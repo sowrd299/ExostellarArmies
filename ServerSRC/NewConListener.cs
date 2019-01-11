@@ -11,7 +11,7 @@ namespace Server{
         private int port;
         private Socket socket; //a socket that listens for new connections to the server
 
-        public Server(IPAddress addr, int port){
+        public NewConListener(IPAddress addr, int port){
             self.addr = addr;
             self.port = port;
             setup();
