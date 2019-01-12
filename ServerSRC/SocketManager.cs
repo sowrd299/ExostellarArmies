@@ -9,6 +9,7 @@ namespace Server{
 
     //manages an individual connection with a client
     //TODO: manage socket closing and cleanup after client disconnects
+    //TODO: (maybe) queue and store messages better? so can be read multiple times/by multiple sources?
     class SocketManager{
 
         private int bufferSize = 1024;

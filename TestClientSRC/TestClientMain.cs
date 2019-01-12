@@ -14,13 +14,13 @@ namespace Client{
             IPHostEntry ipEntry = Dns.GetHostEntry(Dns.GetHostName());
             IPAddress ipAddr = ipEntry.AddressList[0];
             //consts
-            string HostName = ipAddr.ToString();
+            string HostName = ipAddr.ToString(); //by default, is using same local IP addr as server; assuming above process is deterministic
             const int Port = 4011;
             //objs
             TcpClient client;
             NetworkStream stream;
 
-            Console.WriteLine("Connecting to server...");
+            Console.WriteLine("Connecting to server at {0}:{1}...", HostName, Port);
 
             try{
                 //actual work
@@ -52,6 +52,7 @@ namespace Client{
                 Console.Read();
                 stream.Close();
                 client.Close();
+
             }catch(SocketException e){
                 Console.WriteLine("SocketEsception: {0}", e);
             }
