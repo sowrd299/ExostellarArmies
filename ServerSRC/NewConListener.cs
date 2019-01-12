@@ -1,4 +1,4 @@
-
+using System;
 using System.Net;
 using System.Net.Sockets;
 using System.Collections.Generic;
@@ -12,24 +12,27 @@ namespace Server{
         private Socket socket; //a socket that listens for new connections to the server
 
         public NewConListener(IPAddress addr, int port){
-            self.addr = addr;
-            self.port = port;
+            //this.addr = addr;
+            this.addr = addr;
+            this.port = port;
             setup();
         }
 
         //setup the socket
         private void setup(){
-            socket = newSocket(AddressFamily.InterNetwork,
+            socket = new Socket(AddressFamily.InterNetwork,
                     SocketType.Stream,
                     ProtocolType.Tcp);
             socket.Bind(new IPEndPoint(addr, port));
             socket.Listen(10);
+            Console.WriteLine("Opening connect socket on: {0}:{1}",addr.ToString(), port.ToString());
         }
          
         //accept connections
         //microseconds should be small: when expecting to get lots of new cons, can afford to loop back regularly; when not 
         public Socket Accept(int microseconds = 50){
-            List<Socket> l = new List<Socket>(new {socket});
+            List<Socket> l = new List<Socket>();
+            l.Add(socket);
             Socket.Select(l, null, null, microseconds);
             //if have a new connection, accept and return it
             //may be able to accept multiple, but only accept one so can return to gameplay quickly

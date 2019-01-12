@@ -8,6 +8,10 @@ namespace Server{
         static public void Main ()
         {
             Console.WriteLine ("Statring Server...");
+            GameServer gs = new GameServer();
+            while(true){
+                gs.Update();
+            }
         }
     }
 

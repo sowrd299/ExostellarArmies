@@ -6,7 +6,7 @@ namespace Server{
 
     public class GameServer{
 
-        public static const int Port = 4011;
+        public const int Port = 4011;
 
         private IPHostEntry ipEntry;
         private IPAddress ipAddr;
@@ -14,9 +14,11 @@ namespace Server{
         //socket managers
         private NewConListener ncl;
 
-        public Server(){
+        //connected sockets
+
+        public GameServer(){
             //get the IP address
-            ipEntry = Dns.Resolve(Dns.GetHostName());
+            ipEntry = Dns.GetHostEntry(Dns.GetHostName());
             ipAddr = ipEntry.AddressList[0];
             //setup socket managers
             ncl = new NewConListener(ipAddr, Port);
