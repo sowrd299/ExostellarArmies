@@ -10,14 +10,13 @@ namespace Client{
         public static void Main (){
 
             //consts
-            const string HostName = "169.234.56.254";
+            const string HostName = "169.234.56.254"; //TODO: make it so this doesn't need to be manually updated
             const int Port = 4011;
             const string Payload = "HELLO!!!!";
             //objs
             TcpClient client;
             NetworkStream stream;
 
-            //Byte[] data = System.Text.Encoding.ASCII.GetBytes();
             Console.WriteLine("Connecting to server...");
 
             try{
@@ -27,6 +26,12 @@ namespace Client{
                 Console.WriteLine("Connected!");
 
                 stream = client.GetStream(); 
+
+                //send a message
+                Console.WriteLine("Press Enter to send a message...");
+                Console.Read();
+                Byte[] data = System.Text.Encoding.ASCII.GetBytes(Payload);
+                stream.Write(data, 0, data.Length);
 
                 //wait for user then close
                 Console.WriteLine("Presse Enter to disconnect...");
