@@ -1,10 +1,14 @@
 using System.Net.Sockets;
 using System.Collections.Generic;
 using System.Text;
+using System.Xml;
+using System;
+using System.Linq;
 
 namespace Server{
 
     //manages an individual connection with a client
+    //TODO: manage socket closing and cleanup after client disconnects
     class SocketManager{
 
         private int bufferSize = 1024;
@@ -56,6 +60,24 @@ namespace Server{
             return null;
         }
 
+        //since every file is going to be an XML doc anyways,
+        //might as well have a method to just convert it automatically
+        //TODO: handle recieving things that aren't XML w/o crashing
+        public XmlDocument ReceiveXml(int microseconds = 1000){
+            string text = Recieve(microseconds);
+            if(text != null){
+                Console.WriteLine("Parsing XML: {0}", text); //TESTING
+                //filter only valid XML characters; querry from https://stackoverflow.com/questions/8331119/escape-invalid-xml-characters-in-c-sharp
+                var validXmlText = text.Where(ch => XmlConvert.IsXmlChar(ch)).ToArray();
+                //get and return the XML document
+                XmlDocument r = new XmlDocument();
+                r.LoadXml(new string(validXmlText));
+                return r;
+            }
+            return null;
+        }
+
+        //send a given message to the client
         public void Send(string msg){
             byte[] data = Encoding.UTF8.GetBytes(msg);
             socket.Send(data);

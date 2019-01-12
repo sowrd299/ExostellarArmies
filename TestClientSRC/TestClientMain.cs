@@ -1,4 +1,5 @@
 using System;
+using System.Net;
 using System.Net.Sockets;
 
 namespace Client{
@@ -9,8 +10,11 @@ namespace Client{
 
         public static void Main (){
 
+            //find local IP
+            IPHostEntry ipEntry = Dns.GetHostEntry(Dns.GetHostName());
+            IPAddress ipAddr = ipEntry.AddressList[0];
             //consts
-            const string HostName = "169.234.56.254"; //TODO: make it so this doesn't need to be manually updated
+            string HostName = ipAddr.ToString();
             const int Port = 4011;
             //objs
             TcpClient client;
@@ -29,13 +33,13 @@ namespace Client{
                 //send a message
                 Console.WriteLine("Press Enter to start a message...");
                 Console.Read();
-                Byte[] data = System.Text.Encoding.UTF8.GetBytes("HI!!!");
+                Byte[] data = System.Text.Encoding.UTF8.GetBytes("<file type='HI!!!'>");
                 stream.Write(data, 0, data.Length);
 
                 //test if will wait for EOF
                 Console.WriteLine("Press Enter to finish the message...");
                 Console.Read();
-                data = System.Text.Encoding.ASCII.GetBytes("<EOF/>GARBAGE");
+                data = System.Text.Encoding.ASCII.GetBytes("</file>GARBAGE");
                 stream.Write(data, 0, data.Length);
 
                 //recieve

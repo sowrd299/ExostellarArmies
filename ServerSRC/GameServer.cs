@@ -2,13 +2,14 @@ using System;
 using System.Net;
 using System.Net.Sockets;
 using System.Collections.Generic;
+using System.Xml;
 
 namespace Server{
 
     public class GameServer{
 
         public const int Port = 4011;
-        public const string eof = "<EOF/>";
+        public const string eof = "</file>";
 
         private IPHostEntry ipEntry;
         private IPAddress ipAddr;
@@ -38,10 +39,10 @@ namespace Server{
             }
             //read messages from clients
             for(int i = 0; i < clientSockets.Count; i++){
-                string msg = clientSockets[i].Recieve();
+                XmlDocument msg = clientSockets[i].ReceiveXml();
                 if(msg != null){
-                    Console.WriteLine("Recieved message from client {0}: {1}", i.ToString(), msg);
-                    clientSockets[i].Send("<ACC/><EOF/>");
+                    Console.WriteLine("Recieved message from client {0}: {1}", i.ToString(), msg.DocumentElement.Attributes["type"]);
+                    clientSockets[i].Send("<file type='acc'><ACC/></file>");
                 }
             }
         }
