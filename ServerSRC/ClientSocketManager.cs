@@ -36,9 +36,23 @@ namespace Server{
                 byte[] bytes = new byte[bufferSize];
                 l[0].Receive(bytes);
                 string text = Encoding.UTF8.GetString(bytes);
-                //TODO: handle message reassembly
-                return text;
+                //handle EOF
+                if(eof == "" && text.Length > 0){ //if no EOF set, just spit out the message
+                    return text;
+                }
+                //wait for the end of the file
+                textBuffer += text;
+                int eofIndex = textBuffer.IndexOf(eof); //search for EOF in the entire cached string
+                                                //in case got a second eof in an early read that was never processes
+                                                //also helps if EOF gets broken over the divide
+                                                //scanning for all and breaking on arival has more overhead time
+                if(eofIndex >= 0){ //if we have an eof, return the first file
+                    string r = textBuffer.Substring(0, eofIndex + eof.Length); //split from the end of the EOF
+                    textBuffer = textBuffer.Substring(eofIndex + eof.Length);
+                    return r;
+                }
             }
+            //if nothing to read, or nothing to return, return null
             return null;
         }
 

@@ -6,12 +6,12 @@ using System.Collections.Generic;
 namespace Server{
 
     //a socket-rapper that listens for and accepts new client connections
-    public class NewConListener{
+    public class NewClientManager{
         private IPAddress addr;
         private int port;
         private Socket socket; //a socket that listens for new connections to the server
 
-        public NewConListener(IPAddress addr, int port){
+        public NewClientManager(IPAddress addr, int port){
             //this.addr = addr;
             this.addr = addr;
             this.port = port;

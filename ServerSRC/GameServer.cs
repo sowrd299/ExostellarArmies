@@ -8,12 +8,13 @@ namespace Server{
     public class GameServer{
 
         public const int Port = 4011;
+        public const string eof = "<EOF/>";
 
         private IPHostEntry ipEntry;
         private IPAddress ipAddr;
 
         //socket managers
-        private NewConListener ncl;
+        private NewClientManager ncl;
         private List<ClientSocketManager> clientSockets;
 
         //connected sockets
@@ -23,7 +24,7 @@ namespace Server{
             ipEntry = Dns.GetHostEntry(Dns.GetHostName());
             ipAddr = ipEntry.AddressList[0];
             //setup socket managers
-            ncl = new NewConListener(ipAddr, Port);
+            ncl = new NewClientManager(ipAddr, Port);
             clientSockets = new List<ClientSocketManager>();
         }
 
@@ -33,12 +34,12 @@ namespace Server{
             Socket s = ncl.Accept();
             if(s != null){
                 Console.WriteLine("A Client Connected!");
-                clientSockets.Add(new ClientSocketManager(s));
+                clientSockets.Add(new ClientSocketManager(s, eof));
             }
             //read messages from clients
             for(int i = 0; i < clientSockets.Count; i++){
                 string msg = clientSockets[i].Recieve();
-                if(msg != null && msg != ""){
+                if(msg != null){
                     Console.WriteLine("Recieved message from client {0}: {1}", i.ToString(), msg);
                 }
             }
