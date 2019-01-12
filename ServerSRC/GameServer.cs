@@ -15,7 +15,7 @@ namespace Server{
 
         //socket managers
         private NewClientManager ncl;
-        private List<ClientSocketManager> clientSockets;
+        private List<SocketManager> clientSockets;
 
         //connected sockets
 
@@ -25,7 +25,7 @@ namespace Server{
             ipAddr = ipEntry.AddressList[0];
             //setup socket managers
             ncl = new NewClientManager(ipAddr, Port);
-            clientSockets = new List<ClientSocketManager>();
+            clientSockets = new List<SocketManager>();
         }
 
         //to be called once per mainloop
@@ -34,13 +34,14 @@ namespace Server{
             Socket s = ncl.Accept();
             if(s != null){
                 Console.WriteLine("A Client Connected!");
-                clientSockets.Add(new ClientSocketManager(s, eof));
+                clientSockets.Add(new SocketManager(s, eof));
             }
             //read messages from clients
             for(int i = 0; i < clientSockets.Count; i++){
                 string msg = clientSockets[i].Recieve();
                 if(msg != null){
                     Console.WriteLine("Recieved message from client {0}: {1}", i.ToString(), msg);
+                    clientSockets[i].Send("<ACC/><EOF/>");
                 }
             }
         }

@@ -29,7 +29,7 @@ namespace Client{
                 //send a message
                 Console.WriteLine("Press Enter to start a message...");
                 Console.Read();
-                Byte[] data = System.Text.Encoding.ASCII.GetBytes("HI!!!");
+                Byte[] data = System.Text.Encoding.UTF8.GetBytes("HI!!!");
                 stream.Write(data, 0, data.Length);
 
                 //test if will wait for EOF
@@ -37,6 +37,11 @@ namespace Client{
                 Console.Read();
                 data = System.Text.Encoding.ASCII.GetBytes("<EOF/>GARBAGE");
                 stream.Write(data, 0, data.Length);
+
+                //recieve
+                data = new byte[256];
+                stream.Read(data, 0, data.Length);
+                Console.WriteLine("Response from server: {0}",System.Text.Encoding.UTF8.GetString(data));
 
                 //wait for user then close
                 Console.WriteLine("Presse Enter to disconnect...");

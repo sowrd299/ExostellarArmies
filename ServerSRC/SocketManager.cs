@@ -5,7 +5,7 @@ using System.Text;
 namespace Server{
 
     //manages an individual connection with a client
-    class ClientSocketManager{
+    class SocketManager{
 
         private int bufferSize = 1024;
 
@@ -22,7 +22,7 @@ namespace Server{
 
         //takes the socket to manage
         //optionally takes the End of Message tag to look for
-        public ClientSocketManager(Socket socket, string eof = ""){
+        public SocketManager(Socket socket, string eof = ""){
             this.socket = socket;
             this.eof = eof;
         }
@@ -55,6 +55,12 @@ namespace Server{
             //if nothing to read, or nothing to return, return null
             return null;
         }
+
+        public void Send(string msg){
+            byte[] data = Encoding.UTF8.GetBytes(msg);
+            socket.Send(data);
+        }
+
 
     }
 
