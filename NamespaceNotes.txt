@@ -1,0 +1,8 @@
+The code is broken among the following namespaces, each with their own SRC folder
+
+    Game: cointains game logic implementations
+        Game.Decks: code pretaining exactly to the management of decks
+
+    Server: the administrative and networked functionality of the server 
+
+    Client: the client front-end and networking

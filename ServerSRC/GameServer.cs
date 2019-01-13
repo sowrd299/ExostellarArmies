@@ -44,7 +44,7 @@ namespace Server{
                 XmlDocument msg = clientSockets[i].ReceiveXml();
                 if(msg != null){
                     string type = msg.DocumentElement.Attributes["type"].Value;
-                    Console.WriteLine("Recieved message from client {0} of type {1}", i, type);
+                    Console.WriteLine("Recieved message from new client {0} of type {1}", i, type);
                     //handle different types of messages
                     switch(type){
                         //go to match making
