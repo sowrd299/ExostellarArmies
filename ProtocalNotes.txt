@@ -8,3 +8,12 @@ a "joinMatch" message is sent by a client that wishes to join a match
         The deck tag's "id" attribute contains the ID of the deck, for lookup.
 
 a "matchStart" message is sent to the client when the match starts
+
+a "turnStart" message is sent to the client at the start of each turn
+
+a "gameAction" message tells the server about an action the player took
+
+a "lockInTurn" message tells the server the player is done taking actions for that turn
+
+an "error" message communicates that something has gone wrong
+    They contain a "msg" tag, whose inner text is a human-readable description of the error
