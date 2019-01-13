@@ -8,7 +8,7 @@ using System.Linq;
 namespace Server{
 
     //manages an individual connection with a client
-    //TODO: manage socket closing and cleanup after client disconnects
+    //TODO: more robustly manage socket closing and cleanup after client disconnects
     //TODO: (maybe) queue and store messages better? so can be read multiple times/by multiple sources?
     //TODO: add a child of this class that associates verified account data
     class SocketManager{
@@ -24,6 +24,15 @@ namespace Server{
             }
         }
 
+        // if the socket is connected to the other end
+        // may stop reporting alive while still have buffered messages
+        private bool alive;
+        public bool Alive{
+            get{
+                return alive; 
+            }
+        }
+
         private string textBuffer; //the stub of the paritally recieved message
 
         //takes the socket to manage
@@ -31,19 +40,24 @@ namespace Server{
         public SocketManager(Socket socket, string eof = ""){
             this.socket = socket;
             this.eof = eof;
+            alive = true; // assume the socket is allive until proven otherwise
         }
 
         //read in data from the socket, if there is any
-        public string Recieve(int microseconds = 1000){
+        public string Receive(int microseconds = 1000){
             List<Socket> l = new List<Socket>();
             l.Add(socket);
             Socket.Select(l, null, null, microseconds);
             if(l.Count > 0){
                 byte[] bytes = new byte[bufferSize];
-                l[0].Receive(bytes);
+                int i = l[0].Receive(bytes);
                 string text = Encoding.UTF8.GetString(bytes);
+                //handle dead connection
+                if(i == 0){
+                    die();
+                }
                 //handle EOF
-                if(eof == "" && text.Length > 0){ //if no EOF set, just spit out the message
+                if(eof == ""){ //if no EOF set, just spit out the message
                     return text;
                 }
                 //wait for the end of the file
@@ -66,7 +80,7 @@ namespace Server{
         //might as well have a method to just convert it automatically
         //TODO: handle recieving things that aren't XML w/o crashing
         public XmlDocument ReceiveXml(int microseconds = 1000){
-            string text = Recieve(microseconds);
+            string text = Receive(microseconds);
             if(text != null){
                 Console.WriteLine("Parsing XML: {0}", text); //TESTING
                 //filter only valid XML characters; querry from https://stackoverflow.com/questions/8331119/escape-invalid-xml-characters-in-c-sharp
@@ -83,6 +97,20 @@ namespace Server{
         public void Send(string msg){
             byte[] data = Encoding.UTF8.GetBytes(msg);
             socket.Send(data);
+        }
+
+        // to be called once the socket disconnects
+        private void die(){
+            alive = false;
+            socket.Close();
+        }
+
+        // make sure everything get's cleaned up
+        ~SocketManager(){
+            // some of the most poetic code I have ever written
+            if(alive){
+                die();
+            }
         }
 
 

@@ -10,6 +10,8 @@ namespace Server{
     // and puts them into a game
     // responsible for knowing who wants to join what
     // and for deciding which game they will join
+
+    //TODO: only put connected clients into games
     class MatchMaker{
 
         private Queue<MatchMakingInfo> waitingClients; //a queue of clients waiting to join games

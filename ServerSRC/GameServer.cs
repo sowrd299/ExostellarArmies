@@ -33,6 +33,7 @@ namespace Server{
         }
 
         //to be called once per mainloop
+        //TODO: ... except not really, that contutes a perfomant but power-hunger busy wait
         public void Update(){
             //handle new connections
             Socket s = ncl.Accept();
@@ -41,8 +42,15 @@ namespace Server{
                 clientSockets.Add(new SocketManager(s, eof));
             }
             //read messages from clients
-            for(int i = 0; i < clientSockets.Count; i++){
+            //count backwards so can remove as go
+            for(int i = clientSockets.Count-1; i >= 0; i--){
                 XmlDocument msg = clientSockets[i].ReceiveXml();
+                //handle socket death
+                if(!clientSockets[i].Alive){
+                    clientSockets.RemoveAt(i);
+                    Console.WriteLine("A Client Disconnected :(");
+                }
+                //handle messages recieved
                 if(msg != null){
                     string type = msg.DocumentElement.Attributes["type"].Value;
                     Console.WriteLine("Recieved message from new client {0} of type {1}", i, type);

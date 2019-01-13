@@ -43,7 +43,7 @@ namespace Server.Matches{
         // to be called once per main-loop
         public void Update(){
             // recieve messages from the player
-            XmlDocument msg = socket.RecieveXml();
+            XmlDocument msg = socket.ReceiveXml();
             if(msg != null){
                 string type = msg.DocumentElement.Attributes["type"].Value;
                 switch(type){
