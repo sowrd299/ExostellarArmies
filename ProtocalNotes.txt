@@ -3,6 +3,8 @@ Using UTF8 character encodings
 All messages are XML, encompassed in "file" tags
 File tags always have a "type" attribute, defining what the message conveys
 
-"joinMatch" messages are sent by a client that wishes to join a match.
+a "joinMatch" message is sent by a client that wishes to join a match
     They contain a "deck" tag, containing data about the deck they will use in that match.
         The deck tag's "id" attribute contains the ID of the deck, for lookup.
+
+a "matchStart" message is sent to the client when the match starts

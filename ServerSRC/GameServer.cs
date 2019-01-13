@@ -67,6 +67,8 @@ namespace Server{
             Match newMatch = matchMaker.MakeMatch();
             if(newMatch != null){
                 Console.WriteLine("Starting game!");
+                // TODO: multithread! (maybe?)
+                newMatch.Start();
             }
         }
 

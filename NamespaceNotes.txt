@@ -4,5 +4,6 @@ The code is broken among the following namespaces, each with their own SRC folde
         Game.Decks: code pretaining exactly to the management of decks
 
     Server: the administrative and networked functionality of the server 
+        Server.Matches: code pretaining to running one specific match
 
     Client: the client front-end and networking

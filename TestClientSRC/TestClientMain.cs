@@ -57,6 +57,11 @@ namespace Client{
                 data = System.Text.Encoding.UTF8.GetBytes("<file type='joinMatch'><deck id='carthStarter'/></file>");
                 stream.Write(data, 0, data.Length);
 
+                //get matchstart message
+                data = new byte[256];
+                stream.Read(data, 0, data.Length);
+                Console.WriteLine("Response from server: {0}",System.Text.Encoding.UTF8.GetString(data));
+
                 //wait for user then close
                 Console.WriteLine("Presse Enter to disconnect...");
                 Console.Read();
