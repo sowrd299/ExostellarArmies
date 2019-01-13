@@ -3,6 +3,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Collections.Generic;
 using System.Xml;
+using Server.Matches;
 
 namespace Server{
 
@@ -61,6 +62,11 @@ namespace Server{
                     clientSockets[i].Send("<file type='acc'><ACC/></file>");
                     //*/
                 }
+            }
+            //start new games/matches
+            Match newMatch = matchMaker.MakeMatch();
+            if(newMatch != null){
+                Console.WriteLine("Starting game!");
             }
         }
 
