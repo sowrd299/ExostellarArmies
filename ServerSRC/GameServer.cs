@@ -57,11 +57,12 @@ namespace Server{
         // accepts new connections asynchronously
         // will continue to accept new connections ad infinitum
         public void StartAsynchAccept(){
-            ncl.AsynchAccept(endAsychAccept);
+            ncl.AsynchAccept(endAsynchAccept);
         }
 
-        private void endAsychAccept(Socket s){
-            AddClient(s);
+        private void endAsynchAccept(Socket s){
+            SocketManager sm = AddClient(s);
+            StartAsyncReceive(sm);
             // loop accepting
             // TODO: probably should be toggleable
             StartAsynchAccept();
@@ -72,6 +73,22 @@ namespace Server{
             Socket s = ncl.Accept();
             if(s != null){
                 AddClient(s);
+            }
+        }
+
+        // begins accepting new messages asynchronously
+        // will continue to accept new messages ad infinitum
+        public void StartAsyncReceive(SocketManager sm){
+            sm.AsynchReceiveXml(endAsynchReceive);
+        }
+
+        private void endAsynchReceive(XmlDocument msg, SocketManager from){
+            handleMessage(msg, from);
+            clearRemovedSockets(); // doing this is less efficient but more thread safe than checking removedSockets
+            // resuming listening if the socket hasn't been sent somewhere else
+            // TODO: this is a super weird way to handle the case where it moves on
+            if(clientSockets.Contains(from)){
+                StartAsyncReceive(from);
             }
         }
 
@@ -101,7 +118,10 @@ namespace Server{
                 //go to match making
                 case "joinMatch":
                     matchMaker.Enqueueu(from, msg);
-                    removedSockets.Add(from); //remove the socket so that two classes aren't trying to handle it
+                    lock(removedSockets){
+                        removedSockets.Add(from); //remove the socket so that two classes aren't trying to handle it
+                    }
+                    MakeMatch();
                     break;
                 default:
                     base.handleMessage(msg, from);

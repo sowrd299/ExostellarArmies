@@ -11,14 +11,15 @@ namespace Server{
             //this DOES start the server durring construction
             GameServer gs = new GameServer();
             gs.StartAsynchAccept();
-            //the Main Loop
+            //the old synchronous Main Loop
+            /*
             while(true){
                 //gs.Update(); 
-                //handle new messages
-                gs.SyncReceive();
-                //start new games/matches
-                gs.MakeMatch();
             }
+            */
+            // handle closing down the server
+            Console.WriteLine("Press Enter at any time to kill the server...");
+            Console.Read();
         }
     }
 

@@ -94,6 +94,24 @@ namespace Server{
             return null;
         }
 
+        // recieve a message from the socket asynchronously
+        public void AsynchReceiveXml(HandleMessage<XmlDocument> handler, int bufferLen = 256){
+            byte[] buffer = new byte[bufferLen];
+            socket.BeginReceive(buffer, 0, buffer.Length, 0,
+                    new AsyncCallback(endAsychReceiveXml),
+                    new AsyncState<XmlDocument>{buffer = buffer, handler = handler});
+        }
+
+        private void endAsychReceiveXml(IAsyncResult ar){
+            int i = socket.EndReceive(ar);
+            AsyncState<XmlDocument> state = (AsyncState<XmlDocument>)ar.AsyncState;
+            string text = parseMessage(state.buffer, i);
+            if(text != null){
+                XmlDocument msg = parseXml(text);
+                ((HandleMessage<XmlDocument>)state.handler)(msg, this);
+            }
+        }
+
         // returns an XML document from the given recieved message
         private XmlDocument parseXml(string text){
             //filter only valid XML characters; querry from https://stackoverflow.com/questions/8331119/escape-invalid-xml-characters-in-c-sharp
@@ -124,6 +142,11 @@ namespace Server{
             }
         }
 
+        public delegate void HandleMessage<T>(T msg, SocketManager from);
+        private class AsyncState<T>{
+            public HandleMessage<T> handler;
+            public byte[] buffer;
+        }
 
     }
 
