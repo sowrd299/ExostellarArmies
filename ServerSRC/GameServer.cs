@@ -17,7 +17,8 @@ namespace Server{
 
         // socket managers
         private NewClientManager ncl;
-        private List<SocketManager> clientSockets; //currently, this stores clients "at the main menu"
+        private HashSet<SocketManager> clientSockets; //currently, this stores clients "at the main menu"
+        private HashSet<SocketManager> removedSockets; //sockets from client sockets to be removed
 
         // logic (and socket) managers
         private MatchMaker matchMaker;
@@ -28,7 +29,8 @@ namespace Server{
             ipAddr = ipEntry.AddressList[0];
             //setup socket managers
             ncl = new NewClientManager(ipAddr, Port);
-            clientSockets = new List<SocketManager>();
+            clientSockets = new HashSet<SocketManager>();
+            removedSockets = new HashSet<SocketManager>();
             matchMaker = new MatchMaker();
         }
 
@@ -41,19 +43,18 @@ namespace Server{
                 Console.WriteLine("A Client Connected!");
                 clientSockets.Add(new SocketManager(s, eof));
             }
-            //read messages from clients
-            //handle messages recieved (possibly)
-            for(int i = clientSockets.Count-1; i >= 0; i--){
-                handleSocket(clientSockets[i]);
-            }
-            //handle socket death
-            //is its own for-loop to deal with weirdness from removing at two different points
-            for(int i = clientSockets.Count-1; i >= 0; i--){
-                if(i < clientSockets.Count && !clientSockets[i].Alive){
-                    clientSockets.RemoveAt(i);
-                    Console.WriteLine("A Client Disconnected :(");
+            foreach(SocketManager sm in clientSockets){
+                //read messages from clients
+                //handle messages recieved (possibly)
+                handleSocket(sm);
+                //handle socket death
+                //is its own for-loop to deal with weirdness from removing at two different points
+                if(!sm.Alive){
+                    removedSockets.Add(sm);
                 }
             }
+            // finish the above removals
+            clearRemovedSockets();
             //start new games/matches
             Match newMatch = matchMaker.MakeMatch();
             if(newMatch != null){
@@ -63,7 +64,6 @@ namespace Server{
             }
         }
 
-        // NOTE: removes items from the list :S yeesh that's bad code
         public override void handleMessage(XmlDocument msg, SocketManager from){
             string type = msg.DocumentElement.Attributes["type"].Value;
             Console.WriteLine("Recieved message from new client of type {0}", type);
@@ -72,12 +72,20 @@ namespace Server{
                 //go to match making
                 case "joinMatch":
                     matchMaker.Enqueueu(from, msg);
-                    clientSockets.Remove(from); //remove the socket so that two classes aren't trying to handle it
+                    removedSockets.Add(from); //remove the socket so that two classes aren't trying to handle it
                     break;
                 default:
                     base.handleMessage(msg, from);
                     break;
             }
+        }
+
+        // removes sockets marked for removal
+        private void clearRemovedSockets(){
+            foreach(SocketManager sm in removedSockets){
+                clientSockets.Remove(sm);
+            }
+            removedSockets.Clear();
         }
 
     }
