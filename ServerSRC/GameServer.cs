@@ -7,7 +7,7 @@ using Server.Matches;
 
 namespace Server{
 
-    public class GameServer{
+    public class GameServer : MessageHandler{
 
         public const int Port = 4011;
         public const string eof = "</file>";
@@ -42,33 +42,16 @@ namespace Server{
                 clientSockets.Add(new SocketManager(s, eof));
             }
             //read messages from clients
-            //count backwards so can remove as go
+            //handle messages recieved (possibly)
             for(int i = clientSockets.Count-1; i >= 0; i--){
-                XmlDocument msg = clientSockets[i].ReceiveXml();
-                //handle socket death
-                if(!clientSockets[i].Alive){
+                handleSocket(clientSockets[i]);
+            }
+            //handle socket death
+            //is its own for-loop to deal with weirdness from removing at two different points
+            for(int i = clientSockets.Count-1; i >= 0; i--){
+                if(i < clientSockets.Count && !clientSockets[i].Alive){
                     clientSockets.RemoveAt(i);
                     Console.WriteLine("A Client Disconnected :(");
-                }
-                //handle messages recieved
-                if(msg != null){
-                    string type = msg.DocumentElement.Attributes["type"].Value;
-                    Console.WriteLine("Recieved message from new client {0} of type {1}", i, type);
-                    //handle different types of messages
-                    switch(type){
-                        //go to match making
-                        case "joinMatch":
-                            matchMaker.Enqueueu(clientSockets[i], msg);
-                            clientSockets.RemoveAt(i); //remove the socket so that two classes aren't trying to handle it
-                            break;
-                        default:
-                            //if the client did not send an expected message type, send back an error
-                            clientSockets[i].Send("<file type='error'><msg>Unexpected message type: "+type+"</msg></file>");
-                            break; 
-                    }
-                    /* a simple test response back to the client
-                    clientSockets[i].Send("<file type='acc'><ACC/></file>");
-                    //*/
                 }
             }
             //start new games/matches
@@ -77,6 +60,23 @@ namespace Server{
                 Console.WriteLine("Starting game!");
                 // TODO: multithread! (maybe?)
                 newMatch.Start();
+            }
+        }
+
+        // NOTE: removes items from the list :S yeesh that's bad code
+        public override void handleMessage(XmlDocument msg, SocketManager from){
+            string type = msg.DocumentElement.Attributes["type"].Value;
+            Console.WriteLine("Recieved message from new client of type {0}", type);
+            //handle different types of messages
+            switch(type){
+                //go to match making
+                case "joinMatch":
+                    matchMaker.Enqueueu(from, msg);
+                    clientSockets.Remove(from); //remove the socket so that two classes aren't trying to handle it
+                    break;
+                default:
+                    base.handleMessage(msg, from);
+                    break;
             }
         }
 

@@ -11,7 +11,7 @@ namespace Server{
     //TODO: more robustly manage socket closing and cleanup after client disconnects
     //TODO: (maybe) queue and store messages better? so can be read multiple times/by multiple sources?
     //TODO: add a child of this class that associates verified account data
-    class SocketManager{
+    public class SocketManager{
 
         private int bufferSize = 1024;
 

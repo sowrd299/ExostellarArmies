@@ -4,7 +4,7 @@ using System.Xml;
 namespace Server.Matches{
 
     // a class to manage one specific player durring a match
-    class PlayerManager{
+    class PlayerManager : MessageHandler{
 
         private enum State{ACTING, WAITING} 
 
@@ -46,29 +46,29 @@ namespace Server.Matches{
         // to be called once per main-loop-ish
         public void Update(){
             // recieve messages from the player
-            XmlDocument msg = socket.ReceiveXml();
-            if(msg != null){
-                string type = msg.DocumentElement.Attributes["type"].Value;
-                switch(type){
-                    case "gameAction":
-                        if(state == State.ACTING){
-                            // TODO: handle the player taking an action
-                        }else{
-                            socket.Send("<file type='error'><msg>Cannot take game actions now</msg></file>");
-                        }
-                        break;
-                    case "lockInTurn":
-                        if(state == State.ACTING){
-                            // ...
-                            state = State.WAITING; // after locking in, the player may make no more actions
-                        }else{
-                            socket.Send("<file type='error'><msg>You probably sent 'lockInTurn' multiple times</msg></file>");
-                        }
-                        break;
-                    default:
-                        socket.Send("<file type='error'><msg>Unexpect message type durring gameplay: "+type+"</msg></file>");
-                        break;
-                }
+            handleSocket(socket);
+        }
+
+        public override void handleMessage(XmlDocument msg, SocketManager from){
+            switch(messageTypeOf(msg)){
+                case "gameAction":
+                    if(state == State.ACTING){
+                        // TODO: handle the player taking an action
+                    }else{
+                        from.Send("<file type='error'><msg>Cannot take game actions now</msg></file>");
+                    }
+                    break;
+                case "lockInTurn":
+                    if(state == State.ACTING){
+                        // ...
+                        state = State.WAITING; // after locking in, the player may make no more actions
+                    }else{
+                        from.Send("<file type='error'><msg>You probably sent 'lockInTurn' multiple times</msg></file>");
+                    }
+                    break;
+                default:
+                    base.handleMessage(msg,from);
+                    break;
             }
         }
     }

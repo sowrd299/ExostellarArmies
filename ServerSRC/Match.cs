@@ -35,7 +35,7 @@ namespace Server.Matches{
             if(turnLockedIn){
                 // TODO: calculate the turn outcome
                 // TODO: update player's and pm's with new game start
-                foreach(PlayterManager pm in players){
+                foreach(PlayerManager pm in players){
                     pm.StartTurn();
                 }
             }
