@@ -48,8 +48,23 @@ namespace Server{
         public SocketManager AddClient(Socket s){
             Console.WriteLine("A Client Connected!");
             SocketManager sm = new SocketManager(s, eof);
-            clientSockets.Add(sm);
+            lock(clientSockets){
+                clientSockets.Add(sm);
+            }
             return sm;
+        }
+
+        // accepts new connections asynchronously
+        // will continue to accept new connections ad infinitum
+        public void StartAsynchAccept(){
+            ncl.AsynchAccept(endAsychAccept);
+        }
+
+        private void endAsychAccept(Socket s){
+            AddClient(s);
+            // loop accepting
+            // TODO: probably should be toggleable
+            StartAsynchAccept();
         }
 
         // accepts new connections in a synchronous, non-blocking way
@@ -62,18 +77,20 @@ namespace Server{
 
         // recieves messages from attached sockets in a synchronous, non-blocking way
         public void SyncReceive(){
-            foreach(SocketManager sm in clientSockets){
-                //read messages from clients
-                //handle messages recieved (possibly)
-                handleSocket(sm);
-                //handle socket death
-                //is its own for-loop to deal with weirdness from removing at two different points
-                if(!sm.Alive){
-                    removedSockets.Add(sm);
+            lock(clientSockets){
+                foreach(SocketManager sm in clientSockets){
+                    //read messages from clients
+                    //handle messages recieved (possibly)
+                    handleSocket(sm);
+                    //handle socket death
+                    //is its own for-loop to deal with weirdness from removing at two different points
+                    if(!sm.Alive){
+                        removedSockets.Add(sm);
+                    }
                 }
+                // finish the above removals
+                clearRemovedSockets();
             }
-            // finish the above removals
-            clearRemovedSockets();
         }
 
         public override void handleMessage(XmlDocument msg, SocketManager from){
@@ -94,10 +111,14 @@ namespace Server{
 
         // removes sockets marked for removal
         private void clearRemovedSockets(){
-            foreach(SocketManager sm in removedSockets){
-                clientSockets.Remove(sm);
+            lock(removedSockets){
+                lock(clientSockets){
+                    foreach(SocketManager sm in removedSockets){
+                        clientSockets.Remove(sm);
+                    }
+                }
+                removedSockets.Clear();
             }
-            removedSockets.Clear();
         }
 
         // starts a new match, if it can

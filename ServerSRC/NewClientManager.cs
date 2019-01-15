@@ -43,6 +43,19 @@ namespace Server{
             return null;
         }
 
+        // accept connections asychronously
+        public void AsynchAccept(HandleNewClient handler){
+            socket.BeginAccept(new AsyncCallback(endAsyncAccept), handler);
+        }
+
+        // handles a successful async accept
+        private void endAsyncAccept(IAsyncResult ar){
+            Socket newClient = socket.EndAccept(ar);
+            ((HandleNewClient)ar.AsyncState)(newClient);
+        }
+
+        public delegate void HandleNewClient(Socket s);
+
     }
 
 }

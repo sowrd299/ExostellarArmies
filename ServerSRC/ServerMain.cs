@@ -10,9 +10,14 @@ namespace Server{
             Console.WriteLine ("Statring Server...");
             //this DOES start the server durring construction
             GameServer gs = new GameServer();
+            gs.StartAsynchAccept();
             //the Main Loop
             while(true){
-                gs.Update();
+                //gs.Update(); 
+                //handle new messages
+                gs.SyncReceive();
+                //start new games/matches
+                gs.MakeMatch();
             }
         }
     }
