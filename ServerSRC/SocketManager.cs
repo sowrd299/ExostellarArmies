@@ -51,28 +51,34 @@ namespace Server{
             if(l.Count > 0){
                 byte[] bytes = new byte[bufferSize];
                 int i = l[0].Receive(bytes);
-                string text = Encoding.UTF8.GetString(bytes);
-                //handle dead connection
-                if(i == 0){
-                    die();
-                }
-                //handle EOF
-                if(eof == ""){ //if no EOF set, just spit out the message
-                    return text;
-                }
-                //wait for the end of the file
-                textBuffer += text;
-                int eofIndex = textBuffer.IndexOf(eof); //search for EOF in the entire cached string
-                                                //in case got a second eof in an early read that was never processes
-                                                //also helps if EOF gets broken over the divide
-                                                //scanning for all and breaking on arival has more overhead time
-                if(eofIndex >= 0){ //if we have an eof, return the first file
-                    string r = textBuffer.Substring(0, eofIndex + eof.Length); //split from the end of the EOF
-                    textBuffer = textBuffer.Substring(eofIndex + eof.Length);
-                    return r;
-                }
+                return parseMessage(bytes, i);
             }
             //if nothing to read, or nothing to return, return null
+            return null;
+        }
+
+        // parses data recieved from a socket
+        private string parseMessage(byte[] bytes, int i){
+            string text = Encoding.UTF8.GetString(bytes);
+            //handle dead connection
+            if(i == 0){
+                die();
+            }
+            //handle EOF
+            if(eof == ""){ //if no EOF set, just spit out the message
+                return text;
+            }
+            //wait for the end of the file
+            textBuffer += text;
+            int eofIndex = textBuffer.IndexOf(eof); //search for EOF in the entire cached string
+                                            //in case got a second eof in an early read that was never processes
+                                            //also helps if EOF gets broken over the divide
+                                            //scanning for all and breaking on arival has more overhead time
+            if(eofIndex >= 0){ //if we have an eof, return the first file
+                string r = textBuffer.Substring(0, eofIndex + eof.Length); //split from the end of the EOF
+                textBuffer = textBuffer.Substring(eofIndex + eof.Length);
+                return r;
+            }
             return null;
         }
 
@@ -83,14 +89,19 @@ namespace Server{
             string text = Receive(microseconds);
             if(text != null){
                 Console.WriteLine("Parsing XML: {0}", text); //TESTING
-                //filter only valid XML characters; querry from https://stackoverflow.com/questions/8331119/escape-invalid-xml-characters-in-c-sharp
-                var validXmlText = text.Where(ch => XmlConvert.IsXmlChar(ch)).ToArray();
-                //get and return the XML document
-                XmlDocument r = new XmlDocument();
-                r.LoadXml(new string(validXmlText));
-                return r;
+                return parseXml(text);
             }
             return null;
+        }
+
+        // returns an XML document from the given recieved message
+        private XmlDocument parseXml(string text){
+            //filter only valid XML characters; querry from https://stackoverflow.com/questions/8331119/escape-invalid-xml-characters-in-c-sharp
+            var validXmlText = text.Where(ch => XmlConvert.IsXmlChar(ch)).ToArray();
+            //get and return the XML document
+            XmlDocument r = new XmlDocument();
+            r.LoadXml(new string(validXmlText));
+            return r;
         }
 
         //send a given message to the client
