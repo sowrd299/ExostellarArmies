@@ -24,7 +24,9 @@ namespace Server{
 
         // adds the given client to the match-making queue
         public void Enqueueu(SocketManager socket, XmlDocument enqueueRequest){
-            waitingClients.Enqueue(new MatchMakingInfo{Socket = socket, EnqueueRequest = enqueueRequest});
+            lock(waitingClients){
+                waitingClients.Enqueue(new MatchMakingInfo{Socket = socket, EnqueueRequest = enqueueRequest});
+            }
         }
 
         // if possible, make the next game
@@ -32,21 +34,23 @@ namespace Server{
         // returns the new game object
         public Match MakeMatch(){
             const int playerCount = 2; //this is here so that different matches can have difterent player counts
-            if(waitingClients.Count >= playerCount){ 
-                SocketManager[] clients = new SocketManager[playerCount];
-                DeckList[] decks = new DeckList[playerCount]; // the deck lists the player's are using, in order
-                for(int i = 0; i < playerCount; i++){
-                    // currently using a simplistic "every two consecutive requests get paired"
-                    // algorithm for who goes into the match
-                    MatchMakingInfo client = waitingClients.Dequeue();
-                    //Console.WriteLine("Adding player...");
-                    clients[i] = client.Socket;
-                    //Console.WriteLine("Loading deck...");
-                    string deckID = client.EnqueueRequest.DocumentElement["deck"].Attributes["id"].Value;
-                    decks[i] = deckListManager.LoadFromID(deckID);
-                    //Console.WriteLine("Player {0} ready!", i);
+            lock(waitingClients){
+                if(waitingClients.Count >= playerCount){ 
+                    SocketManager[] clients = new SocketManager[playerCount];
+                    DeckList[] decks = new DeckList[playerCount]; // the deck lists the player's are using, in order
+                    for(int i = 0; i < playerCount; i++){
+                        // currently using a simplistic "every two consecutive requests get paired"
+                        // algorithm for who goes into the match
+                        MatchMakingInfo client = waitingClients.Dequeue();
+                        //Console.WriteLine("Adding player...");
+                        clients[i] = client.Socket;
+                        //Console.WriteLine("Loading deck...");
+                        string deckID = client.EnqueueRequest.DocumentElement["deck"].Attributes["id"].Value;
+                        decks[i] = deckListManager.LoadFromID(deckID);
+                        //Console.WriteLine("Player {0} ready!", i);
+                    }
+                    return new Match(clients,decks);
                 }
-                return new Match(clients,decks);
             }
             return null;
         }
