@@ -38,11 +38,30 @@ namespace Server{
         //TODO: ... except not really, that contutes a perfomant but power-hunger busy wait
         public void Update(){
             //handle new connections
+            SyncAccept();
+            //handle new messages
+            SyncReceive();
+            //start new games/matches
+            MakeMatch();
+        }
+
+        public SocketManager AddClient(Socket s){
+            Console.WriteLine("A Client Connected!");
+            SocketManager sm = new SocketManager(s, eof);
+            clientSockets.Add(sm);
+            return sm;
+        }
+
+        // accepts new connections in a synchronous, non-blocking way
+        public void SyncAccept(){
             Socket s = ncl.Accept();
             if(s != null){
-                Console.WriteLine("A Client Connected!");
-                clientSockets.Add(new SocketManager(s, eof));
+                AddClient(s);
             }
+        }
+
+        // recieves messages from attached sockets in a synchronous, non-blocking way
+        public void SyncReceive(){
             foreach(SocketManager sm in clientSockets){
                 //read messages from clients
                 //handle messages recieved (possibly)
@@ -55,13 +74,6 @@ namespace Server{
             }
             // finish the above removals
             clearRemovedSockets();
-            //start new games/matches
-            Match newMatch = matchMaker.MakeMatch();
-            if(newMatch != null){
-                Console.WriteLine("Starting game!");
-                // TODO: multithread! (maybe?)
-                newMatch.Start();
-            }
         }
 
         public override void handleMessage(XmlDocument msg, SocketManager from){
@@ -86,6 +98,17 @@ namespace Server{
                 clientSockets.Remove(sm);
             }
             removedSockets.Clear();
+        }
+
+        // starts a new match, if it can
+        internal Match MakeMatch(){
+            Match newMatch = matchMaker.MakeMatch();
+            if(newMatch != null){
+                Console.WriteLine("Starting game!");
+                // TODO: multithread! (maybe?)
+                newMatch.Start();
+            }
+            return newMatch;
         }
 
     }
