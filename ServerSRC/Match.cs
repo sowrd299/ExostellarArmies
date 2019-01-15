@@ -26,6 +26,21 @@ namespace Server.Matches{
             }
         }
 
+        public void Update(){
+            bool turnLockedIn = true; // tracks if all players are read to advance
+            foreach(PlayerManager pm in players){
+                pm.Update();
+                turnLockedIn &= pm.TurnLockedIn;
+            }
+            if(turnLockedIn){
+                // TODO: calculate the turn outcome
+                // TODO: update player's and pm's with new game start
+                foreach(PlayterManager pm in players){
+                    pm.StartTurn();
+                }
+            }
+        }
+
     }
 
 }

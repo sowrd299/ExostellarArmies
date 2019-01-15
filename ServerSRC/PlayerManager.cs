@@ -10,8 +10,18 @@ namespace Server.Matches{
 
         // the socket to the player's client
         private SocketManager socket;
+
         // tracks what the player is current supposed to be doing
         private State state;
+
+        // returns whether or not the players has locked in their current turn
+        public bool TurnLockedIn{
+            get{
+                // this algorithm is an oversimplification,
+                // but at VGDC quarter-long scale it should work perfectly
+                return state == State.WAITING;
+            }
+        }
 
         // TODO: I am not convinced this should actually take a decklist
         //      that should probably be handled by something that manages game state
@@ -33,14 +43,7 @@ namespace Server.Matches{
             state = State.ACTING;
         }
 
-        // returns whether or not the players has locked in their current turn
-        public bool TurnLockedIn(){
-            // this algorithm is an oversimplification,
-            // but at VGDC quarter-long scale it should work perfectly
-            return state == State.WAITING;
-        }
-
-        // to be called once per main-loop
+        // to be called once per main-loop-ish
         public void Update(){
             // recieve messages from the player
             XmlDocument msg = socket.ReceiveXml();
