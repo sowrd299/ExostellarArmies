@@ -43,6 +43,9 @@ namespace Server{
         // stored here so can change it more dynamically as states change in other threads
         private HandleMessage<XmlDocument> handleAsynchXmlMessage;
 
+        // what to do when the socket disconnects
+        private HandleDeath handleAsyncDeath;
+
         //takes the socket to manage
         //optionally takes the End of Message tag to look for
         public SocketManager(Socket socket, string eof = ""){
@@ -107,9 +110,10 @@ namespace Server{
         // recieve a message from the socket asynchronously
         // NOTE: calling a second time will override previous calls
         // TODO: there seem to be some really ugly race-cases with managing only one asyncReceiving at a time
-        public void AsynchReceiveXml(HandleMessage<XmlDocument> handler, int bufferLen = 256){
+        public void AsynchReceiveXml(HandleMessage<XmlDocument> handler, HandleDeath deathHandler, int bufferLen = 256){
             lock(asynchReceivingLock){
                 handleAsynchXmlMessage = handler;
+                handleAsyncDeath = deathHandler;
                 if(!asynchReceiving){
                     byte[] buffer = new byte[bufferLen];
                     socket.BeginReceive(buffer, 0, buffer.Length, 0,
@@ -127,13 +131,23 @@ namespace Server{
 
         private void endAsynchReceiveXml(IAsyncResult ar){
             lock(asynchReceivingLock){
+                // no long have an outstanding async receive
                 asynchReceiving = false;
+                // reading stuff
                 int i = socket.EndReceive(ar);
                 AsyncState<XmlDocument> state = (AsyncState<XmlDocument>)ar.AsyncState;
                 string text = parseMessage(state.buffer, i);
+                // have a full message, deal with it
                 if(text != null){
                     XmlDocument msg = parseXml(text);
                     handleAsynchXmlMessage(msg, this);
+                // if do not have a full message...
+                }else{ 
+                    if(!Alive){ // ...may have died ...
+                        handleAsyncDeath(this);
+                    }else{ // ...may need to continue reading
+                        AsynchReceiveXml(handleAsynchXmlMessage, handleAsyncDeath);
+                    }
                 }
             }
         }
@@ -172,6 +186,7 @@ namespace Server{
             }
         }
 
+        public delegate void HandleDeath(SocketManager from);
         public delegate void HandleMessage<T>(T msg, SocketManager from);
         private class AsyncState<T>{
             public HandleMessage<T> handler; //DEPRICATED

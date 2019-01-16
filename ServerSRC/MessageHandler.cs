@@ -9,7 +9,7 @@ namespace Server{
         // begins accepting new messages asynchronously
         // will continue to accept new messages ad infinitum
         public void StartAsyncReceive(SocketManager socket){
-            socket.AsynchReceiveXml(endAsyncReceiveXml);
+            socket.AsynchReceiveXml(endAsyncReceiveXml, handleSocketDeath);
         }
 
         protected virtual void endAsyncReceiveXml(XmlDocument msg, SocketManager from){

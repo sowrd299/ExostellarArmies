@@ -79,25 +79,6 @@ namespace Server{
             }
         }
 
-        /* MOVED TO MESSAGE HANDLER
-        // begins accepting new messages asynchronously
-        // will continue to accept new messages ad infinitum
-        // TODO: add this to Message Handler
-        public void StartAsyncReceive(SocketManager sm){
-            sm.AsynchReceiveXml(endAsynchReceive);
-        }
-
-        private void endAsynchReceive(XmlDocument msg, SocketManager from){
-            handleMessage(msg, from);
-            clearRemovedSockets(); // doing this is less efficient but more thread safe than checking removedSockets
-            // resuming listening if the socket hasn't been sent somewhere else
-            // TODO: this is a super weird way to handle the case where it moves on
-            if(clientSockets.Contains(from)){
-                StartAsyncReceive(from);
-            }
-        }
-        // */
-
         protected override void handleSocketDeath(SocketManager socket){
             lock(clientSockets){
                 clientSockets.Remove(socket);

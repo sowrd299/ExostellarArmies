@@ -96,26 +96,6 @@ namespace Server.Matches{
             handleSocket(socket);
         }
 
-        /* HAS BEEN MOVED TO MESSAGE HANDLER
-        public void StartAsyncReceive(){
-            socket.AsynchReceiveXml(endAsyncReceiveXml);
-        }
-
-        private void endAsyncReceiveXml(XmlDocument msg, SocketManager from){
-            // check if the connection is dead; if it is, do something about it
-            // specifically doing socket and not from here, because "from" isn't necessarily
-            // ... the player's main socket/responsibility
-            if(!socket.Alive){
-                deathCallback();
-            }else{
-                // handle the message
-                handleMessage(msg, from);
-                // resume receiving
-                StartAsyncReceive();
-            }
-        }
-        // */
-
         public void StartAsyncReceive(){
             StartAsyncReceive(socket);
         }
