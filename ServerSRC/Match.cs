@@ -32,6 +32,14 @@ namespace Server.Matches{
             }
         }
 
+        // starts the match with asynchronous receiving
+        public void AsynchStart(){
+            Start();
+            foreach(PlayerManager pm in players){
+                pm.StartAsyncReceive();
+            }
+        }
+
         public void Update(){
             foreach(PlayerManager pm in players){
                 pm.Update();

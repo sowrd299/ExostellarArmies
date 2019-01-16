@@ -147,7 +147,7 @@ namespace Server{
             if(newMatch != null){
                 Console.WriteLine("Starting game!");
                 // TODO: multithread! (maybe?)
-                newMatch.Start();
+                newMatch.AsynchStart();
             }
             return newMatch;
         }
