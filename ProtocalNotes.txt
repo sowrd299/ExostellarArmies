@@ -20,5 +20,7 @@ a "actionDeltas" is sent from the server to the client, and contains the outcome
 
 a "lockInTurn" message tells the server the player is done taking actions for that turn
 
+a "matchEnd" message is sent from the server to the client at the end of the match
+
 an "error" message communicates that something has gone wrong
     They contain a "msg" tag, whose inner text is a human-readable description of the error

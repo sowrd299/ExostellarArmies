@@ -7,6 +7,10 @@ using Server.Matches;
 
 namespace Server{
 
+    // the central manager for activities on the server
+    // doubles as both a master of sockets and a main menu
+    // TODO: ...these two rolls should probably be forked
+    // ... but we are well bellow the scale where this becomes an issue
     public class GameServer : MessageHandler{
 
         public const int Port = 4011;
@@ -35,7 +39,6 @@ namespace Server{
         }
 
         //to be called once per mainloop
-        //TODO: ... except not really, that contutes a perfomant but power-hunger busy wait
         public void Update(){
             //handle new connections
             SyncAccept();
@@ -78,6 +81,7 @@ namespace Server{
 
         // begins accepting new messages asynchronously
         // will continue to accept new messages ad infinitum
+        // TODO: add this to Message Handler
         public void StartAsyncReceive(SocketManager sm){
             sm.AsynchReceiveXml(endAsynchReceive);
         }
@@ -147,9 +151,22 @@ namespace Server{
             if(newMatch != null){
                 Console.WriteLine("Starting game!");
                 // TODO: multithread! (maybe?)
-                newMatch.AsynchStart();
+                newMatch.AsynchStart(ReturnClients);
             }
             return newMatch;
+        }
+
+        // returns the given sockets to the management of the game server "main menu"
+        internal void ReturnClients(SocketManager[] client){
+            lock(clientSockets){
+                // for each given client, record that it is here and start receiving from it
+                foreach(SocketManager sm in client){
+                    if(sm.Alive){ // TODO: this is a really course way to handle the possibility of being returned dead sockets
+                        clientSockets.Add(sm);
+                        StartAsyncReceive(sm);
+                    }
+                }
+            }
         }
 
     }

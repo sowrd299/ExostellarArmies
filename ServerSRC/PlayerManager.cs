@@ -12,6 +12,11 @@ namespace Server.Matches{
 
         // the socket to the player's client
         private SocketManager socket;
+        public SocketManager Socket{
+            get{
+                return socket;
+            }
+        }
 
         // tracks what the player is current supposed to be doing
         private State state;
@@ -27,7 +32,11 @@ namespace Server.Matches{
             }
         }
 
+        // to be called at end of turn
         private EotCallback eotCallback;
+
+        // to be called if/when the connection dies
+        private DeathCallback deathCallback;
 
         // the client's player
         private Player player;
@@ -44,11 +53,12 @@ namespace Server.Matches{
         // TODO: I am not convinced this should actually take a decklist
         //      that should probably be handled by something that manages game state
         //      not game networking
-        public PlayerManager(SocketManager socket, Player player, GameState gs, EotCallback eotCallback){
+        public PlayerManager(SocketManager socket, Player player, GameState gs, EotCallback eotCallback, DeathCallback deathCallback){
             this.socket = socket;
             this.player = player;
             this.gameState = gs;
             this.eotCallback = eotCallback;
+            this.deathCallback = deathCallback;
             turnDeltas = new List<Delta>();
         }
 
@@ -59,11 +69,25 @@ namespace Server.Matches{
         }
 
         // handle everything that happens at the start of a new turn
-        public void StartTurn(){
-            // ...
-            socket.Send("<file type='turnStart'></file>");
+        public void StartTurn(Delta[] deltas){
+            XmlDocument msg = NewEmptyMessage("turnStart");
+            foreach(Delta d in deltas){
+                // TODO: filter down to only the deltas the player gets to know about
+                // e.g. remove cards drawn by opponent
+                XmlElement e = d.ToXml(msg);
+                msg.DocumentElement.AppendChild(e);
+            }
+            socket.SendXml(msg);
             state = State.ACTING;
             turnDeltas = new List<Delta>();
+        }
+
+        public void EndMatch(){
+            // TODO: send more helpful information, e.g. winner
+            // TODO: the if statement is just here because if it weren't
+            //          disconnecting would 100% of the time trigger sending a message to a dead socket
+            //          and thus a fatal error ... HANDLE THIS BETTER PLEASE
+            if(socket.Alive) socket.SendXml(NewEmptyMessage("matchEnd"));
         }
 
         // to be called once per main-loop-ish
@@ -73,12 +97,21 @@ namespace Server.Matches{
         }
 
         public void StartAsyncReceive(){
-            socket.AsynchReceiveXml(endAsyncReceive);
+            socket.AsynchReceiveXml(endAsyncReceiveXml);
         }
 
-        private void endAsyncReceive(XmlDocument msg, SocketManager from){
-            handleMessage(msg, from);
-            StartAsyncReceive();
+        private void endAsyncReceiveXml(XmlDocument msg, SocketManager from){
+            // check if the connection is dead; if it is, do something about it
+            // specifically doing socket and not from here, because "from" isn't necessarily
+            // ... the player's main socket/responsibility
+            if(!socket.Alive){
+                deathCallback();
+            }else{
+                // handle the message
+                handleMessage(msg, from);
+                // resume receiving
+                StartAsyncReceive();
+            }
         }
 
         // TODO: this probably should get broken up into many smaller functions
@@ -135,6 +168,8 @@ namespace Server.Matches{
 
         // a delegate for methods to be called after locking in a turn
         public delegate void EotCallback();
+
+        public delegate void DeathCallback();
 
     }
 

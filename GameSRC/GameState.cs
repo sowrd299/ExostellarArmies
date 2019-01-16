@@ -3,6 +3,12 @@ namespace Game{
     // a class to reprsent the state of the game at a give point in time
     public class GameState{
 
+        public bool Over{
+            get{
+                return false;
+            }
+        }
+
         // returns if a move is legal for the given player to make
         public bool IsLegalAction(Player player, Action a){
             // dummy implementation
