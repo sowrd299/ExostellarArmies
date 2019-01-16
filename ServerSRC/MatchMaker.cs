@@ -12,9 +12,10 @@ namespace Server{
     // and for deciding which game they will join
 
     //TODO: only put connected clients into games
-    class MatchMaker{
+    class MatchMaker : MessageHandler{
 
         private Queue<MatchMakingInfo> waitingClients; //a queue of clients waiting to join games
+        private int numDeadClients; // the number of clients that have died; used to know if we actually have enough clients
         private DeckListManager deckListManager; // load and annylize player's deck lists
 
         public MatchMaker(){
@@ -24,9 +25,14 @@ namespace Server{
 
         // adds the given client to the match-making queue
         public void Enqueueu(SocketManager socket, XmlDocument enqueueRequest){
+            StartAsyncReceive(socket); // take over as the message handler
             lock(waitingClients){
                 waitingClients.Enqueue(new MatchMakingInfo{Socket = socket, EnqueueRequest = enqueueRequest});
             }
+        }
+
+        protected override void handleSocketDeath(SocketManager socket){
+            numDeadClients++;
         }
 
         // if possible, make the next game
@@ -35,13 +41,19 @@ namespace Server{
         public Match MakeMatch(){
             const int playerCount = 2; //this is here so that different matches can have difterent player counts
             lock(waitingClients){
-                if(waitingClients.Count >= playerCount){ 
+                if(waitingClients.Count - numDeadClients >= playerCount){ 
                     SocketManager[] clients = new SocketManager[playerCount];
                     DeckList[] decks = new DeckList[playerCount]; // the deck lists the player's are using, in order
                     for(int i = 0; i < playerCount; i++){
                         // currently using a simplistic "every two consecutive requests get paired"
                         // algorithm for who goes into the match
                         MatchMakingInfo client = waitingClients.Dequeue();
+                        //only accepts alive clients
+                        //remove dead clients found in the queue
+                        while(!client.Socket.Alive){
+                            client = waitingClients.Dequeue();
+                            numDeadClients--;
+                        }
                         //Console.WriteLine("Adding player...");
                         clients[i] = client.Socket;
                         //Console.WriteLine("Loading deck...");
