@@ -117,6 +117,11 @@ namespace Server{
                             new AsyncState<XmlDocument>{buffer = buffer, handler = handler});
                     asynchReceiving = true;
                 }
+                /* TESTING
+                else{
+                    Console.WriteLine("Changing Ansync Callback For Socket!");
+                }
+                // */
             }
         }
 

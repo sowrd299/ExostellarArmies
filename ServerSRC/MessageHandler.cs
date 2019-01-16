@@ -19,10 +19,13 @@ namespace Server{
             if(!from.Alive){
                 handleSocketDeath(from);
             }else{
+                // resume receiving
+                // we do this first so that if handle message changes the message handler
+                // ... this one won't imediately grab it back
+                // TODO: this is a dumb order of ops to care about what is my archetecture
+                StartAsyncReceive(from);
                 // handle the message
                 handleMessage(msg, from);
-                // resume receiving
-                StartAsyncReceive(from);
             }
         }
 

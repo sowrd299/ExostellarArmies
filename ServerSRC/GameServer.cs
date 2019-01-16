@@ -176,6 +176,7 @@ namespace Server{
                     }
                 }
             }
+            Console.WriteLine("Game Over Da!");
         }
 
     }
