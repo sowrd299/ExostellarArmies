@@ -40,6 +40,7 @@ namespace Server.Matches{
             }
         }
 
+        // to be called once per frame in synchronous mode
         public void Update(){
             foreach(PlayerManager pm in players){
                 pm.Update();

@@ -10,8 +10,10 @@ namespace Game{
 
         // gets an XML representation of the move
         public XmlDocument ToXml(){
-            // TODO: this is a dummy placeholder implementation
-            return new XmlDocument();
+            XmlDocument r = new XmlDocument();
+            XmlElement e = r.CreateElement("action");
+            r.AppendChild(e);
+            return r;
         }
     }
 }

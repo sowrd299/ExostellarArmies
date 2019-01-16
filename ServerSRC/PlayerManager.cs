@@ -89,20 +89,27 @@ namespace Server.Matches{
                         Action a = new Action(msg.DocumentElement["action"]);
                         if(gameState.IsLegalAction(player, a)){
                             Delta[] ds =  gameState.GetActionDeltas(player, a);
+                            // using three different for loops to:
+                            //  1) send message faster
+                            //  2) spend less time in each lock
+                            // build and send the reponse
                             XmlDocument resp = NewEmptyMessage("actionDeltas");
-                            // TODO: should break into three loops so spend less time in each lock and respond to the message faster
-                            lock(gameState){
-                                lock(turnDeltas){
-                                    foreach(Delta d in ds){
-                                        turnDeltas.Add(d);
-                                        gameState.ApplyDelta(d);
-                                        resp.DocumentElement.AppendChild(d.ToXml().DocumentElement);
-                                        //also get it ready to send
-                                        //TODO: send back deltas
-                                    }
-                                }
+                            foreach(Delta d in ds){
+                                resp.DocumentElement.AppendChild(d.ToXml().DocumentElement);
                             }
                             socket.SendXml(resp);
+                            // update the gamestate
+                            lock(gameState){
+                                foreach(Delta d in ds){
+                                    gameState.ApplyDelta(d);
+                                }
+                            }
+                            // log the turn deltas
+                            lock(turnDeltas){
+                                foreach(Delta d in ds){
+                                    turnDeltas.Add(d);
+                                }
+                            }
                         }else{
                             from.Send("<file type='error'><msg>Illegal game action</msg></file>");
                         }

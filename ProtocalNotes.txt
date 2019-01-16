@@ -10,6 +10,7 @@ a "joinMatch" message is sent by a client that wishes to join a match
 a "matchStart" message is sent to the client when the match starts
 
 a "turnStart" message is sent to the client at the start of each turn
+    contains delta tags, for what has changed since last turn
 
 a "gameAction" message tells the server about an action the player took
     they contain a "action" tag, containing data about the actual move taken
