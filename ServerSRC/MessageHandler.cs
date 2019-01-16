@@ -30,6 +30,16 @@ namespace Server{
             }
         }
 
+        public static XmlDocument NewEmptyMessage(string type){
+            XmlDocument r = new XmlDocument();
+            XmlElement e = r.CreateElement("file");
+            r.AppendChild(e);
+            XmlAttribute a = r.CreateAttribute("type");
+            a.Value = type;
+            e.SetAttributeNode(a);
+            return r;
+        }
+
     }
 
 }

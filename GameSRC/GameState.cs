@@ -4,18 +4,18 @@ namespace Game{
     public class GameState{
 
         // returns if a move is legal for the given player to make
-        public bool IsLegalMove(Player player, Move m){
+        public bool IsLegalAction(Player player, Action a){
             // dummy implementation
             return true;
         }
 
         // returns the outcomes of a player taking a give action
-        public Delta[] GetMoveDeltas(Player player, Move m){
+        public Delta[] GetActionDeltas(Player player, Action a){
             // dummy implementation
             return new Delta[0];
         }
 
-        public void ApplyDeltas(Delta[] deltas){
+        public void ApplyDelta(Delta deltas){
 
         }
 

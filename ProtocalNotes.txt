@@ -12,7 +12,10 @@ a "matchStart" message is sent to the client when the match starts
 a "turnStart" message is sent to the client at the start of each turn
 
 a "gameAction" message tells the server about an action the player took
-    they contain a "move" tag, containing data about the actual move taken
+    they contain a "action" tag, containing data about the actual move taken
+
+a "actionDeltas" is sent from the server to the client, and contains the outcomes of an action
+    they contain "delta" tags, containing data about things that changed in the game state
 
 a "lockInTurn" message tells the server the player is done taking actions for that turn
 

@@ -128,6 +128,10 @@ namespace Server{
             socket.Send(data);
         }
 
+        public void SendXml(XmlDocument xml){
+            Send(xml.InnerXml);
+        }
+
         // to be called once the socket disconnects
         private void die(){
             alive = false;

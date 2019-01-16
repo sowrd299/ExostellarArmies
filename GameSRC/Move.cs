@@ -3,8 +3,8 @@ using System.Xml;
 namespace Game{
 
     // a class to represent a move taken by a player
-    public class Move{
-        public Move(XmlNode from){
+    public class Action{
+        public Action(XmlNode from){
 
         }
 

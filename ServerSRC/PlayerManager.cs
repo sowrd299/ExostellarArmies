@@ -27,6 +27,8 @@ namespace Server.Matches{
             }
         }
 
+        private EotCallback eotCallback;
+
         // the client's player
         private Player player;
 
@@ -42,10 +44,11 @@ namespace Server.Matches{
         // TODO: I am not convinced this should actually take a decklist
         //      that should probably be handled by something that manages game state
         //      not game networking
-        public PlayerManager(SocketManager socket, Player player, GameState gs){
+        public PlayerManager(SocketManager socket, Player player, GameState gs, EotCallback eotCallback){
             this.socket = socket;
             this.player = player;
             this.gameState = gs;
+            this.eotCallback = eotCallback;
             turnDeltas = new List<Delta>();
         }
 
@@ -78,18 +81,28 @@ namespace Server.Matches{
             StartAsyncReceive();
         }
 
+        // TODO: this probably should get broken up into many smaller functions
         public override void handleMessage(XmlDocument msg, SocketManager from){
             switch(messageTypeOf(msg)){
                 case "gameAction":
                     if(state == State.ACTING){
-                        Move m = new Move(msg.DocumentElement["move"]);
-                        if(gameState.IsLegalMove(player, m)){
-                            Delta[] ds =  gameState.GetMoveDeltas(player, m);
-                            foreach(Delta d in ds){
-                                turnDeltas.Add(d);
-                                //also get it ready to send
-                                //TODO: send back deltas
+                        Action a = new Action(msg.DocumentElement["action"]);
+                        if(gameState.IsLegalAction(player, a)){
+                            Delta[] ds =  gameState.GetActionDeltas(player, a);
+                            XmlDocument resp = NewEmptyMessage("actionDeltas");
+                            // TODO: should break into three loops so spend less time in each lock and respond to the message faster
+                            lock(gameState){
+                                lock(turnDeltas){
+                                    foreach(Delta d in ds){
+                                        turnDeltas.Add(d);
+                                        gameState.ApplyDelta(d);
+                                        resp.DocumentElement.AppendChild(d.ToXml().DocumentElement);
+                                        //also get it ready to send
+                                        //TODO: send back deltas
+                                    }
+                                }
                             }
+                            socket.SendXml(resp);
                         }else{
                             from.Send("<file type='error'><msg>Illegal game action</msg></file>");
                         }
@@ -101,6 +114,7 @@ namespace Server.Matches{
                     if(state == State.ACTING){
                         // ...
                         state = State.WAITING; // after locking in, the player may make no more actions
+                        eotCallback();
                     }else{
                         from.Send("<file type='error'><msg>You probably sent 'lockInTurn' multiple times</msg></file>");
                     }
@@ -110,6 +124,10 @@ namespace Server.Matches{
                     break;
             }
         }
+
+        // a delegate for methods to be called after locking in a turn
+        public delegate void EotCallback();
+
     }
 
 }
