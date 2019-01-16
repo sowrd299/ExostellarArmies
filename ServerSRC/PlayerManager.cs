@@ -96,6 +96,7 @@ namespace Server.Matches{
             handleSocket(socket);
         }
 
+        /* HAS BEEN MOVED TO MESSAGE HANDLER
         public void StartAsyncReceive(){
             socket.AsynchReceiveXml(endAsyncReceiveXml);
         }
@@ -112,6 +113,16 @@ namespace Server.Matches{
                 // resume receiving
                 StartAsyncReceive();
             }
+        }
+        // */
+
+        public void StartAsyncReceive(){
+            StartAsyncReceive(socket);
+        }
+
+        // what to do when a socket dies
+        protected override void handleSocketDeath(SocketManager _){
+            deathCallback();
         }
 
         // TODO: this probably should get broken up into many smaller functions
@@ -169,6 +180,7 @@ namespace Server.Matches{
         // a delegate for methods to be called after locking in a turn
         public delegate void EotCallback();
 
+        // a delegate for methods to be called when the socket dies
         public delegate void DeathCallback();
 
     }

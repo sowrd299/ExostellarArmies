@@ -79,6 +79,7 @@ namespace Server{
             }
         }
 
+        /* MOVED TO MESSAGE HANDLER
         // begins accepting new messages asynchronously
         // will continue to accept new messages ad infinitum
         // TODO: add this to Message Handler
@@ -95,6 +96,13 @@ namespace Server{
                 StartAsyncReceive(from);
             }
         }
+        // */
+
+        protected override void handleSocketDeath(SocketManager socket){
+            lock(clientSockets){
+                clientSockets.Remove(socket);
+            }
+        }
 
         // recieves messages from attached sockets in a synchronous, non-blocking way
         public void SyncReceive(){
@@ -102,8 +110,8 @@ namespace Server{
                 foreach(SocketManager sm in clientSockets){
                     //read messages from clients
                     //handle messages recieved (possibly)
-                    handleSocket(sm);
                     //handle socket death
+                    handleSocket(sm);
                     //is its own for-loop to deal with weirdness from removing at two different points
                     if(!sm.Alive){
                         removedSockets.Add(sm);
@@ -116,7 +124,7 @@ namespace Server{
 
         public override void handleMessage(XmlDocument msg, SocketManager from){
             string type = msg.DocumentElement.Attributes["type"].Value;
-            Console.WriteLine("Recieved message from new client of type {0}", type);
+            Console.WriteLine("While in 'Main Menu', Recieved message from client of type {0}", type);
             //handle different types of messages
             switch(type){
                 //go to match making
@@ -157,6 +165,7 @@ namespace Server{
         }
 
         // returns the given sockets to the management of the game server "main menu"
+        // TODO: this is just a really dump way to do this
         internal void ReturnClients(SocketManager[] client){
             lock(clientSockets){
                 // for each given client, record that it is here and start receiving from it

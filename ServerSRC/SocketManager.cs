@@ -8,9 +8,10 @@ using System.Linq;
 namespace Server{
 
     //manages an individual connection with a client
-    //TODO: more robustly manage socket closing and cleanup after client disconnects
     //TODO: (maybe) queue and store messages better? so can be read multiple times/by multiple sources?
     //TODO: add a child of this class that associates verified account data
+    //TODO: handle resuming sessions
+    //TODO: allow multiple handlers to receive at once? Seems like a powerful feature to have
     public class SocketManager{
 
         private int bufferSize = 1024;
@@ -35,12 +36,21 @@ namespace Server{
 
         private string textBuffer; //the stub of the paritally recieved message
 
+        private bool asynchReceiving; //whether or not we are currently receiving asynchronously
+        private object asynchReceivingLock; //a lock for asych receiving; doubles as the lock for handleAsynchXmlMessage
+
+        // store the method to be called to handle asynch Xml messages
+        // stored here so can change it more dynamically as states change in other threads
+        private HandleMessage<XmlDocument> handleAsynchXmlMessage;
+
         //takes the socket to manage
         //optionally takes the End of Message tag to look for
         public SocketManager(Socket socket, string eof = ""){
             this.socket = socket;
             this.eof = eof;
             alive = true; // assume the socket is allive until proven otherwise
+            asynchReceiving = false;
+            asynchReceivingLock = new object();
         }
 
         //read in data from the socket, if there is any
@@ -95,20 +105,31 @@ namespace Server{
         }
 
         // recieve a message from the socket asynchronously
+        // NOTE: calling a second time will override previous calls
+        // TODO: there seem to be some really ugly race-cases with managing only one asyncReceiving at a time
         public void AsynchReceiveXml(HandleMessage<XmlDocument> handler, int bufferLen = 256){
-            byte[] buffer = new byte[bufferLen];
-            socket.BeginReceive(buffer, 0, buffer.Length, 0,
-                    new AsyncCallback(endAsychReceiveXml),
-                    new AsyncState<XmlDocument>{buffer = buffer, handler = handler});
+            lock(asynchReceivingLock){
+                handleAsynchXmlMessage = handler;
+                if(!asynchReceiving){
+                    byte[] buffer = new byte[bufferLen];
+                    socket.BeginReceive(buffer, 0, buffer.Length, 0,
+                            new AsyncCallback(endAsynchReceiveXml),
+                            new AsyncState<XmlDocument>{buffer = buffer, handler = handler});
+                    asynchReceiving = true;
+                }
+            }
         }
 
-        private void endAsychReceiveXml(IAsyncResult ar){
-            int i = socket.EndReceive(ar);
-            AsyncState<XmlDocument> state = (AsyncState<XmlDocument>)ar.AsyncState;
-            string text = parseMessage(state.buffer, i);
-            if(text != null){
-                XmlDocument msg = parseXml(text);
-                ((HandleMessage<XmlDocument>)state.handler)(msg, this);
+        private void endAsynchReceiveXml(IAsyncResult ar){
+            lock(asynchReceivingLock){
+                asynchReceiving = false;
+                int i = socket.EndReceive(ar);
+                AsyncState<XmlDocument> state = (AsyncState<XmlDocument>)ar.AsyncState;
+                string text = parseMessage(state.buffer, i);
+                if(text != null){
+                    XmlDocument msg = parseXml(text);
+                    handleAsynchXmlMessage(msg, this);
+                }
             }
         }
 
@@ -148,7 +169,7 @@ namespace Server{
 
         public delegate void HandleMessage<T>(T msg, SocketManager from);
         private class AsyncState<T>{
-            public HandleMessage<T> handler;
+            public HandleMessage<T> handler; //DEPRICATED
             public byte[] buffer;
         }
 

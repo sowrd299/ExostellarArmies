@@ -1,9 +1,33 @@
 using System.Xml;
+using System.Collections.Generic;
 
 namespace Server{
 
     // a superclass of objects responsible for handling client messages
     public abstract class MessageHandler{
+
+        // begins accepting new messages asynchronously
+        // will continue to accept new messages ad infinitum
+        public void StartAsyncReceive(SocketManager socket){
+            socket.AsynchReceiveXml(endAsyncReceiveXml);
+        }
+
+        protected virtual void endAsyncReceiveXml(XmlDocument msg, SocketManager from){
+            // check if the connection is dead; if it is, do something about it
+            // specifically doing socket and not from here, because "from" isn't necessarily
+            // ... the player's main socket/responsibility
+            if(!from.Alive){
+                handleSocketDeath(from);
+            }else{
+                // handle the message
+                handleMessage(msg, from);
+                // resume receiving
+                StartAsyncReceive(from);
+            }
+        }
+
+        // what to do when a socket dies
+        protected abstract void handleSocketDeath(SocketManager socket);
 
         // gets the type of a message
         protected string messageTypeOf(XmlDocument msg){
@@ -25,7 +49,7 @@ namespace Server{
             string type = messageTypeOf(msg);
             switch(type){
                 default:
-                    from.Send("<file type='error'><msg>Unexpect message type durring gameplay: "+type+"</msg></file>");
+                    from.Send("<file type='error'><msg>Unexpect message type: "+type+"</msg></file>");
                     break;
             }
         }

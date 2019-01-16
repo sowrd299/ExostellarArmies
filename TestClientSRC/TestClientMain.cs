@@ -81,6 +81,11 @@ namespace Client{
                 data = System.Text.Encoding.UTF8.GetBytes("<file type='lockInTurn'></file>");
                 stream.Write(data, 0, data.Length);
 
+                //get action outcome message
+                data = new byte[256];
+                stream.Read(data, 0, data.Length);
+                Console.WriteLine("Response from server: {0}",System.Text.Encoding.UTF8.GetString(data));
+
                 //send a gameaction message
                 Console.WriteLine("Press Enter to make a move...");
                 Console.Read();
