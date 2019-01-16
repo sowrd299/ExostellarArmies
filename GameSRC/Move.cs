@@ -4,7 +4,7 @@ namespace Game{
 
     // a class to represent a move taken by a player
     public class Move{
-        public Move(XmlDocument from){
+        public Move(XmlNode from){
 
         }
 

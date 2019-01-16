@@ -1,5 +1,7 @@
 using Game.Decks;
+using Game;
 using System.Xml;
+using System.Collections.Generic;
 
 namespace Server.Matches{
 
@@ -14,6 +16,20 @@ namespace Server.Matches{
         // tracks what the player is current supposed to be doing
         private State state;
 
+        // a private copy of the gameState
+        private GameState gameState;
+
+        // the moves taken this turn
+        private List<Delta> turnDeltas;
+        public Delta[] TurnDeltas{
+            get{
+                return turnDeltas.ToArray();
+            }
+        }
+
+        // the client's player
+        private Player player;
+
         // returns whether or not the players has locked in their current turn
         public bool TurnLockedIn{
             get{
@@ -26,8 +42,11 @@ namespace Server.Matches{
         // TODO: I am not convinced this should actually take a decklist
         //      that should probably be handled by something that manages game state
         //      not game networking
-        public PlayerManager(SocketManager socket, DeckList list){
+        public PlayerManager(SocketManager socket, Player player, GameState gs){
             this.socket = socket;
+            this.player = player;
+            this.gameState = gs;
+            turnDeltas = new List<Delta>();
         }
 
         // to be called at the start of the game
@@ -41,6 +60,7 @@ namespace Server.Matches{
             // ...
             socket.Send("<file type='turnStart'></file>");
             state = State.ACTING;
+            turnDeltas = new List<Delta>();
         }
 
         // to be called once per main-loop-ish
@@ -49,11 +69,30 @@ namespace Server.Matches{
             handleSocket(socket);
         }
 
+        public void StartAsyncReceive(){
+            socket.AsynchReceiveXml(endAsyncReceive);
+        }
+
+        private void endAsyncReceive(XmlDocument msg, SocketManager from){
+            handleMessage(msg, from);
+            StartAsyncReceive();
+        }
+
         public override void handleMessage(XmlDocument msg, SocketManager from){
             switch(messageTypeOf(msg)){
                 case "gameAction":
                     if(state == State.ACTING){
-                        // TODO: handle the player taking an action
+                        Move m = new Move(msg.DocumentElement["move"]);
+                        if(gameState.IsLegalMove(player, m)){
+                            Delta[] ds =  gameState.GetMoveDeltas(player, m);
+                            foreach(Delta d in ds){
+                                turnDeltas.Add(d);
+                                //also get it ready to send
+                                //TODO: send back deltas
+                            }
+                        }else{
+                            from.Send("<file type='error'><msg>Illegal game action</msg></file>");
+                        }
                     }else{
                         from.Send("<file type='error'><msg>Cannot take game actions now</msg></file>");
                     }

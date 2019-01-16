@@ -5,7 +5,7 @@ namespace Game{
     // a class to represent a change in the game state
     public class Delta{
 
-        public Delta(XmlDocument from){
+        public Delta(XmlNode from){
 
         }
 
