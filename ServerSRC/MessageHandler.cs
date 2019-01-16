@@ -37,10 +37,13 @@ namespace Server{
             return msg.DocumentElement.Attributes["type"].Value;
         }
 
+        // synchronously read and handle date from a socket
         public virtual void handleSocket(SocketManager socket){
             XmlDocument msg = socket.ReceiveXml();
             if(msg != null){
                 handleMessage(msg, socket);
+            }else if(!socket.Alive){
+                handleSocketDeath(socket);
             }
         }
 
@@ -57,6 +60,7 @@ namespace Server{
             }
         }
 
+        // returns an empty XML message in propper format, with type set to the given type
         public static XmlDocument NewEmptyMessage(string type){
             XmlDocument r = new XmlDocument();
             XmlElement e = r.CreateElement("file");
