@@ -12,7 +12,7 @@ namespace Game{
         // returns the outcomes of a player taking a give action
         public Delta[] GetActionDeltas(Player player, Action a){
             // dummy implementation
-            return new Delta[0];
+            return new Delta[]{new Delta()};
         }
 
         public void ApplyDelta(Delta deltas){

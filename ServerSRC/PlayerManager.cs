@@ -95,7 +95,8 @@ namespace Server.Matches{
                             // build and send the reponse
                             XmlDocument resp = NewEmptyMessage("actionDeltas");
                             foreach(Delta d in ds){
-                                resp.DocumentElement.AppendChild(d.ToXml().DocumentElement);
+                                XmlElement e = d.ToXml(resp);
+                                resp.DocumentElement.AppendChild(e);
                             }
                             socket.SendXml(resp);
                             // update the gamestate

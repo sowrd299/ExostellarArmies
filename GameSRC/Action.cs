@@ -9,11 +9,9 @@ namespace Game{
         }
 
         // gets an XML representation of the move
-        public XmlDocument ToXml(){
-            XmlDocument r = new XmlDocument();
-            XmlElement e = r.CreateElement("action");
-            r.AppendChild(e);
-            return r;
+        public XmlElement ToXml(XmlDocument doc){
+            XmlElement e = doc.CreateElement("action");
+            return e;
         }
     }
 }

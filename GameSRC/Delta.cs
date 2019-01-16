@@ -5,15 +5,18 @@ namespace Game{
     // a class to represent a change in the game state
     public class Delta{
 
+        // for testing only
+        public Delta(){
+
+        }
+
         public Delta(XmlNode from){
 
         }
 
-        public XmlDocument ToXml(){
-            XmlDocument r = new XmlDocument();
-            XmlElement e = r.CreateElement("action");
-            r.AppendChild(e);
-            return r;
+        public XmlElement ToXml(XmlDocument doc){
+            XmlElement e = doc.CreateElement("delta");
+            return e;
         }
 
     }
