@@ -1,7 +1,8 @@
-using Game.Decks;
-using Game;
 using System.Xml;
 using System.Collections.Generic;
+using System.Linq;
+using Game.Decks;
+using Game;
 
 namespace Server.Matches{
 
@@ -71,7 +72,7 @@ namespace Server.Matches{
         // handle everything that happens at the start of a new turn
         public void StartTurn(Delta[] deltas){
             XmlDocument msg = NewEmptyMessage("turnStart");
-            foreach(Delta d in deltas){
+            foreach(Delta d in deltas.Where((d) => d.VisibleTo(player))){
                 // TODO: filter down to only the deltas the player gets to know about
                 // e.g. remove cards drawn by opponent
                 XmlElement e = d.ToXml(msg);

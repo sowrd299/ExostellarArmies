@@ -27,12 +27,14 @@ namespace Server.Matches{
         }
 
         public Match(SocketManager[] clients, DeckList[] decks){
-            gameState = new GameState();
+            gameState = new GameState(decks);
             //setup the players
             //TODO: if don't get exactly 2 players for a 2 player game, flip out
             players = new PlayerManager[clients.Length];
             for(int i = 0; i < clients.Length; i++){
-                players[i] = new PlayerManager(clients[i], new Player(), gameState, CheckEndTurn, EndMatch);
+                players[i] = new PlayerManager(clients[i],
+                        gameState.Players[i], gameState,
+                        CheckEndTurn, EndMatch);
             }
         }
 

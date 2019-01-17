@@ -19,6 +19,12 @@ namespace Game{
             return e;
         }
 
+        // returns wether or not the given player would see this change
+        // return false, e.g., for a card being draw into an opponent's hand
+        public bool VisibleTo(Player p){
+            return true;
+        }
+
     }
 
 }
