@@ -62,12 +62,19 @@ namespace Server{
 
         // returns an empty XML message in propper format, with type set to the given type
         public static XmlDocument NewEmptyMessage(string type){
+            // create the document itself and the encompassing file tag
             XmlDocument r = new XmlDocument();
             XmlElement e = r.CreateElement("file");
             r.AppendChild(e);
+            // create and set the type attribute
             XmlAttribute a = r.CreateAttribute("type");
             a.Value = type;
             e.SetAttributeNode(a);
+            // need to add in this comment so it formats the end of the massage as
+            //      <file...></file> and not <file../>
+            // TODO: handle detecting the ends of XML documents better
+            XmlComment c = r.CreateComment(type);
+            e.AppendChild(c);
             return r;
         }
 

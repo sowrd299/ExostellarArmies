@@ -39,7 +39,7 @@ namespace Game{
             return new Delta[]{new Delta()};
         }
 
-        // make a delta a permanent change to the game state
+        // make a delta a "permanent" change to the game state
         public void ApplyDelta(Delta deltas){
 
         }
