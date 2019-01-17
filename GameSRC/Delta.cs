@@ -1,6 +1,6 @@
 using System.Xml;
 
-namespace Game{
+namespace SFB.Game{
 
     // a class to represent a change in the game state
     public class Delta{

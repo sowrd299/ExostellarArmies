@@ -5,7 +5,7 @@ using System.Xml;
 using System;
 using System.Linq;
 
-namespace Server{
+namespace SFB.Net{
 
     //manages an individual connection with a client
     //TODO: (maybe) queue and store messages better? so can be read multiple times/by multiple sources?

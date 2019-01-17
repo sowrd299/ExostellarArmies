@@ -1,7 +1,7 @@
 using System.Xml;
 using System.Collections.Generic;
 
-namespace Server{
+namespace SFB.Net{
 
     // a superclass of objects responsible for handling client messages
     public abstract class MessageHandler{

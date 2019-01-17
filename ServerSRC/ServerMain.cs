@@ -1,6 +1,6 @@
 using System;
 
-namespace Server{
+namespace SFB.Net.Server{
  
     public class ServerMain 
     {

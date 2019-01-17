@@ -1,10 +1,10 @@
 using System;
 using System.Xml;
 using System.Collections.Generic;
-using Server.Matches;
-using Game.Decks;
+using SFB.Net.Server.Matches;
+using SFB.Game.Decks;
 
-namespace Server{
+namespace SFB.Net.Server{
 
     // a class to make matches between waiting clients
     // and puts them into a game

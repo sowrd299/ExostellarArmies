@@ -1,6 +1,6 @@
 using System.Xml;
 
-namespace Game{
+namespace SFB.Game{
 
     // a class to represent a move taken by a player
     public class Action{

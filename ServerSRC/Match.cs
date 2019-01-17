@@ -1,8 +1,8 @@
 using System.Collections.Generic;
-using Game.Decks;
-using Game;
+using SFB.Game.Decks;
+using SFB.Game;
 
-namespace Server.Matches{
+namespace SFB.Net.Server.Matches{
 
     // a class to represent and manage a match of the game being played on the server
     // using term "match" to distinguish from the game as a whole

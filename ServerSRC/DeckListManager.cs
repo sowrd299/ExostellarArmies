@@ -1,11 +1,11 @@
-using Game.Decks;
+using SFB.Game.Decks;
 
 
 // this is part of Server, and not Game.Deck, because it (in theory) needs contact to
 // databases, account information, etc.
 // also the client shouldn't have access to it
 // at minimum it is not part of the pure abstract gamelogic
-namespace Server{
+namespace SFB.Net.Server{
     
     class DeckListManager{
 

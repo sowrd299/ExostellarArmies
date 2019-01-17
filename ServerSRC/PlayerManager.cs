@@ -1,10 +1,10 @@
 using System.Xml;
 using System.Collections.Generic;
 using System.Linq;
-using Game.Decks;
-using Game;
+using SFB.Game.Decks;
+using SFB.Game;
 
-namespace Server.Matches{
+namespace SFB.Net.Server.Matches{
 
     // a class to manage one specific player durring a match
     class PlayerManager : MessageHandler{

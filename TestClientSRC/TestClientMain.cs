@@ -2,7 +2,7 @@ using System;
 using System.Net;
 using System.Net.Sockets;
 
-namespace Client{
+namespace SFB.TestClient{
 
     //A dummy client just for testing the server
     public class TestClient{

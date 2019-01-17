@@ -3,9 +3,9 @@ using System.Net;
 using System.Net.Sockets;
 using System.Collections.Generic;
 using System.Xml;
-using Server.Matches;
+using SFB.Net.Server.Matches;
 
-namespace Server{
+namespace SFB.Net.Server{
 
     // the central manager for activities on the server
     // doubles as both a master of sockets and a main menu

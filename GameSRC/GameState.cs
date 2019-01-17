@@ -1,6 +1,6 @@
-using Game.Decks;
+using SFB.Game.Decks;
 
-namespace Game{
+namespace SFB.Game{
 
     // a class to reprsent the state of the game at a give point in time
     public class GameState{

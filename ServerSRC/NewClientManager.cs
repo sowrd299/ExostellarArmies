@@ -3,7 +3,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Collections.Generic;
 
-namespace Server{
+namespace SFB.Net.Server{
 
     //a socket-rapper that listens for and accepts new client connections
     public class NewClientManager{
