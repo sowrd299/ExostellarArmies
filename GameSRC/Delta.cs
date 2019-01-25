@@ -5,7 +5,6 @@ namespace SFB.Game{
     // a class to represent a change in the game state
     public class Delta{
 
-        // for testing only
         public Delta(){
 
         }

@@ -19,7 +19,7 @@ namespace SFB.Game{
             get{ return healthPoints; }
         }
 
-        public UnitCard(int cost, string name, Faction faction, int rangedAttack, int melee, int melee)
+        public UnitCard(int cost, string name, Faction faction, int rangedAttack, int meleeAttack, int healthPoints)
                 :base(cost, name, faction)
         {
             this.rangedAttack = rangedAttack;
