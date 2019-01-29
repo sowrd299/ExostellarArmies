@@ -29,6 +29,8 @@ namespace SFB.Game{
             get{ return faction; }
         }
 
+       
+
         // TODO: should probably add in other things, like flavor text, main test, etc.
 
         public Card(int deployCost, string name, Faction faction){

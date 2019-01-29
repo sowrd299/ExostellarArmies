@@ -24,6 +24,7 @@ namespace SFB.Game{
                     this.cards.Add(c);
                 }
             }
+            
         }
 
         // randomize the order of cards in the deck
