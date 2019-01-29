@@ -29,14 +29,13 @@ namespace SFB.Game{
 
         // randomize the order of cards in the deck
         public void Shuffle(){
+			List<int> indexes = new List<int>();
+			for(int i = 0; i < cards.Count; i++)
+				indexes.Add(i);
+
 			List<int> randList = new List<int>();
-			for(int i = 0; i < cards.Count; i++) {
-				int r = Random.Range(0, cards.Count - 1);
-				if(!randList.Contains(r))
-					randList.Add(r);
-				else
-					i--;
-			}
+			while(indexes.Count > 0)
+				randList.Add(indexes[Random.Range(0, indexes.Count - 1)]);
 
 			List<Card> tempCards = new List<int>();
 			for(int i = 0; i < cards.Count; i++)
