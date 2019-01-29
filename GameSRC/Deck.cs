@@ -24,11 +24,26 @@ namespace SFB.Game{
                     this.cards.Add(c);
                 }
             }
+			Shuffle();
         }
 
         // randomize the order of cards in the deck
         public void Shuffle(){
-            // TODO; implement
+			List<int> randList = new List<int>();
+			for(int i = 0; i < cards.Count; i++) {
+				int r = Random.Range(0, cards.Count - 1);
+				if(!randList.Contains(r))
+					randList.Add(r);
+				else
+					i--;
+			}
+
+			List<Card> tempCards = new List<int>();
+			for(int i = 0; i < cards.Count; i++)
+				tempCards.Add(cards[randList[i]]);
+
+			for(int i = 0; i < cards.Count; i++)
+				cards[i] = tempCards[i];
         }
 
         // returns the top i cards of the deck 
