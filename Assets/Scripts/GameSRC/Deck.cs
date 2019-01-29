@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using SFB.Game.Decks;
+using UnityEngine;
 
 namespace SFB.Game{
 
@@ -34,10 +35,13 @@ namespace SFB.Game{
 				indexes.Add(i);
 
 			List<int> randList = new List<int>();
-			while(indexes.Count > 0)
-				randList.Add(indexes[Random.Range(0, indexes.Count - 1)]);
+			while(indexes.Count > 0) {
+				int idx = indexes[Random.Range(0, indexes.Count - 1)];
+				indexes.Remove(idx);
+				randList.Add(idx);
+			}
 
-			List<Card> tempCards = new List<int>();
+			List<Card> tempCards = new List<Card>();
 			for(int i = 0; i < cards.Count; i++)
 				tempCards.Add(cards[randList[i]]);
 
@@ -56,6 +60,15 @@ namespace SFB.Game{
             return r;
         }
 
-    }
+		override public string ToString() {
+			string s = "";
+
+			foreach(Card c in cards)
+				s += c + "\n";
+
+			return s;
+		}
+
+	}
 
 }

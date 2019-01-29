@@ -12,6 +12,10 @@ namespace SFB.Game.Decks{
             cards = new Dictionary<Card, int>();
         }
 
+		public void AddCard(Card c, int n) {
+			cards.Add(c, n);
+		}
+
         // returns how many copies of a given card are in the list
         public int GetCopiesOf(Card c){
             if(cards.ContainsKey(c)){
