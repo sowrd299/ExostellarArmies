@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using SFB.Game.Decks;
+using UnityEngine;
 
 namespace SFB.Game{
 
@@ -24,12 +25,28 @@ namespace SFB.Game{
                     this.cards.Add(c);
                 }
             }
-            
+			Shuffle();
         }
 
         // randomize the order of cards in the deck
         public void Shuffle(){
-            // TODO; implement
+			List<int> indexes = new List<int>();
+			for(int i = 0; i < cards.Count; i++)
+				indexes.Add(i);
+
+			List<int> randList = new List<int>();
+			while(indexes.Count > 0) {
+				int idx = indexes[Random.Range(0, indexes.Count - 1)];
+				indexes.Remove(idx);
+				randList.Add(idx);
+			}
+
+			List<Card> tempCards = new List<Card>();
+			for(int i = 0; i < cards.Count; i++)
+				tempCards.Add(cards[randList[i]]);
+
+			for(int i = 0; i < cards.Count; i++)
+				cards[i] = tempCards[i];
         }
 
         // returns the top i cards of the deck 
@@ -43,6 +60,15 @@ namespace SFB.Game{
             return r;
         }
 
-    }
+		override public string ToString() {
+			string s = "";
+
+			foreach(Card c in cards)
+				s += c + "\n";
+
+			return s;
+		}
+
+	}
 
 }
