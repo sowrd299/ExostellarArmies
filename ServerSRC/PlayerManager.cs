@@ -2,6 +2,7 @@ using System.Xml;
 using System.Collections.Generic;
 using System.Linq;
 using SFB.Game.Decks;
+using SFB.Game.Management;
 using SFB.Game;
 
 namespace SFB.Net.Server.Matches{

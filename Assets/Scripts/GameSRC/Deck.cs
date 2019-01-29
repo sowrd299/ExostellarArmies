@@ -1,16 +1,30 @@
 using System.Collections.Generic;
+using System.Xml;
 using SFB.Game.Decks;
+using SFB.Game.Management;
 using UnityEngine;
 
 namespace SFB.Game{
 
     // represents a player's deck of cards while they are playing
-    class Deck{
+    class Deck : IIDed {
+
+        // from whence all player id's at issued; static to avoid repeats
+        private static IdIssuer<Deck> idIssuer = new IdIssuer();
+        public static IdIssuer<Deck> IdIssuer{
+            get { return idIssuer; }
+        }
+
+        private readonly string id;
+        public string ID{
+            get { return id; }
+        }
 
         List<Card> cards; // a list of all the deck
 
         public Deck(){
             cards = new List<Card>();
+            id = idIssuer.IssueId(this);
         }
 
         // adds cards in the deck from a decklist
@@ -55,6 +69,13 @@ namespace SFB.Game{
 			return c;
 		}
 
+
+        // returns a delta that removes the top card from the deck
+        // adding that card to the hand will need to be implemented elsewhere
+        public RemoveFromDeckDelta GetDrawDelta(){
+            return new RemoveFromDeckDelta(this, cards[0], 0);
+        }
+
         // returns the top i cards of the deck 
         // used to calculate card-draw deltas w/o changing the deck
         // TODO: may be better to implement this with producing deltas here
@@ -74,6 +95,32 @@ namespace SFB.Game{
 
 			return s;
 		}
+
+
+        // a class to represent removing the given card from the given index the give card from the given index
+        public class RemoveFromDeckDelta : TargetedDelta<Deck> {
+
+            Card card;
+            int index;
+
+            public RemoveFromDeckDelta(Deck deck, Card c, int i){
+                target = deck;
+                card = c;
+                index = i;
+            }
+
+            public RemoveFromDeckDelta(XmlNode from): base(from, Deck.IdIssuer) { }
+            
+            public override bool VisibleTo(Player p){
+                return p.Owns(target);
+            }
+
+            internal override void Apply(){
+                // TODO: implement removing card from the Ith position
+                // flip out if can't
+            }
+
+        }
 
 	}
 

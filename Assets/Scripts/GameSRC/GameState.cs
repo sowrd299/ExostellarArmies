@@ -1,6 +1,6 @@
 using SFB.Game.Decks;
 
-namespace SFB.Game{
+namespace SFB.Game.Management{
 
     // a class to reprsent the state of the game at a give point in time
     public class GameState{
@@ -39,17 +39,17 @@ namespace SFB.Game{
             return new Delta[]{new Delta()};
         }
 
-        // make a delta a "permanent" change to the game state
-        public void ApplyDelta(Delta deltas){
-
-        }
-
         // return the resaults if the turn were to end right then
         public Delta[] GetTurnDeltas(){
             // dummy implementation
             return new Delta[0];
         }
 
+        public void ApplyDeltas(Delta[] deltas){
+            foreach(Delta d in deltas){
+                d.Apply();
+            }
+        }
 
     }
 

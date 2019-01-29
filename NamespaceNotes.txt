@@ -3,6 +3,7 @@ The root namespace is SFB
 
     Game: cointains game logic implementations
         Game.Decks: code pretaining exactly to the management of decks
+        Game.Management: deals with ID's, Deltas, progressing the gamestate and keep the gamestate synced (or sync-able by the netcode)
 
     Net: Code pertaining to networking;
         Net.Server: the administrative and networked functionality of the server 

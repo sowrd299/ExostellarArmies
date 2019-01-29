@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using SFB.Game.Decks;
-using SFB.Game;
+using SFB.Game.Management;
 
 namespace SFB.Net.Server.Matches{
 

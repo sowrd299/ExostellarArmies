@@ -18,6 +18,7 @@ a "gameAction" message tells the server about an action the player took
 
 a "actionDeltas" is sent from the server to the client, and contains the outcomes of an action
     they contain "delta" tags, containing data about things that changed in the game state
+        each "detla" as a "targetId" attribute, storing the unique id of the object effected
 
 a "lockInTurn" message tells the server the player is done taking actions for that turn
 
