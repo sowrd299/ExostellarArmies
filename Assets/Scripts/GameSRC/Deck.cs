@@ -49,6 +49,12 @@ namespace SFB.Game{
 				cards[i] = tempCards[i];
         }
 
+		public Card DrawCard() {
+			Card c = cards[0];
+			cards.Remove(c);
+			return c;
+		}
+
         // returns the top i cards of the deck 
         // used to calculate card-draw deltas w/o changing the deck
         // TODO: may be better to implement this with producing deltas here

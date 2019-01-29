@@ -18,6 +18,14 @@ public class Driver : MonoBehaviour {
 		d.LoadCards(dl);
 		d.Shuffle();
 		print(d);
+
+		Hand h = new Hand();
+		h.DrawFrom(d);
+		print(h);
+		print(d);
+		h.DrawFrom(d);
+		print(h);
+		print(d);
 	}
 
 	// Update is called once per frame
