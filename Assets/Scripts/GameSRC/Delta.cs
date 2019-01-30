@@ -3,6 +3,7 @@ using System.Xml;
 namespace SFB.Game.Management{
 
     // a class to represent a change in the game state
+    // the changes represented by a single delta should be small and atomic
     public abstract class Delta {
 
 
@@ -28,6 +29,10 @@ namespace SFB.Game.Management{
         // actually enacts the will of the delta
         internal abstract void Apply();
 
+        // undoes what the apply does exactly
+        // if cannot be undone, should through an error
+        internal abstract void Revert();
+
     }
 
 
@@ -49,6 +54,7 @@ namespace SFB.Game.Management{
             if(target != null){
                 XmlAttribute a = doc.CreateAttribute("targetId");
                 a.Value = target.ID;
+                e.SetAttributeNode(a);
             }
             return e;
         }

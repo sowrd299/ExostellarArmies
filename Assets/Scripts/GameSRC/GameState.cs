@@ -23,7 +23,7 @@ namespace SFB.Game.Management{
         public GameState(DeckList[] lists){
             players = new Player[lists.Length];
             for(int i = 0; i < players.Length; i++){
-                players[i] = new Player();
+                players[i] = new Player(lists[i]);
             }
         }
 

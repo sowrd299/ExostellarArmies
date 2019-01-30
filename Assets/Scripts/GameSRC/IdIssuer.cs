@@ -31,10 +31,18 @@ namespace SFB.Game.Management{
 
         // generates and gives out a new ID
         public string IssueId(T issuee){
-            string id = idPrefix + i.ToString();
-            Dictionary[id] = issuee;
-            i++; 
+            string id;
+            do{
+                id = idPrefix + i.ToString();
+                i++;
+            }while(idLookup.ContainsKey(id));
+            RegisterId(id, issuee);
             return id;
+        }
+
+        // stores the given object at the given ID
+        public void RegisterId(string id, T issuee){
+            Dictionary[id] = issuee;
         }
 
         // returns the object to whom the ID was issued
