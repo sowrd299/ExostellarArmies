@@ -44,6 +44,11 @@ namespace SFB.Game{
 			this.discard = new List<Card>();
 		}
 
+		internal void UseCard(int i) {
+			discard.Add(this.hand.Cards[i]);
+			this.hand.Cards.RemoveAt(i);
+		}
+
 		internal void DrawCards() {
 			while(this.hand.Cards.Count < this.HandSize)
 				this.hand.DrawFrom(this.deck);

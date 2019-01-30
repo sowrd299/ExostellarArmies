@@ -9,8 +9,8 @@ public class Driver : MonoBehaviour {
 	public GameState gameState;
 	Phase phase;
 	Player chosen;
-	bool hasPrintedPlayers;
-	bool hasPrintedDetails;
+	bool hasPrinted;
+	Player selectedPlayer;
 
 	void Start() {
 		List<int> test = new List<int>();
@@ -43,23 +43,62 @@ public class Driver : MonoBehaviour {
 	void Update() {
 		switch(phase) {
 			case Phase.DRAW:
-				foreach(Player p in gameState.Players) {
-					p.DrawCards();
-					print(p + " has " + p.Hand + " and " + p.Deck.Count() + " cards in deck.");
-				}
+				foreach(Player p in gameState.Players)
+					p.DrawCards();				
 					
 				phase = Phase.PLACEMENT;
 				
 				chosen = null;
-				hasPrintedPlayers = false;
-				hasPrintedDetails = true;
+				hasPrinted = false;
+				selectedPlayer = null;
 
 				break;
 			case Phase.PLACEMENT:
-				if(!hasPrintedPlayers) {
-					print("Press to act: 1. (" + gameState.Players[0] + ") / 2. (" + gameState.Players[1] + ")");
-					hasPrintedPlayers = true;
+				if(!hasPrinted && selectedPlayer == null) {
+					print("");
+					foreach(Player p in gameState.Players)
+						print(p + " has " + p.Hand + " and " + p.Deck.Count() + " cards in deck.");
+					print("Press to select player: (1. " + gameState.Players[0] + ") / (2. " + gameState.Players[1] + ") / (0. when you're done)");
+					hasPrinted = true;
+				} else if(!hasPrinted && selectedPlayer != null) {
+					string s = selectedPlayer + " can use ";
+					char[] inputs = new char[] {'Q', 'W', 'E', 'R'};
+					for(int i = 0; i < selectedPlayer.Hand.Cards.Count; i++)
+						s += "(" + inputs[i] + ". " + selectedPlayer.Hand.Cards[i] + ") ";
+					print(s + "(P. deselect player)");
+					hasPrinted = true;
 				}
+
+				if(selectedPlayer == null) {
+					if(Input.GetKeyDown(KeyCode.Alpha1)) {
+						selectedPlayer = gameState.Players[0];
+						hasPrinted = false;
+					} else if(Input.GetKeyDown(KeyCode.Alpha2)) {
+						selectedPlayer = gameState.Players[1];
+						hasPrinted = false;
+					} else if(Input.GetKeyDown(KeyCode.Alpha0)) {
+						phase = Phase.RANGED;
+					}
+				} else {
+					if(selectedPlayer.Hand.Cards.Count > 0 && Input.GetKeyDown(KeyCode.Q)) {
+						selectedPlayer.UseCard(0);
+						hasPrinted = false;
+					} else if(selectedPlayer.Hand.Cards.Count > 1 && Input.GetKeyDown(KeyCode.W)) {
+						selectedPlayer.UseCard(1);
+						hasPrinted = false;
+					} else if(selectedPlayer.Hand.Cards.Count > 2 && Input.GetKeyDown(KeyCode.E)) {
+						selectedPlayer.UseCard(2);
+						hasPrinted = false;
+					} else if(selectedPlayer.Hand.Cards.Count > 3 && Input.GetKeyDown(KeyCode.R)) {
+						selectedPlayer.UseCard(3);
+						hasPrinted = false;
+					}
+					if(Input.GetKeyDown(KeyCode.P)) {
+						selectedPlayer = null;
+						hasPrinted = false;
+					}
+				}
+
 				break;
 			case Phase.RANGED:
 				phase = Phase.MELEE;
