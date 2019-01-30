@@ -82,8 +82,13 @@ namespace SFB.Game{
 
         // returns a delta that removes the top card from the deck
         // adding that card to the hand will need to be implemented elsewhere
-        public RemoveFromDeckDelta GetDrawDelta(){
-            return new RemoveFromDeckDelta(null, null, this, cards[0], 0);
+        public RemoveFromDeckDelta[] GetDrawDeltas(int startingIndex = 0, int count = 1){
+            RemoveFromDeckDelta[] r = new RemoveFromDeckDelta[count - startingIndex];
+            for(int i = startingIndex; i < startingIndex+count; i++){
+                r[i-startingIndex] = new RemoveFromDeckDelta(null, null, this, cards[i], 0);
+                // remove index is 0 because assumes all cards above will have been drawn at that point
+            }
+            return r;
         }
 
         // returns the top i cards of the deck 

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Xml; // it's only used once, and I don't really like that
 using SFB.Game.Decks;
 using SFB.Game.Management;
 
@@ -40,8 +41,24 @@ namespace SFB.Net.Server.Matches{
 
         // starts the match
         public void Start(ReturnCallback rc){
-            foreach(PlayerManager pm in players){
-                pm.Start();
+            // get all the enemy player ID data each player needs
+            XmlElement[][] playerIds = new XmlElement[players.Length][];
+            // build all the arrays
+            for(int i = 0; i < players.Length; i++){
+                playerIds[i] = new XmlElement[players.Length - 1];
+            }
+            // populate all the arrays with player id's
+            // ...from other players
+            for(int i = 0; i < players.Length; i++){
+                XmlDocument doc = new XmlDocument();
+                XmlElement e = players[i].GetPlayerIDs(doc);
+                for(int j = i+1; j != i; j = (j+1)%players.Length){
+                    playerIds[j][j > i? j-1 : j] = e;
+                }
+            }
+            // send all the players all the ids and get them started
+            for(int i = 0; i < players.Length; i++){
+                players[i].Start(playerIds[i]);
             }
             returnCallback = rc; 
         }

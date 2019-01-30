@@ -65,9 +65,27 @@ namespace SFB.Net.Server.Matches{
         }
 
         // to be called at the start of the game
-        public void Start(){
+        public void Start(XmlElement[] otherPlayersIDs){
             //TODO: maybe match start should be sent by the match itself?
-            socket.Send("<file type='matchStart'></file>");
+            XmlDocument doc = NewEmptyMessage("matchStart");
+            XmlElement friendlyIDs = player.GetPlayerIDs(doc);
+            XmlAttribute side = doc.CreateAttribute("side");
+            side.Value = "local";
+            friendlyIDs.SetAttributeNode(side); 
+            doc.AppendChild(friendlyIDs);
+            // add in the other players
+            foreach(XmlElement ids in otherPlayersIDs){
+                XmlElement e = doc.ImportNode(ids, true) as XmlElement;
+                XmlAttribute enemyside = doc.CreateAttribute("side");
+                side.Value = "opponent";
+                e?.SetAttributeNode(enemyside); 
+                doc.AppendChild(e);
+            }
+            socket.SendXml(doc);
+        }
+
+        public XmlElement GetPlayerIDs(XmlDocument doc){
+            return player.GetPlayerIDs(doc);
         }
 
         // handle everything that happens at the start of a new turn
