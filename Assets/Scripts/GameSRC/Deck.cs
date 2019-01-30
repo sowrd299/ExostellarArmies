@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using System.Xml;
 using SFB.Game.Decks;
 using SFB.Game.Management;
-using UnityEngine;
 
 namespace SFB.Game{
 
@@ -10,7 +9,7 @@ namespace SFB.Game{
     class Deck : IIDed {
 
         // from whence all player id's at issued; static to avoid repeats
-        private static IdIssuer<Deck> idIssuer = new IdIssuer();
+        private static IdIssuer<Deck> idIssuer = new IdIssuer<Deck>();
         public static IdIssuer<Deck> IdIssuer{
             get { return idIssuer; }
         }
@@ -32,16 +31,22 @@ namespace SFB.Game{
             }
         }
 
+		// shouldnt be a method tbh
+		public int Count() {
+			return cards.Count;
+		}
+
         // adds cards in the deck from a decklist
         // TODO: probably would be more efficient to figure out how to load them into random positions
         public void LoadCards(DeckList cards){
-            // for each different card in the deck
-            foreach(Card c in cards.GetCards()){
+			System.Random rand = new System.Random();
+			// for each different card in the deck
+			foreach(Card c in cards.GetCards()){
                 // for each copy of that deck
                 int cps = cards.GetCopiesOf(c);
                 for(int i = 0; i < cps; i++){
                     // add a copy to the deck
-                    this.cards.Add(c);
+                    this.cards.Insert(rand.Next(0, this.cards.Count), c);
                 }
             }
         }
@@ -52,9 +57,10 @@ namespace SFB.Game{
 			for(int i = 0; i < cards.Count; i++)
 				indexes.Add(i);
 
+			System.Random rand = new System.Random();
 			List<int> randList = new List<int>();
 			while(indexes.Count > 0) {
-				int idx = indexes[Random.Range(0, indexes.Count - 1)];
+				int idx = indexes[rand.Next(0, indexes.Count)];
 				indexes.Remove(idx);
 				randList.Add(idx);
 			}
@@ -77,7 +83,7 @@ namespace SFB.Game{
         // returns a delta that removes the top card from the deck
         // adding that card to the hand will need to be implemented elsewhere
         public RemoveFromDeckDelta GetDrawDelta(){
-            return new RemoveFromDeckDelta(this, cards[0], 0);
+            return new RemoveFromDeckDelta(null, null, this, cards[0], 0);
         }
 
         // returns the top i cards of the deck 
@@ -92,12 +98,12 @@ namespace SFB.Game{
         }
 
 		override public string ToString() {
-			string s = "";
+			string s = "Deck(";
 
 			foreach(Card c in cards)
-				s += c + "\n";
+				s += c + " ";
 
-			return s;
+			return s + ")";
 		}
 
 
@@ -110,7 +116,9 @@ namespace SFB.Game{
             }
             private int index;
 
-            public RemoveFromDeckDelta(Deck deck, Card c, int i){
+            public RemoveFromDeckDelta(XmlNode from, IdIssuer<Deck> issuer, Deck deck, Card c, int i)
+				: base(from, issuer)
+			{
                 target = deck;
                 card = c;
                 index = i;

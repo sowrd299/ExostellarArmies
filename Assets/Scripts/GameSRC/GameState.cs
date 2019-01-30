@@ -23,7 +23,7 @@ namespace SFB.Game.Management{
         public GameState(DeckList[] lists){
             players = new Player[lists.Length];
             for(int i = 0; i < players.Length; i++){
-                players[i] = new Player(lists[i]);
+                players[i] = new Player("Player " + (i+1), lists[i]);
             }
         }
 
@@ -36,7 +36,7 @@ namespace SFB.Game.Management{
         // returns the outcomes of a player taking a give action
         public Delta[] GetActionDeltas(Player player, Action a){
             // dummy implementation
-            return new Delta[]{new Delta()};
+            return new Delta[]{};
         }
 
         // return the resaults if the turn were to end right then
@@ -45,10 +45,8 @@ namespace SFB.Game.Management{
             return new Delta[0];
         }
 
-        public void ApplyDeltas(Delta[] deltas){
-            foreach(Delta d in deltas){
-                d.Apply();
-            }
+        public void ApplyDelta(Delta d){
+            d.Apply();
         }
 
     }

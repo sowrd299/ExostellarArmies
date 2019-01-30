@@ -7,7 +7,7 @@ namespace SFB.Game{
 
         // while all the ID code is repeated, can't use a common ancestor class
         // if we want to have seporate instance of IdIssuer for different things that need id's
-        private static IdIssuer<Unit> idIssuer = new IdIssuer();
+        private static IdIssuer<Unit> idIssuer = new IdIssuer<Unit>();
 
         private UnitCard card; //the card the unit is an instance of
 
@@ -18,7 +18,7 @@ namespace SFB.Game{
 
         public Unit(UnitCard card){
             this.card = card;
-            this.id = idIssuer.IssueId();
+            this.id = idIssuer.IssueId(this);
         }
 
     }

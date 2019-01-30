@@ -42,7 +42,7 @@ namespace SFB.Game.Management{
 
         // stores the given object at the given ID
         public void RegisterId(string id, T issuee){
-            Dictionary[id] = issuee;
+            idLookup[id] = issuee;
         }
 
         // returns the object to whom the ID was issued
