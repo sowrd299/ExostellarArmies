@@ -56,9 +56,10 @@ public class Driver : MonoBehaviour {
 
 				break;
 			case Phase.PLACEMENT:
-				if(!hasPrintedPlayers)
+				if(!hasPrintedPlayers) {
 					print("Press to act: 1. (" + gameState.Players[0] + ") / 2. (" + gameState.Players[1] + ")");
-
+					hasPrintedPlayers = true;
+				}
 				break;
 			case Phase.RANGED:
 				phase = Phase.MELEE;
