@@ -2,11 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+//class attached to Card Prefab, contains array of properties(all the texts,images,ints with their Elemenet type)
 [CreateAssetMenu(menuName = "CardFrontEnd")]
 public class CardFrontEnd : ScriptableObject
 {
-    public string cardName;
-    public string cardDetail;
-    public string cardType;
-    public string cardFlavor;
+    public CardProperties[] properties;
 }

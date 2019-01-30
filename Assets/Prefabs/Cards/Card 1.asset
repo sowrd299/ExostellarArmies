@@ -12,7 +12,40 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a543e8cfa9ed949a5a4cc95c7e7bcc15, type: 3}
   m_Name: Card 1
   m_EditorClassIdentifier: 
-  cardName: Carthan Medical Drone Unit
-  cardDetail: 'Deploy: Heal this Front Line 2 and each adjacent Front Line 1.'
-  cardType: Battle-Line Trauma Medic
-  cardFlavor: "\"\u201CIn the Darkness, Everywhere!\u201D"
+  properties:
+  - stringValue: nameee
+    intValue: 0
+    sprite: {fileID: 0}
+    element: {fileID: 11400000, guid: 8b9afe31435644a82a77ce3171e8a4ed, type: 2}
+  - stringValue: typee
+    intValue: 0
+    sprite: {fileID: 0}
+    element: {fileID: 11400000, guid: c26b2474748cd43bc975fd75c131c766, type: 2}
+  - stringValue: flavor
+    intValue: 0
+    sprite: {fileID: 0}
+    element: {fileID: 11400000, guid: 6255b99563a7c495992811777a675e5d, type: 2}
+  - stringValue: details
+    intValue: 0
+    sprite: {fileID: 0}
+    element: {fileID: 11400000, guid: 6da532ebc0c5c427a8b33a00014bc60f, type: 2}
+  - stringValue: 
+    intValue: 0
+    sprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
+    element: {fileID: 11400000, guid: e42ab5aaa89294e75a7cb333032c43b7, type: 2}
+  - stringValue: 
+    intValue: 3
+    sprite: {fileID: 0}
+    element: {fileID: 11400000, guid: 0833e71fad6ca442daa21b8c64758602, type: 2}
+  - stringValue: 
+    intValue: 1
+    sprite: {fileID: 0}
+    element: {fileID: 11400000, guid: 4ee4825dd23a14c91bf8150d4d6139d5, type: 2}
+  - stringValue: 
+    intValue: 1
+    sprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
+    element: {fileID: 11400000, guid: 67b425464022a4fd595b0abc942fd251, type: 2}
+  - stringValue: 
+    intValue: 1
+    sprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
+    element: {fileID: 11400000, guid: 753be10aa7e2e41eb9296e4a98ad979d, type: 2}

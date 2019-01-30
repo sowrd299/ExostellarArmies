@@ -392,7 +392,7 @@ GameObject:
   - component: {fileID: 2209705394058639018}
   - component: {fileID: 2209705394058639017}
   m_Layer: 5
-  m_Name: Text
+  m_Name: R
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -471,7 +471,7 @@ GameObject:
   - component: {fileID: 2209705394146145395}
   - component: {fileID: 2209705394146145394}
   m_Layer: 5
-  m_Name: Card
+  m_Name: CardArt
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -761,7 +761,7 @@ GameObject:
   - component: {fileID: 2209705394706410015}
   - component: {fileID: 2209705394706410014}
   m_Layer: 5
-  m_Name: Text (1)
+  m_Name: Melee Damage
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -840,7 +840,7 @@ GameObject:
   - component: {fileID: 2209705394794001777}
   - component: {fileID: 2209705394794001776}
   m_Layer: 5
-  m_Name: Text
+  m_Name: Cost Amount
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -919,7 +919,7 @@ GameObject:
   - component: {fileID: 2209705394870174551}
   - component: {fileID: 2209705394870174550}
   m_Layer: 5
-  m_Name: Text
+  m_Name: M
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1060,7 +1060,7 @@ GameObject:
   - component: {fileID: 2209705394939964201}
   - component: {fileID: 2209705394939964200}
   m_Layer: 5
-  m_Name: Text
+  m_Name: HP
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1218,7 +1218,7 @@ GameObject:
   - component: {fileID: 2209705395035939541}
   - component: {fileID: 2209705395035939540}
   m_Layer: 5
-  m_Name: Text (1)
+  m_Name: Health
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1457,7 +1457,7 @@ GameObject:
   - component: {fileID: 2209705395291305455}
   - component: {fileID: 2209705395291305454}
   m_Layer: 5
-  m_Name: Text (1)
+  m_Name: Range Damage
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1550,7 +1550,7 @@ RectTransform:
   m_GameObject: {fileID: 6374767821707340389}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.5, y: 0.5, z: 1}
   m_Children:
   - {fileID: 2209705393403740615}
   m_Father: {fileID: 0}
@@ -1573,8 +1573,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c387f31812720441eb0984b8fd4f1491, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  name: {fileID: 2209705395013451064}
-  detail: {fileID: 2209705395253232660}
-  flavor: {fileID: 2209705393878752952}
-  type: {fileID: 2209705395154985839}
   card: {fileID: 11400000, guid: 1da76dfa9064d4fc68abb8a694c7d177, type: 2}
+  properties:
+  - text: {fileID: 2209705395013451064}
+    image: {fileID: 0}
+    element: {fileID: 11400000, guid: 8b9afe31435644a82a77ce3171e8a4ed, type: 2}
+  - text: {fileID: 2209705395154985839}
+    image: {fileID: 0}
+    element: {fileID: 11400000, guid: c26b2474748cd43bc975fd75c131c766, type: 2}
+  - text: {fileID: 2209705393878752952}
+    image: {fileID: 0}
+    element: {fileID: 11400000, guid: 6255b99563a7c495992811777a675e5d, type: 2}
+  - text: {fileID: 2209705395253232660}
+    image: {fileID: 0}
+    element: {fileID: 11400000, guid: 6da532ebc0c5c427a8b33a00014bc60f, type: 2}
+  - text: {fileID: 0}
+    image: {fileID: 2209705394146145394}
+    element: {fileID: 11400000, guid: e42ab5aaa89294e75a7cb333032c43b7, type: 2}
+  - text: {fileID: 2209705394794001776}
+    image: {fileID: 0}
+    element: {fileID: 11400000, guid: 0833e71fad6ca442daa21b8c64758602, type: 2}
+  - text: {fileID: 2209705395035939540}
+    image: {fileID: 0}
+    element: {fileID: 11400000, guid: 4ee4825dd23a14c91bf8150d4d6139d5, type: 2}
+  - text: {fileID: 2209705394706410014}
+    image: {fileID: 0}
+    element: {fileID: 11400000, guid: 67b425464022a4fd595b0abc942fd251, type: 2}
+  - text: {fileID: 2209705395291305454}
+    image: {fileID: 0}
+    element: {fileID: 11400000, guid: 753be10aa7e2e41eb9296e4a98ad979d, type: 2}
