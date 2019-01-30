@@ -43,6 +43,10 @@ namespace SFB.Net.Server.Matches{
         // the client's player
         private Player player;
 
+        public string Name{
+            get{ return player.Name; }
+        }
+
         // returns whether or not the players has locked in their current turn
         public bool TurnLockedIn{
             get{
@@ -65,9 +69,27 @@ namespace SFB.Net.Server.Matches{
         }
 
         // to be called at the start of the game
-        public void Start(){
+        public void Start(XmlElement[] otherPlayersIDs){
             //TODO: maybe match start should be sent by the match itself?
-            socket.Send("<file type='matchStart'></file>");
+            XmlDocument doc = NewEmptyMessage("matchStart");
+            XmlElement friendlyIDs = player.GetPlayerIDs(doc);
+            XmlAttribute side = doc.CreateAttribute("side");
+            side.Value = "local";
+            friendlyIDs.SetAttributeNode(side); 
+            doc.DocumentElement.AppendChild(friendlyIDs);
+            // add in the other players
+            foreach(XmlElement ids in otherPlayersIDs){
+                XmlElement e = doc.ImportNode(ids, true) as XmlElement;
+                XmlAttribute enemySide = doc.CreateAttribute("side");
+                enemySide.Value = "opponent";
+                e?.SetAttributeNode(enemySide); 
+                doc.DocumentElement.AppendChild(e);
+            }
+            socket.SendXml(doc);
+        }
+
+        public XmlElement GetPlayerIDs(XmlDocument doc){
+            return player.GetPlayerIDs(doc);
         }
 
         // handle everything that happens at the start of a new turn

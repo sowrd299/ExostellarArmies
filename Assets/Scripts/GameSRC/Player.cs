@@ -33,13 +33,20 @@ namespace SFB.Game{
 			get { return discard; }
 		}
 
-		internal Player(string name, DeckList d){
-			this.deck = new Deck();
+        // optionally takes ids to be used instead of generating new ones
+		internal Player(string name, DeckList d, XmlElement ids = null){
+            //if given id's, manage them
+            string deckId = ""; //if this is passed in, will still generate ID
+            if(ids != null){
+                deckId = ids.Attributes["deckId"].Value;
+            }
+            //deck
+			this.deck = new Deck(deckId);
             deck.LoadCards(d);
-
+            //hand
 			this.hand = new Hand();
 			this.handSize = 3;
-
+            //misc
 			this.name = name;
 
 			this.discard = new List<Card>();
@@ -68,6 +75,7 @@ namespace SFB.Game{
             XmlAttribute deckId = doc.CreateAttribute("deck");
             deckId.Value = deck.ID;
             e.SetAttributeNode(deckId); 
+            // return
             return e;
         }
 

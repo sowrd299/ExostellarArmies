@@ -53,37 +53,47 @@ namespace SFB.Game{
 
         // randomize the order of cards in the deck
         public void Shuffle(){
-			List<int> indexes = new List<int>();
-			for(int i = 0; i < cards.Count; i++)
-				indexes.Add(i);
+            lock(cards){
+                List<int> indexes = new List<int>();
+                for(int i = 0; i < cards.Count; i++)
+                    indexes.Add(i);
 
-			System.Random rand = new System.Random();
-			List<int> randList = new List<int>();
-			while(indexes.Count > 0) {
-				int idx = indexes[rand.Next(0, indexes.Count)];
-				indexes.Remove(idx);
-				randList.Add(idx);
-			}
+                System.Random rand = new System.Random();
+                List<int> randList = new List<int>();
+                while(indexes.Count > 0) {
+                    int idx = indexes[rand.Next(0, indexes.Count)];
+                    indexes.Remove(idx);
+                    randList.Add(idx);
+                }
 
-			List<Card> tempCards = new List<Card>();
-			for(int i = 0; i < cards.Count; i++)
-				tempCards.Add(cards[randList[i]]);
+                List<Card> tempCards = new List<Card>();
+                for(int i = 0; i < cards.Count; i++)
+                    tempCards.Add(cards[randList[i]]);
 
-			for(int i = 0; i < cards.Count; i++)
-				cards[i] = tempCards[i];
+                for(int i = 0; i < cards.Count; i++)
+                    cards[i] = tempCards[i];
+            }
         }
 
 		public Card DrawCard() {
-			Card c = cards[0];
-			cards.Remove(c);
+            Card c;
+            lock(cards){
+                c = cards[0];
+                cards.Remove(c);
+            }
 			return c;
 		}
 
 
         // returns a delta that removes the top card from the deck
         // adding that card to the hand will need to be implemented elsewhere
-        public RemoveFromDeckDelta GetDrawDelta(){
-            return new RemoveFromDeckDelta(null, null, this, cards[0], 0);
+        public RemoveFromDeckDelta[] GetDrawDeltas(int startingIndex = 0, int count = 1){
+            RemoveFromDeckDelta[] r = new RemoveFromDeckDelta[count - startingIndex];
+            for(int i = startingIndex; i < startingIndex+count; i++){
+                r[i-startingIndex] = new RemoveFromDeckDelta(this, cards[i], 0);
+                // remove index is 0 because assumes all cards above will have been drawn at that point
+            }
+            return r;
         }
 
         // returns the top i cards of the deck 
@@ -110,21 +120,26 @@ namespace SFB.Game{
         // a class to represent removing the given card from the given index the give card from the given index
         public class RemoveFromDeckDelta : TargetedDelta<Deck> {
 
+            /* 
+            protected override string type{
+                get{ return "RemoveFromDeckDelta"; }
+            }
+            */
+
             private Card card;
             public Card Card{
                 get{ return card; }
             }
             private int index;
 
-            public RemoveFromDeckDelta(XmlNode from, IdIssuer<Deck> issuer, Deck deck, Card c, int i)
-				: base(from, issuer)
+            public RemoveFromDeckDelta(Deck deck, Card c, int i)
+				: base(deck)
 			{
-                target = deck;
                 card = c;
                 index = i;
             }
 
-            public RemoveFromDeckDelta(XmlNode from): base(from, Deck.IdIssuer) { }
+            public RemoveFromDeckDelta(XmlElement from): base(from, Deck.IdIssuer) { }
             
             public override bool VisibleTo(Player p){
                 return p.Owns(target);

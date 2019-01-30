@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using System.Xml; // it's only used once, and I don't really like that
+using System;
 using SFB.Game.Decks;
 using SFB.Game.Management;
 
@@ -40,8 +42,24 @@ namespace SFB.Net.Server.Matches{
 
         // starts the match
         public void Start(ReturnCallback rc){
-            foreach(PlayerManager pm in players){
-                pm.Start();
+            // get all the enemy player ID data each player needs
+            List<XmlElement>[] playerIds = new List<XmlElement>[players.Length];
+            // build all the arrays
+            for(int i = 0; i < players.Length; i++){
+                playerIds[i] = new List<XmlElement>();
+            }
+            // populate all the arrays with player id's
+            // ...from other players
+            for(int i = 0; i < players.Length; i++){
+                XmlDocument doc = new XmlDocument();
+                XmlElement e = players[i].GetPlayerIDs(doc);
+                for(int j = (i+1)%players.Length; j != i; j = (j+1)%players.Length){
+                    playerIds[j].Add(e);
+                }
+            }
+            // send all the players all the ids and get them started
+            for(int i = 0; i < players.Length; i++){
+                players[i].Start(playerIds[i].ToArray());
             }
             returnCallback = rc; 
         }
@@ -95,6 +113,8 @@ namespace SFB.Net.Server.Matches{
             }
             // share the deltas and restart turns
             for(int i = 0; i < players.Length; i++){
+                Console.WriteLine("Giving {0} {1} enemy deltas; they produced {2} deltas this turn.",
+                        players[i].Name, turnDeltaLists[i].Count, players[i].TurnDeltas.Length);
                 players[i].StartTurn(turnDeltaLists[i].ToArray());
             }
             if(gameOver){
