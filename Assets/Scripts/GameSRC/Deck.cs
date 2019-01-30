@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using System.Xml;
 using SFB.Game.Decks;
 using SFB.Game.Management;
-using UnityEngine;
 
 namespace SFB.Game{
 
@@ -50,7 +49,7 @@ namespace SFB.Game{
 
 			List<int> randList = new List<int>();
 			while(indexes.Count > 0) {
-				int idx = indexes[Random.Range(0, indexes.Count - 1)];
+				int idx = indexes[new System.Random().Next(0, indexes.Count)];
 				indexes.Remove(idx);
 				randList.Add(idx);
 			}
