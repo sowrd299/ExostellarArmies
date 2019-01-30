@@ -120,9 +120,11 @@ namespace SFB.Game{
         // a class to represent removing the given card from the given index the give card from the given index
         public class RemoveFromDeckDelta : TargetedDelta<Deck> {
 
+            /* 
             protected override string type{
                 get{ return "RemoveFromDeckDelta"; }
             }
+            */
 
             private Card card;
             public Card Card{
@@ -137,7 +139,7 @@ namespace SFB.Game{
                 index = i;
             }
 
-            public RemoveFromDeckDelta(XmlNode from): base(from, Deck.IdIssuer) { }
+            public RemoveFromDeckDelta(XmlElement from): base(from, Deck.IdIssuer) { }
             
             public override bool VisibleTo(Player p){
                 return p.Owns(target);

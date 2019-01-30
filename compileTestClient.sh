@@ -1,0 +1,1 @@
+csc ./TestClientSRC/TestClientMain.cs ./Assets/Scripts/GameSRC/*.cs

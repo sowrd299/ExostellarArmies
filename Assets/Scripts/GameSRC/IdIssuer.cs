@@ -28,7 +28,7 @@ namespace SFB.Game.Management{
         public IdIssuer(){
             this.idPrefix = "";
             this.idLookup = new Dictionary<string, T>();
-            i = 0;
+            i = 1;
             writeLock = new object();
         }
 
