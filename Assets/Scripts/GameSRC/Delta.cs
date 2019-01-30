@@ -6,6 +6,10 @@ namespace SFB.Game.Management{
     // the changes represented by a single delta should be small and atomic
     public abstract class Delta {
 
+        // the string presentation of the type, for use in making XML's
+        protected virtual string type{
+            get;
+        }
 
         public Delta(){
 
@@ -17,6 +21,10 @@ namespace SFB.Game.Management{
 
         public virtual XmlElement ToXml(XmlDocument doc){
             XmlElement e = doc.CreateElement("delta");
+            // attach the type
+            XmlAttribute typeAttr = doc.CreateAttribute("type");
+            typeAttr.Value = type;
+            e.SetAttributeNode(typeAttr);
             return e;
         }
 
@@ -47,6 +55,10 @@ namespace SFB.Game.Management{
             if(idAttr != null){
 				target = issuer.GetByID(idAttr.Value);// as T;
             }
+        }
+
+        public TargetedDelta(T target) : base() {
+            this.target = target;
         }
 
         public override XmlElement ToXml(XmlDocument doc){

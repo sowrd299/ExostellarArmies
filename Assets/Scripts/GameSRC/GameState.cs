@@ -36,7 +36,7 @@ namespace SFB.Game.Management{
         // returns the outcomes of a player taking a give action
         public Delta[] GetActionDeltas(Player player, Action a){
             // dummy implementation
-            return new Delta[]{};
+            return new Delta[]{new Deck.RemoveFromDeckDelta(player.Deck, null, 0)};
         }
 
         // return the resaults if the turn were to end right then

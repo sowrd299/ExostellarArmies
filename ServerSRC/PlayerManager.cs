@@ -43,6 +43,10 @@ namespace SFB.Net.Server.Matches{
         // the client's player
         private Player player;
 
+        public string Name{
+            get{ return player.Name; }
+        }
+
         // returns whether or not the players has locked in their current turn
         public bool TurnLockedIn{
             get{
@@ -72,14 +76,14 @@ namespace SFB.Net.Server.Matches{
             XmlAttribute side = doc.CreateAttribute("side");
             side.Value = "local";
             friendlyIDs.SetAttributeNode(side); 
-            doc.AppendChild(friendlyIDs);
+            doc.DocumentElement.AppendChild(friendlyIDs);
             // add in the other players
             foreach(XmlElement ids in otherPlayersIDs){
                 XmlElement e = doc.ImportNode(ids, true) as XmlElement;
-                XmlAttribute enemyside = doc.CreateAttribute("side");
-                side.Value = "opponent";
-                e?.SetAttributeNode(enemyside); 
-                doc.AppendChild(e);
+                XmlAttribute enemySide = doc.CreateAttribute("side");
+                enemySide.Value = "opponent";
+                e?.SetAttributeNode(enemySide); 
+                doc.DocumentElement.AppendChild(e);
             }
             socket.SendXml(doc);
         }
