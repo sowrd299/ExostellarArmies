@@ -32,7 +32,7 @@ namespace SFB.Game.Management{
         // generates and gives out a new ID
         public string IssueId(T issuee){
             string id = idPrefix + i.ToString();
-            Dictionary[id] = issuee;
+			idLookup[id] = issuee;
             i++; 
             return id;
         }

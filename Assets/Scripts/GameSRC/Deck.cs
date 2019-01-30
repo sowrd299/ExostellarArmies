@@ -10,7 +10,7 @@ namespace SFB.Game{
     class Deck : IIDed {
 
         // from whence all player id's at issued; static to avoid repeats
-        private static IdIssuer<Deck> idIssuer = new IdIssuer();
+        private static IdIssuer<Deck> idIssuer = new IdIssuer<Deck>();
         public static IdIssuer<Deck> IdIssuer{
             get { return idIssuer; }
         }
@@ -73,7 +73,7 @@ namespace SFB.Game{
         // returns a delta that removes the top card from the deck
         // adding that card to the hand will need to be implemented elsewhere
         public RemoveFromDeckDelta GetDrawDelta(){
-            return new RemoveFromDeckDelta(this, cards[0], 0);
+            return new RemoveFromDeckDelta(null, null, this, cards[0], 0);
         }
 
         // returns the top i cards of the deck 
@@ -103,7 +103,9 @@ namespace SFB.Game{
             Card card;
             int index;
 
-            public RemoveFromDeckDelta(Deck deck, Card c, int i){
+            public RemoveFromDeckDelta(XmlNode from, IdIssuer<Deck> issuer, Deck deck, Card c, int i)
+				: base(from, issuer)
+			{
                 target = deck;
                 card = c;
                 index = i;

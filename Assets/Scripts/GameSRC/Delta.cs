@@ -34,13 +34,13 @@ namespace SFB.Game.Management{
     // a class to represent changes in the gamestate to specific ID'ed objects
     public abstract class TargetedDelta<T> : Delta where T : IIDed {
 
-        T target; // the object the delta applies to
+        public T target; // the object the delta applies to
                   // TODO: I'm not convinced this shouldn't support N targets of different types
         public TargetedDelta(XmlNode from, IdIssuer<T> issuer) : base(from) {
             // returns the target of the action, if any
             XmlAttribute idAttr = from.Attributes["targetId"];
             if(idAttr != null){
-                target = issuer.GetByID(idAttr.Value) as T;
+				target = issuer.GetByID(idAttr.Value);// as T;
             }
         }
 

@@ -8,12 +8,9 @@ public class Driver : MonoBehaviour {
 	// Start is called before the first frame update
 	void Start() {
 		DeckList dl = new DeckList();
-		dl.AddCard(new Card(1, "test1", Faction.NONE), 1);
-		dl.AddCard(new Card(1, "test2", Faction.NONE), 2);
-		dl.AddCard(new Card(1, "test3", Faction.NONE), 1);
-		dl.AddCard(new Card(1, "test4", Faction.NONE), 1);
-		dl.AddCard(new Card(1, "test5", Faction.NONE), 3);
-		dl.AddCard(new Card(1, "test6", Faction.NONE), 1);
+		dl.AddCard(new UnitCard(1, "test1", Faction.NONE, 1, 1, 1), 1);
+		dl.AddCard(new UnitCard(1, "test2", Faction.NONE, 1, 1, 1), 2);
+		dl.AddCard(new UnitCard(1, "test3", Faction.NONE, 1, 1, 1), 3);
 		Deck d = new Deck();
 		d.LoadCards(dl);
 		d.Shuffle();
