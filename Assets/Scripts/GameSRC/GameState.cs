@@ -45,10 +45,8 @@ namespace SFB.Game.Management{
             return new Delta[0];
         }
 
-        public void ApplyDeltas(Delta[] deltas){
-            foreach(Delta d in deltas){
-                d.Apply();
-            }
+        public void ApplyDelta(Delta d){
+            d.Apply();
         }
 
     }

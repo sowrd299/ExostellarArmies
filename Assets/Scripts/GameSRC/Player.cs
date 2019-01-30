@@ -1,4 +1,5 @@
 using SFB.Game.Decks;
+using System.Xml;
 using System.Collections.Generic;
 
 namespace SFB.Game{
@@ -44,6 +45,11 @@ namespace SFB.Game{
 			this.discard = new List<Card>();
 		}
 
+		internal void UseCard(int i) {
+			discard.Add(this.hand.Cards[i]);
+			this.hand.Cards.RemoveAt(i);
+		}
+
 		internal void DrawCards() {
 			while(this.hand.Cards.Count < this.HandSize)
 				this.hand.DrawFrom(this.deck);
@@ -52,6 +58,17 @@ namespace SFB.Game{
         // returns if the player owns the given deck
         internal bool Owns(Deck deck){
             return deck == this.deck;
+        }
+        
+        // returns an XML representation of all of the player's objects ID's,
+        // to sync them between client/server
+        public XmlElement GetPlayerIDs(XmlDocument doc){
+            XmlElement e = doc.CreateElement("playerIds");
+            // the deck id
+            XmlAttribute deckId = doc.CreateAttribute("deck");
+            deckId.Value = deck.ID;
+            e.SetAttributeNode(deckId); 
+            return e;
         }
 
 		public override string ToString() {

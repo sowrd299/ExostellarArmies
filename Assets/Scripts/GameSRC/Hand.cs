@@ -12,7 +12,6 @@ namespace SFB.Game {
 		public Hand() {
 			cards = new List<Card>();
 		}
-		
 
 		internal void DrawFrom(Deck d) {
 			cards.Add(d.DrawCard());

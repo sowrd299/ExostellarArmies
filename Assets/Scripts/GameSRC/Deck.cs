@@ -21,9 +21,14 @@ namespace SFB.Game{
 
         List<Card> cards; // a list of all the deck
 
-        public Deck(){
+        public Deck(string id = ""){
             cards = new List<Card>();
-            id = idIssuer.IssueId(this);
+            if(id == ""){
+                this.id = idIssuer.IssueId(this);
+            }else{
+                idIssuer.RegisterId(id, this);
+                this.id = id;
+            }
         }
 
 		// shouldnt be a method tbh
@@ -105,8 +110,11 @@ namespace SFB.Game{
         // a class to represent removing the given card from the given index the give card from the given index
         public class RemoveFromDeckDelta : TargetedDelta<Deck> {
 
-            Card card;
-            int index;
+            private Card card;
+            public Card Card{
+                get{ return card; }
+            }
+            private int index;
 
             public RemoveFromDeckDelta(XmlNode from, IdIssuer<Deck> issuer, Deck deck, Card c, int i)
 				: base(from, issuer)
@@ -125,6 +133,10 @@ namespace SFB.Game{
             internal override void Apply(){
                 // TODO: implement removing card from the Ith position
                 // flip out if can't
+            }
+            
+            internal override void Revert(){
+                // TODO: implment undoing exactly what was done in Apply
             }
 
         }
