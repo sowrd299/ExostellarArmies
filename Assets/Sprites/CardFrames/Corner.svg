@@ -1,0 +1,755 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="0.5in"
+   height="0.5in"
+   viewBox="0 0 12.7 12.7"
+   version="1.1"
+   id="svg6724"
+   inkscape:version="0.92.3 (2405546, 2018-03-11)"
+   sodipodi:docname="Corner.svg">
+  <defs
+     id="defs6718">
+    <pattern
+       patternUnits="userSpaceOnUse"
+       height="890"
+       width="1017"
+       y="762"
+       x="6477"
+       id="pattern4">
+      <g
+         id="g2651"
+         transform="translate(-6477,-762)">
+        <line
+           id="line2601"
+           y2="842"
+           x2="6557"
+           y1="762"
+           x1="6557"
+           stroke="rgb(102,102,102)"
+           fill="rgb(102,102,102)" />
+        <line
+           id="line2603"
+           y2="889"
+           x2="6663"
+           y1="762"
+           x1="6663"
+           stroke="rgb(102,102,102)"
+           fill="rgb(102,102,102)" />
+        <line
+           id="line2605"
+           y2="889"
+           x2="6769"
+           y1="762"
+           x1="6769"
+           stroke="rgb(102,102,102)"
+           fill="rgb(102,102,102)" />
+        <line
+           id="line2607"
+           y2="889"
+           x2="6875"
+           y1="762"
+           x1="6875"
+           stroke="rgb(102,102,102)"
+           fill="rgb(102,102,102)" />
+        <line
+           id="line2609"
+           y2="889"
+           x2="6981"
+           y1="762"
+           x1="6981"
+           stroke="rgb(102,102,102)"
+           fill="rgb(102,102,102)" />
+        <line
+           id="line2611"
+           y2="1347"
+           x2="7087"
+           y1="762"
+           x1="7087"
+           stroke="rgb(102,102,102)"
+           fill="rgb(102,102,102)" />
+        <line
+           id="line2613"
+           y2="1426"
+           x2="7193"
+           y1="762"
+           x1="7193"
+           stroke="rgb(102,102,102)"
+           fill="rgb(102,102,102)" />
+        <line
+           id="line2615"
+           y2="1506"
+           x2="7299"
+           y1="762"
+           x1="7299"
+           stroke="rgb(102,102,102)"
+           fill="rgb(102,102,102)" />
+        <line
+           id="line2617"
+           y2="1585"
+           x2="7405"
+           y1="762"
+           x1="7405"
+           stroke="rgb(102,102,102)"
+           fill="rgb(102,102,102)" />
+        <line
+           id="line2619"
+           y2="842"
+           x2="7493"
+           y1="842"
+           x1="6557"
+           stroke="rgb(102,102,102)"
+           fill="rgb(102,102,102)" />
+        <line
+           id="line2621"
+           y2="948"
+           x2="7493"
+           y1="948"
+           x1="6985"
+           stroke="rgb(102,102,102)"
+           fill="rgb(102,102,102)" />
+        <line
+           id="line2623"
+           y2="1054"
+           x2="7493"
+           y1="1054"
+           x1="6985"
+           stroke="rgb(102,102,102)"
+           fill="rgb(102,102,102)" />
+        <line
+           id="line2625"
+           y2="1160"
+           x2="7493"
+           y1="1160"
+           x1="6985"
+           stroke="rgb(102,102,102)"
+           fill="rgb(102,102,102)" />
+        <line
+           id="line2627"
+           y2="1266"
+           x2="7493"
+           y1="1266"
+           x1="6985"
+           stroke="rgb(102,102,102)"
+           fill="rgb(102,102,102)" />
+        <line
+           id="line2629"
+           y2="1372"
+           x2="7493"
+           y1="1372"
+           x1="7121"
+           stroke="rgb(102,102,102)"
+           fill="rgb(102,102,102)" />
+        <line
+           id="line2631"
+           y2="1478"
+           x2="7493"
+           y1="1478"
+           x1="7262"
+           stroke="rgb(102,102,102)"
+           fill="rgb(102,102,102)" />
+        <line
+           id="line2633"
+           y2="1584"
+           x2="7493"
+           y1="1584"
+           x1="7404"
+           stroke="rgb(102,102,102)"
+           fill="rgb(102,102,102)" />
+        <line
+           id="line2635"
+           y2="878"
+           x2="7493"
+           y1="762"
+           x1="7377"
+           stroke="rgb(102,102,102)"
+           fill="rgb(102,102,102)" />
+        <line
+           id="line2637"
+           y2="1028"
+           x2="7493"
+           y1="762"
+           x1="7227"
+           stroke="rgb(102,102,102)"
+           fill="rgb(102,102,102)" />
+        <line
+           id="line2639"
+           y2="1178"
+           x2="7493"
+           y1="762"
+           x1="7077"
+           stroke="rgb(102,102,102)"
+           fill="rgb(102,102,102)" />
+        <line
+           id="line2641"
+           y2="1328"
+           x2="7493"
+           y1="762"
+           x1="6927"
+           stroke="rgb(102,102,102)"
+           fill="rgb(102,102,102)" />
+        <line
+           id="line2643"
+           y2="889"
+           x2="6904"
+           y1="762"
+           x1="6777"
+           stroke="rgb(102,102,102)"
+           fill="rgb(102,102,102)" />
+        <line
+           id="line2645"
+           y2="1478"
+           x2="7493"
+           y1="970"
+           x1="6985"
+           stroke="rgb(102,102,102)"
+           fill="rgb(102,102,102)" />
+        <line
+           id="line2647"
+           y2="889"
+           x2="6754"
+           y1="762"
+           x1="6627"
+           stroke="rgb(102,102,102)"
+           fill="rgb(102,102,102)" />
+        <line
+           id="line2649"
+           y2="1628"
+           x2="7493"
+           y1="1120"
+           x1="6985"
+           stroke="rgb(102,102,102)"
+           fill="rgb(102,102,102)" />
+      </g>
+    </pattern>
+    <pattern
+       patternUnits="userSpaceOnUse"
+       height="890"
+       width="1017"
+       y="762"
+       x="6477"
+       id="pattern6710">
+      <g
+         id="g6708"
+         transform="translate(-6477,-762)">
+        <line
+           id="line6658"
+           y2="842"
+           x2="6557"
+           y1="762"
+           x1="6557"
+           stroke="rgb(102,102,102)"
+           fill="rgb(102,102,102)" />
+        <line
+           id="line6660"
+           y2="889"
+           x2="6663"
+           y1="762"
+           x1="6663"
+           stroke="rgb(102,102,102)"
+           fill="rgb(102,102,102)" />
+        <line
+           id="line6662"
+           y2="889"
+           x2="6769"
+           y1="762"
+           x1="6769"
+           stroke="rgb(102,102,102)"
+           fill="rgb(102,102,102)" />
+        <line
+           id="line6664"
+           y2="889"
+           x2="6875"
+           y1="762"
+           x1="6875"
+           stroke="rgb(102,102,102)"
+           fill="rgb(102,102,102)" />
+        <line
+           id="line6666"
+           y2="889"
+           x2="6981"
+           y1="762"
+           x1="6981"
+           stroke="rgb(102,102,102)"
+           fill="rgb(102,102,102)" />
+        <line
+           id="line6668"
+           y2="1347"
+           x2="7087"
+           y1="762"
+           x1="7087"
+           stroke="rgb(102,102,102)"
+           fill="rgb(102,102,102)" />
+        <line
+           id="line6670"
+           y2="1426"
+           x2="7193"
+           y1="762"
+           x1="7193"
+           stroke="rgb(102,102,102)"
+           fill="rgb(102,102,102)" />
+        <line
+           id="line6672"
+           y2="1506"
+           x2="7299"
+           y1="762"
+           x1="7299"
+           stroke="rgb(102,102,102)"
+           fill="rgb(102,102,102)" />
+        <line
+           id="line6674"
+           y2="1585"
+           x2="7405"
+           y1="762"
+           x1="7405"
+           stroke="rgb(102,102,102)"
+           fill="rgb(102,102,102)" />
+        <line
+           id="line6676"
+           y2="842"
+           x2="7493"
+           y1="842"
+           x1="6557"
+           stroke="rgb(102,102,102)"
+           fill="rgb(102,102,102)" />
+        <line
+           id="line6678"
+           y2="948"
+           x2="7493"
+           y1="948"
+           x1="6985"
+           stroke="rgb(102,102,102)"
+           fill="rgb(102,102,102)" />
+        <line
+           id="line6680"
+           y2="1054"
+           x2="7493"
+           y1="1054"
+           x1="6985"
+           stroke="rgb(102,102,102)"
+           fill="rgb(102,102,102)" />
+        <line
+           id="line6682"
+           y2="1160"
+           x2="7493"
+           y1="1160"
+           x1="6985"
+           stroke="rgb(102,102,102)"
+           fill="rgb(102,102,102)" />
+        <line
+           id="line6684"
+           y2="1266"
+           x2="7493"
+           y1="1266"
+           x1="6985"
+           stroke="rgb(102,102,102)"
+           fill="rgb(102,102,102)" />
+        <line
+           id="line6686"
+           y2="1372"
+           x2="7493"
+           y1="1372"
+           x1="7121"
+           stroke="rgb(102,102,102)"
+           fill="rgb(102,102,102)" />
+        <line
+           id="line6688"
+           y2="1478"
+           x2="7493"
+           y1="1478"
+           x1="7262"
+           stroke="rgb(102,102,102)"
+           fill="rgb(102,102,102)" />
+        <line
+           id="line6690"
+           y2="1584"
+           x2="7493"
+           y1="1584"
+           x1="7404"
+           stroke="rgb(102,102,102)"
+           fill="rgb(102,102,102)" />
+        <line
+           id="line6692"
+           y2="878"
+           x2="7493"
+           y1="762"
+           x1="7377"
+           stroke="rgb(102,102,102)"
+           fill="rgb(102,102,102)" />
+        <line
+           id="line6694"
+           y2="1028"
+           x2="7493"
+           y1="762"
+           x1="7227"
+           stroke="rgb(102,102,102)"
+           fill="rgb(102,102,102)" />
+        <line
+           id="line6696"
+           y2="1178"
+           x2="7493"
+           y1="762"
+           x1="7077"
+           stroke="rgb(102,102,102)"
+           fill="rgb(102,102,102)" />
+        <line
+           id="line6698"
+           y2="1328"
+           x2="7493"
+           y1="762"
+           x1="6927"
+           stroke="rgb(102,102,102)"
+           fill="rgb(102,102,102)" />
+        <line
+           id="line6700"
+           y2="889"
+           x2="6904"
+           y1="762"
+           x1="6777"
+           stroke="rgb(102,102,102)"
+           fill="rgb(102,102,102)" />
+        <line
+           id="line6702"
+           y2="1478"
+           x2="7493"
+           y1="970"
+           x1="6985"
+           stroke="rgb(102,102,102)"
+           fill="rgb(102,102,102)" />
+        <line
+           id="line6704"
+           y2="889"
+           x2="6754"
+           y1="762"
+           x1="6627"
+           stroke="rgb(102,102,102)"
+           fill="rgb(102,102,102)" />
+        <line
+           id="line6706"
+           y2="1628"
+           x2="7493"
+           y1="1120"
+           x1="6985"
+           stroke="rgb(102,102,102)"
+           fill="rgb(102,102,102)" />
+      </g>
+    </pattern>
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="1.4"
+     inkscape:cx="-108.27525"
+     inkscape:cy="33.903069"
+     inkscape:document-units="mm"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     units="in"
+     inkscape:window-width="1920"
+     inkscape:window-height="1043"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1" />
+  <metadata
+     id="metadata6721">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Laag 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(0,-284.29998)">
+    <g
+       style="fill-rule:evenodd;stroke-width:28.22200012;stroke-linejoin:round"
+       id="g2131"
+       class="com.sun.star.drawing.PolyPolygonShape"
+       transform="matrix(0.01,0,0,0.01,-62.39111,276.83109)">
+      <g
+         id="id8">
+        <rect
+           style="fill:none;stroke:none"
+           id="rect2124"
+           height="892"
+           width="1019"
+           y="761"
+           x="6476"
+           class="BoundingBox" />
+        <path
+           style="fill:#003366;stroke:none"
+           inkscape:connector-curvature="0"
+           id="path2126"
+           d="M 7493,1651 6985,1270 V 889 H 6604 L 6477,762 h 1016 z" />
+        <path
+           style="fill:none;stroke:#000000"
+           inkscape:connector-curvature="0"
+           id="path2128"
+           d="M 7493,1651 6985,1270 V 889 H 6604 L 6477,762 h 1016 z" />
+      </g>
+    </g>
+    <g
+       style="fill-rule:evenodd;stroke-width:28.22200012;stroke-linejoin:round"
+       id="g2663"
+       class="com.sun.star.drawing.PolyPolygonShape"
+       transform="matrix(0.01,0,0,0.01,-62.37111,276.82109)">
+      <g
+         id="id12">
+        <rect
+           style="fill:none;stroke:none"
+           id="rect2599"
+           height="892"
+           width="1019"
+           y="761"
+           x="6476"
+           class="BoundingBox" />
+        <g
+           id="g2658">
+          <defs
+             id="defs2654">
+            <pattern
+               patternUnits="userSpaceOnUse"
+               height="890"
+               width="1017"
+               y="762"
+               x="6477"
+               id="pattern7451">
+              <g
+                 id="g7449"
+                 transform="translate(-6477,-762)">
+                <line
+                   id="line7399"
+                   y2="842"
+                   x2="6557"
+                   y1="762"
+                   x1="6557"
+                   stroke="rgb(102,102,102)"
+                   fill="rgb(102,102,102)" />
+                <line
+                   id="line7401"
+                   y2="889"
+                   x2="6663"
+                   y1="762"
+                   x1="6663"
+                   stroke="rgb(102,102,102)"
+                   fill="rgb(102,102,102)" />
+                <line
+                   id="line7403"
+                   y2="889"
+                   x2="6769"
+                   y1="762"
+                   x1="6769"
+                   stroke="rgb(102,102,102)"
+                   fill="rgb(102,102,102)" />
+                <line
+                   id="line7405"
+                   y2="889"
+                   x2="6875"
+                   y1="762"
+                   x1="6875"
+                   stroke="rgb(102,102,102)"
+                   fill="rgb(102,102,102)" />
+                <line
+                   id="line7407"
+                   y2="889"
+                   x2="6981"
+                   y1="762"
+                   x1="6981"
+                   stroke="rgb(102,102,102)"
+                   fill="rgb(102,102,102)" />
+                <line
+                   id="line7409"
+                   y2="1347"
+                   x2="7087"
+                   y1="762"
+                   x1="7087"
+                   stroke="rgb(102,102,102)"
+                   fill="rgb(102,102,102)" />
+                <line
+                   id="line7411"
+                   y2="1426"
+                   x2="7193"
+                   y1="762"
+                   x1="7193"
+                   stroke="rgb(102,102,102)"
+                   fill="rgb(102,102,102)" />
+                <line
+                   id="line7413"
+                   y2="1506"
+                   x2="7299"
+                   y1="762"
+                   x1="7299"
+                   stroke="rgb(102,102,102)"
+                   fill="rgb(102,102,102)" />
+                <line
+                   id="line7415"
+                   y2="1585"
+                   x2="7405"
+                   y1="762"
+                   x1="7405"
+                   stroke="rgb(102,102,102)"
+                   fill="rgb(102,102,102)" />
+                <line
+                   id="line7417"
+                   y2="842"
+                   x2="7493"
+                   y1="842"
+                   x1="6557"
+                   stroke="rgb(102,102,102)"
+                   fill="rgb(102,102,102)" />
+                <line
+                   id="line7419"
+                   y2="948"
+                   x2="7493"
+                   y1="948"
+                   x1="6985"
+                   stroke="rgb(102,102,102)"
+                   fill="rgb(102,102,102)" />
+                <line
+                   id="line7421"
+                   y2="1054"
+                   x2="7493"
+                   y1="1054"
+                   x1="6985"
+                   stroke="rgb(102,102,102)"
+                   fill="rgb(102,102,102)" />
+                <line
+                   id="line7423"
+                   y2="1160"
+                   x2="7493"
+                   y1="1160"
+                   x1="6985"
+                   stroke="rgb(102,102,102)"
+                   fill="rgb(102,102,102)" />
+                <line
+                   id="line7425"
+                   y2="1266"
+                   x2="7493"
+                   y1="1266"
+                   x1="6985"
+                   stroke="rgb(102,102,102)"
+                   fill="rgb(102,102,102)" />
+                <line
+                   id="line7427"
+                   y2="1372"
+                   x2="7493"
+                   y1="1372"
+                   x1="7121"
+                   stroke="rgb(102,102,102)"
+                   fill="rgb(102,102,102)" />
+                <line
+                   id="line7429"
+                   y2="1478"
+                   x2="7493"
+                   y1="1478"
+                   x1="7262"
+                   stroke="rgb(102,102,102)"
+                   fill="rgb(102,102,102)" />
+                <line
+                   id="line7431"
+                   y2="1584"
+                   x2="7493"
+                   y1="1584"
+                   x1="7404"
+                   stroke="rgb(102,102,102)"
+                   fill="rgb(102,102,102)" />
+                <line
+                   id="line7433"
+                   y2="878"
+                   x2="7493"
+                   y1="762"
+                   x1="7377"
+                   stroke="rgb(102,102,102)"
+                   fill="rgb(102,102,102)" />
+                <line
+                   id="line7435"
+                   y2="1028"
+                   x2="7493"
+                   y1="762"
+                   x1="7227"
+                   stroke="rgb(102,102,102)"
+                   fill="rgb(102,102,102)" />
+                <line
+                   id="line7437"
+                   y2="1178"
+                   x2="7493"
+                   y1="762"
+                   x1="7077"
+                   stroke="rgb(102,102,102)"
+                   fill="rgb(102,102,102)" />
+                <line
+                   id="line7439"
+                   y2="1328"
+                   x2="7493"
+                   y1="762"
+                   x1="6927"
+                   stroke="rgb(102,102,102)"
+                   fill="rgb(102,102,102)" />
+                <line
+                   id="line7441"
+                   y2="889"
+                   x2="6904"
+                   y1="762"
+                   x1="6777"
+                   stroke="rgb(102,102,102)"
+                   fill="rgb(102,102,102)" />
+                <line
+                   id="line7443"
+                   y2="1478"
+                   x2="7493"
+                   y1="970"
+                   x1="6985"
+                   stroke="rgb(102,102,102)"
+                   fill="rgb(102,102,102)" />
+                <line
+                   id="line7445"
+                   y2="889"
+                   x2="6754"
+                   y1="762"
+                   x1="6627"
+                   stroke="rgb(102,102,102)"
+                   fill="rgb(102,102,102)" />
+                <line
+                   id="line7447"
+                   y2="1628"
+                   x2="7493"
+                   y1="1120"
+                   x1="6985"
+                   stroke="rgb(102,102,102)"
+                   fill="rgb(102,102,102)" />
+              </g>
+            </pattern>
+          </defs>
+          <path
+             inkscape:connector-curvature="0"
+             id="path2656"
+             d="M 7493,1651 6985,1270 V 889 H 6604 L 6477,762 h 1016 z"
+             style="fill:url(#pattern4)" />
+        </g>
+        <path
+           style="fill:none;stroke:#000000"
+           inkscape:connector-curvature="0"
+           id="path2660"
+           d="M 7493,1651 6985,1270 V 889 H 6604 L 6477,762 h 1016 z" />
+      </g>
+    </g>
+  </g>
+</svg>

@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="0.5in"
+   height="0.5in"
+   viewBox="0 0 12.7 12.7"
+   version="1.1"
+   id="svg8800"
+   inkscape:version="0.92.3 (2405546, 2018-03-11)"
+   sodipodi:docname="Melee.svg">
+  <defs
+     id="defs8794" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="0.35"
+     inkscape:cx="-192.85714"
+     inkscape:cy="560"
+     inkscape:document-units="mm"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     units="in"
+     inkscape:window-width="1920"
+     inkscape:window-height="1043"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1" />
+  <metadata
+     id="metadata8797">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Laag 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(0,-284.29996)"
+     style="opacity:0.99">
+    <g
+       style="fill-rule:evenodd;stroke-width:28.22200012;stroke-linejoin:round"
+       id="g2863"
+       class="com.sun.star.drawing.CustomShape"
+       transform="matrix(0.01,0,0,0.01,-12.7,258.1994)">
+      <g
+         id="id28">
+        <rect
+           style="fill:none;stroke:none"
+           id="rect2856"
+           height="638"
+           width="765"
+           y="3046"
+           x="1523"
+           class="BoundingBox" />
+        <path
+           style="fill:#999999;stroke:none"
+           inkscape:connector-curvature="0"
+           id="path2858"
+           d="m 1905,3682 h -381 v -635 h 762 v 635 z" />
+        <path
+           style="fill:none;stroke:#000000"
+           inkscape:connector-curvature="0"
+           id="path2860"
+           d="m 1905,3682 h -381 v -635 h 762 v 635 z" />
+      </g>
+    </g>
+    <g
+       style="fill-rule:evenodd;stroke-width:28.22200012;stroke-linejoin:round"
+       id="g2889"
+       class="com.sun.star.drawing.PolyPolygonShape"
+       transform="matrix(0.01,0,0,0.01,-12.7,258.1994)">
+      <g
+         id="id30">
+        <rect
+           style="fill:none;stroke:none"
+           id="rect2882"
+           height="257"
+           width="765"
+           y="2920"
+           x="1523"
+           class="BoundingBox" />
+        <path
+           style="fill:#333333;stroke:none"
+           inkscape:connector-curvature="0"
+           id="path2884"
+           d="m 1524,3048 127,-127 h 508 l 127,127 -127,127 h -508 z" />
+        <path
+           style="fill:none;stroke:#000000"
+           inkscape:connector-curvature="0"
+           id="path2886"
+           d="m 1524,3048 127,-127 h 508 l 127,127 -127,127 h -508 z" />
+      </g>
+    </g>
+    <g
+       style="fill-rule:evenodd;stroke-width:28.22200012;stroke-linejoin:round"
+       id="g2902"
+       class="com.sun.star.drawing.TextShape"
+       transform="matrix(0.01,0,0,0.01,-12.7,258.1994)">
+      <g
+         id="id31">
+        <rect
+           style="fill:none;stroke:none"
+           id="rect2891"
+           height="509"
+           width="763"
+           y="2794"
+           x="1524"
+           class="BoundingBox" />
+        <text
+           id="text2899"
+           class="TextShape">
+          <tspan
+             style="font-weight:400;font-size:282px;font-family:'Liberation Serif', serif"
+             id="tspan2897"
+             font-weight="400"
+             font-size="282px"
+             class="TextParagraph">
+            <tspan
+               id="tspan2895"
+               y="3146"
+               x="1778"
+               class="TextPosition">
+              <tspan
+                 style="fill:#ffffff;stroke:none"
+                 id="tspan2893">M</tspan>
+            </tspan>
+          </tspan>
+        </text>
+      </g>
+    </g>
+  </g>
+</svg>
