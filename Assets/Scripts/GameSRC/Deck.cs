@@ -6,7 +6,7 @@ using SFB.Game.Management;
 namespace SFB.Game{
 
     // represents a player's deck of cards while they are playing
-    class Deck : IIDed {
+    class Deck : List<Card>, IIDed {
 
         // from whence all player id's at issued; static to avoid repeats
         private static IdIssuer<Deck> idIssuer = new IdIssuer<Deck>();
@@ -18,11 +18,8 @@ namespace SFB.Game{
         public string ID{
             get { return id; }
         }
-
-        List<Card> cards; // a list of all the deck
-
+		
         public Deck(string id = ""){
-            cards = new List<Card>();
             if(id == ""){
                 this.id = idIssuer.IssueId(this);
             }else{
@@ -30,11 +27,6 @@ namespace SFB.Game{
                 this.id = id;
             }
         }
-
-		// shouldnt be a method tbh
-		public int Count() {
-			return cards.Count;
-		}
 
         // adds cards in the deck from a decklist
         // TODO: probably would be more efficient to figure out how to load them into random positions
@@ -46,16 +38,16 @@ namespace SFB.Game{
                 int cps = cards.GetCopiesOf(c);
                 for(int i = 0; i < cps; i++){
                     // add a copy to the deck
-                    this.cards.Insert(rand.Next(0, this.cards.Count), c);
+                    this.Insert(rand.Next(0, this.Count), c);
                 }
             }
         }
 
         // randomize the order of cards in the deck
         public void Shuffle(){
-            lock(cards){
+            lock(this){
                 List<int> indexes = new List<int>();
-                for(int i = 0; i < cards.Count; i++)
+                for(int i = 0; i < this.Count; i++)
                     indexes.Add(i);
 
                 System.Random rand = new System.Random();
@@ -67,19 +59,19 @@ namespace SFB.Game{
                 }
 
                 List<Card> tempCards = new List<Card>();
-                for(int i = 0; i < cards.Count; i++)
-                    tempCards.Add(cards[randList[i]]);
+                for(int i = 0; i < this.Count; i++)
+                    tempCards.Add(this[randList[i]]);
 
-                for(int i = 0; i < cards.Count; i++)
-                    cards[i] = tempCards[i];
+                for(int i = 0; i < this.Count; i++)
+                    this[i] = tempCards[i];
             }
         }
 
 		public Card DrawCard() {
             Card c;
-            lock(cards){
-                c = cards[0];
-                cards.Remove(c);
+            lock(this){
+                c = this[0];
+                this.Remove(c);
             }
 			return c;
 		}
@@ -90,7 +82,7 @@ namespace SFB.Game{
         public RemoveFromDeckDelta[] GetDrawDeltas(int startingIndex = 0, int count = 1){
             RemoveFromDeckDelta[] r = new RemoveFromDeckDelta[count - startingIndex];
             for(int i = startingIndex; i < startingIndex+count; i++){
-                r[i-startingIndex] = new RemoveFromDeckDelta(this, cards[i], 0);
+                r[i-startingIndex] = new RemoveFromDeckDelta(this, this[i], 0);
                 // remove index is 0 because assumes all cards above will have been drawn at that point
             }
             return r;
@@ -102,7 +94,7 @@ namespace SFB.Game{
         public Card[] GetTopCards(int i){
             Card[] r = new Card[i];
             for(int j = 0; j < i; j++){
-                r[j] = cards[j];
+                r[j] = this[j];
             }
             return r;
         }
@@ -110,7 +102,7 @@ namespace SFB.Game{
 		override public string ToString() {
 			string s = "Deck(";
 
-			foreach(Card c in cards)
+			foreach(Card c in this)
 				s += c + " ";
 
 			return s + ")";

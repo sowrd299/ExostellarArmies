@@ -43,6 +43,8 @@ public class Driver : MonoBehaviour {
 	void Update() {
 		switch(phase) {
 			case Phase.DRAW:
+				print("");
+
 				foreach(Player p in gameState.Players)
 					p.DrawCards();				
 					
@@ -55,16 +57,15 @@ public class Driver : MonoBehaviour {
 				break;
 			case Phase.PLACEMENT:
 				if(!hasPrinted && selectedPlayer == null) {
-					print("");
 					foreach(Player p in gameState.Players)
-						print(p + " has " + p.Hand + " and " + p.Deck.Count() + " cards in deck.");
+						print(p + " has " + p.Hand + " and " + p.Deck.Count + " cards in deck.");
 					print("Press to select player: (1. " + gameState.Players[0] + ") / (2. " + gameState.Players[1] + ") / (0. when you're done)");
 					hasPrinted = true;
 				} else if(!hasPrinted && selectedPlayer != null) {
 					string s = selectedPlayer + " can use ";
 					char[] inputs = new char[] {'Q', 'W', 'E', 'R'};
-					for(int i = 0; i < selectedPlayer.Hand.Cards.Count; i++)
-						s += "(" + inputs[i] + ". " + selectedPlayer.Hand.Cards[i] + ") ";
+					for(int i = 0; i < selectedPlayer.Hand.Count; i++)
+						s += "(" + inputs[i] + ". " + selectedPlayer.Hand[i] + ") ";
 					print(s + "(P. deselect player)");
 					hasPrinted = true;
 				}
@@ -80,16 +81,16 @@ public class Driver : MonoBehaviour {
 						phase = Phase.RANGED;
 					}
 				} else {
-					if(selectedPlayer.Hand.Cards.Count > 0 && Input.GetKeyDown(KeyCode.Q)) {
+					if(selectedPlayer.Hand.Count > 0 && Input.GetKeyDown(KeyCode.Q)) {
 						selectedPlayer.UseCard(0);
 						hasPrinted = false;
-					} else if(selectedPlayer.Hand.Cards.Count > 1 && Input.GetKeyDown(KeyCode.W)) {
+					} else if(selectedPlayer.Hand.Count > 1 && Input.GetKeyDown(KeyCode.W)) {
 						selectedPlayer.UseCard(1);
 						hasPrinted = false;
-					} else if(selectedPlayer.Hand.Cards.Count > 2 && Input.GetKeyDown(KeyCode.E)) {
+					} else if(selectedPlayer.Hand.Count > 2 && Input.GetKeyDown(KeyCode.E)) {
 						selectedPlayer.UseCard(2);
 						hasPrinted = false;
-					} else if(selectedPlayer.Hand.Cards.Count > 3 && Input.GetKeyDown(KeyCode.R)) {
+					} else if(selectedPlayer.Hand.Count > 3 && Input.GetKeyDown(KeyCode.R)) {
 						selectedPlayer.UseCard(3);
 						hasPrinted = false;
 					}
@@ -104,7 +105,7 @@ public class Driver : MonoBehaviour {
 				phase = Phase.MELEE;
 				break;
 			case Phase.MELEE:
-				phase = Phase.PLACEMENT;
+				phase = Phase.DRAW;
 				break;
 		}
 	}

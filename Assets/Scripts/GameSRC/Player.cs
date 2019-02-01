@@ -53,12 +53,12 @@ namespace SFB.Game{
 		}
 
 		internal void UseCard(int i) {
-			discard.Add(this.hand.Cards[i]);
-			this.hand.Cards.RemoveAt(i);
+			discard.Add(this.hand[i]);
+			this.hand.RemoveAt(i);
 		}
 
 		internal void DrawCards() {
-			while(this.hand.Cards.Count < this.HandSize)
+			while(this.hand.Count < this.HandSize)
 				this.hand.DrawFrom(this.deck);
 		}
 
