@@ -10,4 +10,5 @@ public class CardProperties
     public int intValue;
     public Sprite sprite;
     public Element element;
+    
 }

@@ -1534,6 +1534,7 @@ GameObject:
   m_Component:
   - component: {fileID: 9035102387948941746}
   - component: {fileID: 839784430}
+  - component: {fileID: 56980777}
   m_Layer: 5
   m_Name: Card
   m_TagString: Untagged
@@ -1602,3 +1603,15 @@ MonoBehaviour:
   - text: {fileID: 2209705395291305454}
     image: {fileID: 0}
     element: {fileID: 11400000, guid: 753be10aa7e2e41eb9296e4a98ad979d, type: 2}
+--- !u!114 &56980777
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6374767821707340389}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5dbacc026ac8b47e4b44f73eb58b2ead, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
