@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="0.5in"
+   height="0.5in"
+   viewBox="0 0 12.7 12.7"
+   version="1.1"
+   id="svg9434"
+   inkscape:version="0.92.3 (2405546, 2018-03-11)"
+   sodipodi:docname="Ranged.svg">
+  <defs
+     id="defs9428" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="5.6"
+     inkscape:cx="36.394622"
+     inkscape:cy="24.200861"
+     inkscape:document-units="mm"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     units="in"
+     inkscape:window-width="1920"
+     inkscape:window-height="1043"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1" />
+  <metadata
+     id="metadata9431">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Laag 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(0,-284.29998)">
+    <g
+       style="fill-rule:evenodd;stroke-width:28.22200012;stroke-linejoin:round"
+       class="Group"
+       id="g2854"
+       transform="matrix(0.01,0,0,0.01,-12.7,267.08942)">
+      <g
+         class="com.sun.star.drawing.CustomShape"
+         id="g2813">
+        <g
+           id="id24">
+          <rect
+             class="BoundingBox"
+             x="1523"
+             y="2157"
+             width="765"
+             height="638"
+             id="rect2806"
+             style="fill:none;stroke:none" />
+          <path
+             d="m 1905,2793 h -381 v -635 h 762 v 635 z"
+             id="path2808"
+             inkscape:connector-curvature="0"
+             style="fill:#999999;stroke:none" />
+          <path
+             d="m 1905,2793 h -381 v -635 h 762 v 635 z"
+             id="path2810"
+             inkscape:connector-curvature="0"
+             style="fill:none;stroke:#000000" />
+        </g>
+      </g>
+      <g
+         class="com.sun.star.drawing.PolyPolygonShape"
+         id="g2839">
+        <g
+           id="id26">
+          <rect
+             class="BoundingBox"
+             x="1523"
+             y="2031"
+             width="765"
+             height="257"
+             id="rect2832"
+             style="fill:none;stroke:none" />
+          <path
+             d="m 1524,2159 127,-127 h 508 l 127,127 -127,127 h -508 z"
+             id="path2834"
+             inkscape:connector-curvature="0"
+             style="fill:#333333;stroke:none" />
+          <path
+             d="m 1524,2159 127,-127 h 508 l 127,127 -127,127 h -508 z"
+             id="path2836"
+             inkscape:connector-curvature="0"
+             style="fill:none;stroke:#000000" />
+        </g>
+      </g>
+      <g
+         class="com.sun.star.drawing.TextShape"
+         id="g2852">
+        <g
+           id="id27">
+          <rect
+             class="BoundingBox"
+             x="1524"
+             y="1905"
+             width="763"
+             height="509"
+             id="rect2841"
+             style="fill:none;stroke:none" />
+          <text
+             class="TextShape"
+             id="text2849">
+            <tspan
+               class="TextParagraph"
+               font-size="282px"
+               font-weight="400"
+               id="tspan2847"
+               style="font-weight:400;font-size:282px;font-family:'Liberation Serif', serif">
+              <tspan
+                 class="TextPosition"
+                 x="1810"
+                 y="2257"
+                 id="tspan2845">
+                <tspan
+                   id="tspan2843"
+                   style="fill:#ffffff;stroke:none">R</tspan>
+              </tspan>
+            </tspan>
+          </text>
+        </g>
+      </g>
+    </g>
+  </g>
+</svg>
