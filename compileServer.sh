@@ -1,1 +1,1 @@
-csc ./ServerSRC/*.cs ./Assets/Scripts/GameSRC/*.cs
+csc ./ServerSRC/*.cs ./Assets/Scripts/GameSRC/*.cs ./Assets/Scripts/Net/*.cs

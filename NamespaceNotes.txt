@@ -2,7 +2,7 @@ The code is broken among the following namespaces, each with their own SRC folde
 The root namespace is SFB
 
     Game: cointains game logic implementations
-        Game.Decks: code pretaining exactly to the management of decks
+        Game.Content: code pretaining to deck lists, cards, and things that contribute both the metagame and game
         Game.Management: deals with ID's, Deltas, progressing the gamestate and keep the gamestate synced (or sync-able by the netcode)
 
     Net: Code pertaining to networking;

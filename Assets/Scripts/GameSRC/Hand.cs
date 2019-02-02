@@ -1,9 +1,13 @@
 ﻿using System.Collections.Generic;
-using SFB.Game.Decks;
 
 namespace SFB.Game {
 
-	public class Hand : List<Card> {
+	public class Hand : CardList {
+
+		public override string ID{
+			get{ return "0"; }
+		}
+
 		internal void DrawFrom(Deck d) {
 			this.Add(d.DrawCard());
 		}

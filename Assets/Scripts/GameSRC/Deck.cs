@@ -1,12 +1,12 @@
 using System.Collections.Generic;
 using System.Xml;
-using SFB.Game.Decks;
+using SFB.Game.Content;
 using SFB.Game.Management;
 
 namespace SFB.Game{
 
     // represents a player's deck of cards while they are playing
-    class Deck : List<Card>, IIDed {
+    class Deck : CardList {
 
         // from whence all player id's at issued; static to avoid repeats
         private static IdIssuer<Deck> idIssuer = new IdIssuer<Deck>();
@@ -15,7 +15,7 @@ namespace SFB.Game{
         }
 
         private readonly string id;
-        public string ID{
+        public override string ID{
             get { return id; }
         }
 		
@@ -110,40 +110,16 @@ namespace SFB.Game{
 
 
         // a class to represent removing the given card from the given index the give card from the given index
-        public class RemoveFromDeckDelta : TargetedDelta<Deck> {
+        public class RemoveFromDeckDelta : CardListDelta<Deck> {
 
-            /* 
-            protected override string type{
-                get{ return "RemoveFromDeckDelta"; }
-            }
-            */
+            public RemoveFromDeckDelta(Deck deck, Card card, int index) : base(deck, card, index, CardListDelta<Deck>.Mode.REMOVE) {}
 
-            private Card card;
-            public Card Card{
-                get{ return card; }
-            }
-            private int index;
+            public RemoveFromDeckDelta(XmlElement element, CardLoader loader) : base(element, Deck.IdIssuer, loader) {}
 
-            public RemoveFromDeckDelta(Deck deck, Card c, int i)
-				: base(deck)
-			{
-                card = c;
-                index = i;
-            }
 
-            public RemoveFromDeckDelta(XmlElement from): base(from, Deck.IdIssuer) { }
-            
+            //TODO: this code can be generalized further
             public override bool VisibleTo(Player p){
-                return p.Owns(target);
-            }
-
-            internal override void Apply(){
-                // TODO: implement removing card from the Ith position
-                // flip out if can't
-            }
-            
-            internal override void Revert(){
-                // TODO: implment undoing exactly what was done in Apply
+                return p.Owns(target as Deck);
             }
 
         }

@@ -5,6 +5,7 @@ using System.Xml;
 using System.Collections.Generic;
 using System.Diagnostics;
 using SFB.Game.Management;
+using SFB.Game.Content;
 using SFB.Game;
 
 namespace SFB.TestClient{
@@ -35,6 +36,8 @@ namespace SFB.TestClient{
                 client = new TcpClient(HostName, Port);
 
                 Console.WriteLine("Connected!");
+
+                CardLoader cl = new CardLoader();
 
                 stream = client.GetStream(); 
 
@@ -92,7 +95,7 @@ namespace SFB.TestClient{
                 doc = new XmlDocument();
                 doc.LoadXml(resp);
                 foreach(XmlElement e in doc.GetElementsByTagName("delta")){
-                    Delta d = Delta.FromXml(e);
+                    Delta d = Delta.FromXml(e, cl);
                     Console.WriteLine("Delta of type {0} parsed.", d.GetType());
                 }
 
@@ -116,7 +119,7 @@ namespace SFB.TestClient{
                     doc = new XmlDocument();
                     doc.LoadXml(resp);
                     foreach(XmlElement e in doc.GetElementsByTagName("delta")){
-                        Delta d = Delta.FromXml(e);
+                        Delta d = Delta.FromXml(e, cl);
                     }
                     watch.Stop();
                     avMillis += watch.ElapsedMilliseconds/((long)tests);

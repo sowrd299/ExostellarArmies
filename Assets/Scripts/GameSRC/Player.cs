@@ -1,4 +1,4 @@
-using SFB.Game.Decks;
+using SFB.Game.Content;
 using System.Xml;
 using System.Collections.Generic;
 

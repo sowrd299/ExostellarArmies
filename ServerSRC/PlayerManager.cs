@@ -1,7 +1,7 @@
 using System.Xml;
 using System.Collections.Generic;
 using System.Linq;
-using SFB.Game.Decks;
+using SFB.Game.Content;
 using SFB.Game.Management;
 using SFB.Game;
 
@@ -24,7 +24,7 @@ namespace SFB.Net.Server.Matches{
         private State state;
 
         // a private copy of the gameState
-        private GameState gameState;
+        private GameManager gameManager;
 
         // the moves taken this turn
         private List<Delta> turnDeltas;
@@ -59,10 +59,10 @@ namespace SFB.Net.Server.Matches{
         // TODO: I am not convinced this should actually take a decklist
         //      that should probably be handled by something that manages game state
         //      not game networking
-        public PlayerManager(SocketManager socket, Player player, GameState gs, EotCallback eotCallback, DeathCallback deathCallback){
+        public PlayerManager(SocketManager socket, Player player, GameManager gm, EotCallback eotCallback, DeathCallback deathCallback){
             this.socket = socket;
             this.player = player;
-            this.gameState = gs;
+            this.gameManager = gm;
             this.eotCallback = eotCallback;
             this.deathCallback = deathCallback;
             turnDeltas = new List<Delta>();
@@ -135,11 +135,18 @@ namespace SFB.Net.Server.Matches{
                 case "gameAction":
                     if(state == State.ACTING){
                         Action a = new Action(msg.DocumentElement["action"]);
-                        if(gameState.IsLegalAction(player, a)){
-                            Delta[] ds =  gameState.GetActionDeltas(player, a);
+                        if(gameManager.IsLegalAction(player, a)){
+                            Delta[] ds =  gameManager.GetActionDeltas(player, a);
                             // using three different for loops to:
                             //  1) send message faster
                             //  2) spend less time in each lock
+
+                            // update the gamestate
+                            lock(gameManager){
+                                foreach(Delta d in ds){
+                                    gameManager.ApplyDelta(d);
+                                }
+                            }
                             // build and send the reponse
                             XmlDocument resp = NewEmptyMessage("actionDeltas");
                             foreach(Delta d in ds){
@@ -147,12 +154,6 @@ namespace SFB.Net.Server.Matches{
                                 resp.DocumentElement.AppendChild(e);
                             }
                             socket.SendXml(resp);
-                            // update the gamestate
-                            lock(gameState){
-                                foreach(Delta d in ds){
-                                    gameState.ApplyDelta(d);
-                                }
-                            }
                             // log the turn deltas
                             lock(turnDeltas){
                                 foreach(Delta d in ds){

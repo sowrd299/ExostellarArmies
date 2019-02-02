@@ -2,12 +2,27 @@ using System.Xml;
 using System.Collections.Generic;
 using System.Reflection;
 using System;
+using SFB.Game.Content;
 
 namespace SFB.Game.Management{
+
+    // for when an impossible delta is applied or reverted
+    public class IllegalDeltaException : Exception{
+        public IllegalDeltaException(){}
+        public IllegalDeltaException(string message) : base(message){}
+        public IllegalDeltaException(string message, Exception inner): base(message, inner){}
+    }
 
     // a class to represent a change in the game state
     // the changes represented by a single delta should be small and atomic
     public abstract class Delta {
+
+        // I am assuming here enough different deltas will want this
+        // that it is worth just sharing the code
+        protected Card card;
+        public Card Card{
+            get{ return card; }
+        }
 
         // the string presentation of the type, for use in making XML's
         protected /*virtual*/ string type{
@@ -25,8 +40,10 @@ namespace SFB.Game.Management{
         // Xml constructor: for use when getting an XML representatino based  on Xml for a network message (client side)
         // every child class needs one THAT TAKES EXACTLY ONE XML ELEMENT
         // THESE CONSTRUCTORS ARE PUBLIC FOR REFLECTION; THEY ARE NOT MEANT TO BE CALLED EXTERNALLY
-        public Delta(XmlElement from){
-
+        public Delta(XmlElement from, CardLoader cardLoader){
+            if(from.Attributes["card"] != null){
+                this.card = cardLoader.LoadCard(from.Attributes["card"].Value);
+            }
         }
 
         public virtual XmlElement ToXml(XmlDocument doc){
@@ -35,17 +52,22 @@ namespace SFB.Game.Management{
             XmlAttribute typeAttr = doc.CreateAttribute("type");
             typeAttr.Value = type;
             e.SetAttributeNode(typeAttr);
+            // TODO: add in the card field here
             return e;
         }
 
         // this will return a new instance of the Delta type specified in the XML
         // and return it
         // DO THIS INSTEAD OF CALLING ANY SUBCLASSES XML CONSTRUCTOR
-        public static Delta FromXml(XmlElement from){
+        public static Delta FromXml(XmlElement from, CardLoader cl){
             string t = from.Attributes["type"].Value;
             Type type = Type.GetType(t);
-            ConstructorInfo con = type.GetConstructor(new Type[]{typeof(XmlElement)});
-            return con?.Invoke(new object[]{from}) as Delta;
+            if(type.IsSubclassOf(typeof(Delta))){ //refuse to construct types that aren't Deltas; do this for safety
+                ConstructorInfo con = type.GetConstructor(new Type[]{typeof(XmlElement), typeof(CardLoader)});
+                return con?.Invoke(new object[]{from, cl}) as Delta;
+            }else{
+                return null;
+            }
         }
 
         // returns wether or not the given player would see this change
@@ -69,7 +91,9 @@ namespace SFB.Game.Management{
 
         public T target; // the object the delta applies to
                   // TODO: I'm not convinced this shouldn't support N targets of different types
-        public TargetedDelta(XmlElement from, IdIssuer<T> issuer) : base(from) {
+        public TargetedDelta(XmlElement from, IdIssuer<T> issuer, CardLoader loader)
+                : base(from, loader)
+        {
             // returns the target of the action, if any
             XmlAttribute idAttr = from.Attributes["targetId"];
             if(idAttr != null){
