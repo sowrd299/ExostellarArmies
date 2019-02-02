@@ -11,7 +11,9 @@ public class CardInstance : MonoBehaviour, IClickable
 
     public void OnHighlight()
     {
-        Vector3 v = Vector3.one * 2;
+        Vector3 v = Vector3.one * 1.05f;
         this.transform.localScale = v;
     }
 }
+
+

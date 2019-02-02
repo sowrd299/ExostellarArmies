@@ -7,4 +7,6 @@ using UnityEngine;
 public class CardFrontEnd : ScriptableObject
 {
     public CardProperties[] properties;
+
+
 }

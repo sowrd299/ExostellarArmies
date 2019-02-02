@@ -2,14 +2,17 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using SFB.Game;
 
 public class CardUI : MonoBehaviour
 {
+    //public Card cardBackEnd;
     public CardFrontEnd card;
     public CardUIProperties[] properties;
 
     private void Start()
     {
+
         LoadCard(card);
     }
 
