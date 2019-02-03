@@ -39,6 +39,15 @@ namespace SFB.TestClient{
 
                 CardLoader cl = new CardLoader();
 
+                Console.WriteLine("Testing Unkown Card == Card: {0}",
+                        new UnknownCard() == cl.LoadCard("Exostellar Marine Squad")? 
+                        "Success" : "Fail"); 
+
+                Console.WriteLine("Testing Card == Unkown Card: {0}",
+                        cl.LoadCard("Exostellar Marine Squad") == new UnknownCard() ? 
+                        "Success" : "Fail"); 
+
+
                 stream = client.GetStream(); 
 
                 byte[] data;
@@ -77,7 +86,11 @@ namespace SFB.TestClient{
                 XmlDocument doc = new XmlDocument();
                 doc.LoadXml(startResp);
                 foreach(XmlElement e in doc.GetElementsByTagName("playerIds")){
-                    decks.Add(new Deck(e.Attributes["deck"].Value));
+                    Deck deck = new Deck(e.Attributes["deck"].Value);
+                    DeckList list = new DeckList();
+                    list.AddCard(new UnknownCard(), 20); // the dummy placeholder deck
+                    deck.LoadCards(list);
+                    decks.Add(deck);
                 }
                 // */
 

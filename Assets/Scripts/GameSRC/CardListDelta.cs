@@ -1,6 +1,7 @@
 using System.Xml;
 using System.Collections.Generic;
 using System.Text;
+using System;
 using SFB.Game.Management;
 using SFB.Game.Content;
 
@@ -33,6 +34,19 @@ namespace SFB.Game {
         public CardListDelta(XmlElement from, IdIssuer<T> issuer, CardLoader cl)
                 : base(from, issuer, cl)
         {
+            this.index = Int32.Parse(from.Attributes["index"].Value);
+            this.mode = from.Attributes["mode"].Value == "add" ? Mode.ADD : Mode.REMOVE; // use remove as default b/c more likely to error if chosen eroniously
+        }
+
+        public override XmlElement ToXml(XmlDocument doc){
+            XmlElement r = base.ToXml(doc);
+            XmlAttribute indexAttr = doc.CreateAttribute("index");
+            indexAttr.Value = index.ToString();
+            r.SetAttributeNode(indexAttr); 
+            XmlAttribute modeAttr = doc.CreateAttribute("mode");
+            modeAttr.Value = mode == Mode.ADD ? "add" : "remove";
+            r.SetAttributeNode(modeAttr); 
+            return r;
         }
         
 

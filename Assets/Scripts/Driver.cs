@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Driver : MonoBehaviour {
-	public GameState gameState;
+	public GameManager gameManager;
 	Phase phase;
 	Player chosen;
 	bool hasPrinted;
@@ -36,7 +36,7 @@ public class Driver : MonoBehaviour {
 		DeckList[] deckLists = new DeckList[] { dlC, dlJ };
 
 
-		gameState = new GameState(deckLists);
+		gameManager = new GameManager(deckLists);
 		phase = Phase.DRAW;
 	}
 	
@@ -45,7 +45,7 @@ public class Driver : MonoBehaviour {
 			case Phase.DRAW:
 				print("");
 
-				foreach(Player p in gameState.Players)
+				foreach(Player p in gameManager.Players)
 					p.DrawCards();				
 					
 				phase = Phase.PLACEMENT;
@@ -57,9 +57,9 @@ public class Driver : MonoBehaviour {
 				break;
 			case Phase.PLACEMENT:
 				if(!hasPrinted && selectedPlayer == null) {
-					foreach(Player p in gameState.Players)
+					foreach(Player p in gameManager.Players)
 						print(p + " has " + p.Hand + " and " + p.Deck.Count + " cards in deck.");
-					print("Press to select player: (1. " + gameState.Players[0] + ") / (2. " + gameState.Players[1] + ") / (0. when you're done)");
+					print("Press to select player: (1. " + gameManager.Players[0] + ") / (2. " + gameManager.Players[1] + ") / (0. when you're done)");
 					hasPrinted = true;
 				} else if(!hasPrinted && selectedPlayer != null) {
 					string s = selectedPlayer + " can use ";
@@ -72,10 +72,10 @@ public class Driver : MonoBehaviour {
 
 				if(selectedPlayer == null) {
 					if(Input.GetKeyDown(KeyCode.Alpha1)) {
-						selectedPlayer = gameState.Players[0];
+						selectedPlayer = gameManager.Players[0];
 						hasPrinted = false;
 					} else if(Input.GetKeyDown(KeyCode.Alpha2)) {
-						selectedPlayer = gameState.Players[1];
+						selectedPlayer = gameManager.Players[1];
 						hasPrinted = false;
 					} else if(Input.GetKeyDown(KeyCode.Alpha0)) {
 						phase = Phase.RANGED;
