@@ -29,14 +29,22 @@ namespace SFB.Game{
             get{ return faction; }
         }
 
-       
+		private string mainText;
+		public string MainText {
+			get { return mainText; }
+		}
+		
+		private string flavorText;
+		public string FlavorText {
+			get { return flavorText; }
+		}
 
-        // TODO: should probably add in other things, like flavor text, main test, etc.
-
-        public Card(int deployCost, string name, Faction faction){
+		public Card(int deployCost, string name, Faction faction, string mainText, string flavorText){
             this.deployCost = deployCost;
             this.name = name;
             this.faction = faction;
+			this.mainText = mainText;
+			this.flavorText = flavorText;
         }
 
 		override public string ToString() {

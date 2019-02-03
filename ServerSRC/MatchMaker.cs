@@ -2,7 +2,7 @@ using System;
 using System.Xml;
 using System.Collections.Generic;
 using SFB.Net.Server.Matches;
-using SFB.Game.Decks;
+using SFB.Game.Content;
 
 namespace SFB.Net.Server{
 

@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Xml; // it's only used once, and I don't really like that
 using System;
-using SFB.Game.Decks;
+using SFB.Game.Content;
 using SFB.Game.Management;
 
 namespace SFB.Net.Server.Matches{
@@ -11,7 +11,7 @@ namespace SFB.Net.Server.Matches{
     class Match{
 
         // the master gamestate
-        private GameState gameState;
+        private GameManager gameManager;
 
         // an array of all the player's in the game
         private PlayerManager[] players;
@@ -29,13 +29,13 @@ namespace SFB.Net.Server.Matches{
         }
 
         public Match(SocketManager[] clients, DeckList[] decks){
-            gameState = new GameState(decks);
+            gameManager = new GameManager(decks);
             //setup the players
             //TODO: if don't get exactly 2 players for a 2 player game, flip out
             players = new PlayerManager[clients.Length];
             for(int i = 0; i < clients.Length; i++){
                 players[i] = new PlayerManager(clients[i],
-                        gameState.Players[i], gameState,
+                        gameManager.Players[i], gameManager,
                         CheckEndTurn, EndMatch);
             }
         }
@@ -93,9 +93,9 @@ namespace SFB.Net.Server.Matches{
         public void EndTurn(){
             bool gameOver;
             List<Delta>[] turnDeltaLists = new List<Delta>[players.Length];
-            lock(gameState){
+            lock(gameManager){
                 // actually calculate the outcome of the turn
-                Delta[] turnDeltas = gameState.GetTurnDeltas();
+                Delta[] turnDeltas = gameManager.GetTurnDeltas();
                 // figure out which deltas everyone needs
                 for(int i = 0; i < players.Length; i++){ // for each player...
                     turnDeltaLists[i] = new List<Delta>();
@@ -109,7 +109,7 @@ namespace SFB.Net.Server.Matches{
                         turnDeltaLists[i].Add(d);
                     }
                 }
-                gameOver = gameState.Over; // do this now while we have the lock
+                gameOver = gameManager.Over; // do this now while we have the lock
             }
             // share the deltas and restart turns
             for(int i = 0; i < players.Length; i++){
