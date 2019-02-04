@@ -1,4 +1,6 @@
+using SFB.Game;
 using SFB.Game.Content;
+using SFB.Game.Management;
 using System.Xml;
 using System.Collections.Generic;
 
@@ -57,6 +59,18 @@ namespace SFB.Game{
 			this.hand.RemoveAt(i);
 		}
 
+		public List<Delta> GetDrawDeltas() {
+			List<Delta> l = new List<Delta>();
+
+			Deck.RemoveFromDeckDelta[] rDeltas = this.deck.GetDrawDeltas(count: this.handSize - this.hand.Count);
+			foreach(Delta d in rDeltas)
+				l.Add(d);
+			foreach(Delta d in this.hand.GetDrawDeltas(rDeltas))
+				l.Add(d);
+
+			return l;
+		}
+
 		internal void DrawCards() {
 			while(this.hand.Count < this.HandSize)
 				this.hand.DrawFrom(this.deck);
@@ -66,10 +80,15 @@ namespace SFB.Game{
         internal bool Owns(Deck deck){
             return deck == this.deck;
         }
-        
-        // returns an XML representation of all of the player's objects ID's,
-        // to sync them between client/server
-        public XmlElement GetPlayerIDs(XmlDocument doc){
+
+		// returns if the player owns the given hand
+		internal bool Owns(Hand hand) {
+			return hand == this.hand;
+		}
+
+		// returns an XML representation of all of the player's objects ID's,
+		// to sync them between client/server
+		public XmlElement GetPlayerIDs(XmlDocument doc){
             XmlElement e = doc.CreateElement("playerIds");
             // the deck id
             XmlAttribute deckId = doc.CreateAttribute("deck");

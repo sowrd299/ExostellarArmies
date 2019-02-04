@@ -79,7 +79,7 @@ namespace SFB.Game {
                 removeCard();
             }
             else{
-                removeCard();
+                addCard();
             }
         }
 
