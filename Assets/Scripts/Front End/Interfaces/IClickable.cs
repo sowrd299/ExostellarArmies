@@ -6,4 +6,5 @@ public interface IClickable
 {
     void OnClick();
     void OnHighlight();
+    void OffHighlight();
 }
