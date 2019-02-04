@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using SFB.Game;
+using SFB.Game.Content;
+using SFB.Game.Management;
 
 public class CardUI : MonoBehaviour
 {
@@ -12,8 +14,19 @@ public class CardUI : MonoBehaviour
 
     private void Start()
     {
+    }
 
-        LoadCard(card);
+    private void Update()
+    {
+        if (Driver.instance.ListofUI.Count>0)
+        {
+            if (this.gameObject.name == "Card")
+                LoadCard(Driver.instance.ListofUI[0]);
+            else if (this.gameObject.name == "Card 1")
+                LoadCard(Driver.instance.ListofUI[1]);
+            else if (this.gameObject.name == "Card 2")
+                LoadCard(Driver.instance.ListofUI[2]);
+        }
     }
 
     public void LoadCard(CardFrontEnd c)

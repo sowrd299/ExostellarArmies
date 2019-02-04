@@ -1,35 +1,58 @@
 ﻿using SFB.Game;
-using SFB.Game.Decks;
+using SFB.Game.Content;
 using SFB.Game.Management;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class Driver : MonoBehaviour {
-	public GameManager gameManager;
+    public static Driver instance = null;
+    public GameManager gameManager;
 	Phase phase;
 	Player chosen;
 	bool hasPrinted;
 	Player selectedPlayer;
 
-	void Start() {
+    private List<CardFrontEnd> listofUI = new List<CardFrontEnd>();
+    public  List<CardFrontEnd> ListofUI
+    {
+        get
+        {
+            return listofUI;
+        }
+    }
+
+    void Awake()
+    {
+        if (instance == null)
+            instance = this;
+        else if (instance != this)
+            Destroy(gameObject);
+        DontDestroyOnLoad(gameObject);
+    }
+
+
+    [SerializeField]
+    private Element[] elemList;
+
+    void Start() {
 		List<int> test = new List<int>();
 
 		DeckList dlC = new DeckList();
-		dlC.AddCard(new UnitCard(1, "Carth1Cost", Faction.CARTH, 1, 1, 1), 4);
-		dlC.AddCard(new UnitCard(2, "Carth2Cost#1", Faction.CARTH, 1, 1, 1), 3);
-		dlC.AddCard(new UnitCard(2, "Carth2Cost#2", Faction.CARTH, 1, 1, 1), 3);
-		dlC.AddCard(new UnitCard(3, "Carth3Cost", Faction.CARTH, 1, 1, 1), 3);
-		dlC.AddCard(new UnitCard(4, "Carth4Cost", Faction.CARTH, 1, 1, 1), 2);
-		dlC.AddCard(new UnitCard(5, "Carth5Cost", Faction.CARTH, 1, 1, 1), 1);
+		dlC.AddCard(new UnitCard(1, "Carth1Cost", Faction.CARTH,"Main","Flavor", 1, 1, 1), 4);
+		dlC.AddCard(new UnitCard(2, "Carth2Cost#1", Faction.CARTH, "Main", "Flavor", 1, 1, 1), 3);
+		dlC.AddCard(new UnitCard(2, "Carth2Cost#2", Faction.CARTH, "Main", "Flavor", 1, 1, 1), 3);
+		dlC.AddCard(new UnitCard(3, "Carth3Cost", Faction.CARTH, "Main", "Flavor", 1, 1, 1), 3);
+		dlC.AddCard(new UnitCard(4, "Carth4Cost", Faction.CARTH, "Main", "Flavor", 1, 1, 1), 2);
+		dlC.AddCard(new UnitCard(5, "Carth5Cost", Faction.CARTH, "Main", "Flavor", 1, 1, 1), 1);
 
 		DeckList dlJ = new DeckList();
-		dlJ.AddCard(new UnitCard(1, "Jirnor1Cost", Faction.JIRNOR, 1, 1, 1), 4);
-		dlJ.AddCard(new UnitCard(2, "Jirnor2Cost#1", Faction.JIRNOR, 1, 1, 1), 3);
-		dlJ.AddCard(new UnitCard(2, "Jirnor2Cost#2", Faction.JIRNOR, 1, 1, 1), 3);
-		dlJ.AddCard(new UnitCard(3, "Jirnor3Cost", Faction.JIRNOR, 1, 1, 1), 3);
-		dlJ.AddCard(new UnitCard(4, "Jirnor4Cost", Faction.JIRNOR, 1, 1, 1), 2);
-		dlJ.AddCard(new UnitCard(5, "Jirnor5Cost", Faction.JIRNOR, 1, 1, 1), 1);
+		dlJ.AddCard(new UnitCard(1, "Jirnor1Cost", Faction.JIRNOR,"Main", "Flavor", 1, 1, 1), 4);
+		dlJ.AddCard(new UnitCard(2, "Jirnor2Cost#1", Faction.JIRNOR, "Main", "Flavor", 1, 1, 1), 3);
+		dlJ.AddCard(new UnitCard(2, "Jirnor2Cost#2", Faction.JIRNOR, "Main", "Flavor", 1, 1, 1), 3);
+		dlJ.AddCard(new UnitCard(3, "Jirnor3Cost", Faction.JIRNOR, "Main", "Flavor", 1, 1, 1), 3);
+		dlJ.AddCard(new UnitCard(4, "Jirnor4Cost", Faction.JIRNOR, "Main", "Flavor", 1, 1, 1), 2);
+		dlJ.AddCard(new UnitCard(5, "Jirnor5Cost", Faction.JIRNOR, "Main", "Flavor", 1, 1, 1), 1);
 
 
 		// Each deck has 16 cards in it
@@ -37,10 +60,41 @@ public class Driver : MonoBehaviour {
 
 
 		gameManager = new GameManager(deckLists);
-		phase = Phase.DRAW;
-	}
-	
-	void Update() {
+
+        phase = Phase.DRAW;
+
+        //Loading UI 
+        for (int i = 0; i < 3; i++)
+        {
+            CardProperties[] listOfProperties = new CardProperties[9];
+            listOfProperties = createCardProperties(9, "NAME", "TYPE", "FLAVOR", "ABILITY", 5, 5, 5, 5);
+            CardFrontEnd cardFront = new CardFrontEnd(listOfProperties);
+            listofUI.Add(cardFront);
+        }
+    }
+
+    public CardProperties[] createCardProperties(int numberOfProperties, string name,string type,string flavor, string ability,int cost,int hp,int melee, int range)
+    {
+        CardProperties[] listOfProp = new CardProperties[numberOfProperties];
+        for (int i=0; i<listOfProp.Length; i++)
+        {
+            CardProperties cardProp = new CardProperties();
+            cardProp.element = elemList[i];
+            listOfProp[i] = cardProp;
+        }
+        listOfProp[0].stringValue = name;
+        listOfProp[1].stringValue = type;
+        listOfProp[2].stringValue = flavor;
+        listOfProp[3].stringValue = ability;
+        listOfProp[5].intValue = cost;
+        listOfProp[6].intValue = hp;
+        listOfProp[7].intValue = melee;
+        listOfProp[8].intValue = range;
+        return listOfProp;
+
+    }
+
+    void Update() {
 		switch(phase) {
 			case Phase.DRAW:
 				print("");

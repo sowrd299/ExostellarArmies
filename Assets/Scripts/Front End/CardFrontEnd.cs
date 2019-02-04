@@ -8,5 +8,8 @@ public class CardFrontEnd : ScriptableObject
 {
     public CardProperties[] properties;
 
-
+    public CardFrontEnd (CardProperties[] cardProp)
+    {
+        this.properties = cardProp;
+    }
 }
