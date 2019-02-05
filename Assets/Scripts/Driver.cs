@@ -24,7 +24,7 @@ public class Driver : MonoBehaviour {
 
     void Awake()
     {
-        if (instance == null)
+		if (instance == null)
             instance = this;
         else if (instance != this)
             Destroy(gameObject);
@@ -35,9 +35,9 @@ public class Driver : MonoBehaviour {
     [SerializeField]
     private Element[] elemList;
 
-    void Start() {
-		List<int> test = new List<int>();
 
+
+    void Start() {
 		DeckList dlC = new DeckList();
 		dlC.AddCard(new UnitCard(1, "Carth1Cost", Faction.CARTH,"Main","Flavor", 1, 1, 1), 4);
 		dlC.AddCard(new UnitCard(2, "Carth2Cost#1", Faction.CARTH, "Main", "Flavor", 1, 1, 1), 3);

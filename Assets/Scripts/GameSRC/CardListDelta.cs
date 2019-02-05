@@ -12,12 +12,6 @@ namespace SFB.Game {
     // a class to represent removing the given card from the given index the give card from the given index
     public class CardListDelta<T> : TargetedDelta<T> where T : CardList {
 
-        /* TODO: move this over to delta
-        public Card Card{
-            get{ return card; }
-        }
-        */
-
         public enum Mode { ADD, REMOVE }
 
         private int index;

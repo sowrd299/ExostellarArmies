@@ -28,9 +28,8 @@ namespace SFB.Game{
             }
         }
 
-        // adds cards in the deck from a decklist
-        // TODO: probably would be more efficient to figure out how to load them into random positions
-        public void LoadCards(DeckList cards){
+		// adds cards in the deck from a decklist; inserts at random locations
+		public void LoadCards(DeckList cards){
 			System.Random rand = new System.Random();
 			// for each different card in the deck
 			foreach(Card c in cards.GetCards()){
