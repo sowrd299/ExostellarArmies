@@ -57,7 +57,7 @@ namespace SFB.Game{
 			this.hand.RemoveAt(i);
 		}
 
-		internal void DrawCards() {
+		internal void DrawCards() { 
 			while(this.hand.Count < this.HandSize)
 				this.hand.DrawFrom(this.deck);
 		}
