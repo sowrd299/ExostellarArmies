@@ -10,6 +10,7 @@ public class MouseOverDetection : Action
 
     public override void Execute()
     {
+        listofCards = new List<GameObject>();
         PointerEventData pointerData = new PointerEventData(EventSystem.current){position = Input.mousePosition}; 
 
         List<RaycastResult> results = new List<RaycastResult>();
@@ -19,19 +20,21 @@ public class MouseOverDetection : Action
         foreach (RaycastResult r in results)
         {
             IClickable c = r.gameObject.GetComponentInParent<IClickable>();
-            if(c!= null && r.gameObject.transform.parent.tag == "Card")
+            Debug.Log(r.gameObject.name);
+            if (c!= null && r.gameObject.transform.parent.tag == "MyCards")
             {
                 c.OnHighlight();
                 listofCards.Add(r.gameObject.transform.parent.gameObject);
-                Debug.Log(r.gameObject.name);
-                break;
             }
             else
             {
-                for(int i=0; i<listofCards.Count;i++)
+                if (listofCards.Count > 0)
                 {
-                    Vector3 v = Vector3.one * .50f;
-                    listofCards[i].gameObject.transform.localScale = v;
+                    for (int i = 0; i < listofCards.Count; i++)
+                    {
+                        Vector3 v = Vector3.one * .50f;
+                        listofCards[i].gameObject.transform.localScale = v;
+                    }
                 }
             }
         }

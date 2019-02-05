@@ -6,6 +6,8 @@ TagManager:
   tags:
   - Card
   - CardHolder
+  - EnemyCardHolder
+  - MyCards
   layers:
   - Default
   - TransparentFX
