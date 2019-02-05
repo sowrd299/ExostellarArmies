@@ -5,7 +5,7 @@ using SFB.Game.Management;
 using SFB.Game.Content;
 using System.Xml;
 
-namespace SFB.Game {
+namespace SFB.Game.Content {
 	public class Lane : IIDed {
 		private static IdIssuer<Lane> idIssuer = new IdIssuer<Lane>();
 		public static IdIssuer<Lane> IdIssuer {

@@ -12,6 +12,7 @@ public class Driver : MonoBehaviour {
 	Player chosen;
 	bool hasPrinted;
 	Player selectedPlayer;
+	Lane[] lanes;
 
     private List<CardFrontEnd> listofUI = new List<CardFrontEnd>();
     public  List<CardFrontEnd> ListofUI
@@ -71,6 +72,7 @@ public class Driver : MonoBehaviour {
             CardFrontEnd cardFront = new CardFrontEnd(listOfProperties);
             listofUI.Add(cardFront);
         }
+		lanes = new Lane[] { new Lane(), new Lane(), new Lane() };
     }
 
     public CardProperties[] createCardProperties(int numberOfProperties, string name,string type,string flavor, string ability,int cost,int hp,int melee, int range)

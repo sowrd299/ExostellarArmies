@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace SFB.Game.Content{
+namespace SFB.Game.Content {
 
     // a class to contain the non-unique set (bag) of cards in a deck
     public class DeckList {
