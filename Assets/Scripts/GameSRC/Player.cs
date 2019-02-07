@@ -95,6 +95,10 @@ namespace SFB.Game{
             XmlAttribute deckId = doc.CreateAttribute("deck");
             deckId.Value = deck.ID;
             e.SetAttributeNode(deckId); 
+            // the hand id
+            XmlAttribute handId = doc.CreateAttribute("hand");
+            handId.Value = hand.ID;
+            e.SetAttributeNode(handId); 
             // return
             return e;
         }

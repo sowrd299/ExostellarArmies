@@ -1,4 +1,5 @@
 using SFB.Game.Content;
+using System.Collections.Generic;
 
 namespace SFB.Game.Management{
 
@@ -41,8 +42,15 @@ namespace SFB.Game.Management{
 
         // return the resaults if the turn were to end right then
         public Delta[] GetTurnDeltas(){
-            // dummy implementation
-            return new Delta[0];
+            List<Delta> deltas = new List<Delta>();
+            // card draws
+            foreach(Player p in players){
+                foreach(Delta d in p.GetDrawDeltas()){
+                    deltas.Add(d);
+                }
+            }
+            // cleanup and return
+            return deltas.ToArray();
         }
 
         public void ApplyDelta(Delta d){
