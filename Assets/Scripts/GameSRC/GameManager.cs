@@ -1,5 +1,6 @@
 using SFB.Game.Content;
 using System.Collections.Generic;
+using System.Xml;
 
 namespace SFB.Game.Management{
 
@@ -14,17 +15,27 @@ namespace SFB.Game.Management{
 
         Player[] players;
         // an array of all the players
-        // MUST BE IN THE SAME ORDER AS THEIR DECKLISTS WERE PROVIDED
+        // MUST BE IN THE SAME ORDER AS THEIR DECKLISTS/IDS WERE PROVIDED
         public Player[] Players{
             get{
                 return players;
             }
         }
 
-        public GameManager(DeckList[] lists){
-            players = new Player[lists.Length];
-            for(int i = 0; i < players.Length; i++){
-                players[i] = new Player("Player " + (i+1), lists[i]);
+        // when hidden list is null, will init players with "hidden decks" of unkown cards
+        //      functionality intended for clients
+        // when ids is null, will init with newly generated ids
+        //      functionality intended for servers
+        // when both are null, will start a game with no players
+        // MUST KEEP THE INDEXES OF THE OBJECTS GIVEN TO IT
+        public GameManager(DeckList[] deckLists = null, XmlElement[] ids = null){
+            int numPlayers = deckLists != null ? deckLists.Length : (ids != null ? ids.Length : 0);
+            players = new Player[numPlayers];
+            for(int i = 0; i < numPlayers; i++){
+                DeckList hiddenList =  new DeckList();
+                hiddenList.AddCard(new UnknownCard(), 20); // TODO: support decks of different sizes?
+                DeckList list = deckLists != null ? deckLists[i] : hiddenList;
+                players[i] = new Player("Player " + (i+1), list, ids != null ? ids[i] : null);
             }
         }
 
@@ -37,7 +48,8 @@ namespace SFB.Game.Management{
         // returns the outcomes of a player taking a give action
         public Delta[] GetActionDeltas(Player player, Action a){
             // dummy implementation
-            return new Delta[]{new Deck.RemoveFromDeckDelta(player.Deck, null, 0)};
+            // return new Delta[]{new Deck.RemoveFromDeckDelta(player.Deck, null, 0)}; // this implementation intrinsically throws errors
+            return new Delta[]{};
         }
 
         // return the resaults if the turn were to end right then

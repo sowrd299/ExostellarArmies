@@ -39,14 +39,16 @@ namespace SFB.Game{
 		internal Player(string name, DeckList d, XmlElement ids = null){
             //if given id's, manage them
             string deckId = ""; //if this is passed in, will still generate ID
+            string handId = ""; //if this is passed in, will still generate ID
             if(ids != null){
-                deckId = ids.Attributes["deckId"].Value;
+                deckId = ids.Attributes["deck"].Value;
+                handId = ids.Attributes["hand"].Value;
             }
             //deck
 			this.deck = new Deck(deckId);
             deck.LoadCards(d);
             //hand
-			this.hand = new Hand();
+			this.hand = new Hand(handId);
 			this.handSize = 3;
             //misc
 			this.name = name;
