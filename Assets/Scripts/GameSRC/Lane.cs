@@ -16,8 +16,8 @@ namespace SFB.Game.Content {
 			get { return id; }
 		}
 
-		public Tower yourTower, theirTower;
-		internal Unit[] yourUnits, theirUnits; // 0 front, 1 back
+		public Tower[] towers;
+		internal Unit[,] unitss; // 0 front, 1 back
 
 		public Lane(string id = "") {
 			if(id == "") {
@@ -27,37 +27,33 @@ namespace SFB.Game.Content {
 				this.id = id;
 			}
 
-			yourTower = new Tower();
-			theirTower = new Tower();
-			yourUnits = new Unit[2];
-			theirUnits = new Unit[2];
+			towers = new Tower[2] { new Tower(), new Tower() };
+			unitss = new Unit[2, 2];
 		}
 
-		public bool isOccupied(bool yourSide, int i) {
-			return (yourSide ? yourUnits : theirUnits)[i] != null;
+		public bool isOccupied(int player, int pos) {
+			return unitss[player, pos] != null;
 		}
 
-		private void remove(bool yourSide, int i) {
-			(yourSide ? yourUnits : theirUnits)[i] = null;
+		private void remove(int player, int pos) {
+			unitss[player, pos] = null;
 		}
 		
-		private void place(UnitCard uc, bool yourSide, int i) {
-			(yourSide ? yourUnits : theirUnits)[i] = new Unit(uc);
+		private void place(UnitCard uc, int player, int pos) {
+			unitss[player, pos] = new Unit(uc);
 		}
 
-		internal void placeYourFront (UnitCard uc) { place(uc, true,  0); }
-		internal void placeYourBack  (UnitCard uc) { place(uc, true,  1); }
-		internal void placeTheirFront(UnitCard uc) { place(uc, false, 0); }
-		internal void placeTheirBack (UnitCard uc) { place(uc, false, 1); }
+		internal void placeFront(UnitCard uc, int p) { place(uc, p,  0); }
+		internal void placeBack (UnitCard uc, int p) { place(uc, p,  1); }
 
 		public void advance() {
-			if(isOccupied(true, 1) && !isOccupied(true, 0)) {
-				yourUnits[0] = yourUnits[1];
-				yourUnits[1] = null;
+			if(isOccupied(0, 1) && !isOccupied(0, 0)) {
+				unitss[0, 0] = unitss[0, 1];
+				unitss[0, 1] = null;
 			}
-			if(isOccupied(false, 1) && !isOccupied(false, 0)) {
-				theirUnits[0] = theirUnits[1];
-				theirUnits[1] = null;
+			if(isOccupied(1, 1) && !isOccupied(1, 0)) {
+				unitss[1, 0] = unitss[1, 1];
+				unitss[1, 1] = null;
 			}
 		}
 
@@ -75,12 +71,12 @@ namespace SFB.Game.Content {
 		}*/
 
 		public class AddToLaneDelta : TargetedDelta<Lane> {
-			private bool yourSide;
+			private int player;
 			private int pos;
 
-			internal AddToLaneDelta(Lane lane, UnitCard card, bool yourSide, int pos) : base(lane) {
+			internal AddToLaneDelta(Lane lane, UnitCard card, int player, int pos) : base(lane) {
 				this.card = card;
-				this.yourSide = yourSide;
+				this.player = player;
 				this.pos = pos;
 			}
 
@@ -92,16 +88,16 @@ namespace SFB.Game.Content {
 			}
 
 			internal override void Apply() {
-				if((target as Lane).isOccupied(this.yourSide, this.pos))
+				if((target as Lane).isOccupied(this.player, this.pos))
 					throw new IllegalDeltaException("The lane and position you wish to put that Unit is already occupied");
-				(target as Lane).place(this.card as UnitCard, this.yourSide, this.pos);
+				(target as Lane).place(this.card as UnitCard, this.player, this.pos);
 			}
 
 			internal override void Revert() {
-				if(!(target as Lane).isOccupied(this.yourSide, this.pos))
+				if(!(target as Lane).isOccupied(this.player, this.pos))
 					throw new IllegalDeltaException("The lane and position you wish to remove that Unit from is already empty");
 
-				(target as Lane).remove(this.yourSide, this.pos);
+				(target as Lane).remove(this.player, this.pos);
 			}
 
 		}
