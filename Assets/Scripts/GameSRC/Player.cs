@@ -7,7 +7,11 @@ using System.Collections.Generic;
 namespace SFB.Game{
 
     // a class to represent a player in a match
-    public class Player{
+    public class Player {
+		private int lives;
+		internal int Lives {
+			get { return lives; }
+		}
 
         // the player's deck is stored here
         private Deck deck;
@@ -39,19 +43,22 @@ namespace SFB.Game{
 		internal Player(string name, DeckList d, XmlElement ids = null){
             //if given id's, manage them
             string deckId = ""; //if this is passed in, will still generate ID
+            string handId = ""; //if this is passed in, will still generate ID
             if(ids != null){
-                deckId = ids.Attributes["deckId"].Value;
+                deckId = ids.Attributes["deck"].Value;
+                handId = ids.Attributes["hand"].Value;
             }
             //deck
 			this.deck = new Deck(deckId);
             deck.LoadCards(d);
             //hand
-			this.hand = new Hand();
+			this.hand = new Hand(handId);
 			this.handSize = 3;
             //misc
 			this.name = name;
 
 			this.discard = new List<Card>();
+			this.lives = 3; //?
 		}
 
 		internal void UseCard(int i) {

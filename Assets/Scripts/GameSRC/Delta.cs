@@ -38,11 +38,11 @@ namespace SFB.Game.Management{
         }
 
         // Xml constructor: for use when getting an XML representatino based  on Xml for a network message (client side)
-        // every child class needs one THAT TAKES EXACTLY ONE XML ELEMENT
+        // every child class needs one THAT TAKES EXACTLY ONE XML ELEMENT AND A CARD LOADER
         // THESE CONSTRUCTORS ARE PUBLIC FOR REFLECTION; THEY ARE NOT MEANT TO BE CALLED EXTERNALLY
         public Delta(XmlElement from, CardLoader cardLoader){
             if(from.Attributes["card"] != null){
-                this.card = cardLoader.LoadCard(from.Attributes["card"].Value);
+                this.card = cardLoader.GetById(from.Attributes["card"].Value);
             }
         }
 
@@ -52,7 +52,12 @@ namespace SFB.Game.Management{
             XmlAttribute typeAttr = doc.CreateAttribute("type");
             typeAttr.Value = type;
             e.SetAttributeNode(typeAttr);
-            // TODO: add in the card field here
+            // attach the card
+            if(card != null){
+                XmlAttribute cardAttr = doc.CreateAttribute("card");
+                cardAttr.Value = card.ID;
+                e.SetAttributeNode(cardAttr);
+            }
             return e;
         }
 

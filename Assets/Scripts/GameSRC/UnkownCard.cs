@@ -17,6 +17,7 @@ namespace SFB.Game{
             return obj != null && obj.GetType().IsSubclassOf(typeof(Card));
         }
 
+        // because of changes to card equality implementation, the bellow aren't actually needed anymore, but, eh
         public static bool operator == (UnknownCard a, Card b){
             return true;
         }

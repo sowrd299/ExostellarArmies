@@ -3,7 +3,7 @@ using System.Xml;
 using SFB.Game.Content;
 using SFB.Game.Management;
 
-namespace SFB.Game {
+namespace SFB.Game.Content {
 
 	public class Hand : CardList {
 		private static IdIssuer<Hand> idIssuer = new IdIssuer<Hand>();

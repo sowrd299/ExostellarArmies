@@ -4,7 +4,7 @@ using SFB.Game.Management;
 using SFB.Game.Content;
 using System.Xml;
 
-namespace SFB.Game {
+namespace SFB.Game.Content {
 	public class Lane : IIDed {
 		private static IdIssuer<Lane> idIssuer = new IdIssuer<Lane>();
 		public static IdIssuer<Lane> IdIssuer {
@@ -40,8 +40,7 @@ namespace SFB.Game {
 		private void remove(bool yourSide, int i) {
 			(yourSide ? yourUnits : theirUnits)[i] = null;
 		}
-
-		// returns false if there already is a unit there
+		
 		private void place(UnitCard uc, bool yourSide, int i) {
 			(yourSide ? yourUnits : theirUnits)[i] = new Unit(uc);
 		}
@@ -61,6 +60,19 @@ namespace SFB.Game {
 				theirUnits[1] = null;
 			}
 		}
+
+		/*public void doCombat() {
+			doRangedCombat();
+			doMeleeCombat();
+		}
+
+		public void doRangedCombat() {
+			foreach(Unit u in yourUnits)
+		}
+
+		public void doMeleeCombat() {
+
+		}*/
 
 		public class AddToLaneDelta : TargetedDelta<Lane> {
 			private bool yourSide;
