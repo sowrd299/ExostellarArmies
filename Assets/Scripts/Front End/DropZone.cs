@@ -20,9 +20,12 @@ public class DropZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
                 if (this.gameObject.transform.childCount == 0)
                 {
                     d.ParentToReturnTo = this.transform;
-                    //RectTransform parent = this.gameObject.transform.GetComponent<RectTransform>();
+                    RectTransform parent = this.gameObject.transform.GetComponent<RectTransform>();
                     //GridLayoutGroup grid = this.gameObject.transform.GetComponent<GridLayoutGroup>();
                     //grid.cellSize = new Vector2(parent.rect.width, parent.rect.height);
+                    Debug.Log("Dragging:"+d.gameObject.name);
+                    RectTransform rt = d.gameObject.transform.GetComponent<RectTransform>();
+                    rt.sizeDelta = new Vector2(parent.sizeDelta.x, parent.sizeDelta.x);
                 }
             }
             else if(this.gameObject.tag == "EnemyCardHolder" && d.gameObject.tag == "MyCards")
@@ -32,9 +35,6 @@ public class DropZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
             else
             {
                 d.ParentToReturnTo = this.transform;
-                //RectTransform parent = this.gameObject.transform.GetComponent<RectTransform>();
-                //GridLayoutGroup grid = this.gameObject.transform.GetComponent<GridLayoutGroup>();
-                //grid.cellSize = new Vector2(parent.rect.width, parent.rect.height);
             }
 
             
@@ -42,13 +42,6 @@ public class DropZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
 
     }
 
-    /*GameObject worldPanel_1 = Instantiate(WorldPanel_1) as GameObject;
-        worldPanel_1.transform.SetParent(ContainerPanel.gameObject.transform, false);
- 
-        RectTransform parent = ContainerPanel.gameObject.transform.GetComponent<RectTransform>();
- 
-        GridLayoutGroup grid = ContainerPanel.gameObject.transform.GetComponent<GridLayoutGroup>();
-        grid.cellSize = new Vector2(parent.rect.width, parent.rect.height);*/
 
     public void OnPointerEnter(PointerEventData eventDate)
     {
