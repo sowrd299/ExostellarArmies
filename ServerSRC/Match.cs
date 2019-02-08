@@ -62,6 +62,8 @@ namespace SFB.Net.Server.Matches{
                 players[i].Start(playerIds[i].ToArray());
             }
             returnCallback = rc; 
+            // start the first turn;
+            EndTurn();
         }
 
         // starts the match with asynchronous receiving

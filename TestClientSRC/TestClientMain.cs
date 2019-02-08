@@ -74,7 +74,7 @@ namespace SFB.TestClient{
                 //join a game
                 Console.WriteLine("Press Enter to join a game...");
                 Console.Read();
-                data = System.Text.Encoding.UTF8.GetBytes("<file type='joinMatch'><deck id='carthStarter'/></file>");
+                data = System.Text.Encoding.UTF8.GetBytes("<file type='joinMatch'><deck id='testing'/></file>");
                 stream.Write(data, 0, data.Length);
 
                 //*

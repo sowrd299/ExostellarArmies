@@ -12,6 +12,16 @@ namespace SFB.Net{
     //TODO: add a child of this class that associates verified account data
     //TODO: handle resuming sessions
     //TODO: allow multiple handlers to receive at once? Seems like a powerful feature to have
+    /*TODO: HANDLE THIS ERROR:
+    Unhandled Exception:
+        System.Net.Sockets.SocketException (0x80004005): Connection reset by peer
+        at System.Net.Sockets.Socket.EndReceive (System.IAsyncResult asyncResult) [0x00012] in <5bf358e735be486487282a37cb3bce80>:0 
+        at SFB.Net.SocketManager.endAsynchReceiveXml (System.IAsyncResult ar) [0x0001b] in <4fec1bc975604ce0aca66f4d8c8202c0>:0 
+        at System.Net.Sockets.SocketAsyncResult+<>c.<Complete>b__27_0 (System.Object state) [0x0000b] in <5bf358e735be486487282a37cb3bce80>:0 
+        at System.Threading.QueueUserWorkItemCallback.System.Threading.IThreadPoolWorkItem.ExecuteWorkItem () <0x7f251d219ba0 + 0x0003a> in <04750267503a43e5929c1d1ba19daf3e>:0 
+        at System.Threading.ThreadPoolWorkQueue.Dispatch () [0x00074] in <04750267503a43e5929c1d1ba19daf3e>:0 
+        at System.Threading._ThreadPoolWaitCallback.PerformWaitCallback () <0x7f251d219a50 + 0x00005> in <04750267503a43e5929c1d1ba19daf3e>:0 
+     */
     public class SocketManager{
 
         private int bufferSize = 1024;
