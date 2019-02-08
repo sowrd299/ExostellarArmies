@@ -7,7 +7,11 @@ using System.Collections.Generic;
 namespace SFB.Game{
 
     // a class to represent a player in a match
-    public class Player{
+    public class Player {
+		private int lives;
+		internal int Lives {
+			get { return lives; }
+		}
 
         // the player's deck is stored here
         private Deck deck;
@@ -52,6 +56,7 @@ namespace SFB.Game{
 			this.name = name;
 
 			this.discard = new List<Card>();
+			this.lives = 3; //?
 		}
 
 		internal void UseCard(int i) {

@@ -41,8 +41,7 @@ namespace SFB.Game.Content {
 		private void remove(bool yourSide, int i) {
 			(yourSide ? yourUnits : theirUnits)[i] = null;
 		}
-
-		// returns false if there already is a unit there
+		
 		private void place(UnitCard uc, bool yourSide, int i) {
 			(yourSide ? yourUnits : theirUnits)[i] = new Unit(uc);
 		}
@@ -62,6 +61,19 @@ namespace SFB.Game.Content {
 				theirUnits[1] = null;
 			}
 		}
+
+		/*public void doCombat() {
+			doRangedCombat();
+			doMeleeCombat();
+		}
+
+		public void doRangedCombat() {
+			foreach(Unit u in yourUnits)
+		}
+
+		public void doMeleeCombat() {
+
+		}*/
 
 		public class AddToLaneDelta : TargetedDelta<Lane> {
 			private bool yourSide;

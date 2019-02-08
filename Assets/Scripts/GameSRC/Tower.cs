@@ -12,9 +12,17 @@ namespace SFB.Game.Content {
 			hp = maxHP;
 		}
 
+		public void takeDamage() {
+			hp--;
+		}
+
 		public void revive() {
-			maxHP++;
-			hp = maxHP;
+			if(hp == 0) {
+				maxHP++;
+				hp = maxHP;
+			} else {
+				//exception?
+			}
 		}
 	}
 }

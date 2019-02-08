@@ -5,10 +5,11 @@ namespace SFB.Game.Management{
     // a class to reprsent the state of the game at a give point in time
     public class GameManager{
 
-        public bool Over{
-            get{
-                return false;
-            }
+        public bool over() {
+			foreach(Player p in players)
+				if(p.Lives == 0)
+					return true;
+			return false;
         }
 
         Player[] players;
