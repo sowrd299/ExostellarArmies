@@ -20,7 +20,7 @@ namespace SFB.Game {
         public CardListDelta(T list, Card c, int i, Mode m)
             : base(list)
         {
-            card = c;
+            card = new SendableTarget<Card>("card", c); // TODO: shouldn't have to know what to name this...
             index = i;
             mode = m;
         }
@@ -46,14 +46,14 @@ namespace SFB.Game {
 
         protected void addCard(){
             if(target.Count >= index){
-                target.Insert(index, card);
+                target.Insert(index, card.Target);
             }else{
                 throw new IllegalDeltaException("The deck does not contain the index you wish to insert at");
             }
         }
 
         protected void removeCard(){
-            if(target.Count > index && target[index] == card){
+            if(target.Count > index && target[index] == card.Target){
                 target.RemoveAt(index);
             }else{
                 throw new IllegalDeltaException("The card you wish to remove does not exist at that index");

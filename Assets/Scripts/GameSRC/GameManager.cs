@@ -7,14 +7,16 @@ namespace SFB.Game.Management{
     // a class to reprsent the state of the game at a give point in time
     public class GameManager{
 
-        public bool over() {
-			foreach(Player p in players)
-				if(p.Lives == 0)
-					return true;
-			return false;
+        public bool Over {
+            get{ // technically shouldn't do o(n) in a field, but it's a very small n
+                foreach(Player p in players)
+                    if(p.Lives == 0)
+                        return true;
+                return false;
+            }
         }
 
-        Player[] players;
+        private Player[] players;
         // an array of all the players
         // MUST BE IN THE SAME ORDER AS THEIR DECKLISTS/IDS WERE PROVIDED
         public Player[] Players{

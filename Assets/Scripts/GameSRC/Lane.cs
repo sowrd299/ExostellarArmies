@@ -75,7 +75,7 @@ namespace SFB.Game.Content {
 			private int pos;
 
 			internal AddToLaneDelta(Lane lane, UnitCard card, int player, int pos) : base(lane) {
-				this.card = card;
+				this.card = new SendableTarget<Card>("card", card);
 				this.player = player;
 				this.pos = pos;
 			}
@@ -90,7 +90,7 @@ namespace SFB.Game.Content {
 			internal override void Apply() {
 				if((target as Lane).isOccupied(this.player, this.pos))
 					throw new IllegalDeltaException("The lane and position you wish to put that Unit is already occupied");
-				(target as Lane).place(this.card as UnitCard, this.player, this.pos);
+				(target as Lane).place(this.card.Target as UnitCard, this.player, this.pos);
 			}
 
 			internal override void Revert() {

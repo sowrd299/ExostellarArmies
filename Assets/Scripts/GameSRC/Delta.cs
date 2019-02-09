@@ -19,9 +19,9 @@ namespace SFB.Game.Management{
 
         // I am assuming here enough different deltas will want this
         // that it is worth just sharing the code
-        protected Card card;
+        protected SendableTarget<Card> card;
         public Card Card{
-            get{ return card; }
+            get{ return card.Target; }
         }
 
         // the string presentation of the type, for use in making XML's
@@ -34,16 +34,14 @@ namespace SFB.Game.Management{
         // non-Xml constructor: for use when originating a delta (server side)
         // every child class needs one
         public Delta(){
-
+            card = new SendableTarget<Card>("card", null);
         }
 
         // Xml constructor: for use when getting an XML representatino based  on Xml for a network message (client side)
         // every child class needs one THAT TAKES EXACTLY ONE XML ELEMENT AND A CARD LOADER
         // THESE CONSTRUCTORS ARE PUBLIC FOR REFLECTION; THEY ARE NOT MEANT TO BE CALLED EXTERNALLY
         public Delta(XmlElement from, CardLoader cardLoader){
-            if(from.Attributes["card"] != null){
-                this.card = cardLoader.GetById(from.Attributes["card"].Value);
-            }
+            card = new SendableTarget<Card>("card", from, cardLoader);
         }
 
         public virtual XmlElement ToXml(XmlDocument doc){
@@ -53,11 +51,7 @@ namespace SFB.Game.Management{
             typeAttr.Value = type;
             e.SetAttributeNode(typeAttr);
             // attach the card
-            if(card != null){
-                XmlAttribute cardAttr = doc.CreateAttribute("card");
-                cardAttr.Value = card.ID;
-                e.SetAttributeNode(cardAttr);
-            }
+            e.SetAttributeNode(card.ToXml(doc));
             return e;
         }
 
@@ -92,18 +86,18 @@ namespace SFB.Game.Management{
 
 
     // a class to represent changes in the gamestate to specific ID'ed objects
+    // NOTE: this is depricated; use other Deltas with SendableTargets instead
     public abstract class TargetedDelta<T> : Delta where T : IIDed {
 
-        public T target; // the object the delta applies to
-                  // TODO: I'm not convinced this shouldn't support N targets of different types
+        private SendableTarget<T> _target; // the object the delta applies to
+        public T target{
+            get{ return _target.Target; }
+            set{ _target = new SendableTarget<T>("targetId", value); }
+        }
         public TargetedDelta(XmlElement from, IdIssuer<T> issuer, CardLoader loader)
                 : base(from, loader)
         {
-            // returns the target of the action, if any
-            XmlAttribute idAttr = from.Attributes["targetId"];
-            if(idAttr != null){
-				target = issuer.GetByID(idAttr.Value);// as T;
-            }
+            _target = new SendableTarget<T>("targetId", from, issuer);
         }
 
         public TargetedDelta(T target) : base() {
@@ -113,9 +107,7 @@ namespace SFB.Game.Management{
         public override XmlElement ToXml(XmlDocument doc){
             XmlElement e = base.ToXml(doc);
             if(target != null){
-                XmlAttribute a = doc.CreateAttribute("targetId");
-                a.Value = target.ID;
-                e.SetAttributeNode(a);
+                e.SetAttributeNode(_target.ToXml(doc));
             }
             return e;
         }
