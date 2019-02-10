@@ -37,6 +37,11 @@ namespace SFB.Game.Management{
             card = new SendableTarget<Card>("card", null);
         }
 
+        // an alternate non-Xml constructor
+        public Delta(Card c){
+            card = new SendableTarget<Card>("card", c);
+        }
+
         // Xml constructor: for use when getting an XML representatino based  on Xml for a network message (client side)
         // every child class needs one THAT TAKES EXACTLY ONE XML ELEMENT AND A CARD LOADER
         // THESE CONSTRUCTORS ARE PUBLIC FOR REFLECTION; THEY ARE NOT MEANT TO BE CALLED EXTERNALLY

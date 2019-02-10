@@ -42,24 +42,28 @@ namespace SFB.Net.Server.Matches{
 
         // starts the match
         public void Start(ReturnCallback rc){
+            // a disposable Xml document for creating nodes in
+            // TODO: this is really bad practice
+            XmlDocument doc = new XmlDocument();
             // get all the enemy player ID data each player needs
             List<XmlElement>[] playerIds = new List<XmlElement>[players.Length];
             // build all the arrays
             for(int i = 0; i < players.Length; i++){
                 playerIds[i] = new List<XmlElement>();
             }
+            // TODO: this whole ID collecting section might be better served in the game manager, I'm not sure
             // populate all the arrays with player id's
             // ...from other players
             for(int i = 0; i < players.Length; i++){
-                XmlDocument doc = new XmlDocument();
                 XmlElement e = players[i].GetPlayerIDs(doc);
                 for(int j = (i+1)%players.Length; j != i; j = (j+1)%players.Length){
                     playerIds[j].Add(e);
                 }
             }
             // send all the players all the ids and get them started
+            XmlElement[] laneIds = gameManager.GetLaneIDs(doc);
             for(int i = 0; i < players.Length; i++){
-                players[i].Start(playerIds[i].ToArray());
+                players[i].Start(playerIds[i].ToArray(), laneIds);
             }
             returnCallback = rc; 
             // start the first turn;

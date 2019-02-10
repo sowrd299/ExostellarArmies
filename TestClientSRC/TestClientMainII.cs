@@ -76,7 +76,11 @@ namespace SFB.TestClient{
                 }
                 playerIds.Add(e);
             }
-            gm = new GameManager(ids: playerIds.ToArray());
+            List<XmlElement> laneIds = new List<XmlElement>();
+            foreach(XmlElement e in matchStartDoc.GetElementsByTagName("laneIds")){
+                laneIds.Add(e);
+            }
+            gm = new GameManager(playerIds: playerIds.ToArray(), laneIds: laneIds.ToArray());
             localPlayer = gm.Players[localPlayerIndex];
 
             // get the turnStart message

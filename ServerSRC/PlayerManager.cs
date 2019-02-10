@@ -69,7 +69,7 @@ namespace SFB.Net.Server.Matches{
         }
 
         // to be called at the start of the game
-        public void Start(XmlElement[] otherPlayersIDs){
+        public void Start(XmlElement[] otherPlayersIDs, XmlElement[] laneIds){
             //TODO: maybe match start should be sent by the match itself?
             XmlDocument doc = NewEmptyMessage("matchStart");
             XmlElement friendlyIDs = player.GetPlayerIDs(doc);
@@ -83,6 +83,11 @@ namespace SFB.Net.Server.Matches{
                 XmlAttribute enemySide = doc.CreateAttribute("side");
                 enemySide.Value = "opponent";
                 e?.SetAttributeNode(enemySide); 
+                doc.DocumentElement.AppendChild(e);
+            }
+            //add the lanes
+            foreach(XmlElement ids in laneIds){
+                XmlElement e = doc.ImportNode(ids, true) as XmlElement;
                 doc.DocumentElement.AppendChild(e);
             }
             socket.SendXml(doc);
@@ -134,7 +139,7 @@ namespace SFB.Net.Server.Matches{
             switch(messageTypeOf(msg)){
                 case "gameAction":
                     if(state == State.ACTING){
-                        Action a = new Action(msg.DocumentElement["action"]);
+                        PlayerAction a = PlayerAction.FromXml(msg.DocumentElement["action"]);
                         if(gameManager.IsLegalAction(player, a)){
                             Delta[] ds =  gameManager.GetActionDeltas(player, a);
                             // using three different for loops to:
