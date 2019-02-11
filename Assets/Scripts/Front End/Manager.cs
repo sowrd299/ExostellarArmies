@@ -1,13 +1,14 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Manager : MonoBehaviour
 {
     public State currentState;
 
     [SerializeField]
-    private List<GameObject> cardPrefabs;
+    private GameObject cardPrefab;
     public List<GameObject> cards = new List<GameObject>();
 
     [SerializeField]
@@ -16,13 +17,22 @@ public class Manager : MonoBehaviour
     private GameObject handPlaceHolder;
 
 
+    [SerializeField]
+    private Text handCapacity;
+
+
+    private void FixedUpdate()
+    {
+        handCapacity.text = "Hand capacity\n" + handPlaceHolder.gameObject.transform.childCount.ToString()+"/3";
+    }
+
     public void spawnCards()
     {
-        for (int i = 0; i < cardPrefabs.Count; i++)
+        while (handPlaceHolder.gameObject.transform.childCount + cards.Count < 3)
         {
-            GameObject tempCard = Instantiate(cardPrefabs[i], placeHolder.transform);
+            GameObject tempCard = Instantiate(cardPrefab, placeHolder.transform);
             cards.Add(tempCard);
-        }
+        }   
         StartCoroutine(moveToHand());
     }
 
@@ -30,7 +40,6 @@ public class Manager : MonoBehaviour
     {
         while(cards.Count>0)
         {
-            cards[0].gameObject.transform.SetParent(handPlaceHolder.transform.parent);
             float timeOfTravel = 0.5f;
             float elapsedTime = 0f;
             Vector3 startingPosition = cards[0].transform.position;
@@ -42,6 +51,9 @@ public class Manager : MonoBehaviour
             }
             cards[0].gameObject.transform.SetParent(handPlaceHolder.transform);
             cards.RemoveAt(0);
+            //HorizontalLayoutGroup h = handPlaceHolder.gameObject.GetComponent<HorizontalLayoutGroup>();
+            //h.enabled = false;
+            //h.enabled = true;
             yield return new WaitForSeconds(0.3f);
         }
         yield return null;
