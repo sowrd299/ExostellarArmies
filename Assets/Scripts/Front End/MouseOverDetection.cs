@@ -20,9 +20,10 @@ public class MouseOverDetection : Action
         foreach (RaycastResult r in results)
         {
             IClickable c = r.gameObject.GetComponentInParent<IClickable>();
-            //Debug.Log(r.gameObject.name);
+            Debug.Log(c==null);
             if (c!= null && r.gameObject.transform.parent.tag == "MyCards")
             {
+                Debug.Log("Clicable:" + r.gameObject.name);
                 c.OnHighlight();
                 listofCards.Add(r.gameObject.transform.parent.gameObject);
             }

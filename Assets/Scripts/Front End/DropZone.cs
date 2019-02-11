@@ -17,15 +17,12 @@ public class DropZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
         {
             if (this.gameObject.tag == "CardHolder")
             {
-                if (this.gameObject.transform.childCount == 0)
+                if (this.gameObject.transform.childCount <= 1)
                 {
                     d.ParentToReturnTo = this.transform;
-                    RectTransform parent = this.gameObject.transform.GetComponent<RectTransform>();
-                    //GridLayoutGroup grid = this.gameObject.transform.GetComponent<GridLayoutGroup>();
-                    //grid.cellSize = new Vector2(parent.rect.width, parent.rect.height);
-                    Debug.Log("Dragging:"+d.gameObject.name);
-                    RectTransform rt = d.gameObject.transform.GetComponent<RectTransform>();
-                    rt.sizeDelta = new Vector2(parent.sizeDelta.x, parent.sizeDelta.x);
+                    //RectTransform parent = this.gameObject.transform.GetComponent<RectTransform>();
+                    //RectTransform rt = d.gameObject.transform.GetComponent<RectTransform>();
+                    //rt.sizeDelta = new Vector2(parent.sizeDelta.x, parent.sizeDelta.x);
                 }
             }
             else if(this.gameObject.tag == "EnemyCardHolder" && d.gameObject.tag == "MyCards")
@@ -43,13 +40,25 @@ public class DropZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
     }
 
 
-    public void OnPointerEnter(PointerEventData eventDate)
+    public void OnPointerEnter(PointerEventData eventData)
     {
-
+        if (eventData.pointerDrag == null)
+            return;
+        Draggable d = eventData.pointerDrag.GetComponent<Draggable>();
+        if (d != null)
+        {
+            d.placeHolderParent = this.transform;
+        }
     }
 
-    public void OnPointerExit(PointerEventData eventDate)
+    public void OnPointerExit(PointerEventData eventData)
     {
-
+        if (eventData.pointerDrag == null)
+            return;
+        Draggable d = eventData.pointerDrag.GetComponent<Draggable>();
+        if (d != null && d.placeHolderParent == this.transform)
+        {
+            d.placeHolderParent = d.ParentToReturnTo;
+        }
     }
 }
