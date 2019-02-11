@@ -5,6 +5,9 @@ namespace SFB.Game.Content {
 	public class Tower {
 		private int maxHP;
 		private int hp;
+		public int HP {
+			get { return hp; }
+		}
 
 		public Tower() {
 			maxHP = 2;

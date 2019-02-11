@@ -1,5 +1,6 @@
 using SFB.Game.Management;
 using SFB.Game.Content;
+using System.Collections.Generic;
 
 namespace SFB.Game{
 
@@ -41,34 +42,55 @@ namespace SFB.Game{
         }
 
 		// p is other player
-		public Delta getRangedDamagingDelta(Lane l, int p) {
-			if(rangedAttack == 0)
-				return null;
-			
-			//TODO switch statement for attrs like LOB
-			for(int i = 0; i < 2; i++)
-				if(l.isOccupied(p, i))
-					return new UnitDelta(l.Unit(p, i), rangedAttack, l);
+		public List<Delta> getRangedDamagingDelta(Lane l, int play) {
+			int dmgLeft = rangedAttack;
 
-			return new TowerDelta(l.Tower(p));
+			List<Delta> list = new List<Delta>();
+			int pos = 0;
+
+			//TODO switch statement for attrs like LOB
+			while(dmgLeft > 0 && pos < 2) {
+				if(l.isOccupied(play, pos)) {
+					Unit target = l.Unit(play, pos);
+					int deal = System.Math.Max(target.HealthPoints, dmgLeft);
+					list.Add(new UnitDelta(target, deal));
+					dmgLeft -= deal;
+				}
+				pos++;
+			}
+
+			if(dmgLeft > 0)
+				list.Add(new TowerDelta(l.Tower(play)));
+			
+			return list;
 		}
 
 		// p is other player
-		public Delta getMeleeDamagingDelta(Lane l, int p) {
-			if(meleeAttack == 0)
-				return null;
+		public List<Delta> getMeleeDamagingDelta(Lane l, int play) {
+			int dmgLeft = meleeAttack;
 
-			for(int i = 0; i < 2; i++)
-				if(l.isOccupied(p, i))
-					return new UnitDelta(l.Unit(p, i), meleeAttack, l);
+			List<Delta> list = new List<Delta>();
+			int pos = 0;
 
-			return new TowerDelta(l.Tower(p));
+			//TODO switch statement for attrs like LOB
+			while(dmgLeft > 0 && pos < 2) {
+				if(l.isOccupied(play, pos)) {
+					Unit target = l.Unit(play, pos);
+					int deal = System.Math.Max(target.HealthPoints, dmgLeft);
+					list.Add(new UnitDelta(target, deal));
+					dmgLeft -= deal;
+				}
+				pos++;
+			}
+
+			if(dmgLeft > 0)
+				list.Add(new TowerDelta(l.Tower(play)));
+
+			return list;
 		}
 
-		public void takeDamage(int dmg, Lane l) {
+		public void takeDamage(int dmg) {
 			healthPoints -= dmg;
-			if(healthPoints <= 0)
-				l.kill(this);
 		}
     }
 
