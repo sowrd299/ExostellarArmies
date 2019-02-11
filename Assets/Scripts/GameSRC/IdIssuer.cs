@@ -33,7 +33,7 @@ namespace SFB.Game.Management{
         }
 
         // generates and gives out a new ID
-        public string IssueId(T issuee){
+        public virtual string IssueId(T issuee){
             string id;
             lock(writeLock){
                 do{
@@ -54,7 +54,16 @@ namespace SFB.Game.Management{
 
         // returns the object to whom the ID was issued
         public T GetByID(string id){
-            return idLookup[id];
+            if(idLookup.ContainsKey(id)){
+                return idLookup[id];
+            }else{
+                return handleMiss(id);
+            }
+        }
+
+        // by default, returns null when asked for the object with an unissue ID
+        protected virtual T handleMiss(string id){
+            return default(T);
         }
 
     }
