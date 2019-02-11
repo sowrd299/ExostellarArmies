@@ -15,23 +15,17 @@ namespace SFB.Game {
 			get { return dHP; }
 		}
 
-		private Lane lane;
-		public Lane Lane {
-			get { return lane; }
-		}
-
-		internal UnitDelta(Unit u, int h, Lane l) {
+		internal UnitDelta(Unit u, int h) {
 			unit = u;
 			dHP = h;
-			lane = l;
 		}
 
 		internal override void Apply() {
-			unit.takeDamage(-dHP, lane);
+			unit.takeDamage(-dHP);
 		}
 
 		internal override void Revert() {
-			
+			unit.takeDamage(dHP);
 		}
 	}
 }
