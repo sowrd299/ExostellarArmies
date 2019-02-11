@@ -5,72 +5,88 @@ using SFB.Game.Content;
 using System.Xml;
 
 namespace SFB.Game.Content {
-    public class Lane : IIDed
-    {
-        private static IdIssuer<Lane> idIssuer = new IdIssuer<Lane>();
-        public static IdIssuer<Lane> IdIssuer
-        {
-            get { return idIssuer; }
-        }
 
-        private readonly string id;
-        public string ID
-        {
-            get { return id; }
-        }
+	public class Lane : IIDed {
+		private static IdIssuer<Lane> idIssuer = new IdIssuer<Lane>();
+		public static IdIssuer<Lane> IdIssuer {
+			get { return idIssuer; }
+		}
 
-        public Tower[] towers;
-        internal Unit[,] unitss; // 0 front, 1 back
+		private readonly string id;
+		public string ID {
+			get { return id; }
+		}
 
-        public Lane(string id = "")
-        {
-            if (id == "")
-            {
-                this.id = idIssuer.IssueId(this);
-            }
-            else
-            {
-                idIssuer.RegisterId(id, this);
-                this.id = id;
-            }
+		//index corresponds to player index in master array
+		public Tower[] towers;
+		public Tower Tower(int play) {
+			return towers[play];
+		}
 
-            towers = new Tower[2] { new Tower(), new Tower() };
-            unitss = new Unit[2, 2];
-        }
+		//index a in unitss[a,b] corresponds to player index in master array
+		internal Unit[,] unitss; // 0 front, 1 back
+		internal Unit Unit(int play, int pos) {
+			return unitss[play, pos];
+		}
 
-        public bool isOccupied(int player, int pos)
-        {
-            return unitss[player, pos] != null;
-        }
+		public Lane(string id = "") {
+			if(id == "") {
+				this.id = idIssuer.IssueId(this);
+			} else {
+				idIssuer.RegisterId(id, this);
+				this.id = id;
+			}
 
-        private void remove(int player, int pos)
-        {
-            unitss[player, pos] = null;
-        }
+			towers = new Tower[2] { new Tower(), new Tower() };
+			unitss = new Unit[2, 2];
+		}
 
-        private void place(UnitCard uc, int player, int pos)
-        {
-            unitss[player, pos] = new Unit(uc);
-        }
+		internal bool contains(Unit unit) {
+			foreach(Unit u in unitss)
+				if(unit == u)
+					return true;
+			return false;
+		}
 
-        internal void placeFront(UnitCard uc, int p) { place(uc, p, 0); }
-        internal void placeBack(UnitCard uc, int p) { place(uc, p, 1); }
+		internal void kill(Unit u) {
+			for(int play = 0; play < unitss.GetLength(0); play++) {
+				for(int pos = 0; pos < unitss.GetLength(1); pos++) {
+					if(unitss[play, pos] == u) {
+						unitss[play, pos] = null;
+						return;
+					}
+				}
+			}
+			//error?
+		}
 
-        public void advance()
-        {
-            if (isOccupied(0, 1) && !isOccupied(0, 0))
-            {
-                unitss[0, 0] = unitss[0, 1];
-                unitss[0, 1] = null;
-            }
-            if (isOccupied(1, 1) && !isOccupied(1, 0))
-            {
-                unitss[1, 0] = unitss[1, 1];
-                unitss[1, 1] = null;
-            }
-        }
+		public bool isOccupied(int player, int pos) {
+			return unitss[player, pos] != null;
+		}
 
-        /*public void doCombat() {
+		private void remove(int player, int pos) {
+			unitss[player, pos] = null;
+		}
+		
+		private void place(UnitCard uc, int player, int pos) {
+			unitss[player, pos] = new Unit(uc);
+		}
+
+		internal void placeFront(UnitCard uc, int p) { place(uc, p,  0); }
+		internal void placeBack (UnitCard uc, int p) { place(uc, p,  1); }
+
+		public void advance() {
+			if(isOccupied(0, 1) && !isOccupied(0, 0)) {
+				unitss[0, 0] = unitss[0, 1];
+				unitss[0, 1] = null;
+			}
+			if(isOccupied(1, 1) && !isOccupied(1, 0)) {
+				unitss[1, 0] = unitss[1, 1];
+				unitss[1, 1] = null;
+			}
+		}
+
+		/*public void doCombat() {
 			doRangedCombat();
 			doMeleeCombat();
 		}

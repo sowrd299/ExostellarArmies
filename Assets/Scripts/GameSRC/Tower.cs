@@ -15,6 +15,10 @@ namespace SFB.Game.Content {
 			hp--;
 		}
 
+		public void undoTakeDamage() {
+			hp++;
+		}
+
 		public void revive() {
 			if(hp == 0) {
 				maxHP++;
