@@ -1,4 +1,5 @@
 using SFB.Game.Management;
+using SFB.Game.Content;
 
 namespace SFB.Game{
 
@@ -31,7 +32,7 @@ namespace SFB.Game{
             get{ return id; }
         }
 
-        public Unit(UnitCard card){
+        public Unit(UnitCard card) {
             this.card = card;
             this.id = idIssuer.IssueId(this);
 			this.rangedAttack = card.RangedAttack;
@@ -39,6 +40,41 @@ namespace SFB.Game{
 			this.healthPoints = card.HealthPoints;
         }
 
+		// p is other player
+		public Delta getRangedDamagingDelta(Lane l, int p) {
+			if(rangedAttack == 0)
+				return null;
+			
+			//TODO switch statement for attrs like LOB
+			for(int i = 0; i < 2; i++)
+				if(l.isOccupied(p, i))
+					return new UnitDelta(l.Unit(p, i), rangedAttack, l);
+
+			return new TowerDelta(l.Tower(p));
+		}
+
+		// p is other player
+		public Delta getMeleeDamagingDelta(Lane l, int p) {
+			if(meleeAttack == 0)
+				return null;
+
+			for(int i = 0; i < 2; i++)
+				if(l.isOccupied(p, i))
+					return new UnitDelta(l.Unit(p, i), meleeAttack, l);
+
+			return new TowerDelta(l.Tower(p));
+		}
+
+		public void takeDamage(int dmg, Lane l) {
+			healthPoints -= dmg;
+			if(healthPoints <= 0)
+				l.kill(this);
+		}
     }
+
+	// preliminary, might not be an enum if theres stuff like (Kicker X)
+	enum Attribute {
+		LOB, 
+	}
 
 }

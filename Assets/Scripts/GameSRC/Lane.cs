@@ -18,8 +18,15 @@ namespace SFB.Game.Content {
 
 		//index corresponds to player index in master array
 		public Tower[] towers;
-		//first index corresponds to player index in master array
+		public Tower Tower(int play) {
+			return towers[play];
+		}
+
+		//index a in unitss[a,b] corresponds to player index in master array
 		internal Unit[,] unitss; // 0 front, 1 back
+		internal Unit Unit(int play, int pos) {
+			return unitss[play, pos];
+		}
 
 		public Lane(string id = "") {
 			if(id == "") {
@@ -31,6 +38,25 @@ namespace SFB.Game.Content {
 
 			towers = new Tower[2] { new Tower(), new Tower() };
 			unitss = new Unit[2, 2];
+		}
+
+		internal bool contains(Unit unit) {
+			foreach(Unit u in unitss)
+				if(unit == u)
+					return true;
+			return false;
+		}
+
+		internal void kill(Unit u) {
+			for(int play = 0; play < unitss.GetLength(0); play++) {
+				for(int pos = 0; pos < unitss.GetLength(1); pos++) {
+					if(unitss[play, pos] == u) {
+						unitss[play, pos] = null;
+						return;
+					}
+				}
+			}
+			//error?
 		}
 
 		public bool isOccupied(int player, int pos) {
