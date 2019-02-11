@@ -16,7 +16,9 @@ namespace SFB.Game.Content {
 			get { return id; }
 		}
 
+		//index corresponds to player index in master array
 		public Tower[] towers;
+		//first index corresponds to player index in master array
 		internal Unit[,] unitss; // 0 front, 1 back
 
 		public Lane(string id = "") {
