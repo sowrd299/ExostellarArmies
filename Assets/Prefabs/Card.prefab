@@ -1678,6 +1678,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 2209705394146145393}
     m_Modifications:
+    - target: {fileID: 100000, guid: 84757245e6cd44f55abeef6d6dd505db, type: 3}
+      propertyPath: m_Name
+      value: Corner (1)
+      objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 84757245e6cd44f55abeef6d6dd505db, type: 3}
       propertyPath: m_LocalPosition.x
       value: -166
@@ -1729,10 +1733,6 @@ PrefabInstance:
     - target: {fileID: 400000, guid: 84757245e6cd44f55abeef6d6dd505db, type: 3}
       propertyPath: m_LocalScale.y
       value: 56
-      objectReference: {fileID: 0}
-    - target: {fileID: 100000, guid: 84757245e6cd44f55abeef6d6dd505db, type: 3}
-      propertyPath: m_Name
-      value: Corner (1)
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 84757245e6cd44f55abeef6d6dd505db, type: 3}
@@ -1891,6 +1891,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 2209705394146145393}
     m_Modifications:
+    - target: {fileID: 100000, guid: a0cb455a4bf014c459ab9d334e04b1f0, type: 3}
+      propertyPath: m_Name
+      value: Ranged
+      objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: a0cb455a4bf014c459ab9d334e04b1f0, type: 3}
       propertyPath: m_LocalPosition.x
       value: 158
@@ -1943,10 +1947,6 @@ PrefabInstance:
       propertyPath: m_LocalScale.y
       value: 56
       objectReference: {fileID: 0}
-    - target: {fileID: 100000, guid: a0cb455a4bf014c459ab9d334e04b1f0, type: 3}
-      propertyPath: m_Name
-      value: Ranged
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a0cb455a4bf014c459ab9d334e04b1f0, type: 3}
 --- !u!4 &3640548434452394500 stripped
@@ -1962,6 +1962,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 2209705394146145393}
     m_Modifications:
+    - target: {fileID: 100000, guid: 5aed51940e91845b3b5345027cd3efa4, type: 3}
+      propertyPath: m_Name
+      value: Cost
+      objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 5aed51940e91845b3b5345027cd3efa4, type: 3}
       propertyPath: m_LocalPosition.x
       value: 144
@@ -2013,10 +2017,6 @@ PrefabInstance:
     - target: {fileID: 400000, guid: 5aed51940e91845b3b5345027cd3efa4, type: 3}
       propertyPath: m_LocalScale.y
       value: 56
-      objectReference: {fileID: 0}
-    - target: {fileID: 100000, guid: 5aed51940e91845b3b5345027cd3efa4, type: 3}
-      propertyPath: m_Name
-      value: Cost
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5aed51940e91845b3b5345027cd3efa4, type: 3}
@@ -2104,6 +2104,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 2209705394146145393}
     m_Modifications:
+    - target: {fileID: 100000, guid: 84757245e6cd44f55abeef6d6dd505db, type: 3}
+      propertyPath: m_Name
+      value: Corner
+      objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 84757245e6cd44f55abeef6d6dd505db, type: 3}
       propertyPath: m_LocalPosition.x
       value: 157
@@ -2156,10 +2160,6 @@ PrefabInstance:
       propertyPath: m_LocalScale.y
       value: 70
       objectReference: {fileID: 0}
-    - target: {fileID: 100000, guid: 84757245e6cd44f55abeef6d6dd505db, type: 3}
-      propertyPath: m_Name
-      value: Corner
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 84757245e6cd44f55abeef6d6dd505db, type: 3}
 --- !u!4 &7703415530630102357 stripped
@@ -2175,6 +2175,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 2209705394146145393}
     m_Modifications:
+    - target: {fileID: 100000, guid: ae006d12d013d4a5c9136c21e597f24b, type: 3}
+      propertyPath: m_Name
+      value: HP
+      objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: ae006d12d013d4a5c9136c21e597f24b, type: 3}
       propertyPath: m_LocalPosition.x
       value: 165
@@ -2226,10 +2230,6 @@ PrefabInstance:
     - target: {fileID: 400000, guid: ae006d12d013d4a5c9136c21e597f24b, type: 3}
       propertyPath: m_LocalScale.y
       value: 56
-      objectReference: {fileID: 0}
-    - target: {fileID: 100000, guid: ae006d12d013d4a5c9136c21e597f24b, type: 3}
-      propertyPath: m_Name
-      value: HP
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ae006d12d013d4a5c9136c21e597f24b, type: 3}
