@@ -71,6 +71,7 @@ namespace SFB.Game{
 			this.lives = 3; //?
 
 			this.num = n;
+			this.mana = new ResourcePool(5); //??
 		}
 
 		public void takeDamage() {
