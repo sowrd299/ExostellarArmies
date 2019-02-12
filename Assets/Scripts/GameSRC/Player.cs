@@ -39,6 +39,11 @@ namespace SFB.Game{
 			get { return num; }
 		}
 
+		private ResourcePool mana;
+		public ResourcePool Mana {
+			get { return mana; }
+		}
+
 		private List<Card> discard;
 		internal List<Card> Discard {
 			get { return discard; }
@@ -73,7 +78,7 @@ namespace SFB.Game{
 		}
 
  
-		public List<Delta> GetDrawDeltas() {
+		public Delta[] GetDrawDeltas() {
 			List<Delta> l = new List<Delta>();
 
 			Deck.RemoveFromDeckDelta[] rDeltas = this.deck.GetDrawDeltas(count: this.handSize - this.hand.Count);
@@ -82,12 +87,7 @@ namespace SFB.Game{
 			foreach(Delta d in this.hand.GetDrawDeltas(rDeltas))
 				l.Add(d);
 
-			return l;
-		}
-
-		internal void DrawCards() {
-			while(this.hand.Count < this.HandSize)
-				this.hand.DrawFrom(this.deck);
+			return l.ToArray();
 		}
 
         // returns if the player owns the given deck

@@ -5,7 +5,7 @@ using SFB.Game.Content;
 
 namespace SFB.Game.Management {
 	public class CombatManager {
-		public static List<Delta> getRangedDeltas(Lane[] lanes) {
+		public static Delta[] getRangedDeltas(Lane[] lanes) {
 			List<Delta> list = new List<Delta>();
 
 			foreach(Lane l in lanes)
@@ -14,10 +14,10 @@ namespace SFB.Game.Management {
 						if(l.isOccupied(play, pos))
 							list.AddRange(l.Units[play, pos].getRangedDamagingDelta(l, System.Math.Abs(play-1)));
 
-			return list;
+			return list.ToArray();
 		}
 
-		public static List<Delta> getMeleeDeltas(Lane[] lanes) {
+		public static Delta[] getMeleeDeltas(Lane[] lanes) {
 			List<Delta> list = new List<Delta>();
 
 			foreach(Lane l in lanes)
@@ -26,7 +26,7 @@ namespace SFB.Game.Management {
 						if(l.isOccupied(play, pos))
 							list.AddRange(l.Units[play, pos].getMeleeDamagingDelta(l, System.Math.Abs(play-1)));
 
-			return list;
+			return list.ToArray();
 		}
 	}
 }

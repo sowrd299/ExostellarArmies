@@ -103,6 +103,32 @@ namespace SFB.Game.Management{
             d.Apply();
         }
 
+		public void DrawPhase() {
+			foreach(Player p in players) {
+				Delta[] ds = p.GetDrawDeltas();
+
+				//send network??
+
+				foreach(Delta d in ds)
+					ApplyDelta(d);
+			}
+		}
+
+		public void CombatPhase() {
+			Delta[] rds = CombatManager.getRangedDeltas(lanes);
+			Delta[] mds = CombatManager.getMeleeDeltas(lanes);
+
+			//send network??
+
+			foreach(Delta d in rds)
+				ApplyDelta(d);
+			cleanUp();
+
+			foreach(Delta d in mds)
+				ApplyDelta(d);
+			cleanUp();
+		}
+
         // returns and XML representation of the ID of the lane in each index
         public XmlElement[] GetLaneIDs(XmlDocument doc){
             XmlElement[] r = new XmlElement[lanes.Length];

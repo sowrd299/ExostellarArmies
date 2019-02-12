@@ -45,6 +45,10 @@ namespace SFB.Game.Content {
 			return a;
 		}
 
+		internal RemoveFromHandDelta[] GetRemoveDelta(Card c) {
+			return new RemoveFromHandDelta[] { new RemoveFromHandDelta(this, c, this.IndexOf(c)) };
+		}
+
 		public class AddToHandDelta : CardListDelta<Hand> {
 
 			public AddToHandDelta(Hand hand, Card card) : base(hand, card, 0, CardListDelta<Hand>.Mode.ADD) { }

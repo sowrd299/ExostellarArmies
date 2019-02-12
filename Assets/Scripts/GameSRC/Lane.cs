@@ -85,7 +85,12 @@ namespace SFB.Game.Content {
 				unitss[1, 1] = null;
 			}
 		}
+
+		internal AddToLaneDelta[] getDeployDeltas(UnitCard card, int play, int pos) {
+			return new AddToLaneDelta[] { new AddToLaneDelta(this, card, play, pos) };
+		}
 		
+
 		public class AddToLaneDelta : TargetedDelta<Lane> {
 			private int player;
 			private int pos;
