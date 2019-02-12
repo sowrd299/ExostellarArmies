@@ -12,7 +12,7 @@ namespace SFB.Game.Management {
 				for(int play = 0; play < 2; play++)
 					for(int pos = 0; pos < 2; pos++)
 						if(l.isOccupied(play, pos))
-							list.AddRange(l.Unit(play, pos).getRangedDamagingDelta(l, System.Math.Abs(play-1)));
+							list.AddRange(l.Units[play, pos].getRangedDamagingDelta(l, System.Math.Abs(play-1)));
 
 			return list;
 		}
@@ -24,7 +24,7 @@ namespace SFB.Game.Management {
 				for(int play = 0; play < 2; play++)
 					for(int pos = 0; pos < 2; pos++)
 						if(l.isOccupied(play, pos))
-							list.AddRange(l.Unit(play, pos).getMeleeDamagingDelta(l, System.Math.Abs(play-1)));
+							list.AddRange(l.Units[play, pos].getMeleeDamagingDelta(l, System.Math.Abs(play-1)));
 
 			return list;
 		}

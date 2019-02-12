@@ -56,7 +56,7 @@ namespace SFB.Game.Management{
                 DeckList hiddenList =  new DeckList();
                 hiddenList.AddCard(new UnknownCard(), 20); // TODO: support decks of different sizes?
                 DeckList list = deckLists != null ? deckLists[i] : hiddenList;
-                players[i] = new Player("Player " + (i+1), list, playerIds != null ? playerIds[i] : null);
+                players[i] = new Player("Player " + (i+1), i, list, playerIds != null ? playerIds[i] : null);
             }
             // setup lanes
             if(laneIds == null){ // ...from scratch
@@ -117,6 +117,24 @@ namespace SFB.Game.Management{
             }
             return r;
         }
+
+		public void cleanUp() {
+			foreach(Lane l in lanes) {
+				// clean units
+				foreach(Unit u in l.Units)
+					if(u != null && u.HealthPoints <= 0)
+						l.kill(u);
+
+				// clean towers -> player lives
+				for(int i = 0; i < l.Towers.Length; i++) {
+					if(l.Towers[i].HP == 0) {
+						players[i].takeDamage();
+						l.Towers[i].revive();
+						// extra deploy phase?
+					}
+				}
+			}
+		}
 
     }
 

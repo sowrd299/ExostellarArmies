@@ -18,14 +18,14 @@ namespace SFB.Game.Content {
 
 		//index corresponds to player index in master array
 		public Tower[] towers;
-		public Tower Tower(int play) {
-			return towers[play];
+		public Tower[] Towers {
+			get { return towers; }
 		}
 
 		//index a in unitss[a,b] corresponds to player index in master array
 		internal Unit[,] unitss; // 0 front, 1 back
-		internal Unit Unit(int play, int pos) {
-			return unitss[play, pos];
+		internal Unit[,] Units {
+			get { return unitss; }
 		}
 
 		public Lane(string id = "") {
@@ -84,19 +84,6 @@ namespace SFB.Game.Content {
 				unitss[1, 1] = null;
 			}
 		}
-
-		/*public void doCombat() {
-			doRangedCombat();
-			doMeleeCombat();
-		}
-
-		public void doRangedCombat() {
-			foreach(Unit u in yourUnits)
-		}
-
-		public void doMeleeCombat() {
-
-		}*/
 
 		public class AddToLaneDelta : TargetedDelta<Lane> {
 			private int player;

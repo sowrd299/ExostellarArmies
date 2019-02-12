@@ -97,6 +97,7 @@ public class Driver : MonoBehaviour {
     }
 
     void Update() {
+		/*
 		switch(phase) {
 			case Phase.DRAW:
 				print("");
@@ -164,6 +165,7 @@ public class Driver : MonoBehaviour {
 				phase = Phase.DRAW;
 				break;
 		}
+		*/
 	}
 
 }

@@ -34,13 +34,18 @@ namespace SFB.Game{
 			get { return name; }
 		}
 
+		private int num;
+		public int Num {
+			get { return num; }
+		}
+
 		private List<Card> discard;
 		internal List<Card> Discard {
 			get { return discard; }
 		}
 
         // optionally takes ids to be used instead of generating new ones
-		internal Player(string name, DeckList d, XmlElement ids = null){
+		internal Player(string name, int n, DeckList d, XmlElement ids = null){
             //if given id's, manage them
             string deckId = ""; //if this is passed in, will still generate ID
             string handId = ""; //if this is passed in, will still generate ID
@@ -59,11 +64,12 @@ namespace SFB.Game{
 
 			this.discard = new List<Card>();
 			this.lives = 3; //?
+
+			this.num = n;
 		}
 
-		internal void UseCard(int i) {
-			discard.Add(this.hand[i]);
-			this.hand.RemoveAt(i);
+		public void takeDamage() {
+			lives--;
 		}
 
  
