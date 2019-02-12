@@ -51,7 +51,7 @@ namespace SFB.Game{
 			//TODO switch statement for attrs like LOB
 			while(dmgLeft > 0 && pos < 2) {
 				if(l.isOccupied(play, pos)) {
-					Unit target = l.Unit(play, pos);
+					Unit target = l.Units[play, pos];
 					int deal = System.Math.Max(target.HealthPoints, dmgLeft);
 					list.Add(new UnitDelta(target, deal));
 					dmgLeft -= deal;
@@ -60,7 +60,7 @@ namespace SFB.Game{
 			}
 
 			if(dmgLeft > 0)
-				list.Add(new TowerDelta(l.Tower(play)));
+				list.Add(new TowerDelta(l.Towers[play]));
 			
 			return list;
 		}
@@ -75,7 +75,7 @@ namespace SFB.Game{
 			//TODO switch statement for attrs like LOB
 			while(dmgLeft > 0 && pos < 2) {
 				if(l.isOccupied(play, pos)) {
-					Unit target = l.Unit(play, pos);
+					Unit target = l.Units[play, pos];
 					int deal = System.Math.Max(target.HealthPoints, dmgLeft);
 					list.Add(new UnitDelta(target, deal));
 					dmgLeft -= deal;
@@ -84,7 +84,7 @@ namespace SFB.Game{
 			}
 
 			if(dmgLeft > 0)
-				list.Add(new TowerDelta(l.Tower(play)));
+				list.Add(new TowerDelta(l.Towers[play]));
 
 			return list;
 		}
