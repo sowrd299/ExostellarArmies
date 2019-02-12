@@ -1,6 +1,8 @@
 using SFB.Game.Management;
 using SFB.Game.Content;
 using System.Xml;
+using System.Text;
+using System;
 
 namespace SFB.Game{
 
@@ -31,7 +33,7 @@ namespace SFB.Game{
         }
 
         public bool CanAfford(int x){
-            return x > count;
+            return x >= count;
         }
 
         public void Add(int x){
@@ -39,7 +41,13 @@ namespace SFB.Game{
         }
 
         public Delta[] GetAddDeltas(int x){
-            return new Delta[]{new ResourcePoolDelta(x, this)};
+            int xp = x; // x prime
+            if(xp + count > max){ // do not go above max
+                xp = max - count;
+            }else if(count + xp < 0){ // do not go bellow 0
+                xp = - count;
+            }
+            return new Delta[]{new ResourcePoolDelta(xp, this)};
         }
 
 
@@ -56,7 +64,17 @@ namespace SFB.Game{
             public ResourcePoolDelta(XmlElement e, CardLoader cl)
                     : base(e, cl) 
             {
-                this.rp = new SendableTarget<ResourcePool>("poolId", e, null); 
+                this.rp = new SendableTarget<ResourcePool>("poolId", e, ResourcePool.IdIssuer); 
+                this.amount = Int32.Parse(e.Attributes["amount"].Value);
+            }
+
+            public override XmlElement ToXml(XmlDocument doc){
+                XmlElement r = base.ToXml(doc);
+                r.SetAttributeNode(rp.ToXml(doc));
+                XmlAttribute amount = doc.CreateAttribute("amount");
+                amount.Value = this.amount.ToString();
+                r.SetAttributeNode(amount);
+                return r;
             }
 
             internal override void Apply(){
