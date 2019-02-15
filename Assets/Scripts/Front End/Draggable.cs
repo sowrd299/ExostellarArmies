@@ -5,6 +5,13 @@ using UnityEngine.EventSystems;
 
 public class Draggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
+
+    public GameObject myHand=null;
+
+    void Start()
+    {
+        myHand = GameObject.FindWithTag("MyHand");
+    }
     Transform parentToReturnTo = null;
     public Transform ParentToReturnTo
     {
@@ -23,6 +30,7 @@ public class Draggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
 
     public void OnBeginDrag(PointerEventData eventData)
     {
+        myHand.GetComponent<Image>().raycastTarget = true;
         //Debug.Log("Begin Drag");
         placeHolder = new GameObject();
         placeHolder.transform.SetParent(this.transform.parent);
@@ -64,8 +72,10 @@ public class Draggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
     public void OnEndDrag(PointerEventData eventData)
     {
         //Debug.Log("End Drag");
+        myHand.GetComponent<Image>().raycastTarget = false;
         this.transform.SetParent(parentToReturnTo);
         this.transform.SetSiblingIndex(placeHolder.transform.GetSiblingIndex());
+        this.transform.position = new Vector3(this.transform.position.x, this.transform.position.y, 0f);
         GetComponent<CanvasGroup>().blocksRaycasts = true;
         Destroy(placeHolder);
     }

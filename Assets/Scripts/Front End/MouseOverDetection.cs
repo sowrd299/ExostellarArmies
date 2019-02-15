@@ -6,38 +6,55 @@ using UnityEngine.EventSystems;
 [CreateAssetMenu(menuName = "Actions/MouseOverDetection")]
 public class MouseOverDetection : Action
 {
-    private List<GameObject> listofCards;
+    private List<GameObject> listofCards = new List<GameObject>();
 
     public override void Execute()
     {
-        listofCards = new List<GameObject>();
+        //listofCards = new List<GameObject>();
         PointerEventData pointerData = new PointerEventData(EventSystem.current){position = Input.mousePosition}; 
 
         List<RaycastResult> results = new List<RaycastResult>();
         EventSystem.current.RaycastAll(pointerData,results);
 
-        //check if we  hit something that has IClickable Interface
-        foreach (RaycastResult r in results)
+        if(results.Count == 0)
         {
-            IClickable c = r.gameObject.GetComponentInParent<IClickable>();
-            //Debug.Log(c==null);
-            if (c!= null && r.gameObject.transform.parent.tag == "MyCards")
+            int i = 0;
+            while (i < listofCards.Count)
             {
-                //Debug.Log("Clicable:" + r.gameObject.name);
-                c.OnHighlight();
-                listofCards.Add(r.gameObject.transform.parent.gameObject);
+                Vector3 v = Vector3.one * .4f;
+                listofCards[i].gameObject.transform.localScale = v;
+                i++;
             }
-            else
+            listofCards.Clear();
+        }
+        else
+        {
+            //check if we  hit something that has IClickable Interface
+            foreach (RaycastResult r in results)
             {
-                if (listofCards.Count > 0)
+                IClickable c = r.gameObject.GetComponentInParent<IClickable>();
+                Debug.Log(r.gameObject.transform.parent.tag);
+                if (c != null && r.gameObject.transform.parent.tag == "MyCards")
                 {
-                    for (int i = 0; i < listofCards.Count; i++)
+                    c.OnHighlight();
+                    if (!listofCards.Contains(r.gameObject.transform.parent.gameObject))
                     {
-                        Vector3 v = Vector3.one * .50f;
-                        listofCards[i].gameObject.transform.localScale = v;
+                        listofCards.Add(r.gameObject.transform.parent.gameObject);
                     }
+                }
+                else if(c== null || r.gameObject.transform.tag == "Card")
+                {
+                    int i = 0;
+                    while (i < listofCards.Count)
+                    {
+                        Vector3 v = Vector3.one * .4f;
+                        listofCards[i].gameObject.transform.localScale = v;
+                        i++;
+                    }
+                    listofCards.Clear();
                 }
             }
         }
+       
     }
 }
