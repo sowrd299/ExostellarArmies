@@ -9,10 +9,6 @@ public class Driver : MonoBehaviour {
     public static Driver instance = null;
     public GameManager gameManager;
 	Phase phase;
-	Player chosen;
-	bool hasPrinted;
-	Player selectedPlayer;
-	Lane[] lanes;
 
     private List<CardFrontEnd> listofUI = new List<CardFrontEnd>();
     public  List<CardFrontEnd> ListofUI
@@ -72,7 +68,6 @@ public class Driver : MonoBehaviour {
             CardFrontEnd cardFront = new CardFrontEnd(listOfProperties);
             listofUI.Add(cardFront);
         }
-		lanes = new Lane[] { new Lane(), new Lane(), new Lane() };
     }
 
     public CardProperties[] createCardProperties(int numberOfProperties, string name,string type,string flavor, string ability,int cost,int hp,int melee, int range)
@@ -97,79 +92,31 @@ public class Driver : MonoBehaviour {
     }
 
     void Update() {
-		/*
 		switch(phase) {
 			case Phase.DRAW:
-				print("");
-
-				foreach(Player p in gameManager.Players)
-					p.DrawCards();				
-					
+				gameManager.DrawPhase();
 				phase = Phase.PLACEMENT;
-				
-				chosen = null;
-				hasPrinted = false;
-				selectedPlayer = null;
 
 				break;
 			case Phase.PLACEMENT:
-				if(!hasPrinted && selectedPlayer == null) {
-					foreach(Player p in gameManager.Players)
-						print(p + " has " + p.Hand + " and " + p.Deck.Count + " cards in deck.");
-					print("Press to select player: (1. " + gameManager.Players[0] + ") / (2. " + gameManager.Players[1] + ") / (0. when you're done)");
-					hasPrinted = true;
-				} else if(!hasPrinted && selectedPlayer != null) {
-					string s = selectedPlayer + " can use ";
-					char[] inputs = new char[] {'Q', 'W', 'E', 'R'};
-					for(int i = 0; i < selectedPlayer.Hand.Count; i++)
-						s += "(" + inputs[i] + ". " + selectedPlayer.Hand[i] + ") ";
-					print(s + "(P. deselect player)");
-					hasPrinted = true;
-				}
-
-				if(selectedPlayer == null) {
-					if(Input.GetKeyDown(KeyCode.Alpha1)) {
-						selectedPlayer = gameManager.Players[0];
-						hasPrinted = false;
-					} else if(Input.GetKeyDown(KeyCode.Alpha2)) {
-						selectedPlayer = gameManager.Players[1];
-						hasPrinted = false;
-					} else if(Input.GetKeyDown(KeyCode.Alpha0)) {
-						phase = Phase.RANGED;
-					}
-				} else {
-					if(selectedPlayer.Hand.Count > 0 && Input.GetKeyDown(KeyCode.Q)) {
-						selectedPlayer.UseCard(0);
-						hasPrinted = false;
-					} else if(selectedPlayer.Hand.Count > 1 && Input.GetKeyDown(KeyCode.W)) {
-						selectedPlayer.UseCard(1);
-						hasPrinted = false;
-					} else if(selectedPlayer.Hand.Count > 2 && Input.GetKeyDown(KeyCode.E)) {
-						selectedPlayer.UseCard(2);
-						hasPrinted = false;
-					} else if(selectedPlayer.Hand.Count > 3 && Input.GetKeyDown(KeyCode.R)) {
-						selectedPlayer.UseCard(3);
-						hasPrinted = false;
-					}
-					if(Input.GetKeyDown(KeyCode.P)) {
-						selectedPlayer = null;
-						hasPrinted = false;
-					}
-				}
-
+				// handled by UI
 				break;
-			case Phase.RANGED:
-				phase = Phase.MELEE;
+			case Phase.COMBAT:
+				gameManager.CombatPhase();
+				phase = gameManager.Over ? Phase.DONE : Phase.DRAW;
 				break;
-			case Phase.MELEE:
-				phase = Phase.DRAW;
+			case Phase.DONE:
+				print("Game Over: Player " + (gameManager.Players[0].Lives==0?2:1) + " Wins!");
 				break;
 		}
-		*/
 	}
 
+	internal void PlayUnitCardAction(UnitCard c, Lane l, int p) {
+		foreach(Delta d in new PlayUnitCardAction(c, l, p).GetDeltas(gameManager.Players[p]))
+			d.Apply();
+	}
 }
 
 enum Phase {
-	DRAW, PLACEMENT, RANGED, MELEE
+	DRAW, PLACEMENT, COMBAT, DONE
 }
