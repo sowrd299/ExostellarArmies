@@ -14,6 +14,10 @@ namespace SFB.Game{
         }
 
         private int count; // the current number of resources
+        public int Count{
+            get{ return count; }
+        }
+
         private int max; // the most resources the pool can have
 
         private string id;

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Xml;
 using System.Text;
 using System;
+using System.Linq;
 
 namespace SFB.Game.Management{
 
@@ -73,12 +74,35 @@ namespace SFB.Game.Management{
             }
         }
 
-        // returns if a move is legal for the given player to make
-        public bool IsLegalAction(Player player, PlayerAction a){
-            return a.IsLegalAction(player);
+        public void ApplyDelta(Delta d){
+            d.Apply();
         }
 
-        // returns the outcomes of a player taking a give action
+        // returns if a move is legal for the given player to make
+        public bool IsLegalAction(Player player, PlayerAction a){
+            // the action is a legal action for them to play, 
+            // and they may still play actions
+            return a.IsLegalAction(player) && player.DeployPhases > 0;
+        }
+
+        // THE FOLLOWING METHODS IMPLEMENT IN THE GAME LOOP
+        // EACH RETURNING THE DELTAS FROM EACH STEP OF THE TURN
+        //   (to be applied, sent, etc. before calling the next turn's)
+        // You may call them out of order; this will simulate skipping all the phases
+        //   whose deltas haven't been applied yet
+
+        // get Deltas for the start of the turn
+        public Delta[] GetStartTurnDeltas(){
+            List<Delta> deltas = new List<Delta>();
+            foreach(Player p in players){
+                foreach(Delta d in p.GetDeployPhaseDeltas()){
+                    deltas.Add(d);
+                }
+            }
+            return deltas.ToArray();
+        }
+
+        // returns the outcomes of a player taking a given action
         public Delta[] GetActionDeltas(Player player, PlayerAction a){
             // and old dummy implementation:
             // return new Delta[]{new Deck.RemoveFromDeckDelta(player.Deck, null, 0)}; // this implementation intrinsically throws errors
@@ -86,21 +110,33 @@ namespace SFB.Game.Management{
             return a.GetDeltas(player);
         }
 
-        // return the resaults if the turn were to end right then
+        // Get deltas for after a deployment phase ends
+        public Delta[] GetEndDelpoyDeltas(){
+            List<Delta> deltas = new List<Delta>();
+            foreach(Player p in players){
+                foreach(Delta d in p.GetPostDeployPhaseDeltas()){
+                    deltas.Add(d);
+                }
+            }
+            return deltas.ToArray();
+        }
+
+        // return the results if the turn were to end right then
+        // more specifically, returns the combine results of every phase
+        //  from the currently ending deployment phase up to the draw phase
+        //  before the next deploy phase
+        // TODO: is this REALLY the best way to do this...
         public Delta[] GetTurnDeltas(){
             List<Delta> deltas = new List<Delta>();
-            // card draws
-            foreach(Player p in players){
+            // card draws; at some point change this over to the draw phase
+            // only draw for players who have deployment phases left
+            foreach(Player p in players.Where((x) => {return x.DeployPhases > 0;})){ 
                 foreach(Delta d in p.GetDrawDeltas()){
                     deltas.Add(d);
                 }
             }
             // cleanup and return
             return deltas.ToArray();
-        }
-
-        public void ApplyDelta(Delta d){
-            d.Apply();
         }
 
 		public void DrawPhase() {
@@ -129,6 +165,8 @@ namespace SFB.Game.Management{
 			cleanUp();
 		}
 
+        // VARIOUS ADMIN METHODS
+
         // returns and XML representation of the ID of the lane in each index
         public XmlElement[] GetLaneIDs(XmlDocument doc){
             XmlElement[] r = new XmlElement[lanes.Length];
@@ -144,6 +182,7 @@ namespace SFB.Game.Management{
             return r;
         }
 
+        // to be called after every phase
 		public void cleanUp() {
 			foreach(Lane l in lanes) {
 				// clean units
@@ -156,7 +195,7 @@ namespace SFB.Game.Management{
 					if(l.Towers[i].HP == 0) {
 						players[i].takeDamage();
 						l.Towers[i].revive();
-						// extra deploy phase?
+                        players[i].AddDeployPhase();
 					}
 				}
 			}

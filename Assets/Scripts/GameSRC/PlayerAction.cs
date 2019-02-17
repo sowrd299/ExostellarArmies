@@ -31,7 +31,7 @@ namespace SFB.Game.Management{
         // this is allows us to discociate 
         internal abstract bool IsLegalAction(Player p);
 
-        // returns the changes do the current gamestate the changes would enact
+        // returns the changes to the current gamestate the changes would enact
         // takes the player doing the action
         internal abstract Delta[] GetDeltas(Player p);
 

@@ -34,6 +34,7 @@ namespace SFB.Game{
 			get { return name; }
 		}
 
+		// TODO: what does this do?
 		private int num;
 		public int Num {
 			get { return num; }
@@ -42,6 +43,12 @@ namespace SFB.Game{
 		private ResourcePool mana;
 		public ResourcePool Mana {
 			get { return mana; }
+		}
+
+		// how many deployment phases the player gets
+		private ResourcePool deployPhases;
+		public int DeployPhases{
+			get{ return deployPhases.Count; }
 		}
 
 		private List<Card> discard;
@@ -54,24 +61,27 @@ namespace SFB.Game{
             //if given id's, manage them
             string deckId = ""; //if this is passed in, will still generate ID
             string handId = ""; //if this is passed in, will still generate ID
+			string manaId = "";
+			string depId = "";
             if(ids != null){
                 deckId = ids.Attributes["deck"].Value;
                 handId = ids.Attributes["hand"].Value;
+                manaId= ids.Attributes["mana"].Value;
+                depId= ids.Attributes["dep"].Value;
             }
             //deck
 			this.deck = new Deck(deckId);
             deck.LoadCards(d);
             //hand
 			this.hand = new Hand(handId);
-			this.handSize = 3;
+			this.handSize = 3; // CONST HAND SIZE IMPLEMENTED HERE
             //misc
 			this.name = name;
-
 			this.discard = new List<Card>();
-			this.lives = 3; //?
-
+			this.lives = 4; // CONST LIVES IMPLEMENETED HERE
 			this.num = n;
-			this.mana = new ResourcePool(5); //??
+			this.mana = new ResourcePool(12, manaId); // CONST MAX RESOURCES IMPLEMENTED HERE
+			this.deployPhases = new ResourcePool(2, depId);
 		}
 
 		public void takeDamage() {
@@ -91,6 +101,21 @@ namespace SFB.Game{
 			return l.ToArray();
 		}
 
+		// get the deltas for when this tower goes down
+		public Delta[] GetDeployPhaseDeltas(){
+			return deployPhases.GetAddDeltas(1);
+		}
+
+		public void AddDeployPhase(){
+			deployPhases.Add(1);
+		}
+
+		// get the deltas for after have used a deploy phase
+		// NOTE: I'm not actually sure this is what we want to here, or just want to skip deltas for this
+		public Delta[] GetPostDeployPhaseDeltas(){
+			return deployPhases.GetAddDeltas(-1);
+		}
+
         // returns if the player owns the given deck
         internal bool Owns(Deck deck){
             return deck == this.deck;
@@ -105,14 +130,16 @@ namespace SFB.Game{
 		// to sync them between client/server
 		public XmlElement GetPlayerIDs(XmlDocument doc){
             XmlElement e = doc.CreateElement("playerIds");
-            // the deck id
-            XmlAttribute deckId = doc.CreateAttribute("deck");
-            deckId.Value = deck.ID;
-            e.SetAttributeNode(deckId); 
-            // the hand id
-            XmlAttribute handId = doc.CreateAttribute("hand");
-            handId.Value = hand.ID;
-            e.SetAttributeNode(handId); 
+			// setup the ids to add
+			// make arrays so can just itterate them
+			IIDed[] elements = new IIDed[]{deck, hand, mana, deployPhases};
+			string[] elementNames = new string[]{"deck", "hand", "mana", "dep"};
+			// add all the ids
+			for(int i = 0; i < elements.Length; i++){
+				XmlAttribute idAttr = doc.CreateAttribute(elementNames[i]);
+				idAttr.Value = elements[i].ID;
+				e.SetAttributeNode(idAttr); 
+			}
             // return
             return e;
         }

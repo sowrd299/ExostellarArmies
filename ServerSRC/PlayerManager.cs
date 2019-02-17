@@ -137,6 +137,7 @@ namespace SFB.Net.Server.Matches{
         // TODO: this probably should get broken up into many smaller functions
         public override void handleMessage(XmlDocument msg, SocketManager from){
             switch(messageTypeOf(msg)){
+                // handle player taking action
                 case "gameAction":
                     if(state == State.ACTING){
                         PlayerAction a = PlayerAction.FromXml(msg.DocumentElement["action"]);
@@ -172,6 +173,7 @@ namespace SFB.Net.Server.Matches{
                         from.Send("<file type='error'><msg>Cannot take game actions now</msg></file>");
                     }
                     break;
+                // handle ending turn
                 case "lockInTurn":
                     if(state == State.ACTING){
                         // ...
