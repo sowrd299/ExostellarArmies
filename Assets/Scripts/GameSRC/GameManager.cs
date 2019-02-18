@@ -91,7 +91,7 @@ namespace SFB.Game.Management{
         // You may call them out of order; this will simulate skipping all the phases
         //   whose deltas haven't been applied yet
 
-        // get Deltas for the start of the turn
+        // get deltas for the absolute start of the turn
         public Delta[] GetStartTurnDeltas(){
             List<Delta> deltas = new List<Delta>();
             foreach(Player p in players){
@@ -100,6 +100,13 @@ namespace SFB.Game.Management{
                 }
             }
             return deltas.ToArray();
+        }
+
+        // get Deltas for the start of each deploy phase
+        public Delta[] GetStartDeployDeltas(){
+            // TODO: return draw deltas
+            // dummy implementation:
+            return new Delta[]{};
         }
 
         // returns the outcomes of a player taking a given action
@@ -118,7 +125,19 @@ namespace SFB.Game.Management{
                     deltas.Add(d);
                 }
             }
+            // TODO: activate deploy affects here, probably
             return deltas.ToArray();
+        }
+
+        // returns whether or there are deploy phases to continue doing
+        // if returns true, continue to combat
+        // if not, go back to GetStartDeployDeltas...
+        public bool DeployPhasesOver(){
+            bool r = true;
+            foreach(Player p in players){
+                r &= p.DeployPhases <= 0;
+            }
+            return r;
         }
 
         // return the results if the turn were to end right then
@@ -126,6 +145,7 @@ namespace SFB.Game.Management{
         //  from the currently ending deployment phase up to the draw phase
         //  before the next deploy phase
         // TODO: is this REALLY the best way to do this...
+        // probably should depricate this...
         public Delta[] GetTurnDeltas(){
             List<Delta> deltas = new List<Delta>();
             // card draws; at some point change this over to the draw phase
@@ -192,7 +212,7 @@ namespace SFB.Game.Management{
 
 				// clean towers -> player lives
 				for(int i = 0; i < l.Towers.Length; i++) {
-					if(l.Towers[i].HP == 0) {
+					if(l.Towers[i].HP <= 0) {
 						players[i].takeDamage();
 						l.Towers[i].revive();
                         players[i].AddDeployPhase();

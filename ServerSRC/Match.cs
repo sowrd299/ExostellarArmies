@@ -96,12 +96,37 @@ namespace SFB.Net.Server.Matches{
         }
         
         // TODO: avoid weird race conditions when a user resumes making actions
+        // to be called after ending deployment
+        // NOTE: technically, multiple deployment phases withing one turn are implemented
+        // as multiple turns, with many phases skipped
         public void EndTurn(){
             bool gameOver;
             List<Delta>[] turnDeltaLists = new List<Delta>[players.Length];
             lock(gameManager){
-                // actually calculate the outcome of the turn
-                Delta[] turnDeltas = gameManager.GetTurnDeltas();
+                // calculate the outcome of the deploy phase
+                // use a list to collect the deltas, to send them later
+                List<Delta> turnDeltas = new List<Delta>(); 
+                // cleanup the deploy phase
+                foreach(Delta d in gameManager.GetEndDelpoyDeltas()){
+                    turnDeltas.Add(d);
+                    gameManager.ApplyDelta(d);
+                }
+                gameManager.cleanUp();
+                // if no more deployment phases, do the rest of this turn into the start of the next
+                if(gameManager.DeployPhasesOver()){
+                    // combat
+                    gameManager.cleanUp();
+                    // start of the next turn
+                    foreach(Delta d in gameManager.GetStartTurnDeltas()){
+                        turnDeltas.Add(d);
+                        gameManager.ApplyDelta(d);
+                    }
+                }
+                // get the start of the next deploy phase
+                foreach(Delta d in gameManager.GetStartDeployDeltas()){
+                    turnDeltas.Add(d);
+                    gameManager.ApplyDelta(d);
+                }
                 // figure out which deltas everyone needs
                 for(int i = 0; i < players.Length; i++){ // for each player...
                     turnDeltaLists[i] = new List<Delta>();

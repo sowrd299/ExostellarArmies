@@ -52,7 +52,7 @@ namespace SFB.Net.Server.Matches{
             get{
                 // this algorithm is an oversimplification,
                 // but at VGDC quarter-long scale it should work perfectly
-                return state == State.WAITING;
+                return state == State.WAITING || player.DeployPhases <= 0;
             }
         }
 
