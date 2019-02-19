@@ -134,13 +134,13 @@ namespace SFB.Game{
 			return deltas.ToArray();
 		}
 
-		public Delta[] onDeath(Lane[] lanes, Player[] players) {
+		public Delta[] onDeath(int play, Lane[] lanes, Player[] players) {
 			List<Delta> deltas = new List<Delta>();
 			foreach(Ability a in abilities) {
-				deltas.AddRange(a.onDeath());
-				deltas.AddRange(a.onDeath(lanes));
-				deltas.AddRange(a.onDeath(players));
-				deltas.AddRange(a.onDeath(lanes, players));
+				deltas.AddRange(a.onDeath(play));
+				deltas.AddRange(a.onDeath(play, lanes));
+				deltas.AddRange(a.onDeath(play, players));
+				deltas.AddRange(a.onDeath(play, lanes, players));
 			}
 			return deltas.ToArray();
 		}

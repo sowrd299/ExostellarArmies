@@ -231,7 +231,7 @@ namespace SFB.Game.Management{
 					for(int pos = 0; pos < l.Units.GetLength(1); pos++) {
 						Unit u = l.Units[play, pos];
 						if(u != null && u.HealthPoints <= 0) {
-							deltas.AddRange(u.onDeath(lanes, players));
+							deltas.AddRange(u.onDeath(play, lanes, players));
 							l.kill(play, pos);
 						}
 					}
