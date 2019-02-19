@@ -15,9 +15,9 @@ namespace SFB.Game {
 			get { return dHP; }
 		}
 
-		internal UnitDelta(Unit u, int h) {
+		internal UnitDelta(Unit u, int dhp) {
 			unit = u;
-			dHP = h;
+			dHP = dhp;
 		}
 
 		internal override void Apply() {

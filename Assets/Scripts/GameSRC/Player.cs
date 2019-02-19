@@ -34,12 +34,6 @@ namespace SFB.Game{
 			get { return name; }
 		}
 
-		// TODO: what does this do?
-		private int num;
-		public int Num {
-			get { return num; }
-		}
-
 		private ResourcePool mana;
 		public ResourcePool Mana {
 			get { return mana; }
@@ -57,7 +51,7 @@ namespace SFB.Game{
 		}
 
         // optionally takes ids to be used instead of generating new ones
-		internal Player(string name, int n, DeckList d, XmlElement ids = null){
+		internal Player(string name, DeckList d, XmlElement ids = null){
             //if given id's, manage them
             string deckId = ""; //if this is passed in, will still generate ID
             string handId = ""; //if this is passed in, will still generate ID
@@ -79,7 +73,6 @@ namespace SFB.Game{
 			this.name = name;
 			this.discard = new List<Card>();
 			this.lives = 4; // CONST LIVES IMPLEMENETED HERE
-			this.num = n;
 			this.mana = new ResourcePool(12, manaId); // CONST MAX RESOURCES IMPLEMENTED HERE
 			this.deployPhases = new ResourcePool(2, depId);
 		}

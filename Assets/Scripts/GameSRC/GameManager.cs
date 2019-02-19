@@ -57,7 +57,7 @@ namespace SFB.Game.Management{
                 DeckList hiddenList =  new DeckList();
                 hiddenList.AddCard(new UnknownCard(), 20); // TODO: support decks of different sizes?
                 DeckList list = deckLists != null ? deckLists[i] : hiddenList;
-                players[i] = new Player("Player " + (i+1), i, list, playerIds != null ? playerIds[i] : null);
+                players[i] = new Player("Player " + (i+1), list, playerIds != null ? playerIds[i] : null);
             }
             // setup lanes
             if(laneIds == null){ // ...from scratch
@@ -104,13 +104,25 @@ namespace SFB.Game.Management{
 
         // get Deltas for the start of each deploy phase
         public Delta[] GetStartDeployDeltas(){
-            // TODO: return draw deltas
-            // dummy implementation:
-            return new Delta[]{};
-        }
+			List<Delta> deltas = new List<Delta>();
+			foreach(Player p in players) {
+				foreach(Delta d in p.GetDrawDeltas()) {
+					deltas.Add(d);
+				}
+			}
+			return deltas.ToArray();
+		}
 
-        // returns the outcomes of a player taking a given action
-        public Delta[] GetActionDeltas(Player player, PlayerAction a){
+		public Delta[] GetRangedCombatDeltas() {
+			return CombatManager.getRangedDeltas(lanes);
+		}
+
+		public Delta[] GetMeleeCombatDeltas() {
+			return CombatManager.getMeleeDeltas(lanes);
+		}
+
+		// returns the outcomes of a player taking a given action
+		public Delta[] GetActionDeltas(Player player, PlayerAction a){
             // and old dummy implementation:
             // return new Delta[]{new Deck.RemoveFromDeckDelta(player.Deck, null, 0)}; // this implementation intrinsically throws errors
             // real implementation:
@@ -118,14 +130,20 @@ namespace SFB.Game.Management{
         }
 
         // Get deltas for after a deployment phase ends
-        public Delta[] GetEndDelpoyDeltas(){
+        public Delta[] GetEndDeployDeltas(){
             List<Delta> deltas = new List<Delta>();
             foreach(Player p in players){
                 foreach(Delta d in p.GetPostDeployPhaseDeltas()){
                     deltas.Add(d);
                 }
             }
-            // TODO: activate deploy affects here, probably
+
+			// TODO: activate deploy affects here, probably
+			foreach(Lane l in lanes)
+				for(int play = 0; play < l.Units.GetLength(0); play++)
+					for(int pos = 0; pos < l.Units.GetLength(1); pos++)
+						deltas.AddRange(l.Units[play, pos].onEachDeployPhase(lanes, players));
+		
             return deltas.ToArray();
         }
 
@@ -159,6 +177,7 @@ namespace SFB.Game.Management{
             return deltas.ToArray();
         }
 
+/*
 		public void DrawPhase() {
 			foreach(Player p in players) {
 				Delta[] ds = p.GetDrawDeltas();
@@ -184,6 +203,7 @@ namespace SFB.Game.Management{
 				ApplyDelta(d);
 			cleanUp();
 		}
+*/
 
         // VARIOUS ADMIN METHODS
 
@@ -203,12 +223,18 @@ namespace SFB.Game.Management{
         }
 
         // to be called after every phase
-		public void cleanUp() {
+		public Delta[] cleanUp() {
+			List<Delta> deltas = new List<Delta>();
 			foreach(Lane l in lanes) {
 				// clean units
-				foreach(Unit u in l.Units)
-					if(u != null && u.HealthPoints <= 0)
-						l.kill(u);
+				for(int play = 0; play < l.Units.GetLength(0); play++)
+					for(int pos = 0; pos < l.Units.GetLength(1); pos++) {
+						Unit u = l.Units[play, pos];
+						if(u != null && u.HealthPoints <= 0) {
+							deltas.AddRange(u.onDeath(lanes, players));
+							l.kill(play, pos);
+						}
+					}
 
 				// clean towers -> player lives
 				for(int i = 0; i < l.Towers.Length; i++) {
@@ -219,6 +245,7 @@ namespace SFB.Game.Management{
 					}
 				}
 			}
+			return deltas.ToArray();
 		}
 
     }

@@ -111,8 +111,8 @@ public class Driver : MonoBehaviour {
 		}
 	}
 
-	internal void PlayUnitCardAction(UnitCard c, Lane l, int p) {
-		foreach(Delta d in new PlayUnitCardAction(c, l, p).GetDeltas(gameManager.Players[p]))
+	internal void PlayUnitCardAction(UnitCard c, Lane l, int play, int pos) {
+		foreach(Delta d in new PlayUnitCardAction(c, l, play, pos).GetDeltas(gameManager.Players[play]))
 			d.Apply();
 	}
 }

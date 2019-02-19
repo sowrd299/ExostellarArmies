@@ -18,13 +18,14 @@ namespace SFB.Game.Content {
 		}
 
 		//index corresponds to player index in master array
-		public Tower[] towers;
+		private Tower[] towers;
 		public Tower[] Towers {
 			get { return towers; }
 		}
 
 		//index a in unitss[a,b] corresponds to player index in master array
-		internal Unit[,] unitss; // 0 front, 1 back
+		//b corresponds to 0 front, 1 back
+		private Unit[,] unitss;
 		internal Unit[,] Units {
 			get { return unitss; }
 		}
@@ -48,11 +49,15 @@ namespace SFB.Game.Content {
 			return false;
 		}
 
+		internal void kill(int play, int pos) {
+			unitss[play, pos] = null;
+		}
+
 		internal void kill(Unit u) {
 			for(int play = 0; play < unitss.GetLength(0); play++) {
 				for(int pos = 0; pos < unitss.GetLength(1); pos++) {
 					if(unitss[play, pos] == u) {
-						unitss[play, pos] = null;
+						kill(play, pos);
 						return;
 					}
 				}
@@ -115,7 +120,7 @@ namespace SFB.Game.Content {
                 if ((target as Lane).isOccupied(this.player, this.pos))
                     throw new IllegalDeltaException("The lane and position you wish to put that Unit is already occupied");
                 (target as Lane).place(this.card.Target as UnitCard, this.player, this.pos);
-            }
+			}
 
             internal override void Revert()
             {

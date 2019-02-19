@@ -7,16 +7,18 @@ namespace SFB.Game.Management {
 		private UnitCard card;
 		private Lane lane;
 		private int pos;
+		private int play;
 
-		internal PlayUnitCardAction(UnitCard c, Lane l, int p) {
-			card = c;
-			lane = l;
-			pos = p;
+		internal PlayUnitCardAction(UnitCard c, Lane l, int play, int pos) {
+			this.card = c;
+			this.lane = l;
+			this.pos = pos;
+			this.play = play;
 		}
 
 		internal override bool IsLegalAction(Player p) {
 			return p.Hand.Contains(card) &&
-					!lane.isOccupied(p.Num, pos) &&
+					!lane.isOccupied(play, pos) &&
 					p.Mana.CanAfford(card.DeployCost);
 		}
 		
@@ -24,7 +26,7 @@ namespace SFB.Game.Management {
 			return new Delta[] {
 				p.Hand.GetRemoveDelta(card)[0],
 				p.Mana.GetAddDeltas(card.DeployCost)[0],
-				lane.getDeployDeltas(card, p.Num, pos)[0]
+				lane.getDeployDeltas(card, play, pos)[0]
 			};
 		}
 	}
