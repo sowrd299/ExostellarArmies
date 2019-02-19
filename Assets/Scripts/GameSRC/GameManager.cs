@@ -142,7 +142,7 @@ namespace SFB.Game.Management{
 			foreach(Lane l in lanes)
 				for(int play = 0; play < l.Units.GetLength(0); play++)
 					for(int pos = 0; pos < l.Units.GetLength(1); pos++)
-						deltas.AddRange(l.Units[play, pos].onEachDeployPhase(lanes, players));
+						deltas.AddRange(l.Units[play, pos].onEachDeployPhase(play, lanes, players));
 		
             return deltas.ToArray();
         }

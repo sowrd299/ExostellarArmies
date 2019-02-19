@@ -108,27 +108,27 @@ namespace SFB.Game{
 			healthPoints -= dmg;
 		}
 
-		private Delta[] onInitialDeploy(Lane[] lanes, Player[] players) {
+		private Delta[] onInitialDeploy(int play, Lane[] lanes, Player[] players) {
 			List<Delta> deltas = new List<Delta>();
 			foreach(Ability a in abilities) {
-				deltas.AddRange(a.onInitialDeploy());
-				deltas.AddRange(a.onInitialDeploy(lanes));
-				deltas.AddRange(a.onInitialDeploy(players));
-				deltas.AddRange(a.onInitialDeploy(lanes, players));
+				deltas.AddRange(a.onInitialDeploy(play));
+				deltas.AddRange(a.onInitialDeploy(play, lanes));
+				deltas.AddRange(a.onInitialDeploy(play, players));
+				deltas.AddRange(a.onInitialDeploy(play, lanes, players));
 			}
 			return deltas.ToArray();
 		}
 
-		public Delta[] onEachDeployPhase(Lane[] lanes, Player[] players) {
+		public Delta[] onEachDeployPhase(int play, Lane[] lanes, Player[] players) {
 			List<Delta> deltas = new List<Delta>();
 			foreach(Ability a in abilities) {
-				deltas.AddRange(a.onEachDeployPhase());
-				deltas.AddRange(a.onEachDeployPhase(lanes));
-				deltas.AddRange(a.onEachDeployPhase(players));
-				deltas.AddRange(a.onEachDeployPhase(lanes, players));
+				deltas.AddRange(a.onEachDeployPhase(play));
+				deltas.AddRange(a.onEachDeployPhase(play, lanes));
+				deltas.AddRange(a.onEachDeployPhase(play, players));
+				deltas.AddRange(a.onEachDeployPhase(play, lanes, players));
 			}
 			if(this.firstDeploy) {
-				deltas.AddRange(onInitialDeploy(lanes, players));
+				deltas.AddRange(onInitialDeploy(play, lanes, players));
 				this.firstDeploy = false;
 			}
 			return deltas.ToArray();
@@ -182,16 +182,17 @@ namespace SFB.Game{
 
 		public Ability(): this(-1) { }
 
-		public virtual Delta[] onInitialDeploy() { return new Delta[] { }; }
-		public virtual Delta[] onInitialDeploy(Lane[] lanes) { return new Delta[] { }; }
-		public virtual Delta[] onInitialDeploy(Player[] players) { return new Delta[] { }; }
-		public virtual Delta[] onInitialDeploy(Lane[] lanes, Player[] players) { return new Delta[] { }; }
+		public virtual Delta[] onInitialDeploy(int play) { return new Delta[] { }; }
+		public virtual Delta[] onInitialDeploy(int play, Lane[] lanes) { return new Delta[] { }; }
+		public virtual Delta[] onInitialDeploy(int play, Player[] players) { return new Delta[] { }; }
+		public virtual Delta[] onInitialDeploy(int play, Lane[] lanes, Player[] players) { return new Delta[] { }; }
 
-		public virtual Delta[] onEachDeployPhase() { return new Delta[] { }; }
-		public virtual Delta[] onEachDeployPhase(Lane[] lanes) { return new Delta[] { }; }
-		public virtual Delta[] onEachDeployPhase(Player[] players) { return new Delta[] { }; }
-		public virtual Delta[] onEachDeployPhase(Lane[] lanes, Player[] players) { return new Delta[] { }; }
+		public virtual Delta[] onEachDeployPhase(int play) { return new Delta[] { }; }
+		public virtual Delta[] onEachDeployPhase(int play, Lane[] lanes) { return new Delta[] { }; }
+		public virtual Delta[] onEachDeployPhase(int play, Player[] players) { return new Delta[] { }; }
+		public virtual Delta[] onEachDeployPhase(int play, Lane[] lanes, Player[] players) { return new Delta[] { }; }
 
+		// play is the player that owns the unit
 		public virtual Delta[] onDeath(int play) { return new Delta[] { }; }
 		public virtual Delta[] onDeath(int play, Lane[] lanes) { return new Delta[] { }; }
 		public virtual Delta[] onDeath(int play, Player[] players) { return new Delta[] { }; }
