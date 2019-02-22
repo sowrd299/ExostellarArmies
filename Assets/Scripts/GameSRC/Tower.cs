@@ -9,9 +9,18 @@ namespace SFB.Game.Content {
 			get { return hp; }
 		}
 
+		private int baseDamage;
+		private int damage;
+		public int Damage {
+			get { return damage; }
+			set { damage = value; }
+		}
+
 		public Tower() {
 			maxHP = 2;
 			hp = maxHP;
+			baseDamage = 1;
+			damage = baseDamage;
 		}
 
 		public void takeDamage() {
@@ -24,13 +33,14 @@ namespace SFB.Game.Content {
 
 		public void revive() {
 			if(hp == 0) {
-				maxHP++;
-				hp = maxHP;
+				hp = ++maxHP;
 			} else {
 				//exception?
 			}
 		}
 
-
+		public void resetDamage() {
+			damage = baseDamage;
+		}
 	}
 }

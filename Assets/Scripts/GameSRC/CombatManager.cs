@@ -28,5 +28,28 @@ namespace SFB.Game.Management {
 
 			return list.ToArray();
 		}
+
+		public static Delta[] getTowerDeltas(Lane[] lanes) {
+			List<Delta> list = new List<Delta>();
+
+			foreach(Lane l in lanes) {
+				for(int play = 1; play >= 0; play--) {
+					int dmgLeft = l.Towers[System.Math.Abs(play - 1)].Damage;
+
+					int pos = 0;
+
+					while(dmgLeft > 0 && pos < 2) {
+						if(l.isOccupied(play, pos)) {
+							Unit target = l.Units[play, pos];
+							int deal = System.Math.Max(target.HealthPoints, dmgLeft);
+							list.Add(new UnitDelta(target, deal, UnitDelta.DamageType.TRUE));
+							dmgLeft -= deal;
+						}
+						pos++;
+					}
+				}
+			}
+			return list.ToArray();
+		}
 	}
 }

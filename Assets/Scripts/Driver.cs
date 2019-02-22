@@ -36,20 +36,20 @@ public class Driver : MonoBehaviour {
 
     void Start() {
 		DeckList dlC = new DeckList();
-		dlC.AddCard(new UnitCard(1, "Carth1Cost", Faction.CARTH,"Main","Flavor", 1, 1, 1), 4);
-		dlC.AddCard(new UnitCard(2, "Carth2Cost#1", Faction.CARTH, "Main", "Flavor", 1, 1, 1), 3);
-		dlC.AddCard(new UnitCard(2, "Carth2Cost#2", Faction.CARTH, "Main", "Flavor", 1, 1, 1), 3);
-		dlC.AddCard(new UnitCard(3, "Carth3Cost", Faction.CARTH, "Main", "Flavor", 1, 1, 1), 3);
-		dlC.AddCard(new UnitCard(4, "Carth4Cost", Faction.CARTH, "Main", "Flavor", 1, 1, 1), 2);
-		dlC.AddCard(new UnitCard(5, "Carth5Cost", Faction.CARTH, "Main", "Flavor", 1, 1, 1), 1);
+		dlC.AddCard(new UnitCard(1, "Carth1Cost", Faction.CARTH,"Main","Flavor", 1, 1, 1, new AbilityList()), 4);
+		dlC.AddCard(new UnitCard(2, "Carth2Cost#1", Faction.CARTH, "Main", "Flavor", 1, 1, 1, new AbilityList()), 3);
+		dlC.AddCard(new UnitCard(2, "Carth2Cost#2", Faction.CARTH, "Main", "Flavor", 1, 1, 1, new AbilityList()), 3);
+		dlC.AddCard(new UnitCard(3, "Carth3Cost", Faction.CARTH, "Main", "Flavor", 1, 1, 1, new AbilityList()), 3);
+		dlC.AddCard(new UnitCard(4, "Carth4Cost", Faction.CARTH, "Main", "Flavor", 1, 1, 1, new AbilityList()), 2);
+		dlC.AddCard(new UnitCard(5, "Carth5Cost", Faction.CARTH, "Main", "Flavor", 1, 1, 1, new AbilityList()), 1);
 
 		DeckList dlJ = new DeckList();
-		dlJ.AddCard(new UnitCard(1, "Jirnor1Cost", Faction.JIRNOR,"Main", "Flavor", 1, 1, 1), 4);
-		dlJ.AddCard(new UnitCard(2, "Jirnor2Cost#1", Faction.JIRNOR, "Main", "Flavor", 1, 1, 1), 3);
-		dlJ.AddCard(new UnitCard(2, "Jirnor2Cost#2", Faction.JIRNOR, "Main", "Flavor", 1, 1, 1), 3);
-		dlJ.AddCard(new UnitCard(3, "Jirnor3Cost", Faction.JIRNOR, "Main", "Flavor", 1, 1, 1), 3);
-		dlJ.AddCard(new UnitCard(4, "Jirnor4Cost", Faction.JIRNOR, "Main", "Flavor", 1, 1, 1), 2);
-		dlJ.AddCard(new UnitCard(5, "Jirnor5Cost", Faction.JIRNOR, "Main", "Flavor", 1, 1, 1), 1);
+		dlJ.AddCard(new UnitCard(1, "Jirnor1Cost", Faction.JIRNOR,"Main", "Flavor", 1, 1, 1, new AbilityList()), 4);
+		dlJ.AddCard(new UnitCard(2, "Jirnor2Cost#1", Faction.JIRNOR, "Main", "Flavor", 1, 1, 1, new AbilityList()), 3);
+		dlJ.AddCard(new UnitCard(2, "Jirnor2Cost#2", Faction.JIRNOR, "Main", "Flavor", 1, 1, 1, new AbilityList()), 3);
+		dlJ.AddCard(new UnitCard(3, "Jirnor3Cost", Faction.JIRNOR, "Main", "Flavor", 1, 1, 1, new AbilityList()), 3);
+		dlJ.AddCard(new UnitCard(4, "Jirnor4Cost", Faction.JIRNOR, "Main", "Flavor", 1, 1, 1, new AbilityList()), 2);
+		dlJ.AddCard(new UnitCard(5, "Jirnor5Cost", Faction.JIRNOR, "Main", "Flavor", 1, 1, 1, new AbilityList()), 1);
 
 
 		// Each deck has 16 cards in it

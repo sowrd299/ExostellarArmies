@@ -177,7 +177,7 @@ namespace SFB.Game.Management{
             return deltas.ToArray();
         }
 
-/*
+
 		public void DrawPhase() {
 			foreach(Player p in players) {
 				Delta[] ds = p.GetDrawDeltas();
@@ -203,7 +203,7 @@ namespace SFB.Game.Management{
 				ApplyDelta(d);
 			cleanUp();
 		}
-*/
+
 
         // VARIOUS ADMIN METHODS
 

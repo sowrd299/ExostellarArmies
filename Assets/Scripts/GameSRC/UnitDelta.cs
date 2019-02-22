@@ -10,22 +10,54 @@ namespace SFB.Game {
 			get { return unit; }
 		}
 
-		private int dHP;
-		public int DHP {
-			get { return dHP; }
+		private int amount;
+		public int Amount {
+			get { return amount; }
 		}
 
-		internal UnitDelta(Unit u, int dhp) {
+		private DamageType dmgType;
+		public DamageType DmgType {
+			get { return dmgType; }
+		}
+
+		internal UnitDelta(Unit u, int a, DamageType t) {
 			unit = u;
-			dHP = dhp;
+			amount = a;
+			dmgType = t;
 		}
 
 		internal override void Apply() {
-			unit.takeDamage(-dHP);
+			switch(dmgType) {
+				case DamageType.RANGED:
+					unit.takeRangedDamage(amount);
+					break;
+				case DamageType.MELEE:
+					unit.takeMeleeDamage(amount);
+					break;
+				case DamageType.TRUE:
+					unit.takeTrueDamage(amount);
+					break;
+				case DamageType.HEAL:
+					unit.heal(amount);
+					break;
+			}
 		}
 
 		internal override void Revert() {
-			unit.takeDamage(dHP);
+			if(dmgType == DamageType.HEAL) {
+				unit.takeTrueDamage(amount);
+			} else {
+				int mod = (dmgType == DamageType.RANGED
+								? unit.getRangedDamageModifier()
+								: (dmgType == DamageType.MELEE
+									? unit.getMeleeDamageModifier()
+									: 0));
+				unit.heal(amount >= mod ? amount - mod : 0);
+			}
+		}
+
+		public enum DamageType {
+			RANGED, MELEE, TRUE, HEAL
 		}
 	}
 }
