@@ -6,7 +6,7 @@ namespace SFB.Game.Content {
 
         protected override Card handleMiss(string id){
             // TODO: dummy implmentation
-            return new UnitCard(3, id, Faction.CARTH, "Some rules text", "Some flavor text", 2, 2, 4);
+            return new UnitCard(3, id, Faction.CARTH, "Some rules text", "Some flavor text", 2, 2, 4, new AbilityList());
         }
 
     }

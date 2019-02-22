@@ -143,21 +143,28 @@ namespace SFB.Net{
             lock(asynchReceivingLock){
                 // no long have an outstanding async receive
                 asynchReceiving = false;
-                // reading stuff
-                int i = socket.EndReceive(ar);
-                AsyncState<XmlDocument> state = (AsyncState<XmlDocument>)ar.AsyncState;
-                string text = parseMessage(state.buffer, i);
-                // have a full message, deal with it
-                if(text != null){
-                    XmlDocument msg = parseXml(text);
-                    handleAsynchXmlMessage(msg, this);
-                // if do not have a full message...
-                }else{ 
-                    if(!Alive){ // ...may have died ...
-                        handleAsyncDeath(this);
-                    }else{ // ...may need to continue reading
-                        AsynchReceiveXml(handleAsynchXmlMessage, handleAsyncDeath);
+                // make sure we are still connected
+                if(connected()){
+                    // reading stuff
+                    int i = socket.EndReceive(ar);
+                    AsyncState<XmlDocument> state = (AsyncState<XmlDocument>)ar.AsyncState;
+                    string text = parseMessage(state.buffer, i);
+                    // have a full message, deal with it
+                    if(text != null){
+                        XmlDocument msg = parseXml(text);
+                        handleAsynchXmlMessage(msg, this);
+                    // if do not have a full message...
+                    }else{ 
+                        if(!Alive){ // ...may have died ...
+                            handleAsyncDeath(this);
+                        }else{ // ...may need to continue reading
+                            AsynchReceiveXml(handleAsynchXmlMessage, handleAsyncDeath);
+                        }
                     }
+                // if not still connected, die
+                }else{
+                    die();
+                    handleAsyncDeath(this);
                 }
             }
         }
@@ -182,8 +189,16 @@ namespace SFB.Net{
             Send(xml.InnerXml);
         }
 
+        // returns whether or not the socket is still connected 
+        private bool connected(){
+            bool poll = socket.Poll(1000, SelectMode.SelectRead);
+            bool data = (socket.Available == 0);
+            return poll && data;
+        }
+
         // to be called once the socket disconnects
         private void die(){
+            Console.WriteLine("Socket Dying"); // TESTING
             alive = false;
             socket.Close();
         }
