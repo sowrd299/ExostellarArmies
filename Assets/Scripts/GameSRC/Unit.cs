@@ -55,57 +55,74 @@ namespace SFB.Game{
 				this.abilities.Add(a);
 			this.firstDeploy = true;
         }
+		
+		public Delta[] getRangedDamagingDelta(Lane l, int oppPlay) {
+			return getDamagingDeltas(l, oppPlay, UnitDelta.DamageType.RANGED);
+		}
+		
+		public Delta[] getMeleeDamagingDelta(Lane l, int oppPlay) {
+			return getDamagingDeltas(l, oppPlay, UnitDelta.DamageType.MELEE);
+		}
 
-		// play is other player
-		public List<Delta> getRangedDamagingDelta(Lane l, int play) {
-			int dmgLeft = rangedAttack;
+		private Delta[] getDamagingDeltas(Lane l, int oppPlay, UnitDelta.DamageType type) {
+			int dmgLeft = (type==UnitDelta.DamageType.RANGED ? rangedAttack : meleeAttack);
 
 			List<Delta> list = new List<Delta>();
 			int pos = 0;
 
-			//TODO switch statement for attrs like LOB
+			Unit[,] units = l.Units;
+			foreach(Ability a in abilities)
+				units = a.filterTargets(units, oppPlay);
+
 			while(dmgLeft > 0 && pos < 2) {
-				if(l.isOccupied(play, pos)) {
-					Unit target = l.Units[play, pos];
-					int deal = System.Math.Max(target.HealthPoints, dmgLeft);
-					list.Add(new UnitDelta(target, deal));
+				if(l.isOccupied(oppPlay, pos)) {
+					Unit target = units[oppPlay, pos];
+					int mod = (type == UnitDelta.DamageType.RANGED
+								? getRangedDamageModifier()
+								: (type == UnitDelta.DamageType.MELEE
+									? getMeleeDamageModifier()
+									: 0));
+					int deal = System.Math.Max(target.HealthPoints + mod, dmgLeft);
+					list.Add(new UnitDelta(target, deal, type));
 					dmgLeft -= deal;
 				}
 				pos++;
 			}
 
 			if(dmgLeft > 0)
-				list.Add(new TowerDelta(l.Towers[play]));
-			
-			return list;
+				list.Add(new TowerDelta(l.Towers[oppPlay]));
+
+			return list.ToArray();
 		}
 
-		// play is other player
-		public List<Delta> getMeleeDamagingDelta(Lane l, int play) {
-			int dmgLeft = meleeAttack;
-
-			List<Delta> list = new List<Delta>();
-			int pos = 0;
-
-			//TODO switch statement for attrs like LOB
-			while(dmgLeft > 0 && pos < 2) {
-				if(l.isOccupied(play, pos)) {
-					Unit target = l.Units[play, pos];
-					int deal = System.Math.Max(target.HealthPoints, dmgLeft);
-					list.Add(new UnitDelta(target, deal));
-					dmgLeft -= deal;
-				}
-				pos++;
-			}
-
-			if(dmgLeft > 0)
-				list.Add(new TowerDelta(l.Towers[play]));
-
-			return list;
+		public void takeRangedDamage(int dmg) {
+			healthPoints -= System.Math.Max(dmg - getRangedDamageModifier(), 0);
 		}
 
-		public void takeDamage(int dmg) {
+		public void takeMeleeDamage(int dmg) {
+			healthPoints -= System.Math.Max(dmg - getMeleeDamageModifier(), 0);
+		}
+
+		public void takeTrueDamage(int dmg) {
 			healthPoints -= dmg;
+		}
+
+		public void heal(int amt) {
+			healthPoints += amt;
+		}
+
+		public int getRangedDamageModifier() {
+			int n = 0;
+			foreach(Ability a in abilities)
+				n += a.takeRangedDamageModifier();
+			return n;
+		}
+
+		public int getMeleeDamageModifier() {
+			int n = 0;
+			foreach(Ability a in abilities)
+				n += a.takeMeleeDamageModifier();
+			return n;
 		}
 
 		private Delta[] onInitialDeploy(int play, Lane[] lanes, Player[] players) {
@@ -142,77 +159,6 @@ namespace SFB.Game{
 				deltas.AddRange(a.onDeath(play, players));
 				deltas.AddRange(a.onDeath(play, lanes, players));
 			}
-			return deltas.ToArray();
-		}
-	}
-
-	class AbilityList : List<Ability> {
-
-		public new void Add(Ability a) {
-			if(this.hasType(a.GetType())) {
-				if(a.Num == -1) {
-					// error: trying to add a numberless ability to a unit that already has it
-				} else {
-					foreach(Ability ability in this) {
-						if(ability.GetType() == a.GetType()) {
-							ability.Num += a.Num;
-							break;
-						}
-					}
-				}
-			} else {
-				base.Add(a);
-			}
-		}
-
-		public bool hasType(Type type) {
-			return !this.TrueForAll(ability => ability.GetType() != type);
-		}
-	}
-	
-	abstract class Ability {
-		private int num;
-		public int Num {
-			get; set;
-		}
-
-		public Ability(int num) {
-			this.num = num;
-		}
-
-		public Ability(): this(-1) { }
-
-		public virtual Delta[] onInitialDeploy(int play) { return new Delta[] { }; }
-		public virtual Delta[] onInitialDeploy(int play, Lane[] lanes) { return new Delta[] { }; }
-		public virtual Delta[] onInitialDeploy(int play, Player[] players) { return new Delta[] { }; }
-		public virtual Delta[] onInitialDeploy(int play, Lane[] lanes, Player[] players) { return new Delta[] { }; }
-
-		public virtual Delta[] onEachDeployPhase(int play) { return new Delta[] { }; }
-		public virtual Delta[] onEachDeployPhase(int play, Lane[] lanes) { return new Delta[] { }; }
-		public virtual Delta[] onEachDeployPhase(int play, Player[] players) { return new Delta[] { }; }
-		public virtual Delta[] onEachDeployPhase(int play, Lane[] lanes, Player[] players) { return new Delta[] { }; }
-
-		// play is the player that owns the unit
-		public virtual Delta[] onDeath(int play) { return new Delta[] { }; }
-		public virtual Delta[] onDeath(int play, Lane[] lanes) { return new Delta[] { }; }
-		public virtual Delta[] onDeath(int play, Player[] players) { return new Delta[] { }; }
-		public virtual Delta[] onDeath(int play, Lane[] lanes, Player[] players) { return new Delta[] { }; }
-	}
-
-	class Lob : Ability {
-		public Lob() : base() { }
-	}
-
-	// test
-	class HealAlliesWhenDie : Ability {
-		public HealAlliesWhenDie() : base() { }
-
-		public override Delta[] onDeath(int play, Lane[] lanes) {
-			List<Delta> deltas = new List<Delta>();
-			foreach(Lane l in lanes)
-				for(int pos = 0; pos < l.Units.GetLength(1); pos++)
-					if(l.Units[play, pos] != null)
-						deltas.Add(new UnitDelta(l.Units[play, pos], 1));
 			return deltas.ToArray();
 		}
 	}
