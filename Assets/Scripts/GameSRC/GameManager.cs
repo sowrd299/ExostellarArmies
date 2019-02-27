@@ -140,9 +140,10 @@ namespace SFB.Game.Management{
 
 			// TODO: activate deploy affects here, probably
 			foreach(Lane l in lanes)
-				for(int play = 0; play < l.Units.GetLength(0); play++)
-					for(int pos = 0; pos < l.Units.GetLength(1); pos++)
-						deltas.AddRange(l.Units[play, pos].onEachDeployPhase(play, lanes, players));
+				for(int play = 0; play < l.Units.GetLength(0); play++) // player
+					for(int pos = 0; pos < l.Units.GetLength(1); pos++) // front/back row
+                        if(l.Units[play, pos] != null) // do not call on empty spaces
+                            deltas.AddRange(l.Units[play, pos].onEachDeployPhase(play, lanes, players));
 		
             return deltas.ToArray();
         }

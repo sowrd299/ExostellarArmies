@@ -107,15 +107,31 @@ namespace SFB.Net.Server.Matches{
                 // use a list to collect the deltas, to send them later
                 List<Delta> turnDeltas = new List<Delta>(); 
                 // cleanup the deploy phase
-                foreach(Delta d in gameManager.GetEndDelpoyDeltas()){
+                foreach(Delta d in gameManager.GetEndDeployDeltas()){
                     turnDeltas.Add(d);
                     gameManager.ApplyDelta(d);
                 }
                 gameManager.cleanUp();
                 // if no more deployment phases, do the rest of this turn into the start of the next
                 if(gameManager.DeployPhasesOver()){
-                    // combat
-                    gameManager.cleanUp();
+                    // ranged combat
+                    foreach(Delta d in gameManager.GetRangedCombatDeltas()){
+                        turnDeltas.Add(d);
+                        gameManager.ApplyDelta(d);
+                    }
+                    foreach(Delta d in gameManager.cleanUp()){
+                        turnDeltas.Add(d);
+                        gameManager.ApplyDelta(d);
+                    }
+                    // melee combat
+                    foreach(Delta d in gameManager.GetMeleeCombatDeltas()){
+                        turnDeltas.Add(d);
+                        gameManager.ApplyDelta(d);
+                    }
+                    foreach(Delta d in gameManager.cleanUp()){
+                        turnDeltas.Add(d);
+                        gameManager.ApplyDelta(d);
+                    }
                     // start of the next turn
                     foreach(Delta d in gameManager.GetStartTurnDeltas()){
                         turnDeltas.Add(d);

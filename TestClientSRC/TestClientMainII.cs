@@ -32,7 +32,7 @@ namespace SFB.TestClient{
 
             // testing unkown card equality
             Card unknownCard = new UnknownCard();
-            Card card = new UnitCard(0, "Test Card", Faction.NONE, "Some text", "Some more text", 0, 0, 0);
+            Card card = new UnitCard(0, "Test Card", Faction.NONE, "Some text", "Some more text", 0, 0, 0, new AbilityList());
             Console.WriteLine("Testing UnknownCard == Card: {0}", unknownCard == card ? "Success" : "Fail");
 
             //find local IP
