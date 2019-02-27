@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using SFB.Game;
+using SFB.Game.Management;
 
 public class Manager : MonoBehaviour
 {
@@ -63,6 +65,23 @@ public class Manager : MonoBehaviour
                     Driver.instance.phase = Phase.COMBAT;
                     flipCards();
                     placeAll();
+
+                    List<PlayUnitCardAction> actions = new List<PlayUnitCardAction>();
+                    for (int i = 0; i < myCardHolders.Length; i++)
+                    {
+                        if(myCardHolders[i].transform.childCount>0)
+                        {
+                            CardUI c = myCardHolders[i].transform.GetChild(0).GetComponent<CardUI>();
+                            Card back = c.cardBackEnd;
+                            actions.Add(new PlayUnitCardAction(back as UnitCard, Driver.instance.myLanes[i%3], 0, 1));
+                            //myCardHolders need to be in correct order
+                        }
+                    }
+                    foreach(PlayUnitCardAction action in actions)
+                    {
+                        foreach (Delta del in action.GetDeltas(Driver.instance.gameManager.Players[0]))
+                            del.Apply();
+                    }
                 }
                 else
                 {

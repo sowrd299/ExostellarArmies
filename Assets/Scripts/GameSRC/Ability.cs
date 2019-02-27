@@ -37,7 +37,7 @@ namespace SFB.Game {
 		public virtual int takeRangedDamageModifier() { return 0; }
 	}
 
-	class AbilityList : List<Ability> {
+	public class AbilityList : List<Ability> {
 		// abilities must be in a set order because of filtering targets to damage
 		// otherwise, say if you had flying and lob, depending on the order, the targets
 		//     would be filtered differently - do you skip a target for

@@ -38,27 +38,34 @@ public class DropZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
             Debug.Log("L==null" + (l == null));
             CardUI c = d.gameObject.GetComponent<CardUI>();
             p = Driver.instance.gameManager.Players[0];
-            UnitCard uc = p.Hand[c.handIndex] as UnitCard;
+
             if (this.gameObject.tag == "CardHolder" && this.gameObject.transform.childCount <= 1)
             {
-                if (this.transform.parent.name.Contains("Front"))
-                    action = new PlayUnitCardAction(uc, l, 0, 0);
-                else
-                    action = new PlayUnitCardAction(uc, l, 0, 1);
-                if (Driver.instance.gameManager.IsLegalAction(p, action))
-                {
-                    d.ParentToReturnTo = this.transform;
-                    foreach (Delta del in action.GetDeltas(Driver.instance.gameManager.Players[0]))
-                        del.Apply();
-                }
+                //UnitCard uc = c.cardBackEnd as UnitCard;
+                //if (this.transform.parent.name.Contains("Front"))
+                //    action = new PlayUnitCardAction(uc, l, 0, 0);
+                //else
+                //    action = new PlayUnitCardAction(uc, l, 0, 1);
+                //if (Driver.instance.gameManager.IsLegalAction(p, action))
+                //{
+                //    d.ParentToReturnTo = this.transform;
+                //    Delta[] del = action.GetDeltas(Driver.instance.gameManager.Players[0]);
+                //    for (int i = 1; i < del.Length; i++)
+                //    {
+                //        del[i].Apply();
+                //    }
+                //    //foreach (Delta del in action.GetDeltas(Driver.instance.gameManager.Players[0]))
+                //        //del.Apply();
+                //}
 
-                //RectTransform parent = this.gameObject.transform.GetComponent<RectTransform>();
-                //RectTransform rt = d.gameObject.transform.GetComponent<RectTransform>();
-                //rt.sizeDelta = new Vector2(parent.rect.width, parent.rect.height);
+                d.ParentToReturnTo = this.transform;
+
             }
             else if(this.gameObject.tag == "MyHand")
             {
                 //Driver.instance.dropCostSum -= cardCost;
+                //Driver.instance.gameManager.Players[0].Hand.Add(c.cardBackEnd);
+                //Driver.instance.myMana.Add(c.cardBackEnd.DeployCost);
                 d.ParentToReturnTo = this.transform;
             }
             else if(this.gameObject.tag == "EnemyCardHolder" && d.gameObject.tag == "MyCards")

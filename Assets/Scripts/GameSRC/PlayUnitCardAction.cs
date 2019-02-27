@@ -25,7 +25,7 @@ namespace SFB.Game.Management {
 		internal override Delta[] GetDeltas(Player p) {
 			return new Delta[] {
 				p.Hand.GetRemoveDelta(card)[0],
-				p.Mana.GetAddDeltas(card.DeployCost)[0],
+				p.Mana.GetSubtractDeltas(card.DeployCost)[0],
 				lane.getDeployDeltas(card, play, pos)[0]
 			};
 		}

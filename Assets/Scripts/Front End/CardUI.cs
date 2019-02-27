@@ -14,7 +14,7 @@ public class CardUI : MonoBehaviour
 
     private List<CardFrontEnd> playerFrontEnds = new List<CardFrontEnd>();
     private List<CardFrontEnd> enemyFrontEnds = new List<CardFrontEnd>();
-    private Card cardBackEnd;
+    public Card cardBackEnd;
     public int handIndex
     {
         get { return Driver.instance.gameManager.Players[0].Hand.IndexOf(cardBackEnd); }
