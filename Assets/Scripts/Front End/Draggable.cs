@@ -5,33 +5,31 @@ using UnityEngine.EventSystems;
 
 public class Draggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
+    private Transform parentToReturnTo = null;
+    public Transform ParentToReturnTo
+    {
+        get{return parentToReturnTo;}
+        set{parentToReturnTo = value;}
+    }
+    public Transform placeHolderParent = null;
+    private GameObject placeHolder = null;
 
-    public GameObject myHand=null;
-
+    public GameObject myHand = null;
     void Start()
     {
         myHand = GameObject.FindWithTag("MyHand");
     }
-    Transform parentToReturnTo = null;
-    public Transform ParentToReturnTo
-    {
-        get
-        {
-            return parentToReturnTo;
-        }
-        set
-        {
-            parentToReturnTo = value;
-        }
-    }
-    public Transform placeHolderParent = null;
-
-    private GameObject placeHolder = null;
 
     public void OnBeginDrag(PointerEventData eventData)
     {
+        CardUI c = this.gameObject.GetComponent<CardUI>();
+        int cardCost;
+        int.TryParse(c.properties[5].text.text, out cardCost);
+        if (this.transform.parent.gameObject.tag == "CardHolder")
+        {
+            Driver.instance.dropCostSum -= cardCost;
+        }
         myHand.GetComponent<Image>().raycastTarget = true;
-        //Debug.Log("Begin Drag");
         placeHolder = new GameObject();
         placeHolder.transform.SetParent(this.transform.parent);
         LayoutElement le = placeHolder.AddComponent<LayoutElement>();
@@ -72,6 +70,13 @@ public class Draggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
     public void OnEndDrag(PointerEventData eventData)
     {
         //Debug.Log("End Drag");
+        CardUI c = this.gameObject.GetComponent<CardUI>();
+        int cardCost;
+        int.TryParse(c.properties[5].text.text, out cardCost);
+        if (parentToReturnTo.gameObject.tag == "CardHolder")
+        {
+            Driver.instance.dropCostSum += cardCost;
+        }
         myHand.GetComponent<Image>().raycastTarget = false;
         this.transform.SetParent(parentToReturnTo);
         this.transform.SetSiblingIndex(placeHolder.transform.GetSiblingIndex());

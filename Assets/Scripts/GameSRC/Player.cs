@@ -84,7 +84,6 @@ namespace SFB.Game{
  
 		public Delta[] GetDrawDeltas() {
 			List<Delta> l = new List<Delta>();
-
 			Deck.RemoveFromDeckDelta[] rDeltas = this.deck.GetDrawDeltas(count: this.handSize - this.hand.Count);
 			foreach(Delta d in rDeltas)
 				l.Add(d);

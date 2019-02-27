@@ -37,11 +37,16 @@ namespace SFB.Game{
         }
 
         public bool CanAfford(int x){
-            return x >= count;
+            return x <= count;
         }
 
         public void Add(int x){
             count += x;
+        }
+
+        public void Subtract(int x)
+        {
+            count -= x;
         }
 
         public Delta[] GetAddDeltas(int x){

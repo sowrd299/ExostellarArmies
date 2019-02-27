@@ -17,7 +17,7 @@ namespace SFB.Game.Management {
 		}
 
 		internal override bool IsLegalAction(Player p) {
-			return p.Hand.Contains(card) &&
+         return p.Hand.Contains(card) &&
 					!lane.isOccupied(play, pos) &&
 					p.Mana.CanAfford(card.DeployCost);
 		}

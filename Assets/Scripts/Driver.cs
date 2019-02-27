@@ -8,14 +8,34 @@ using UnityEngine;
 public class Driver : MonoBehaviour {
     public static Driver instance = null;
     public GameManager gameManager;
-	Phase phase;
+	public Phase phase;
+ 
+    [SerializeField]
+    private Element[] elemList;
+    public bool deployDone = false;
 
-    private List<CardFrontEnd> listofUI = new List<CardFrontEnd>();
-    public  List<CardFrontEnd> ListofUI
+    public Manager manager;
+    public ResourcePool myMana;
+    private ResourcePool enemyMana;
+    public Lane[] myLanes=null;
+
+    public int resoureCount = 0;
+    public int dropCostSum = 0;
+
+    private List<CardFrontEnd> listofUIOnTable = new List<CardFrontEnd>();
+    public  List<CardFrontEnd> ListofUIOnTable
     {
         get
         {
-            return listofUI;
+            return listofUIOnTable;
+        }
+    }
+    private List<CardFrontEnd> listofEnemyUI = new List<CardFrontEnd>();
+    public List<CardFrontEnd> ListofEnemyUI
+    {
+        get
+        {
+            return listofEnemyUI;
         }
     }
 
@@ -26,53 +46,51 @@ public class Driver : MonoBehaviour {
         else if (instance != this)
             Destroy(gameObject);
         DontDestroyOnLoad(gameObject);
-    }
 
-
-    [SerializeField]
-    private Element[] elemList;
-
-
-
-    void Start() {
 		DeckList dlC = new DeckList();
-		dlC.AddCard(new UnitCard(1, "Carth1Cost", Faction.CARTH,"Main","Flavor", 1, 1, 1), 4);
-		dlC.AddCard(new UnitCard(2, "Carth2Cost#1", Faction.CARTH, "Main", "Flavor", 1, 1, 1), 3);
-		dlC.AddCard(new UnitCard(2, "Carth2Cost#2", Faction.CARTH, "Main", "Flavor", 1, 1, 1), 3);
-		dlC.AddCard(new UnitCard(3, "Carth3Cost", Faction.CARTH, "Main", "Flavor", 1, 1, 1), 3);
-		dlC.AddCard(new UnitCard(4, "Carth4Cost", Faction.CARTH, "Main", "Flavor", 1, 1, 1), 2);
-		dlC.AddCard(new UnitCard(5, "Carth5Cost", Faction.CARTH, "Main", "Flavor", 1, 1, 1), 1);
+        AbilityList a = new AbilityList();
+        dlC.AddCard(new UnitCard(3, "Exostellar Snipers", Faction.CARTH, "Carthan Elite Ranging Infantry Unit", "Illuminate with Muzzle Flare!", 3, 1, 3,a), 1);
+		dlC.AddCard(new UnitCard(3, "Exostellar Vanshield Marines", Faction.CARTH, "Carthan Elite Infantry Unit", "“First into the Night!”", 1, 3, 5,a), 1);
+		dlC.AddCard(new UnitCard(3, "Exostellar Marine Squad", Faction.CARTH, "Carthan Elite Infantry Unit", "Boldly into the Night!", 2, 2, 4,a), 2);
+		dlC.AddCard(new UnitCard(4, "Cmdr. Yos Lorth", Faction.CARTH, "Unique; Ranged Shield 1\rFront Line: Allied Elites on the Front Line have +1M and Ranged Shield 1.\nCarthan Elite Command Infantry Unit", "Exostellar Champion", 2, 2, 5,a), 2);
+		dlC.AddCard(new UnitCard(2, "Ancillary Medical Officer", Faction.CARTH, "Support Carthan Infantry: Heal this Front Line 2. (when this is deployed behind Carthan Infantry, activate this ability)\rCarthan Infantry Unit", "Healer of Carth", 1, 2, 3,a), 2);
+		dlC.AddCard(new UnitCard(2, "Autonomous Range Finder", Faction.CARTH, "Support Carthan: Give this Front Line +3R this turn. (when this is deployed behind a Carthan, activate this ability)\r", "56413", 0, 1, 3,a), 1);
+        dlC.AddCard(new UnitCard(5, "Adv. Infantry Support System", Faction.CARTH, "Melee Shield 1\rFront or Back Line: At the start of your turn, generate an extra resource.\rCarthan Command Vehicle Unit", "Mobile Command Center", 0, 3, 6, a), 1);
+        dlC.AddCard(new UnitCard(0, "Emergancy Med Drop", Faction.CARTH, "Deploy: Heal this Front Line 2 and each adjacent Front Line 1.\rCarthan Medical Drone Unit", "Forever Alive in the Dark!", 0, 0, 1, a), 2);
+        dlC.AddCard(new UnitCard(2, "Adv. Supply Drone", Faction.CARTH, "Support Carthan: Heal this Front Line 2 and gain 3 Resources.\rCarthan Medical Drone Unit", "762491", 0, 1, 2, a), 2);
+        dlC.AddCard(new UnitCard(3, "Exostellar Rover Marine", Faction.CARTH, "Front Line: If this has a Back Line, this has +2M, else this has +1R.\rCarthan Elite Infantry Unit", "In the Darkness, Everywhere!", 1, 1, 4, a), 2);
+        dlC.AddCard(new UnitCard(4, "Techrositioner Marine", Faction.CARTH, "Front Line Command: Discard a card to gain 1 Resource and give this +2R.\rCarthan Elite Engineering Infantry Unit", "“Lock; Mark; Two; Fire!”", 2, 0, 5, a), 2);
+        dlC.AddCard(new UnitCard(2, "Hover-Shield Projector", Faction.CARTH, "Support Carthan Infantry: Give this Front Line Ranged Shield 3 this turn. (when this is deployed behind Carthan Infantry, activate this ability)\rCarthan Drone Unit", "98432", 0, 1, 4, a), 2);
 
-		DeckList dlJ = new DeckList();
-		dlJ.AddCard(new UnitCard(1, "Jirnor1Cost", Faction.JIRNOR,"Main", "Flavor", 1, 1, 1), 4);
-		dlJ.AddCard(new UnitCard(2, "Jirnor2Cost#1", Faction.JIRNOR, "Main", "Flavor", 1, 1, 1), 3);
-		dlJ.AddCard(new UnitCard(2, "Jirnor2Cost#2", Faction.JIRNOR, "Main", "Flavor", 1, 1, 1), 3);
-		dlJ.AddCard(new UnitCard(3, "Jirnor3Cost", Faction.JIRNOR, "Main", "Flavor", 1, 1, 1), 3);
-		dlJ.AddCard(new UnitCard(4, "Jirnor4Cost", Faction.JIRNOR, "Main", "Flavor", 1, 1, 1), 2);
-		dlJ.AddCard(new UnitCard(5, "Jirnor5Cost", Faction.JIRNOR, "Main", "Flavor", 1, 1, 1), 1);
+        DeckList dlJ = new DeckList();
+		dlJ.AddCard(new UnitCard(2, "Dominion Pikeman Squad", Faction.JIRNOR, "Jirnorn Infantry Unit", "“For Jirnor that Will Be!”", 0, 4, 3,a), 4);
+		dlJ.AddCard(new UnitCard(2, "Scions of Radiation", Faction.JIRNOR, "Jirnorn Mutant Infantry Unit", "We Have Nothing to Lose!", 3, 2, 3,a), 3);
+		dlJ.AddCard(new UnitCard(2, "Defenders of the Losthome", Faction.JIRNOR, "Jirnorn Infantry Unit", "For Jirnor that Was!", 2, 1, 3,a), 3);
+		dlJ.AddCard(new UnitCard(3, "Hellfire Bringers", Faction.JIRNOR, "Jirnorn Elite Infantry Unit", "Deliver the Doom of Jirnor!", 2, 1, 3,a), 3);
+		dlJ.AddCard(new UnitCard(4, "Deathspew Battery", Faction.JIRNOR, "Jirnorn Mutant Artillery Unit", "No Remorse for the Unrepentant!", 3, 0, 5,a), 2);
+		dlJ.AddCard(new UnitCard(2, "Vanguards of the Dominion", Faction.JIRNOR, "Jirnorn Mutant Infantry Unit", "After Jirnor, We have Nothing!", 1, 2, 1,a), 1);
+        dlJ.AddCard(new UnitCard(3, "Losthome’s Radio Riders", Faction.JIRNOR, "Jirnorn Mutant Fast Vehicle Unit", "For the Losthome! For Jirnor!", 2, 2, 3, a), 2);
+        dlJ.AddCard(new UnitCard(4, "Salvage Truck", Faction.JIRNOR, "Jirnorn Engineering Vehicle Unit", "Waist Nothing; Leave Nothing", 2, 3, 5, a), 2);
 
 
-		// Each deck has 16 cards in it
-		DeckList[] deckLists = new DeckList[] { dlC, dlJ };
-
-
+        // Each deck has 16 cards in it
+        DeckList[] deckLists = new DeckList[] { dlC, dlJ };
 		gameManager = new GameManager(deckLists);
+        myLanes = gameManager.Lanes;
+        Debug.Log("MuLanes:" + (myLanes == null));
+        Debug.Log("MuLanes1:" + (myLanes[0] == null));
+        Debug.Log("MuLanes2:" + (myLanes[1] == null));
+        Debug.Log("MuLanes3:" + (myLanes[2] == null));
 
         phase = Phase.DRAW;
-
-        //Loading UI 
-        for (int i = 0; i < 3; i++)
-        {
-            CardProperties[] listOfProperties = new CardProperties[9];
-            listOfProperties = createCardProperties(9, "NAME", "TYPE", "FLAVOR", "ABILITY", 5, 5, 5, 5);
-            CardFrontEnd cardFront = new CardFrontEnd(listOfProperties);
-            listofUI.Add(cardFront);
-        }
+        myMana = gameManager.Players[0].Mana;
+        resoureCount = myMana.Count;
+        //loadWhenDraw();
     }
 
-    public CardProperties[] createCardProperties(int numberOfProperties, string name,string type,string flavor, string ability,int cost,int hp,int melee, int range)
+    public CardProperties[] createCardProperties(string name,string type,string flavor, string ability,int cost,int hp,int melee, int range)
     {
-        CardProperties[] listOfProp = new CardProperties[numberOfProperties];
+        CardProperties[] listOfProp = new CardProperties[9];
         for (int i=0; i<listOfProp.Length; i++)
         {
             CardProperties cardProp = new CardProperties();
@@ -91,18 +109,106 @@ public class Driver : MonoBehaviour {
 
     }
 
-    void Update() {
-		switch(phase) {
-			case Phase.DRAW:
-				gameManager.DrawPhase();
-				phase = Phase.PLACEMENT;
+    public void drawCards()
+    {
+//        Player us = gameManager.Players[0];
+//        us.Hand.DrawFrom(us.Deck);
+//        us.Hand.DrawFrom(us.Deck);
+//        us.Hand.DrawFrom(us.Deck);
+//        Player enemy = gameManager.Players[1];
+//        enemy.Hand.DrawFrom(enemy.Deck);
+//        enemy.Hand.DrawFrom(enemy.Deck);
+//        enemy.Hand.DrawFrom(enemy.Deck);
 
+//        //loadPlayerCards(us);
+//        //loadPlayerCards(enemy);
+          myMana.Add(2);
+          gameManager.Players[0].GetDeployPhaseDeltas()[0].Apply();
+////        enemyMana.Add(2);
+    }
+
+    //public void loadPlayerCards(Player p)
+    //{
+    //    for (int i = 0; i < p.HandSize; i++)
+    //    {
+    //        Debug.Log("NAME:: " + p.Hand[i].Name);
+    //        string myName = p.Hand[i].Name;
+    //        string flavorText = p.Hand[i].FlavorText;
+    //        string mainText = p.Hand[i].MainText;
+    //        int cost = p.Hand[i].DeployCost;
+    //        UnitCard uc = p.Hand[i] as UnitCard;
+    //        int meleeAttack = uc.MeleeAttack;
+    //        int rangedAttack = uc.RangedAttack;
+    //        int hp = uc.HealthPoints;
+    //        CardProperties[] listOfProperties = new CardProperties[9];
+    //        listOfProperties = createCardProperties(myName, "TYPE", flavorText, mainText, cost, rangedAttack, meleeAttack, hp);
+    //        CardFrontEnd cardFront = new CardFrontEnd(listOfProperties);
+    //        if (p == gameManager.Players[0])
+    //            listofUI.Add(cardFront);
+    //        else if (p == gameManager.Players[1])
+    //            listofEnemyUI.Add(cardFront);
+    //    }
+    //}
+
+    public void updateUIonTable()
+    {
+        List<CardUI> l = new List<CardUI>();
+        for (int i = 0; i < manager.myCardHolders.Length; i++)
+        {
+            if (manager.myCardHolders[i].transform.childCount>0)
+            {
+                CardUI c = manager.myCardHolders[i].transform.GetChild(0).GetComponent<CardUI>();
+                l.Add(c);
+            }
+        }
+        for (int i = 0; i < listofUIOnTable.Count; i++)
+        {
+            for (int m = 0; m < l.Count; m++)
+            {
+                if (l[m].card == listofUIOnTable[i])
+                    l[m].LoadCard(listofUIOnTable[i]);
+            }
+        }
+    }
+
+
+    public List<CardFrontEnd> loadFrontEnd(Player p)
+    {
+        List<CardFrontEnd> ans = new List<CardFrontEnd>();
+        for (int i = 0; i < p.HandSize; i++)
+        {
+//            Debug.Log("NAME:: " + p.Hand[i].Name);
+            string myName = p.Hand[i].Name;
+            string flavorText = p.Hand[i].FlavorText;
+            string mainText = p.Hand[i].MainText;
+            int cost = p.Hand[i].DeployCost;
+            UnitCard uc = p.Hand[i] as UnitCard;
+            int meleeAttack = uc.MeleeAttack;
+            int rangedAttack = uc.RangedAttack;
+            int hp = uc.HealthPoints;
+            CardProperties[] listOfProperties = new CardProperties[9];
+            listOfProperties = createCardProperties(myName, "TYPE", flavorText, mainText, cost, rangedAttack, meleeAttack, hp);
+            CardFrontEnd cardFront = new CardFrontEnd(listOfProperties);
+            ans.Add(cardFront);
+        }
+        return ans;
+    }
+
+    void Update() {
+        //updateUI();
+        resoureCount = myMana.Count;
+        switch (phase) {
+            case Phase.DRAW:
+				gameManager.DrawPhase();
+				//phase = Phase.PLACEMENT;
 				break;
 			case Phase.PLACEMENT:
-				// handled by UI
-				break;
+                manager.enemyPlay();
+                // handled by UI
+                break;
 			case Phase.COMBAT:
 				gameManager.CombatPhase();
+                updateUIonTable();
 				phase = gameManager.Over ? Phase.DONE : Phase.DRAW;
 				break;
 			case Phase.DONE:
@@ -117,6 +223,6 @@ public class Driver : MonoBehaviour {
 	}
 }
 
-enum Phase {
+public enum Phase {
 	DRAW, PLACEMENT, COMBAT, DONE
 }
