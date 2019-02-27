@@ -16,7 +16,7 @@ namespace SFB.Net.Server{
             DeckList r = new DeckList();
             //TESTING IMPLEMENTATION
             if(id == "testing"){
-                UnitCard xsMarine = new UnitCard(3, "Exostellar Marine Squade", Faction.CARTH, "", "Bravely into the Darkness", 2, 2, 4);
+                UnitCard xsMarine = new UnitCard(3, "Exostellar Marine Squade", Faction.CARTH, "", "Bravely into the Darkness", 2, 2, 4, new AbilityList());
                 r.AddCard(xsMarine, 20);
             }
             return r;

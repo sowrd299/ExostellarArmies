@@ -12,7 +12,7 @@ namespace SFB.Net{
     //TODO: add a child of this class that associates verified account data
     //TODO: handle resuming sessions
     //TODO: allow multiple handlers to receive at once? Seems like a powerful feature to have
-    /*TODO: HANDLE THIS ERROR:
+    /*TODO: HANDLE THIS ERROR: (being delt with)
     Unhandled Exception:
         System.Net.Sockets.SocketException (0x80004005): Connection reset by peer
         at System.Net.Sockets.Socket.EndReceive (System.IAsyncResult asyncResult) [0x00012] in <5bf358e735be486487282a37cb3bce80>:0 
@@ -85,7 +85,11 @@ namespace SFB.Net{
             string text = Encoding.UTF8.GetString(bytes);
             //handle dead connection
             if(i == 0){
+                Console.WriteLine("Socket Received Empty 'End of Connnection' Packet; Dying");
+                // Console.WriteLine("Circumventing death for testing");
+                //* TODO: TESTING do in fact need something here
                 die();
+                //*/
             }
             //handle EOF
             if(eof == ""){ //if no EOF set, just spit out the message
@@ -144,7 +148,15 @@ namespace SFB.Net{
                 // no long have an outstanding async receive
                 asynchReceiving = false;
                 // reading stuff
-                int i = socket.EndReceive(ar);
+                int i; 
+                try{ // this may error; not really sure why but eh, this works I think
+                    i = socket.EndReceive(ar);
+                }catch(SocketException e){
+                    Console.WriteLine("Socket died from an error; Alive: {0}; Error: ", alive, e);
+                    die();
+                    handleAsyncDeath(this);
+                    return;
+                }
                 AsyncState<XmlDocument> state = (AsyncState<XmlDocument>)ar.AsyncState;
                 string text = parseMessage(state.buffer, i);
                 // have a full message, deal with it
@@ -182,8 +194,16 @@ namespace SFB.Net{
             Send(xml.InnerXml);
         }
 
+        // returns whether or not the socket is still connected 
+        private bool connected(){
+            bool poll = socket.Poll(1000, SelectMode.SelectRead);
+            bool data = (socket.Available == 0);
+            return poll && data;
+        }
+
         // to be called once the socket disconnects
         private void die(){
+            Console.WriteLine("Socket {0} Dying", socket.RemoteEndPoint); // TESTING
             alive = false;
             socket.Close();
         }
@@ -192,6 +212,7 @@ namespace SFB.Net{
         ~SocketManager(){
             // some of the most poetic code I have ever written
             if(alive){
+                Console.WriteLine("Socket Manager Deconstructing; Dying");
                 die();
             }
         }
