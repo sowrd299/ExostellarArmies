@@ -44,7 +44,11 @@ namespace SFB.Game{
             count += x;
         }
 
-        public Delta[] GetAddDeltas(int x){
+		public void Subtract(int x) {
+			count += x;
+		}
+
+		public Delta[] GetAddDeltas(int x){
             int xp = x; // x prime
             if(xp + count > max){ // do not go above max
                 xp = max - count;
@@ -54,8 +58,18 @@ namespace SFB.Game{
             return new Delta[]{new ResourcePoolDelta(xp, this)};
         }
 
+		public Delta[] GetSubtractDeltas(int x) {
+			int xp = -x; // x prime
+			if(xp + count > max) { // do not go above max
+				xp = max - count;
+			} else if(count + xp < 0) { // do not go bellow 0
+				xp = -count;
+			}
+			return new Delta[] { new ResourcePoolDelta(xp, this) };
+		}
 
-        private class ResourcePoolDelta : Delta {
+
+		private class ResourcePoolDelta : Delta {
 
             private int amount;
             private SendableTarget<ResourcePool> rp;
@@ -82,12 +96,18 @@ namespace SFB.Game{
             }
 
             internal override void Apply(){
-                rp.Target.Add(amount);
+				if(amount > 0)
+					rp.Target.Add(amount);
+				else
+					rp.Target.Subtract(-amount);
             }
 
             internal override void Revert(){
-                rp.Target.Add(-amount);
-            }
+				if(amount > 0)
+					rp.Target.Subtract(amount);
+				else
+					rp.Target.Add(-amount);
+			}
 
         }
 
