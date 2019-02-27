@@ -45,7 +45,7 @@ namespace SFB.Game{
         }
 
 		public void Subtract(int x) {
-			count += x;
+			count -= x;
 		}
 
 		public Delta[] GetAddDeltas(int x){
