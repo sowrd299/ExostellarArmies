@@ -14,6 +14,9 @@ namespace SFB.Game{
         private static IdIssuer<Unit> idIssuer = new IdIssuer<Unit>();
 
         private UnitCard card; //the card the unit is an instance of
+		public UnitCard Card {
+			get;
+		}
 
 		private int rangedAttack;
 		public int RangedAttack {
@@ -86,13 +89,13 @@ namespace SFB.Game{
 									: 0));
 					int deal = System.Math.Max(target.HealthPoints + mod, dmgLeft);
 					list.Add(new UnitDelta(target, deal, type));
-					dmgLeft -= deal;
+					dmgLeft = dmgLeft - deal + getDamageLeftModifier(dmgLeft, deal);
 				}
 				pos++;
 			}
 
 			if(dmgLeft > 0)
-				list.Add(new TowerDelta(l.Towers[oppPlay]));
+				list.Add(new TowerDelta(l.Towers[oppPlay], 1 + getTowerDamageModifier()));
 
 			return list.ToArray();
 		}
@@ -111,6 +114,20 @@ namespace SFB.Game{
 
 		public void heal(int amt) {
 			healthPoints += amt;
+		}
+
+		public int getDamageLeftModifier(int dmgLeft, int deal) {
+			int sum = 0;
+			foreach(Ability a in abilities)
+				sum += abilities[0].getDamageLeftModifier(dmgLeft, deal);
+			return sum;
+		}
+
+		public int getTowerDamageModifier() {
+			int sum = 0;
+			foreach(Ability a in abilities)
+				sum += abilities[0].getTowerDamageModifier();
+			return sum;
 		}
 
 		public int getRangedDamageModifier() {

@@ -193,6 +193,7 @@ namespace SFB.Game.Management{
 		public void CombatPhase() {
 			Delta[] rds = CombatManager.getRangedDeltas(lanes);
 			Delta[] mds = CombatManager.getMeleeDeltas(lanes);
+			Delta[] tds = CombatManager.getTowerDeltas(lanes);
 
 			//send network??
 
@@ -201,6 +202,10 @@ namespace SFB.Game.Management{
 			cleanUp();
 
 			foreach(Delta d in mds)
+				ApplyDelta(d);
+			cleanUp();
+
+			foreach(Delta d in tds)
 				ApplyDelta(d);
 			cleanUp();
 		}

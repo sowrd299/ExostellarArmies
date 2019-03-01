@@ -26,7 +26,7 @@ public class CardUI : MonoBehaviour
             LoadCard(card);
         //handIndex = this.transform.GetSiblingIndex();
         cardBackEnd = Driver.instance.gameManager.Players[0].Hand[this.transform.GetSiblingIndex()];
-        Debug.Log("HandINd" + handIndex);
+//        Debug.Log("HandINd" + handIndex);
     }
 
     private void Update()

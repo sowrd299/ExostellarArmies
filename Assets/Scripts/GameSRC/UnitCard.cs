@@ -24,13 +24,13 @@ namespace SFB.Game{
 			get; set;
 		}
 
-        public UnitCard(int cost, string name, Faction faction, string mainText, string flavorText, int rangedAttack, int meleeAttack, int healthPoints, AbilityList abilities)
+        public UnitCard(int cost, string name, Faction faction, string mainText, string flavorText, int rangedAttack, int meleeAttack, int healthPoints)
                 :base(cost, name, faction, mainText, flavorText)
         {
 			this.rangedAttack = rangedAttack;
 			this.meleeAttack = meleeAttack;
             this.healthPoints = healthPoints;
-			this.abilities = abilities;
+			this.abilities = new AbilityList();
         }
 
     }

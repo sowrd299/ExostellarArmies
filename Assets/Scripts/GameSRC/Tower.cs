@@ -23,12 +23,12 @@ namespace SFB.Game.Content {
 			damage = baseDamage;
 		}
 
-		public void takeDamage() {
-			hp--;
+		public void takeDamage(int n) {
+			hp -= n;
 		}
 
-		public void undoTakeDamage() {
-			hp++;
+		public void undoTakeDamage(int n) {
+			hp += n;
 		}
 
 		public void revive() {

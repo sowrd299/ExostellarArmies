@@ -35,6 +35,8 @@ namespace SFB.Game {
 		internal virtual Unit[,] filterTargets(Unit[,] arr, int oppPlay) { return arr; }
 		public virtual int takeMeleeDamageModifier() { return 0; }
 		public virtual int takeRangedDamageModifier() { return 0; }
+		public virtual int getDamageLeftModifier(int dmgLeft, int deal) { return 0; }
+		public virtual int getTowerDamageModifier() { return 0; }
 	}
 
 	public class AbilityList : List<Ability> {
@@ -114,6 +116,8 @@ namespace SFB.Game {
 			return nArr;
 		}
 	}
+
+
 
 	// test
 	public class HealAlliesWhenDie : Ability {
