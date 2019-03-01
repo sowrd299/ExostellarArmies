@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using SFB.Game;
 using SFB.Game.Content;
+using UnityEngine;
 
 namespace SFB.Game.Management {
 	public class CombatManager {
@@ -11,9 +12,10 @@ namespace SFB.Game.Management {
 			foreach(Lane l in lanes)
 				for(int play = 0; play < 2; play++)
 					for(int pos = 0; pos < 2; pos++)
-						if(l.isOccupied(play, pos))
-							list.AddRange(l.Units[play, pos].getRangedDamagingDelta(l, System.Math.Abs(play-1)));
-
+						if(l.isOccupied(play, pos)) {
+							Debug.Log("R" + play + " " + pos);
+							list.AddRange(l.Units[play, pos].getRangedDamagingDeltas(l, System.Math.Abs(play - 1)));
+						}
 			return list.ToArray();
 		}
 
@@ -24,7 +26,7 @@ namespace SFB.Game.Management {
 				for(int play = 0; play < 2; play++)
 					for(int pos = 0; pos < 2; pos++)
 						if(l.isOccupied(play, pos))
-							list.AddRange(l.Units[play, pos].getMeleeDamagingDelta(l, System.Math.Abs(play-1)));
+							list.AddRange(l.Units[play, pos].getMeleeDamagingDeltas(l, System.Math.Abs(play-1)));
 
 			return list.ToArray();
 		}

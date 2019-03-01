@@ -177,19 +177,21 @@ public class Driver : MonoBehaviour {
                 // handled by UI
                 break;
 			case Phase.COMBAT:
-                //Debug.Log("LeftFront " + (gameManager.Lanes[0].Units[0, 0]==null));
-                //Debug.Log("LeftBack " + (gameManager.Lanes[0].Units[0, 1] == null));
-                //Debug.Log("MiddleFront " + (gameManager.Lanes[1].Units[0, 0] == null));
-                //Debug.Log("MiddleBack " + (gameManager.Lanes[1].Units[0, 1] == null));
-                //Debug.Log("RightFront " + (gameManager.Lanes[2].Units[0, 0] == null));
-                Debug.Log("RightBack " + (gameManager.Lanes[2].Units[0, 0].HealthPoints));
-                gameManager.CombatPhase();
+				//Debug.Log("LeftFront " + (gameManager.Lanes[0].Units[0, 0]==null));
+				//Debug.Log("LeftBack " + (gameManager.Lanes[0].Units[0, 1] == null));
+				//Debug.Log("MiddleFront " + (gameManager.Lanes[1].Units[0, 0] == null));
+				//Debug.Log("MiddleBack " + (gameManager.Lanes[1].Units[0, 1] == null));
+				//Debug.Log("RightFront " + (gameManager.Lanes[2].Units[0, 0] == null));
+				//Debug.Log("RightBack " + (gameManager.Lanes[2].Units[0, 0].HealthPoints));
+				printField();
+				gameManager.CombatPhase();
+				printField();
                 //Debug.Log("LeftFront After" + (gameManager.Lanes[0].Units[0, 0] == null));
                 //Debug.Log("LeftBack After" + (gameManager.Lanes[0].Units[0, 1] == null));
                 //Debug.Log("MiddleFront After" + (gameManager.Lanes[1].Units[0, 0] == null));
                 //Debug.Log("MiddleBack After" + (gameManager.Lanes[1].Units[0, 1] == null));
                 //Debug.Log("RightFront After" + (gameManager.Lanes[2].Units[0, 0] == null));
-                Debug.Log("RightBack After" + (gameManager.Lanes[2].Units[0, 0].HealthPoints));
+                //Debug.Log("RightBack After" + (gameManager.Lanes[2].Units[0, 0].HealthPoints));
                 List<CardFrontEnd> c = loadFrontEnd2();
                 List<CardUI> cu = manager.loadCardUI();
                 Debug.Log("Lengths==" + (c.Count == cu.Count));
@@ -205,6 +207,24 @@ public class Driver : MonoBehaviour {
 			case Phase.DONE:
 				print("Game Over: Player " + (gameManager.Players[0].Lives==0?2:1) + " Wins!");
 				break;
+		}
+	}
+
+	public void printField() {
+		int[][] loop = {
+			new int[2] { 1, 1 },
+			new int[2] { 1, 0 },
+			new int[2] { 0, 0 },
+			new int[2] { 0, 1 },
+		};
+
+		foreach(int[] play_pos in loop) {
+			string s = "";
+			foreach(Lane l in gameManager.Lanes) {
+				Unit u = l.Units[play_pos[0], play_pos[1]];
+				s += (u!=null ? ""+u.HealthPoints : "X") + " ";
+			}
+			Debug.Log(s);
 		}
 	}
 

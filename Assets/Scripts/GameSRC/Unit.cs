@@ -61,11 +61,11 @@ namespace SFB.Game{
 			this.firstDeploy = true;
         }
 		
-		public Delta[] getRangedDamagingDelta(Lane l, int oppPlay) {
+		public Delta[] getRangedDamagingDeltas(Lane l, int oppPlay) {
 			return getDamagingDeltas(l, oppPlay, UnitDelta.DamageType.RANGED);
 		}
 		
-		public Delta[] getMeleeDamagingDelta(Lane l, int oppPlay) {
+		public Delta[] getMeleeDamagingDeltas(Lane l, int oppPlay) {
 			return getDamagingDeltas(l, oppPlay, UnitDelta.DamageType.MELEE);
 		}
 
