@@ -130,6 +130,7 @@ public class Manager : MonoBehaviour
                     else
                         actions.Add(new PlayUnitCardAction(back as UnitCard, Driver.instance.myLanes[i % 3], 1, 1));
                 }
+                c.Old = true;
             }
         }
         foreach (PlayUnitCardAction action in actions)
@@ -246,7 +247,6 @@ public class Manager : MonoBehaviour
             if (cardHolders[list[i]].transform.childCount == 0)
             {
                 StartCoroutine(moveTo(l[i], cardHolders[list[i]]));
-                l[i].GetComponent<CardUI>().Old = true;
             }
 
         }

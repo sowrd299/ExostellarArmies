@@ -181,14 +181,14 @@ public class Driver : MonoBehaviour {
                 //Debug.Log("MiddleFront " + (gameManager.Lanes[1].Units[0, 0] == null));
                 //Debug.Log("MiddleBack " + (gameManager.Lanes[1].Units[0, 1] == null));
                 //Debug.Log("RightFront " + (gameManager.Lanes[2].Units[0, 0] == null));
-                Debug.Log("RightBack " + (gameManager.Lanes[2].Units[0, 0].HealthPoints));
+                Debug.Log("RightBack " + (gameManager.Lanes[2].Units[1, 0].HealthPoints));
                 gameManager.CombatPhase();
                 //Debug.Log("LeftFront After" + (gameManager.Lanes[0].Units[0, 0] == null));
                 //Debug.Log("LeftBack After" + (gameManager.Lanes[0].Units[0, 1] == null));
                 //Debug.Log("MiddleFront After" + (gameManager.Lanes[1].Units[0, 0] == null));
                 //Debug.Log("MiddleBack After" + (gameManager.Lanes[1].Units[0, 1] == null));
                 //Debug.Log("RightFront After" + (gameManager.Lanes[2].Units[0, 0] == null));
-                Debug.Log("RightBack After" + (gameManager.Lanes[2].Units[0, 0].HealthPoints));
+                Debug.Log("Rightfr After" + (gameManager.Lanes[2].Units[1, 0].HealthPoints));
                 List<CardFrontEnd> c = loadFrontEnd2();
                 List<CardUI> cu = manager.loadCardUI();
                 Debug.Log("Lengths==" + (c.Count == cu.Count));
