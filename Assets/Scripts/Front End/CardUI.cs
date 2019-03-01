@@ -15,9 +15,27 @@ public class CardUI : MonoBehaviour
     private List<CardFrontEnd> playerFrontEnds = new List<CardFrontEnd>();
     private List<CardFrontEnd> enemyFrontEnds = new List<CardFrontEnd>();
     public Card cardBackEnd;
+
     public int handIndex
     {
-        get { return Driver.instance.gameManager.Players[0].Hand.IndexOf(cardBackEnd); }
+        get { 
+            if(!this.gameObject.name.Contains("Enemy"))
+                return Driver.instance.gameManager.Players[0].Hand.IndexOf(cardBackEnd); 
+            else
+                return Driver.instance.gameManager.Players[1].Hand.IndexOf(cardBackEnd);
+        }
+    }
+    private bool old = false;
+    public bool Old
+    {
+        get
+        {
+            return old;
+        }
+        set
+        {
+            old = value;
+        }
     }
 
     private void Start()
@@ -25,8 +43,12 @@ public class CardUI : MonoBehaviour
         if (card != null)
             LoadCard(card);
         //handIndex = this.transform.GetSiblingIndex();
-        cardBackEnd = Driver.instance.gameManager.Players[0].Hand[this.transform.GetSiblingIndex()];
-//        Debug.Log("HandINd" + handIndex);
+
+        if (!this.gameObject.name.Contains("Enemy"))
+            cardBackEnd = Driver.instance.gameManager.Players[0].Hand[this.transform.GetSiblingIndex()];
+        else
+            cardBackEnd = Driver.instance.gameManager.Players[1].Hand[this.transform.GetSiblingIndex()];
+
     }
 
     private void Update()
@@ -50,7 +72,6 @@ public class CardUI : MonoBehaviour
                 enemyFrontEnds.RemoveAt(this.gameObject.transform.GetSiblingIndex());
             }
         }
-
         //Debug.Log("Name ="+this.gameObject.transform.GetSiblingIndex().ToString()+this.properties[0].text.text);
     }
 

@@ -14,12 +14,11 @@ public class DropZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
     private PlayUnitCardAction action;
     private Player p;
 
+
     void Start()
     {
         if (this.gameObject.tag == "CardHolder" )
         {
- //           Debug.Log("Sibl" + (this.transform.GetSiblingIndex())+(this.transform.gameObject.name));
-
             l = Driver.instance.gameManager.Lanes[this.transform.GetSiblingIndex()];
 
         }
@@ -35,7 +34,6 @@ public class DropZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
         Draggable d = eventData.pointerDrag.GetComponent<Draggable>();
         if (d != null)
         {
- //           Debug.Log("L==null" + (l == null));
             CardUI c = d.gameObject.GetComponent<CardUI>();
             p = Driver.instance.gameManager.Players[0];
 

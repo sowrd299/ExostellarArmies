@@ -37,7 +37,7 @@ public class Manager : MonoBehaviour
     [SerializeField]
     public Button mainButton;
     [SerializeField]
-    private Text mainBtnText;
+    public Text mainBtnText;
     [SerializeField]
     private Text handCapacity;
 
@@ -62,19 +62,24 @@ public class Manager : MonoBehaviour
                 if(Driver.instance.myMana.CanAfford(Driver.instance.dropCostSum)){ 
                     mainBtnText.text = "COMBAT!";
                     mainButton.gameObject.GetComponent<Image>().color = Color.green;
-                    Driver.instance.phase = Phase.COMBAT;
+                    Driver.instance.dropCostSum = 0;
                     flipCards();
-                    placeAll();
-
+                    applyEnemyDeltas();
                     List<PlayUnitCardAction> actions = new List<PlayUnitCardAction>();
                     for (int i = 0; i < myCardHolders.Length; i++)
                     {
                         if(myCardHolders[i].transform.childCount>0)
                         {
                             CardUI c = myCardHolders[i].transform.GetChild(0).GetComponent<CardUI>();
-                            Card back = c.cardBackEnd;
-                            actions.Add(new PlayUnitCardAction(back as UnitCard, Driver.instance.myLanes[i%3], 0, 1));
-                            //myCardHolders need to be in correct order
+
+                            if (c.Old == false) {
+                                Card back = c.cardBackEnd;
+                                if (myCardHolders[i].transform.parent.name.Contains("Front"))
+                                    actions.Add(new PlayUnitCardAction(back as UnitCard, Driver.instance.myLanes[i % 3], 0, 0));
+                                else
+                                    actions.Add(new PlayUnitCardAction(back as UnitCard, Driver.instance.myLanes[i % 3], 0, 1));
+                                //myCardHolders need to be in correct order
+                            }
                         }
                     }
                     foreach(PlayUnitCardAction action in actions)
@@ -82,11 +87,14 @@ public class Manager : MonoBehaviour
                         foreach (Delta del in action.GetDeltas(Driver.instance.gameManager.Players[0]))
                             del.Apply();
                     }
+                    placeAll();
+                    Driver.instance.phase = Phase.COMBAT;
                 }
                 else
                 {
                     mainBtnText.text = "Cant Afford!";
                     mainButton.gameObject.GetComponent<Image>().color = Color.red;
+                    StartCoroutine(lerpColor(mainButton.gameObject));
                 }
                 break;
             case Phase.COMBAT:
@@ -96,6 +104,39 @@ public class Manager : MonoBehaviour
                 mainButton.GetComponent<Button>().enabled = false;
                 break;
 
+        }
+    }
+
+    public IEnumerator damageAnims()
+    {
+        yield return new WaitForSeconds(0.5f);
+        mainBtnText.text = "Combat Done!";
+        yield return new WaitForSeconds(0.5f);
+        mainBtnText.text = "DRAW";
+    }
+
+    public void applyEnemyDeltas()
+    {
+        List<PlayUnitCardAction> actions = new List<PlayUnitCardAction>();
+        for (int i = 0; i < cardHolders.Length; i++)
+        {
+            if (cardHolders[i].transform.childCount > 0)
+            {
+                CardUI c = cardHolders[i].transform.GetChild(0).GetComponent<CardUI>();
+                if (c.Old == false)
+                {
+                    Card back = c.cardBackEnd;
+                    if (cardHolders[i].transform.parent.name.Contains("Front"))
+                        actions.Add(new PlayUnitCardAction(back as UnitCard, Driver.instance.myLanes[i % 3], 1, 0));
+                    else
+                        actions.Add(new PlayUnitCardAction(back as UnitCard, Driver.instance.myLanes[i % 3], 1, 1));
+                }
+            }
+        }
+        foreach (PlayUnitCardAction action in actions)
+        {
+            foreach (Delta del in action.GetDeltas(Driver.instance.gameManager.Players[1]))
+                del.Apply();
         }
     }
 
@@ -119,9 +160,10 @@ public class Manager : MonoBehaviour
     {
         while (cards.Count>0 || enemyCards.Count>0)
         {
-            float timeOfTravel = 0.5f;
+            float timeOfTravel = 0.25f;
             float elapsedTime = 0f;
-            if (cards[0] != null)
+
+            if (cards.Count>0)
             {
                 Vector3 startingPosition = cards[0].transform.position;
                 while (elapsedTime < timeOfTravel)
@@ -134,7 +176,7 @@ public class Manager : MonoBehaviour
                 cards.RemoveAt(0);
             }
             elapsedTime = 0;
-            if (enemyCards[0] != null)
+            if (enemyCards.Count>0)
             {
                 Vector3 startingPosition = enemyCards[0].transform.position;
                 while (elapsedTime < timeOfTravel)
@@ -151,6 +193,22 @@ public class Manager : MonoBehaviour
         Driver.instance.phase = Phase.PLACEMENT;
         mainBtnText.text = "DEPLOY";
         yield return null;
+        enemyPlay();
+    }
+
+    IEnumerator lerpColor(GameObject g)
+    {
+        yield return new WaitForSeconds(1f);
+        mainBtnText.text = "";
+        float ElapsedTime = 0.0f;
+        float TotalTime = 0.4f;
+        while (ElapsedTime < TotalTime)
+        {
+            ElapsedTime += Time.deltaTime;
+            g.GetComponent<Image>().color = Color.Lerp(Color.red, Color.green, (ElapsedTime / TotalTime));
+            yield return null;
+        }
+        mainBtnText.text = "DEPLOY";
     }
 
     IEnumerator moveTo(GameObject g, GameObject v)
@@ -174,9 +232,26 @@ public class Manager : MonoBehaviour
         {
             l.Add(enemyHandPlaceHolder.transform.GetChild(i).gameObject);
         }
+
+        //Rand List of 3ints from 1 to 6
+        List<int> list = new List<int>(new int[3]);
+        for (int j = 0; j < list.Count; j++)
+        {
+            int rand = Random.Range(1, 6);
+            while (list.Contains(rand))
+            {
+                rand = Random.Range(1, 6);
+            }
+            list[j] = rand;
+        }
         for (int i = 0; i < l.Count; i++)
         {
-            StartCoroutine(moveTo(l[i], cardHolders[i]));
+            if (cardHolders[list[i]].transform.childCount == 0)
+            {
+                StartCoroutine(moveTo(l[i], cardHolders[list[i]]));
+                l[i].GetComponent<CardUI>().Old = true;
+            }
+
         }
     }
 
@@ -184,14 +259,16 @@ public class Manager : MonoBehaviour
     {
         for (int i = 0; i < cardHolders.Length; i++)
         {
-            cardHolders[i].transform.GetChild(0).GetChild(0).GetChild(4).gameObject.SetActive(false); ;
+
+            if(cardHolders[i].transform.childCount>0)
+                cardHolders[i].transform.GetChild(0).GetChild(0).GetChild(4).gameObject.SetActive(false); ;
         }
     }
 
     public void placeAll()
     {
         List<GameObject> l = new List<GameObject>();
-        for (int i = 0; i < cardHolders.Length; i++)
+        for (int i = 0; i < myCardHolders.Length; i++)
         {
             if(myCardHolders[i].transform.childCount > 0)
                 l.Add(myCardHolders[i].transform.GetChild(0).gameObject);
@@ -200,7 +277,61 @@ public class Manager : MonoBehaviour
         {
             Vector3 v = Vector3.one * 0.25f;
             l[i].transform.localScale = v;
-        }
 
+            Destroy(l[i].transform.GetChild(1).GetComponent<CardInstance>());
+            l[i].transform.GetComponent<Draggable>().enabled = false;
+            l[i].GetComponent<CardUI>().Old = true;
+        }
+        //moveToFrontRow(myCardHolders);
+        //moveToFrontRow(cardHolders);
+    }
+
+    //TODO:IMPORVE IMPLEMENTATION
+    public List<CardUI> loadCardUI()
+    {
+        List<CardUI> cu = new List<CardUI>();
+        //Left Lane
+        if (hasCard(myCardHolders, 0))
+            cu.Add(myCardHolders[0].transform.GetChild(0).GetComponent<CardUI>());
+        if (hasCard(myCardHolders, 3))
+            cu.Add(myCardHolders[3].transform.GetChild(0).GetComponent<CardUI>());
+        if (hasCard(cardHolders, 0))
+            cu.Add(cardHolders[0].transform.GetChild(0).GetComponent<CardUI>());
+        if (hasCard(cardHolders, 3))
+            cu.Add(cardHolders[3].transform.GetChild(0).GetComponent<CardUI>());
+        //Middle Lane
+        if (hasCard(myCardHolders, 1))
+            cu.Add(myCardHolders[1].transform.GetChild(0).GetComponent<CardUI>());
+        if (hasCard(myCardHolders, 4))
+            cu.Add(myCardHolders[4].transform.GetChild(0).GetComponent<CardUI>());
+        if (hasCard(cardHolders, 1))
+            cu.Add(cardHolders[1].transform.GetChild(0).GetComponent<CardUI>());
+        if (hasCard(cardHolders, 4))
+            cu.Add(cardHolders[4].transform.GetChild(0).GetComponent<CardUI>());
+        //RightLane
+        if (hasCard(myCardHolders, 2))
+            cu.Add(myCardHolders[2].transform.GetChild(0).GetComponent<CardUI>());
+        if (hasCard(myCardHolders, 5))
+            cu.Add(myCardHolders[5].transform.GetChild(0).GetComponent<CardUI>());
+        if (hasCard(cardHolders, 2))
+            cu.Add(cardHolders[2].transform.GetChild(0).GetComponent<CardUI>());
+        if (hasCard(cardHolders, 5))
+            cu.Add(cardHolders[5].transform.GetChild(0).GetComponent<CardUI>());
+        return cu;
+		
+    }
+
+    public bool hasCard(GameObject[] g,int i)
+    {
+        return g[i].transform.childCount > 0;
+    }
+
+    public void moveToFrontRow(GameObject[] g)
+    {
+        for (int i = 3; i <= 5; i++)
+        {
+            if (g[i].transform.childCount > 0 && g[i - 3].transform.childCount == 0)
+                StartCoroutine(moveTo(g[i].transform.GetChild(0).gameObject, g[i - 3]));
+        }
     }
 }

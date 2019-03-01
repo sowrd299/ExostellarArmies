@@ -48,18 +48,20 @@ public class Driver : MonoBehaviour {
         DontDestroyOnLoad(gameObject);
 
 		DeckList dlC = new DeckList();
-        dlC.AddCard(new UnitCard(3, "Exostellar Snipers", Faction.CARTH, "Carthan Elite Ranging Infantry Unit", "Illuminate with Muzzle Flare!", 3, 1, 3), 1);
-		dlC.AddCard(new UnitCard(3, "Exostellar Vanshield Marines", Faction.CARTH, "Carthan Elite Infantry Unit", "“First into the Night!”", 1, 3, 5), 1);
-		dlC.AddCard(new UnitCard(3, "Exostellar Marine Squad", Faction.CARTH, "Carthan Elite Infantry Unit", "Boldly into the Night!", 2, 2, 4), 2);
-		dlC.AddCard(new UnitCard(4, "Cmdr. Yos Lorth", Faction.CARTH, "Unique; Ranged Shield 1\rFront Line: Allied Elites on the Front Line have +1M and Ranged Shield 1.\nCarthan Elite Command Infantry Unit", "Exostellar Champion", 2, 2, 5), 2);
-		dlC.AddCard(new UnitCard(2, "Ancillary Medical Officer", Faction.CARTH, "Support Carthan Infantry: Heal this Front Line 2. (when this is deployed behind Carthan Infantry, activate this ability)\rCarthan Infantry Unit", "Healer of Carth", 1, 2, 3), 2);
-		dlC.AddCard(new UnitCard(2, "Autonomous Range Finder", Faction.CARTH, "Support Carthan: Give this Front Line +3R this turn. (when this is deployed behind a Carthan, activate this ability)\r", "56413", 0, 1, 3), 1);
-        dlC.AddCard(new UnitCard(5, "Adv. Infantry Support System", Faction.CARTH, "Melee Shield 1\rFront or Back Line: At the start of your turn, generate an extra resource.\rCarthan Command Vehicle Unit", "Mobile Command Center", 0, 3, 6), 1);
-        dlC.AddCard(new UnitCard(0, "Emergancy Med Drop", Faction.CARTH, "Deploy: Heal this Front Line 2 and each adjacent Front Line 1.\rCarthan Medical Drone Unit", "Forever Alive in the Dark!", 0, 0, 1), 2);
-        dlC.AddCard(new UnitCard(2, "Adv. Supply Drone", Faction.CARTH, "Support Carthan: Heal this Front Line 2 and gain 3 Resources.\rCarthan Medical Drone Unit", "762491", 0, 1, 2), 2);
-        dlC.AddCard(new UnitCard(3, "Exostellar Rover Marine", Faction.CARTH, "Front Line: If this has a Back Line, this has +2M, else this has +1R.\rCarthan Elite Infantry Unit", "In the Darkness, Everywhere!", 1, 1, 4), 2);
-        dlC.AddCard(new UnitCard(4, "Techrositioner Marine", Faction.CARTH, "Front Line Command: Discard a card to gain 1 Resource and give this +2R.\rCarthan Elite Engineering Infantry Unit", "“Lock; Mark; Two; Fire!”", 2, 0, 5), 2);
-        dlC.AddCard(new UnitCard(2, "Hover-Shield Projector", Faction.CARTH, "Support Carthan Infantry: Give this Front Line Ranged Shield 3 this turn. (when this is deployed behind Carthan Infantry, activate this ability)\rCarthan Drone Unit", "98432", 0, 1, 4), 2);
+		
+        dlC.AddCard(new UnitCard(2, "Exostellar Snipers", Faction.CARTH, "Carthan Elite Ranging Infantry Unit", "Illuminate with Muzzle Flare!", 3, 1, 30), 1);
+		dlC.AddCard(new UnitCard(1, "Exostellar Vanshield Marines", Faction.CARTH, "Carthan Elite Infantry Unit", "“First into the Night!”", 1, 3, 50), 1);
+		dlC.AddCard(new UnitCard(2, "Exostellar Marine Squad", Faction.CARTH, "Carthan Elite Infantry Unit", "Boldly into the Night!", 2, 2, 40), 2);
+		dlC.AddCard(new UnitCard(1, "Cmdr. Yos Lorth", Faction.CARTH, "Unique; Ranged Shield 1\rFront Line: Allied Elites on the Front Line have +1M and Ranged Shield 1.\nCarthan Elite Command Infantry Unit", "Exostellar Champion", 2, 2, 50), 2);
+		dlC.AddCard(new UnitCard(2, "Ancillary Medical Officer", Faction.CARTH, "Support Carthan Infantry: Heal this Front Line 2. (when this is deployed behind Carthan Infantry, activate this ability)\rCarthan Infantry Unit", "Healer of Carth", 1, 2, 30), 2);
+		dlC.AddCard(new UnitCard(2, "Autonomous Range Finder", Faction.CARTH, "Support Carthan: Give this Front Line +3R this turn. (when this is deployed behind a Carthan, activate this ability)\r", "56413", 0, 1, 30), 1);
+        dlC.AddCard(new UnitCard(3, "Adv. Infantry Support System", Faction.CARTH, "Melee Shield 1\rFront or Back Line: At the start of your turn, generate an extra resource.\rCarthan Command Vehicle Unit", "Mobile Command Center", 0, 3, 60), 1);
+        dlC.AddCard(new UnitCard(0, "Emergancy Med Drop", Faction.CARTH, "Deploy: Heal this Front Line 2 and each adjacent Front Line 1.\rCarthan Medical Drone Unit", "Forever Alive in the Dark!", 0, 0, 10), 2);
+        dlC.AddCard(new UnitCard(2, "Adv. Supply Drone", Faction.CARTH, "Support Carthan: Heal this Front Line 2 and gain 3 Resources.\rCarthan Medical Drone Unit", "762491", 0, 1, 20), 2);
+        dlC.AddCard(new UnitCard(3, "Exostellar Rover Marine", Faction.CARTH, "Front Line: If this has a Back Line, this has +2M, else this has +1R.\rCarthan Elite Infantry Unit", "In the Darkness, Everywhere!", 1, 1, 40), 2);
+        dlC.AddCard(new UnitCard(4, "Techrositioner Marine", Faction.CARTH, "Front Line Command: Discard a card to gain 1 Resource and give this +2R.\rCarthan Elite Engineering Infantry Unit", "“Lock; Mark; Two; Fire!”", 2, 0, 50), 2);
+        dlC.AddCard(new UnitCard(2, "Hover-Shield Projector", Faction.CARTH, "Support Carthan Infantry: Give this Front Line Ranged Shield 3 this turn. (when this is deployed behind Carthan Infantry, activate this ability)\rCarthan Drone Unit", "98432", 0, 1, 40), 2);
+
 
         DeckList dlJ = new DeckList();
 		dlJ.AddCard(new UnitCard(2, "Dominion Pikeman Squad", Faction.JIRNOR, "Jirnorn Infantry Unit", "“For Jirnor that Will Be!”", 0, 4, 3), 4);
@@ -76,10 +78,6 @@ public class Driver : MonoBehaviour {
         DeckList[] deckLists = new DeckList[] { dlC, dlJ };
 		gameManager = new GameManager(deckLists);
         myLanes = gameManager.Lanes;
- //       Debug.Log("MuLanes:" + (myLanes == null));
- //       Debug.Log("MuLanes1:" + (myLanes[0] == null));
- //       Debug.Log("MuLanes2:" + (myLanes[1] == null));
- //       Debug.Log("MuLanes3:" + (myLanes[2] == null));
 
         phase = Phase.DRAW;
         myMana = gameManager.Players[0].Mana;
@@ -110,66 +108,10 @@ public class Driver : MonoBehaviour {
 
     public void drawCards()
     {
-//        Player us = gameManager.Players[0];
-//        us.Hand.DrawFrom(us.Deck);
-//        us.Hand.DrawFrom(us.Deck);
-//        us.Hand.DrawFrom(us.Deck);
-//        Player enemy = gameManager.Players[1];
-//        enemy.Hand.DrawFrom(enemy.Deck);
-//        enemy.Hand.DrawFrom(enemy.Deck);
-//        enemy.Hand.DrawFrom(enemy.Deck);
-
-//        //loadPlayerCards(us);
-//        //loadPlayerCards(enemy);
           myMana.Add(2);
           gameManager.Players[0].GetDeployPhaseDeltas()[0].Apply();
 ////        enemyMana.Add(2);
     }
-
-    //public void loadPlayerCards(Player p)
-    //{
-    //    for (int i = 0; i < p.HandSize; i++)
-    //    {
-    //        Debug.Log("NAME:: " + p.Hand[i].Name);
-    //        string myName = p.Hand[i].Name;
-    //        string flavorText = p.Hand[i].FlavorText;
-    //        string mainText = p.Hand[i].MainText;
-    //        int cost = p.Hand[i].DeployCost;
-    //        UnitCard uc = p.Hand[i] as UnitCard;
-    //        int meleeAttack = uc.MeleeAttack;
-    //        int rangedAttack = uc.RangedAttack;
-    //        int hp = uc.HealthPoints;
-    //        CardProperties[] listOfProperties = new CardProperties[9];
-    //        listOfProperties = createCardProperties(myName, "TYPE", flavorText, mainText, cost, rangedAttack, meleeAttack, hp);
-    //        CardFrontEnd cardFront = new CardFrontEnd(listOfProperties);
-    //        if (p == gameManager.Players[0])
-    //            listofUI.Add(cardFront);
-    //        else if (p == gameManager.Players[1])
-    //            listofEnemyUI.Add(cardFront);
-    //    }
-    //}
-
-    public void updateUIonTable()
-    {
-        List<CardUI> l = new List<CardUI>();
-        for (int i = 0; i < manager.myCardHolders.Length; i++)
-        {
-            if (manager.myCardHolders[i].transform.childCount>0)
-            {
-                CardUI c = manager.myCardHolders[i].transform.GetChild(0).GetComponent<CardUI>();
-                l.Add(c);
-            }
-        }
-        for (int i = 0; i < listofUIOnTable.Count; i++)
-        {
-            for (int m = 0; m < l.Count; m++)
-            {
-                if (l[m].card == listofUIOnTable[i])
-                    l[m].LoadCard(listofUIOnTable[i]);
-            }
-        }
-    }
-
 
     public List<CardFrontEnd> loadFrontEnd(Player p)
     {
@@ -186,11 +128,41 @@ public class Driver : MonoBehaviour {
             int rangedAttack = uc.RangedAttack;
             int hp = uc.HealthPoints;
             CardProperties[] listOfProperties = new CardProperties[9];
-            listOfProperties = createCardProperties(myName, "TYPE", flavorText, mainText, cost, rangedAttack, meleeAttack, hp);
+            listOfProperties = createCardProperties(myName, "TYPE", flavorText, mainText, cost, hp, meleeAttack, rangedAttack);
             CardFrontEnd cardFront = new CardFrontEnd(listOfProperties);
             ans.Add(cardFront);
         }
         return ans;
+    }
+
+    public List<CardFrontEnd> loadFrontEnd2()
+    {
+        List<CardFrontEnd> ans = new List<CardFrontEnd>();
+        foreach (Lane lane in gameManager.Lanes)
+        {
+            for (int play = 0; play < lane.Units.GetLength(0); play++)
+            {
+                for (int pos = 0; pos < lane.Units.GetLength(1); pos++)
+                {
+                    if (lane.Units[play, pos] != null)
+                    {
+                        Unit u = lane.Units[play, pos];
+                        string myName = u.Card.Name;
+                        string flavorText = u.Card.FlavorText;
+                        string mainText = u.Card.MainText;
+                        int cost = u.Card.DeployCost;
+                        int meleeAttack = u.Card.MeleeAttack;
+                        int rangedAttack = u.Card.RangedAttack;
+                        int hp = u.Card.HealthPoints;
+                        CardProperties[] listOfProperties = new CardProperties[9];
+                        listOfProperties = createCardProperties(myName, "TYPE", flavorText, mainText, cost, hp, meleeAttack, rangedAttack);
+                        CardFrontEnd cardFront = new CardFrontEnd(listOfProperties);
+                        ans.Add(cardFront);
+                    }
+                }
+            }
+        }
+        return ans;  
     }
 
     void Update() {
@@ -202,13 +174,33 @@ public class Driver : MonoBehaviour {
 				//phase = Phase.PLACEMENT;
 				break;
 			case Phase.PLACEMENT:
-                manager.enemyPlay();
                 // handled by UI
                 break;
 			case Phase.COMBAT:
-				gameManager.CombatPhase();
-                updateUIonTable();
+                //Debug.Log("LeftFront " + (gameManager.Lanes[0].Units[0, 0]==null));
+                //Debug.Log("LeftBack " + (gameManager.Lanes[0].Units[0, 1] == null));
+                //Debug.Log("MiddleFront " + (gameManager.Lanes[1].Units[0, 0] == null));
+                //Debug.Log("MiddleBack " + (gameManager.Lanes[1].Units[0, 1] == null));
+                //Debug.Log("RightFront " + (gameManager.Lanes[2].Units[0, 0] == null));
+                Debug.Log("RightBack " + (gameManager.Lanes[2].Units[0, 0].HealthPoints));
+                gameManager.CombatPhase();
+                //Debug.Log("LeftFront After" + (gameManager.Lanes[0].Units[0, 0] == null));
+                //Debug.Log("LeftBack After" + (gameManager.Lanes[0].Units[0, 1] == null));
+                //Debug.Log("MiddleFront After" + (gameManager.Lanes[1].Units[0, 0] == null));
+                //Debug.Log("MiddleBack After" + (gameManager.Lanes[1].Units[0, 1] == null));
+                //Debug.Log("RightFront After" + (gameManager.Lanes[2].Units[0, 0] == null));
+                Debug.Log("RightBack After" + (gameManager.Lanes[2].Units[0, 0].HealthPoints));
+                List<CardFrontEnd> c = loadFrontEnd2();
+                List<CardUI> cu = manager.loadCardUI();
+                Debug.Log("Lengths==" + (c.Count == cu.Count));
+                for (int i = 0; i < c.Count; i++)
+                {
+                    cu[i].LoadCard(c[i]);
+                }
+
+                //Debug.Log("HP:" + gameManager.Lanes[0].Units[0, 0].HealthPoints + "R:" + gameManager.Lanes[0].Units[0, 0].RangedAttack + "R:" + gameManager.Lanes[0].Units[0, 0].MeleeAttack);
 				phase = gameManager.Over ? Phase.DONE : Phase.DRAW;
+                StartCoroutine(manager.damageAnims());
 				break;
 			case Phase.DONE:
 				print("Game Over: Player " + (gameManager.Players[0].Lives==0?2:1) + " Wins!");

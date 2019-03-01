@@ -4,6 +4,7 @@ using System.Xml;
 using System.Text;
 using System;
 using System.Linq;
+using UnityEngine;
 
 namespace SFB.Game.Management{
 
@@ -195,14 +196,28 @@ namespace SFB.Game.Management{
 			Delta[] mds = CombatManager.getMeleeDeltas(lanes);
 			Delta[] tds = CombatManager.getTowerDeltas(lanes);
 
-			//send network??
+            //send network??
 
-			foreach(Delta d in rds)
-				ApplyDelta(d);
-			cleanUp();
+            foreach (Delta d in rds)
+            {
+                ApplyDelta(d);
+                if(d.GetType()==typeof(UnitDelta))
+                    Debug.Log((d as UnitDelta).Amount);
+                else
+                {
+                    Debug.Log("tower");
+                }
+            }
+            cleanUp();
 
-			foreach(Delta d in mds)
-				ApplyDelta(d);
+            foreach (Delta d in mds)
+            {
+                ApplyDelta(d);
+                if((d.GetType() == typeof(UnitDelta)))
+                    Debug.Log((d as UnitDelta).Amount);
+                else
+                    Debug.Log("tower");
+            }
 			cleanUp();
 
 			foreach(Delta d in tds)
