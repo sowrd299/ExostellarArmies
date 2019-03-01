@@ -14,8 +14,15 @@ namespace SFB.Game{
         private static IdIssuer<Unit> idIssuer = new IdIssuer<Unit>();
 
         private UnitCard card; //the card the unit is an instance of
+        public UnitCard Card
+        {
+            get
+            {
+                return card;
+            }
+        }
 
-		private int rangedAttack;
+        private int rangedAttack;
 		public int RangedAttack {
 			get { return rangedAttack; }
 		}
@@ -52,7 +59,7 @@ namespace SFB.Game{
 			this.meleeAttack = card.MeleeAttack;
 			this.healthPoints = card.HealthPoints;
 			this.abilities = new AbilityList();
-            Debug.Log("Ab==nul:" + (card.Abilities == null));
+//            Debug.Log("Ab==nul:" + (card.Abilities == null));
 			//foreach(Ability a in card.Abilities)
 				//this.abilities.Add(a);
 			this.firstDeploy = true;
@@ -99,13 +106,13 @@ namespace SFB.Game{
 
 		public void takeRangedDamage(int dmg) {
 			healthPoints -= System.Math.Max(dmg - getRangedDamageModifier(), 0);
-		}
+        }
 
-		public void takeMeleeDamage(int dmg) {
+        public void takeMeleeDamage(int dmg) {
 			healthPoints -= System.Math.Max(dmg - getMeleeDamageModifier(), 0);
-		}
+        }
 
-		public void takeTrueDamage(int dmg) {
+        public void takeTrueDamage(int dmg) {
 			healthPoints -= dmg;
 		}
 
