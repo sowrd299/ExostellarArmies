@@ -14,11 +14,13 @@ public class DropZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
     private PlayUnitCardAction action;
     private Player p;
 
+
     void Start()
     {
         if (this.gameObject.tag == "CardHolder" )
         {
             l = Driver.instance.gameManager.Lanes[this.transform.GetSiblingIndex()];
+
         }
 
 

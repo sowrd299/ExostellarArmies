@@ -75,6 +75,7 @@ public class Manager : MonoBehaviour
                         if(myCardHolders[i].transform.childCount>0)
                         {
                             CardUI c = myCardHolders[i].transform.GetChild(0).GetComponent<CardUI>();
+
                             if (c.Old == false) {
                                 Card back = c.cardBackEnd;
                                 if (myCardHolders[i].transform.parent.name.Contains("Front"))
@@ -166,6 +167,7 @@ public class Manager : MonoBehaviour
         {
             float timeOfTravel = 0.25f;
             float elapsedTime = 0f;
+
             if (cards.Count>0)
             {
                 Vector3 startingPosition = cards[0].transform.position;
@@ -235,6 +237,7 @@ public class Manager : MonoBehaviour
         {
             l.Add(enemyHandPlaceHolder.transform.GetChild(i).gameObject);
         }
+
         //Rand List of 3ints from 1 to 6
         List<int> list = new List<int>(new int[3]);
         for (int j = 0; j < list.Count; j++)
@@ -260,6 +263,7 @@ public class Manager : MonoBehaviour
     {
         for (int i = 0; i < cardHolders.Length; i++)
         {
+
             if(cardHolders[i].transform.childCount>0)
                 cardHolders[i].transform.GetChild(0).GetChild(0).GetChild(4).gameObject.SetActive(false); ;
         }
@@ -277,6 +281,7 @@ public class Manager : MonoBehaviour
         {
             Vector3 v = Vector3.one * 0.25f;
             l[i].transform.localScale = v;
+
             Destroy(l[i].transform.GetChild(1).GetComponent<CardInstance>());
             l[i].transform.GetComponent<Draggable>().enabled = false;
             l[i].GetComponent<CardUI>().Old = true;
@@ -327,7 +332,7 @@ public class Manager : MonoBehaviour
         if (hasCard(cardHolders, 5))
             cu.Add(cardHolders[5].transform.GetChild(0).GetComponent<CardUI>());
         return cu;
-
+		
     }
 
     public bool hasCard(GameObject[] g,int i)

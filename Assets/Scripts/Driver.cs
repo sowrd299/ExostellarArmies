@@ -50,29 +50,30 @@ public class Driver : MonoBehaviour {
         DontDestroyOnLoad(gameObject);
 
 		DeckList dlC = new DeckList();
-        AbilityList a = new AbilityList();
-        dlC.AddCard(new UnitCard(2, "Exostellar Snipers", Faction.CARTH, "Carthan Elite Ranging Infantry Unit", "Illuminate with Muzzle Flare!", 3, 1, 30,a), 1);
-		dlC.AddCard(new UnitCard(1, "Exostellar Vanshield Marines", Faction.CARTH, "Carthan Elite Infantry Unit", "“First into the Night!”", 1, 3, 50,a), 1);
-		dlC.AddCard(new UnitCard(2, "Exostellar Marine Squad", Faction.CARTH, "Carthan Elite Infantry Unit", "Boldly into the Night!", 2, 2, 40,a), 2);
-		dlC.AddCard(new UnitCard(1, "Cmdr. Yos Lorth", Faction.CARTH, "Unique; Ranged Shield 1\rFront Line: Allied Elites on the Front Line have +1M and Ranged Shield 1.\nCarthan Elite Command Infantry Unit", "Exostellar Champion", 2, 2, 50,a), 2);
-		dlC.AddCard(new UnitCard(2, "Ancillary Medical Officer", Faction.CARTH, "Support Carthan Infantry: Heal this Front Line 2. (when this is deployed behind Carthan Infantry, activate this ability)\rCarthan Infantry Unit", "Healer of Carth", 1, 2, 30,a), 2);
-		dlC.AddCard(new UnitCard(2, "Autonomous Range Finder", Faction.CARTH, "Support Carthan: Give this Front Line +3R this turn. (when this is deployed behind a Carthan, activate this ability)\r", "56413", 0, 1, 30,a), 1);
-        dlC.AddCard(new UnitCard(3, "Adv. Infantry Support System", Faction.CARTH, "Melee Shield 1\rFront or Back Line: At the start of your turn, generate an extra resource.\rCarthan Command Vehicle Unit", "Mobile Command Center", 0, 3, 60, a), 1);
-        dlC.AddCard(new UnitCard(0, "Emergancy Med Drop", Faction.CARTH, "Deploy: Heal this Front Line 2 and each adjacent Front Line 1.\rCarthan Medical Drone Unit", "Forever Alive in the Dark!", 0, 0, 10, a), 2);
-        dlC.AddCard(new UnitCard(2, "Adv. Supply Drone", Faction.CARTH, "Support Carthan: Heal this Front Line 2 and gain 3 Resources.\rCarthan Medical Drone Unit", "762491", 0, 1, 20, a), 2);
-        dlC.AddCard(new UnitCard(3, "Exostellar Rover Marine", Faction.CARTH, "Front Line: If this has a Back Line, this has +2M, else this has +1R.\rCarthan Elite Infantry Unit", "In the Darkness, Everywhere!", 1, 1, 40, a), 2);
-        dlC.AddCard(new UnitCard(4, "Techrositioner Marine", Faction.CARTH, "Front Line Command: Discard a card to gain 1 Resource and give this +2R.\rCarthan Elite Engineering Infantry Unit", "“Lock; Mark; Two; Fire!”", 2, 0, 50, a), 2);
-        dlC.AddCard(new UnitCard(2, "Hover-Shield Projector", Faction.CARTH, "Support Carthan Infantry: Give this Front Line Ranged Shield 3 this turn. (when this is deployed behind Carthan Infantry, activate this ability)\rCarthan Drone Unit", "98432", 0, 1, 40, a), 2);
+		
+        dlC.AddCard(new UnitCard(2, "Exostellar Snipers", Faction.CARTH, "Carthan Elite Ranging Infantry Unit", "Illuminate with Muzzle Flare!", 3, 1, 30), 1);
+		dlC.AddCard(new UnitCard(1, "Exostellar Vanshield Marines", Faction.CARTH, "Carthan Elite Infantry Unit", "“First into the Night!”", 1, 3, 50), 1);
+		dlC.AddCard(new UnitCard(2, "Exostellar Marine Squad", Faction.CARTH, "Carthan Elite Infantry Unit", "Boldly into the Night!", 2, 2, 40), 2);
+		dlC.AddCard(new UnitCard(1, "Cmdr. Yos Lorth", Faction.CARTH, "Unique; Ranged Shield 1\rFront Line: Allied Elites on the Front Line have +1M and Ranged Shield 1.\nCarthan Elite Command Infantry Unit", "Exostellar Champion", 2, 2, 50), 2);
+		dlC.AddCard(new UnitCard(2, "Ancillary Medical Officer", Faction.CARTH, "Support Carthan Infantry: Heal this Front Line 2. (when this is deployed behind Carthan Infantry, activate this ability)\rCarthan Infantry Unit", "Healer of Carth", 1, 2, 30), 2);
+		dlC.AddCard(new UnitCard(2, "Autonomous Range Finder", Faction.CARTH, "Support Carthan: Give this Front Line +3R this turn. (when this is deployed behind a Carthan, activate this ability)\r", "56413", 0, 1, 30), 1);
+        dlC.AddCard(new UnitCard(3, "Adv. Infantry Support System", Faction.CARTH, "Melee Shield 1\rFront or Back Line: At the start of your turn, generate an extra resource.\rCarthan Command Vehicle Unit", "Mobile Command Center", 0, 3, 60), 1);
+        dlC.AddCard(new UnitCard(0, "Emergancy Med Drop", Faction.CARTH, "Deploy: Heal this Front Line 2 and each adjacent Front Line 1.\rCarthan Medical Drone Unit", "Forever Alive in the Dark!", 0, 0, 10), 2);
+        dlC.AddCard(new UnitCard(2, "Adv. Supply Drone", Faction.CARTH, "Support Carthan: Heal this Front Line 2 and gain 3 Resources.\rCarthan Medical Drone Unit", "762491", 0, 1, 20), 2);
+        dlC.AddCard(new UnitCard(3, "Exostellar Rover Marine", Faction.CARTH, "Front Line: If this has a Back Line, this has +2M, else this has +1R.\rCarthan Elite Infantry Unit", "In the Darkness, Everywhere!", 1, 1, 40), 2);
+        dlC.AddCard(new UnitCard(4, "Techrositioner Marine", Faction.CARTH, "Front Line Command: Discard a card to gain 1 Resource and give this +2R.\rCarthan Elite Engineering Infantry Unit", "“Lock; Mark; Two; Fire!”", 2, 0, 50), 2);
+        dlC.AddCard(new UnitCard(2, "Hover-Shield Projector", Faction.CARTH, "Support Carthan Infantry: Give this Front Line Ranged Shield 3 this turn. (when this is deployed behind Carthan Infantry, activate this ability)\rCarthan Drone Unit", "98432", 0, 1, 40), 2);
+
 
         DeckList dlJ = new DeckList();
-		dlJ.AddCard(new UnitCard(2, "Dominion Pikeman Squad", Faction.JIRNOR, "Jirnorn Infantry Unit", "“For Jirnor that Will Be!”", 0, 4, 3,a), 4);
-		dlJ.AddCard(new UnitCard(2, "Scions of Radiation", Faction.JIRNOR, "Jirnorn Mutant Infantry Unit", "We Have Nothing to Lose!", 3, 2, 3,a), 3);
-		dlJ.AddCard(new UnitCard(2, "Defenders of the Losthome", Faction.JIRNOR, "Jirnorn Infantry Unit", "For Jirnor that Was!", 2, 1, 3,a), 3);
-		dlJ.AddCard(new UnitCard(3, "Hellfire Bringers", Faction.JIRNOR, "Jirnorn Elite Infantry Unit", "Deliver the Doom of Jirnor!", 2, 1, 3,a), 3);
-		dlJ.AddCard(new UnitCard(4, "Deathspew Battery", Faction.JIRNOR, "Jirnorn Mutant Artillery Unit", "No Remorse for the Unrepentant!", 3, 0, 5,a), 2);
-		dlJ.AddCard(new UnitCard(2, "Vanguards of the Dominion", Faction.JIRNOR, "Jirnorn Mutant Infantry Unit", "After Jirnor, We have Nothing!", 1, 2, 1,a), 1);
-        dlJ.AddCard(new UnitCard(3, "Losthome’s Radio Riders", Faction.JIRNOR, "Jirnorn Mutant Fast Vehicle Unit", "For the Losthome! For Jirnor!", 2, 2, 3, a), 2);
-        dlJ.AddCard(new UnitCard(4, "Salvage Truck", Faction.JIRNOR, "Jirnorn Engineering Vehicle Unit", "Waist Nothing; Leave Nothing", 2, 3, 5, a), 2);
+		dlJ.AddCard(new UnitCard(2, "Dominion Pikeman Squad", Faction.JIRNOR, "Jirnorn Infantry Unit", "“For Jirnor that Will Be!”", 0, 4, 3), 4);
+		dlJ.AddCard(new UnitCard(2, "Scions of Radiation", Faction.JIRNOR, "Jirnorn Mutant Infantry Unit", "We Have Nothing to Lose!", 3, 2, 3), 3);
+		dlJ.AddCard(new UnitCard(2, "Defenders of the Losthome", Faction.JIRNOR, "Jirnorn Infantry Unit", "For Jirnor that Was!", 2, 1, 3), 3);
+		dlJ.AddCard(new UnitCard(3, "Hellfire Bringers", Faction.JIRNOR, "Jirnorn Elite Infantry Unit", "Deliver the Doom of Jirnor!", 2, 1, 3), 3);
+		dlJ.AddCard(new UnitCard(4, "Deathspew Battery", Faction.JIRNOR, "Jirnorn Mutant Artillery Unit", "No Remorse for the Unrepentant!", 3, 0, 5), 2);
+		dlJ.AddCard(new UnitCard(2, "Vanguards of the Dominion", Faction.JIRNOR, "Jirnorn Mutant Infantry Unit", "After Jirnor, We have Nothing!", 1, 2, 1), 1);
+        dlJ.AddCard(new UnitCard(3, "Losthome’s Radio Riders", Faction.JIRNOR, "Jirnorn Mutant Fast Vehicle Unit", "For the Losthome! For Jirnor!", 2, 2, 3), 2);
+        dlJ.AddCard(new UnitCard(4, "Salvage Truck", Faction.JIRNOR, "Jirnorn Engineering Vehicle Unit", "Waist Nothing; Leave Nothing", 2, 3, 5), 2);
 
 
         // Each deck has 16 cards in it
@@ -219,19 +220,22 @@ public class Driver : MonoBehaviour {
                 // handled by UI
                 break;
 			case Phase.COMBAT:
-                //Debug.Log("LeftFront " + (gameManager.Lanes[0].Units[0, 0]==null));
-                //Debug.Log("LeftBack " + (gameManager.Lanes[0].Units[0, 1] == null));
-                //Debug.Log("MiddleFront " + (gameManager.Lanes[1].Units[0, 0] == null));
-                //Debug.Log("MiddleBack " + (gameManager.Lanes[1].Units[0, 1] == null));
-                //Debug.Log("RightFront " + (gameManager.Lanes[2].Units[0, 0] == null));
-                Debug.Log("RightBack " + (gameManager.Lanes[2].Units[1, 0].HealthPoints));
-                gameManager.CombatPhase();
+				//Debug.Log("LeftFront " + (gameManager.Lanes[0].Units[0, 0]==null));
+				//Debug.Log("LeftBack " + (gameManager.Lanes[0].Units[0, 1] == null));
+				//Debug.Log("MiddleFront " + (gameManager.Lanes[1].Units[0, 0] == null));
+				//Debug.Log("MiddleBack " + (gameManager.Lanes[1].Units[0, 1] == null));
+				//Debug.Log("RightFront " + (gameManager.Lanes[2].Units[0, 0] == null));
+				//Debug.Log("RightBack " + (gameManager.Lanes[2].Units[0, 0].HealthPoints));
+
+				gameManager.CombatPhase();
+				
                 //Debug.Log("LeftFront After" + (gameManager.Lanes[0].Units[0, 0] == null));
                 //Debug.Log("LeftBack After" + (gameManager.Lanes[0].Units[0, 1] == null));
                 //Debug.Log("MiddleFront After" + (gameManager.Lanes[1].Units[0, 0] == null));
                 //Debug.Log("MiddleBack After" + (gameManager.Lanes[1].Units[0, 1] == null));
                 //Debug.Log("RightFront After" + (gameManager.Lanes[2].Units[0, 0] == null));
-                Debug.Log("Rightfr After" + (gameManager.Lanes[2].Units[1, 0].HealthPoints));
+                //Debug.Log("RightBack After" + (gameManager.Lanes[2].Units[0, 0].HealthPoints));
+
                 List<CardFrontEnd> c = loadFrontEnd2();
                 List<CardUI> cu = manager.loadCardUI();
                 Debug.Log("Lengths==" + (c.Count == cu.Count));
@@ -247,6 +251,24 @@ public class Driver : MonoBehaviour {
 			case Phase.DONE:
 				print("Game Over: Player " + (gameManager.Players[0].Lives==0?2:1) + " Wins!");
 				break;
+		}
+	}
+
+	public void printField() {
+		int[][] loop = {
+			new int[2] { 1, 1 },
+			new int[2] { 1, 0 },
+			new int[2] { 0, 0 },
+			new int[2] { 0, 1 },
+		};
+
+		foreach(int[] play_pos in loop) {
+			string s = "";
+			foreach(Lane l in gameManager.Lanes) {
+				Unit u = l.Units[play_pos[0], play_pos[1]];
+				s += (u!=null ? ""+u.HealthPoints : "X") + " ";
+			}
+			Debug.Log(s);
 		}
 	}
 

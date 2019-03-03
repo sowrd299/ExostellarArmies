@@ -15,6 +15,7 @@ public class CardUI : MonoBehaviour
     private List<CardFrontEnd> playerFrontEnds = new List<CardFrontEnd>();
     private List<CardFrontEnd> enemyFrontEnds = new List<CardFrontEnd>();
     public Card cardBackEnd;
+
     public int handIndex
     {
         get { 
@@ -42,10 +43,12 @@ public class CardUI : MonoBehaviour
         if (card != null)
             LoadCard(card);
         //handIndex = this.transform.GetSiblingIndex();
+
         if (!this.gameObject.name.Contains("Enemy"))
             cardBackEnd = Driver.instance.gameManager.Players[0].Hand[this.transform.GetSiblingIndex()];
         else
             cardBackEnd = Driver.instance.gameManager.Players[1].Hand[this.transform.GetSiblingIndex()];
+
     }
 
     private void Update()

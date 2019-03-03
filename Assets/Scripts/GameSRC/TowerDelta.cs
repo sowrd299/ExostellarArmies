@@ -6,17 +6,19 @@ using SFB.Game.Content;
 namespace SFB.Game {
 	public class TowerDelta : Delta {
 		private Tower tower;
+		private int amount;
 
-		public TowerDelta(Tower t) {
+		public TowerDelta(Tower t, int amt) {
 			tower = t;
+			amount = amt;
 		}
 
 		internal override void Apply() {
-			tower.takeDamage();
+			tower.takeDamage(amount);
 		}
 
 		internal override void Revert() {
-			tower.undoTakeDamage();
+			tower.undoTakeDamage(amount);
 		}
 	}
 }
