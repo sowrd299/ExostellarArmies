@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 0}
+  m_Name: Tower1
+  m_EditorClassIdentifier: Assembly-CSharp::TowerFrontEnd
+  properties:
+  - intValue: 1
+    sprite: {fileID: 0}
+    element: {fileID: 11400000, guid: cfe0ea45134f44f41899f0717276b9e1, type: 2}
+  - intValue: 0
+    sprite: {fileID: 21300000, guid: 5aed51940e91845b3b5345027cd3efa4, type: 3}
+    element: {fileID: 11400000, guid: 562ef14102f8643fa904186590cb3eba, type: 2}
