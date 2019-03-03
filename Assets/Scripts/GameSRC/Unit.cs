@@ -71,6 +71,7 @@ namespace SFB.Game{
 
 		private Delta[] getDamagingDeltas(Lane l, int oppPlay, UnitDelta.DamageType type) {
 			int dmgLeft = (type==UnitDelta.DamageType.RANGED ? rangedAttack : meleeAttack);
+			//Debug.Log("INTIAL DAMAGE: " + dmgLeft);
 
 			List<Delta> list = new List<Delta>();
 			int pos = 0;
@@ -87,13 +88,19 @@ namespace SFB.Game{
 								: (type == UnitDelta.DamageType.MELEE
 									? getMeleeDamageModifier()
 									: 0));
-					int deal = System.Math.Max(target.HealthPoints + mod, dmgLeft);
+					int deal = System.Math.Min(target.HealthPoints + mod, dmgLeft);
+					//Debug.Log("    DMG LEFT: " + dmgLeft);
+					//Debug.Log("        DEAL: " + deal);
+					//Debug.Log("        T HP: " + target.HealthPoints);
+					//Debug.Log("        MOD: " + mod);
+
 					list.Add(new UnitDelta(target, deal, type));
 					dmgLeft = dmgLeft - deal + getDamageLeftModifier(dmgLeft, deal);
 				}
 				pos++;
 			}
 
+			//Debug.Log("DMG AFTER UNITS: " + dmgLeft);
 			if(dmgLeft > 0)
 				list.Add(new TowerDelta(l.Towers[oppPlay], 1 + getTowerDamageModifier()));
 

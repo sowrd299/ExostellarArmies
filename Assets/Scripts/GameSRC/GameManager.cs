@@ -192,13 +192,10 @@ namespace SFB.Game.Management{
 		}
 
 		public void CombatPhase() {
-			Delta[] rds = CombatManager.getRangedDeltas(lanes);
-			Delta[] mds = CombatManager.getMeleeDeltas(lanes);
-			Delta[] tds = CombatManager.getTowerDeltas(lanes);
-
-            //send network??
-
-            foreach (Delta d in rds)
+			Debug.Log("PRE COMBAT");
+			Driver.instance.printField();
+			
+            foreach (Delta d in CombatManager.getRangedDeltas(lanes))
             {
                 ApplyDelta(d);
                 if(d.GetType()==typeof(UnitDelta))
@@ -208,9 +205,13 @@ namespace SFB.Game.Management{
                     Debug.Log("tower");
                 }
             }
-            cleanUp();
+			Debug.Log("POST RANGED");
+			Driver.instance.printField();
+			cleanUp();
+			Debug.Log("POST CLEAN");
+			Driver.instance.printField();
 
-            foreach (Delta d in mds)
+			foreach (Delta d in CombatManager.getMeleeDeltas(lanes))
             {
                 ApplyDelta(d);
                 if((d.GetType() == typeof(UnitDelta)))
@@ -218,11 +219,19 @@ namespace SFB.Game.Management{
                 else
                     Debug.Log("tower");
             }
+			Debug.Log("POST MELEE");
+			Driver.instance.printField();
 			cleanUp();
-
-			foreach(Delta d in tds)
+			Debug.Log("POST CLEAN");
+			Driver.instance.printField();
+			
+			foreach(Delta d in CombatManager.getTowerDeltas(lanes))
 				ApplyDelta(d);
+			Debug.Log("POST TOWER");
+			Driver.instance.printField();
 			cleanUp();
+			Debug.Log("POST COMBAT");
+			Driver.instance.printField();
 		}
 
         // VARIOUS ADMIN METHODS

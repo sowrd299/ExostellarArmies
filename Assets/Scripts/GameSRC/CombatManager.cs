@@ -43,7 +43,7 @@ namespace SFB.Game.Management {
 					while(dmgLeft > 0 && pos < 2) {
 						if(l.isOccupied(play, pos)) {
 							Unit target = l.Units[play, pos];
-							int deal = System.Math.Max(target.HealthPoints, dmgLeft);
+							int deal = System.Math.Min(target.HealthPoints, dmgLeft);
 							list.Add(new UnitDelta(target, deal, UnitDelta.DamageType.TRUE));
 							dmgLeft -= deal;
 						}
