@@ -1,6 +1,7 @@
 ﻿using SFB.Game;
 using SFB.Game.Content;
 using SFB.Game.Management;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -212,6 +213,10 @@ public class Driver : MonoBehaviour {
 	}
 
 	public void printField() {
+		printField(unit => ""+unit.HealthPoints);
+	}
+
+	internal void printField(Func<Unit, string> func) {
 		int[][] loop = {
 			new int[2] { 1, 1 },
 			new int[2] { 1, 0 },
@@ -223,7 +228,7 @@ public class Driver : MonoBehaviour {
 			string s = "";
 			foreach(Lane l in gameManager.Lanes) {
 				Unit u = l.Units[play_pos[0], play_pos[1]];
-				s += (u!=null ? ""+u.HealthPoints : "X") + " ";
+				s += (u!=null ? func(u) : "X") + " ";
 			}
 			Debug.Log(s);
 		}
