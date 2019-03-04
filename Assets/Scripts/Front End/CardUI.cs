@@ -56,9 +56,9 @@ public class CardUI : MonoBehaviour
 
     private void Update()
     {
-        int.TryParse(properties[6].text.text, out hp);
-        if (card!=null && hp <= 0)
-            Destroy(this.gameObject);
+        //int.TryParse(properties[6].text.text, out hp);
+        //if (card!=null && hp <= 0)
+            //Destroy(this.gameObject);
         if (playerFrontEnds != null && playerFrontEnds.Count==0)
             playerFrontEnds = Driver.instance.loadFrontEnd(Driver.instance.gameManager.Players[0]);
         if (enemyFrontEnds != null && enemyFrontEnds.Count == 0)

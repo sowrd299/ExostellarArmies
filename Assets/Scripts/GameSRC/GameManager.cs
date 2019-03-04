@@ -191,28 +191,74 @@ namespace SFB.Game.Management{
 			}
 		}
 
-		public void CombatPhase() {
-			Debug.Log("PRE COMBAT");
-			Driver.instance.printField();
-			
+        //public void CombatPhase() {
+        //	Debug.Log("PRE COMBAT");
+        //	Driver.instance.printField();
+
+        //          foreach (Delta d in CombatManager.getRangedDeltas(lanes))
+        //          {
+        //              ApplyDelta(d);
+        //              if(d.GetType()==typeof(UnitDelta))
+        //                  Debug.Log((d as UnitDelta).Amount);
+        //              else
+        //              {
+        //                  Debug.Log("tower");
+        //              }
+        //          }
+        //	Debug.Log("POST RANGED");
+        //	Driver.instance.printField();
+        //          Driver.instance.updateCardsOntable();
+        //	cleanUp();
+        //	Debug.Log("POST CLEAN");
+        //	Driver.instance.printField();
+
+        //	foreach (Delta d in CombatManager.getMeleeDeltas(lanes))
+        //          {
+        //              ApplyDelta(d);
+        //              if((d.GetType() == typeof(UnitDelta)))
+        //                  Debug.Log((d as UnitDelta).Amount);
+        //              else
+        //                  Debug.Log("tower");
+        //          }
+        //	Debug.Log("POST MELEE");
+        //	Driver.instance.printField();
+        //          Driver.instance.updateCardsOntable();
+        //          cleanUp();
+        //	Debug.Log("POST CLEAN");
+        //	Driver.instance.printField();
+
+        //	foreach(Delta d in CombatManager.getTowerDeltas(lanes))
+        //		ApplyDelta(d);
+        //	Debug.Log("POST TOWER");
+        //	Driver.instance.printField();
+        //          Driver.instance.updateCardsOntable();
+        //          cleanUp();
+        //	Debug.Log("POST COMBAT");
+        //	Driver.instance.printField();
+        //}
+
+        public void CombatRangePhase()
+        {
             foreach (Delta d in CombatManager.getRangedDeltas(lanes))
             {
                 ApplyDelta(d);
                 if(d.GetType()==typeof(UnitDelta))
                     Debug.Log((d as UnitDelta).Amount);
                 else
-                {
                     Debug.Log("tower");
-                }
             }
-			Debug.Log("POST RANGED");
-			Driver.instance.printField();
-            Driver.instance.updateCardsOntable();
-			cleanUp();
-			Debug.Log("POST CLEAN");
-			Driver.instance.printField();
+          Debug.Log("POST RANGED");
+          Driver.instance.printField();
+          
+        }
 
-			foreach (Delta d in CombatManager.getMeleeDeltas(lanes))
+        public void CombatMellePhase()
+        {
+            cleanUp();
+            Debug.Log("POST CLEAN");
+            Driver.instance.printField();
+
+            foreach (Delta d in CombatManager.getMeleeDeltas(lanes))
             {
                 ApplyDelta(d);
                 if((d.GetType() == typeof(UnitDelta)))
@@ -220,22 +266,23 @@ namespace SFB.Game.Management{
                 else
                     Debug.Log("tower");
             }
-			Debug.Log("POST MELEE");
-			Driver.instance.printField();
-            Driver.instance.updateCardsOntable();
-            cleanUp();
-			Debug.Log("POST CLEAN");
-			Driver.instance.printField();
-			
-			foreach(Delta d in CombatManager.getTowerDeltas(lanes))
-				ApplyDelta(d);
-			Debug.Log("POST TOWER");
-			Driver.instance.printField();
-            Driver.instance.updateCardsOntable();
-            cleanUp();
-			Debug.Log("POST COMBAT");
-			Driver.instance.printField();
-		}
+            Debug.Log("POST MELEE"); 
+            Driver.instance.printField();
+
+        }
+
+        public void CombatTowerPhase()
+        {
+              cleanUp();
+              Debug.Log("POST CLEAN");
+              Driver.instance.printField();
+
+              foreach(Delta d in CombatManager.getTowerDeltas(lanes))
+                  ApplyDelta(d);
+              Debug.Log("POST TOWER");
+              Driver.instance.printField();
+        }
+
 
         // VARIOUS ADMIN METHODS
 

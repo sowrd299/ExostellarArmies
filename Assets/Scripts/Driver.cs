@@ -15,7 +15,7 @@ public class Driver : MonoBehaviour {
     private Element[] elemList;
     [SerializeField]
     private Element towerElem;
-    public bool deployDone = false;
+    public bool combatStarted = false;
 
     public Manager manager;
     public ResourcePool myMana;
@@ -221,13 +221,17 @@ public class Driver : MonoBehaviour {
         {
             cu[i].loadHp(c[i]);
         }
+        manager.cleanup();
     }
+
+
 
     void Update() {
         //updateUI();
         resoureCount = myMana.Count;
         switch (phase) {
             case Phase.DRAW:
+                combatStarted = false;
                 gameManager.DrawPhase();
 				//phase = Phase.PLACEMENT;
 				break;
@@ -236,11 +240,14 @@ public class Driver : MonoBehaviour {
                 break;
 			case Phase.COMBAT:
                 manager.makeDraggable(false);
-				gameManager.CombatPhase();
-                phase = gameManager.Over ? Phase.DONE : Phase.DRAW;
-
-                updateTowerUI();
-                StartCoroutine(manager.damageAnims());
+                //gameManager.CombatPhase();
+                //phase = gameManager.Over ? Phase.DONE : Phase.DRAW;
+                //updateTowerUI();
+                if (!combatStarted)
+                {
+                    combatStarted = true;
+                    StartCoroutine(manager.damageAnims());
+                }
 				break;
 			case Phase.DONE:
 				print("Game Over: Player " + (gameManager.Players[0].Lives==0?2:1) + " Wins!");
