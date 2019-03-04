@@ -27,10 +27,11 @@ namespace SFB.Game {
 		public virtual Delta[] onEachDeployPhase(int play, Lane[] lanes, Player[] players) { return new Delta[] { }; }
 
 		// play is the player that owns the unit
-		public virtual Delta[] onDeath(int play) { return new Delta[] { }; }
-		public virtual Delta[] onDeath(int play, Lane[] lanes) { return new Delta[] { }; }
-		public virtual Delta[] onDeath(int play, Player[] players) { return new Delta[] { }; }
-		public virtual Delta[] onDeath(int play, Lane[] lanes, Player[] players) { return new Delta[] { }; }
+		public virtual Delta[] onDeath(int play, int pos) { return new Delta[] { }; }
+		public virtual Delta[] onDeath(int play, int pos, Lane[] lanes) { return new Delta[] { }; }
+		public virtual Delta[] onDeath(int play, int pos, Player[] players) { return new Delta[] { }; }
+		public virtual Delta[] onDeath(int play, int pos, Lane[] lanes, Player[] players) { return new Delta[] { }; }
+		public virtual Delta[] onDeath(int play, Player[] players, Lane[] lanes, Card c) { return new Delta[] { }; }
 
 		internal virtual Unit[,] filterTargets(Unit[,] arr, int oppPlay) { return arr; }
 		public virtual int takeMeleeDamageModifier() { return 0; }
@@ -100,6 +101,14 @@ namespace SFB.Game {
 		public override int takeRangedDamageModifier() { return Num; }
 	}
 
+	public class Siege : Ability {
+		public Siege(int n) : base(n) { }
+
+		public override int getTowerDamageModifier() {
+			return Num;
+		}
+	}
+
 	public class Lob : Ability {
 		public Lob() : base() { }
 
@@ -114,6 +123,31 @@ namespace SFB.Game {
 						nArr[oppPlay, i] = arr[oppPlay, i];
 				}
 			return nArr;
+		}
+	}
+
+	public class Regrowth : Ability {
+		private int play;
+		private Func<Player[], Lane[], bool> func;
+
+		public Regrowth(int p, Func<Player[], Lane[], bool> f) {
+			play = p;
+			func = f;
+		}
+
+		public override Delta[] onDeath(int play, Player[] players, Lane[] lanes, Card c) {
+			List<Delta> l = new List<Delta>();
+
+			if(func(players, lanes))
+				l.Add(new Hand.AddToHandDelta(players[play].Hand, c));
+
+			return l.ToArray();
+		}
+	}
+
+	public class Swarm : Ability {
+		public override Delta[] onInitialDeploy(int play, Lane[] lanes, Player[] players) {
+			return new Delta[] { };
 		}
 	}
 

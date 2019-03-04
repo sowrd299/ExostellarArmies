@@ -261,8 +261,9 @@ namespace SFB.Game.Management{
 						Unit u = l.Units[play, pos];
 						if(u != null && u.HealthPoints <= 0) {
 							Debug.Log("kill " + play + " " + pos + " " + u.HealthPoints);
-							deltas.AddRange(u.onDeath(play, lanes, players));
-							l.kill(play, pos);
+							deltas.AddRange(u.onDeath(play, pos, lanes, players));
+							if(l.isOccupied(play, pos))
+								l.kill(play, pos);
 						}
 					}
 
