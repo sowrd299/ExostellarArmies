@@ -177,13 +177,14 @@ namespace SFB.Game{
 			return deltas.ToArray();
 		}
 
-		public Delta[] onDeath(int play, Lane[] lanes, Player[] players) {
+		public Delta[] onDeath(int play, int pos, Lane[] lanes, Player[] players) {
 			List<Delta> deltas = new List<Delta>();
 			foreach(Ability a in abilities) {
-				deltas.AddRange(a.onDeath(play));
-				deltas.AddRange(a.onDeath(play, lanes));
-				deltas.AddRange(a.onDeath(play, players));
-				deltas.AddRange(a.onDeath(play, lanes, players));
+				deltas.AddRange(a.onDeath(play, pos));
+				deltas.AddRange(a.onDeath(play, pos, lanes));
+				deltas.AddRange(a.onDeath(play, pos, players));
+				deltas.AddRange(a.onDeath(play, pos, lanes, players));
+				deltas.AddRange(a.onDeath(play, players, lanes, this.Card));
 			}
 			return deltas.ToArray();
 		}
