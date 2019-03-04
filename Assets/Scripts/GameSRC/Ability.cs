@@ -155,18 +155,14 @@ namespace SFB.Game {
 
 	// test
 	public class HealAlliesWhenDie : Ability {
-		private int amt;
+		public HealAlliesWhenDie(int n) : base(n) { }
 
-		public HealAlliesWhenDie(int n) : base() {
-			amt = n;
-		}
-
-		public override Delta[] onDeath(int play, Lane[] lanes) {
+		public override Delta[] onDeath(int play, int pos, Lane[] lanes) {
 			List<Delta> deltas = new List<Delta>();
 			foreach(Lane l in lanes)
-				for(int pos = 0; pos < l.Units.GetLength(1); pos++)
-					if(l.Units[play, pos] != null)
-						deltas.Add(new UnitDelta(l.Units[play, pos], amt, UnitDelta.DamageType.HEAL));
+				for(int p = 0; p < l.Units.GetLength(1); p++)
+					if(l.Units[play, p] != null)
+						deltas.Add(new UnitDelta(l.Units[play, p], Num, UnitDelta.DamageType.HEAL));
 			return deltas.ToArray();
 		}
 	}

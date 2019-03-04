@@ -32,7 +32,7 @@ namespace SFB.Game.Content {
 		}
 
 		public void revive() {
-			if(hp == 0) {
+			if(hp <= 0) {
 				hp = ++maxHP;
 			} else {
 				//exception?
