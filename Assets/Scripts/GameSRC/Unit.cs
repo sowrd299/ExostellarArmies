@@ -162,7 +162,7 @@ namespace SFB.Game{
 			return deltas.ToArray();
 		}
 
-		public Delta[] onEachDeployPhase(int play, Lane[] lanes, Player[] players) {
+		public Delta[] onEachDeployPhase(int play, int pos, Lane[] lanes, Player[] players) {
 			List<Delta> deltas = new List<Delta>();
 			foreach(Ability a in abilities) {
 				deltas.AddRange(a.onEachDeployPhase(play));
