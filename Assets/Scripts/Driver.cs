@@ -13,6 +13,8 @@ public class Driver : MonoBehaviour {
  
     [SerializeField]
     private Element[] elemList;
+    [SerializeField]
+    private Element towerElem;
     public bool deployDone = false;
 
     public Manager manager;
@@ -107,6 +109,16 @@ public class Driver : MonoBehaviour {
 
     }
 
+    public TowerProperties[] createTowerProperties(int hp)
+    {
+        TowerProperties[] listOfProp = new TowerProperties[1];
+        TowerProperties towerProp = new TowerProperties();
+        towerProp.element = towerElem;
+        listOfProp[0]=towerProp;
+        listOfProp[0].intValue = hp;
+        return listOfProp;
+    }
+
     public void drawCards()
     {
           myMana.Add(2);
@@ -132,6 +144,27 @@ public class Driver : MonoBehaviour {
             listOfProperties = createCardProperties(myName, "TYPE", flavorText, mainText, cost, hp, meleeAttack, rangedAttack);
             CardFrontEnd cardFront = new CardFrontEnd(listOfProperties);
             ans.Add(cardFront);
+        }
+        return ans;
+    }
+
+    public List<TowerFrontEnd> loadTowerFrontEnd()
+    {
+        List<TowerFrontEnd> ans = new List<TowerFrontEnd>();
+        foreach (Lane lane in gameManager.Lanes)
+        {
+            for (int play = 0; play < lane.Towers.Length; play++)
+            {
+                if (lane.Towers[play] != null)
+                {
+                    Tower t = lane.Towers[play];
+                    int hp = t.HP;
+                    TowerProperties[] tp = new TowerProperties[1];//For now 1, later will probably need Damage,Sprite
+                    tp = createTowerProperties(hp);
+                    TowerFrontEnd tf = new TowerFrontEnd(tp);
+                    ans.Add(tf);
+                }
+            }
         }
         return ans;
     }
@@ -164,6 +197,16 @@ public class Driver : MonoBehaviour {
             }
         }
         return ans;  
+    }
+
+    public void updateTowerUI()
+    {
+        List<TowerFrontEnd> t = loadTowerFrontEnd();
+        List<TowerUI> tu = manager.loadTowerUI();
+        for (int i = 0; i < t.Count; i++)
+        {
+            tu[i].LoadTower(t[i]);
+        }
     }
 
     void Update() {

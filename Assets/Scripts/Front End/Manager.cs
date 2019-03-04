@@ -25,10 +25,13 @@ public class Manager : MonoBehaviour
     [SerializeField]
     private GameObject enemyHandPlaceHolder;
 
+
     [SerializeField]
     private GameObject[] cardHolders;
     [SerializeField]
     public GameObject[] myCardHolders;
+    [SerializeField]
+    private GameObject[] towerHolders;
 
     [SerializeField]
     private Text resourseText;
@@ -56,6 +59,7 @@ public class Manager : MonoBehaviour
         {
             case Phase.DRAW:
                 spawnCards();
+                Driver.instance.updateTowerUI();
                 mainBtnText.text = "DRAWING...";
                 break;
             case Phase.PLACEMENT:
@@ -284,6 +288,16 @@ public class Manager : MonoBehaviour
         }
         //moveToFrontRow(myCardHolders);
         //moveToFrontRow(cardHolders);
+    }
+
+    public List<TowerUI> loadTowerUI()
+    {
+        List<TowerUI> tu = new List<TowerUI>();
+        for (int i = 0; i < towerHolders.Length; i++)
+        {
+            tu.Add(towerHolders[i].GetComponent<TowerUI>());
+        }
+        return tu;
     }
 
     //TODO:IMPORVE IMPLEMENTATION
