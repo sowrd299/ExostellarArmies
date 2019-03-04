@@ -11,6 +11,8 @@ public class CardUI : MonoBehaviour
     //public Card cardBackEnd;
     public CardFrontEnd card;
     public CardUIProperties[] properties;
+    [SerializeField]
+    public Element hpElement;
 
     private List<CardFrontEnd> playerFrontEnds = new List<CardFrontEnd>();
     private List<CardFrontEnd> enemyFrontEnds = new List<CardFrontEnd>();
@@ -37,6 +39,7 @@ public class CardUI : MonoBehaviour
             old = value;
         }
     }
+    private int hp;
 
     private void Start()
     {
@@ -53,8 +56,10 @@ public class CardUI : MonoBehaviour
 
     private void Update()
     {
-//        Debug.Log("Index: " + this.transform.GetSiblingIndex());
-        if(playerFrontEnds != null && playerFrontEnds.Count==0)
+        //int.TryParse(properties[6].text.text, out hp);
+        //if (card!=null && hp <= 0)
+            //Destroy(this.gameObject);
+        if (playerFrontEnds != null && playerFrontEnds.Count==0)
             playerFrontEnds = Driver.instance.loadFrontEnd(Driver.instance.gameManager.Players[0]);
         if (enemyFrontEnds != null && enemyFrontEnds.Count == 0)
             enemyFrontEnds = Driver.instance.loadFrontEnd(Driver.instance.gameManager.Players[1]);
@@ -80,7 +85,6 @@ public class CardUI : MonoBehaviour
     {
         if (c == null)
          return;
-        this.card = c;
         for (int i=0; i<c.properties.Length; i++)
         {
             CardProperties cp = c.properties[i];
@@ -99,6 +103,23 @@ public class CardUI : MonoBehaviour
             else if(cp.element is ElementImage)
             {
                 p.image.sprite = cp.sprite;
+            }
+        }
+        this.card = c;
+    }
+
+    public void loadHp(CardFrontEnd c)
+    {
+        if (c == null)
+            return;
+        for (int i = 0; i < c.properties.Length; i++)
+        {
+            CardProperties cp = c.properties[i];
+            CardUIProperties p = GetProperty(cp.element);
+            if (cp.element is ElementInt)
+            {
+                //Debug.Log(p.GetType());
+                p.text.text = cp.intValue.ToString();
             }
         }
     }

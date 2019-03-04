@@ -113,10 +113,26 @@ public class Manager : MonoBehaviour
 
     public IEnumerator damageAnims()
     {
-        yield return new WaitForSeconds(0.5f);
-        mainBtnText.text = "Combat Done!";
-        yield return new WaitForSeconds(0.5f);
-        mainBtnText.text = "DRAW";
+        mainBtnText.text = "Range Combat!";
+        Driver.instance.gameManager.CombatRangePhase();
+        Driver.instance.updateCardsOntable();
+        Driver.instance.updateTowerUI();
+        yield return new WaitForSeconds(3.5f);
+        mainBtnText.text = "Melle Combat!";
+        Driver.instance.gameManager.CombatMellePhase();
+        Driver.instance.updateCardsOntable();
+        Driver.instance.updateTowerUI();
+        yield return new WaitForSeconds(3.5f);
+        mainBtnText.text = "Tower Combat!";
+        Driver.instance.gameManager.CombatMellePhase();
+        Driver.instance.updateCardsOntable();
+        Driver.instance.updateTowerUI();
+        yield return new WaitForSeconds(3.5f);
+        Driver.instance.gameManager.cleanUp();
+        mainBtnText.text = "Combat done1";
+        yield return new WaitForSeconds(1f);
+        mainBtnText.text = "Draw";
+        Driver.instance.phase = Driver.instance.gameManager.Over ? Phase.DONE : Phase.DRAW;
     }
 
     public void applyEnemyDeltas()
@@ -197,6 +213,7 @@ public class Manager : MonoBehaviour
         }
         Driver.instance.phase = Phase.PLACEMENT;
         mainBtnText.text = "DEPLOY";
+        makeDraggable(true);
         yield return null;
         enemyPlay();
     }
@@ -300,6 +317,32 @@ public class Manager : MonoBehaviour
         return tu;
     }
 
+    public void cleanup()
+    {
+        for (int i = 0; i < cardHolders.Length; i++)
+        {
+            if(cardHolders[i].transform.childCount>0)
+            {
+                CardUI c = cardHolders[i].transform.GetChild(0).GetComponent<CardUI>();
+                int hp;
+                int.TryParse(c.properties[6].text.text, out hp);
+                if (hp <= 0)
+                    Destroy(cardHolders[i].transform.GetChild(0).gameObject);
+            }
+        }
+        for (int i = 0; i < myCardHolders.Length; i++)
+        {
+            if (myCardHolders[i].transform.childCount > 0)
+            {
+                CardUI c2 = myCardHolders[i].transform.GetChild(0).GetComponent<CardUI>();
+                int hp;
+                int.TryParse(c2.properties[6].text.text, out hp);
+                if (hp <= 0)
+                    Destroy(myCardHolders[i].transform.GetChild(0).gameObject);
+            }
+        }
+    }
+
     //TODO:IMPORVE IMPLEMENTATION
     public List<CardUI> loadCardUI()
     {
@@ -333,6 +376,14 @@ public class Manager : MonoBehaviour
             cu.Add(cardHolders[5].transform.GetChild(0).GetComponent<CardUI>());
         return cu;
 		
+    }
+
+    public void makeDraggable(bool b)
+    {
+        for (int i = 0; i < handPlaceHolder.transform.childCount; i++)
+        {
+            handPlaceHolder.transform.GetChild(i).GetComponent<Draggable>().enabled = b;
+        }
     }
 
     public bool hasCard(GameObject[] g,int i)

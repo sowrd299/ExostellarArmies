@@ -1872,7 +1872,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c387f31812720441eb0984b8fd4f1491, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  card: {fileID: 11400000, guid: 1da76dfa9064d4fc68abb8a694c7d177, type: 2}
+  card: {fileID: 0}
   properties:
   - text: {fileID: 2209705395013451064}
     image: {fileID: 0}
@@ -1901,6 +1901,7 @@ MonoBehaviour:
   - text: {fileID: 2209705395291305454}
     image: {fileID: 0}
     element: {fileID: 11400000, guid: 753be10aa7e2e41eb9296e4a98ad979d, type: 2}
+  hpElement: {fileID: 11400000, guid: 4ee4825dd23a14c91bf8150d4d6139d5, type: 2}
 --- !u!114 &8639076190155446269
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1908,7 +1909,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6374767821707340389}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ee75175cfa83d467f83d36fd74c654b1, type: 3}
   m_Name: 
