@@ -207,6 +207,7 @@ namespace SFB.Game.Management{
             }
 			Debug.Log("POST RANGED");
 			Driver.instance.printField();
+            Driver.instance.updateCardsOntable();
 			cleanUp();
 			Debug.Log("POST CLEAN");
 			Driver.instance.printField();
@@ -221,7 +222,8 @@ namespace SFB.Game.Management{
             }
 			Debug.Log("POST MELEE");
 			Driver.instance.printField();
-			cleanUp();
+            Driver.instance.updateCardsOntable();
+            cleanUp();
 			Debug.Log("POST CLEAN");
 			Driver.instance.printField();
 			
@@ -229,7 +231,8 @@ namespace SFB.Game.Management{
 				ApplyDelta(d);
 			Debug.Log("POST TOWER");
 			Driver.instance.printField();
-			cleanUp();
+            Driver.instance.updateCardsOntable();
+            cleanUp();
 			Debug.Log("POST COMBAT");
 			Driver.instance.printField();
 		}

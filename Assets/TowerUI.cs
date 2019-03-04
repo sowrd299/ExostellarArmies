@@ -6,6 +6,7 @@ public class TowerUI : MonoBehaviour
 {
     public TowerFrontEnd tower;
     public TowerUIProperties[] properties;
+    private int hp;
     // Start is called before the first frame update
     private void Start()
     {
@@ -16,7 +17,28 @@ public class TowerUI : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        int.TryParse(properties[0].text.text, out hp);
+        if (hp <= 0)
+            StartCoroutine(DestroyAndRespawn());
+    }
+
+    IEnumerator DestroyAndRespawn()
+    {
+        float timeOfTravel = 0.5f;
+        float elapsedTime = 0f;
+        while (elapsedTime < timeOfTravel)
+        {
+            this.transform.localScale = Vector3.Lerp(Vector3.one, Vector3.zero, (elapsedTime / timeOfTravel));
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+        elapsedTime = 0f;
+        while (elapsedTime < timeOfTravel)
+        {
+            this.transform.localScale = Vector3.Lerp(Vector3.zero, Vector3.one, (elapsedTime / timeOfTravel));
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
     }
 
     public void LoadTower(TowerFrontEnd t)

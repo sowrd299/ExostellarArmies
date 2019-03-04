@@ -51,18 +51,18 @@ public class Driver : MonoBehaviour {
 
 		DeckList dlC = new DeckList();
 		
-        dlC.AddCard(new UnitCard(2, "Exostellar Snipers", Faction.CARTH, "Carthan Elite Ranging Infantry Unit", "Illuminate with Muzzle Flare!", 3, 1, 30), 1);
-		dlC.AddCard(new UnitCard(1, "Exostellar Vanshield Marines", Faction.CARTH, "Carthan Elite Infantry Unit", "“First into the Night!”", 1, 3, 50), 1);
-		dlC.AddCard(new UnitCard(2, "Exostellar Marine Squad", Faction.CARTH, "Carthan Elite Infantry Unit", "Boldly into the Night!", 2, 2, 40), 2);
-		dlC.AddCard(new UnitCard(1, "Cmdr. Yos Lorth", Faction.CARTH, "Unique; Ranged Shield 1\rFront Line: Allied Elites on the Front Line have +1M and Ranged Shield 1.\nCarthan Elite Command Infantry Unit", "Exostellar Champion", 2, 2, 50), 2);
-		dlC.AddCard(new UnitCard(2, "Ancillary Medical Officer", Faction.CARTH, "Support Carthan Infantry: Heal this Front Line 2. (when this is deployed behind Carthan Infantry, activate this ability)\rCarthan Infantry Unit", "Healer of Carth", 1, 2, 30), 2);
-		dlC.AddCard(new UnitCard(2, "Autonomous Range Finder", Faction.CARTH, "Support Carthan: Give this Front Line +3R this turn. (when this is deployed behind a Carthan, activate this ability)\r", "56413", 0, 1, 30), 1);
-        dlC.AddCard(new UnitCard(3, "Adv. Infantry Support System", Faction.CARTH, "Melee Shield 1\rFront or Back Line: At the start of your turn, generate an extra resource.\rCarthan Command Vehicle Unit", "Mobile Command Center", 0, 3, 60), 1);
-        dlC.AddCard(new UnitCard(0, "Emergancy Med Drop", Faction.CARTH, "Deploy: Heal this Front Line 2 and each adjacent Front Line 1.\rCarthan Medical Drone Unit", "Forever Alive in the Dark!", 0, 0, 10), 2);
-        dlC.AddCard(new UnitCard(2, "Adv. Supply Drone", Faction.CARTH, "Support Carthan: Heal this Front Line 2 and gain 3 Resources.\rCarthan Medical Drone Unit", "762491", 0, 1, 20), 2);
-        dlC.AddCard(new UnitCard(3, "Exostellar Rover Marine", Faction.CARTH, "Front Line: If this has a Back Line, this has +2M, else this has +1R.\rCarthan Elite Infantry Unit", "In the Darkness, Everywhere!", 1, 1, 40), 2);
-        dlC.AddCard(new UnitCard(4, "Techrositioner Marine", Faction.CARTH, "Front Line Command: Discard a card to gain 1 Resource and give this +2R.\rCarthan Elite Engineering Infantry Unit", "“Lock; Mark; Two; Fire!”", 2, 0, 50), 2);
-        dlC.AddCard(new UnitCard(2, "Hover-Shield Projector", Faction.CARTH, "Support Carthan Infantry: Give this Front Line Ranged Shield 3 this turn. (when this is deployed behind Carthan Infantry, activate this ability)\rCarthan Drone Unit", "98432", 0, 1, 40), 2);
+        dlC.AddCard(new UnitCard(2, "Exostellar Snipers", Faction.CARTH, "Carthan Elite Ranging Infantry Unit", "Illuminate with Muzzle Flare!", 3, 1, 3), 1);
+		dlC.AddCard(new UnitCard(1, "Exostellar Vanshield Marines", Faction.CARTH, "Carthan Elite Infantry Unit", "“First into the Night!”", 1, 3, 5), 1);
+		dlC.AddCard(new UnitCard(2, "Exostellar Marine Squad", Faction.CARTH, "Carthan Elite Infantry Unit", "Boldly into the Night!", 2, 2, 4), 2);
+		dlC.AddCard(new UnitCard(1, "Cmdr. Yos Lorth", Faction.CARTH, "Unique; Ranged Shield 1\rFront Line: Allied Elites on the Front Line have +1M and Ranged Shield 1.\nCarthan Elite Command Infantry Unit", "Exostellar Champion", 2, 2, 5), 2);
+		dlC.AddCard(new UnitCard(2, "Ancillary Medical Officer", Faction.CARTH, "Support Carthan Infantry: Heal this Front Line 2. (when this is deployed behind Carthan Infantry, activate this ability)\rCarthan Infantry Unit", "Healer of Carth", 1, 2, 3), 2);
+		dlC.AddCard(new UnitCard(2, "Autonomous Range Finder", Faction.CARTH, "Support Carthan: Give this Front Line +3R this turn. (when this is deployed behind a Carthan, activate this ability)\r", "56413", 0, 1, 3), 1);
+        dlC.AddCard(new UnitCard(3, "Adv. Infantry Support System", Faction.CARTH, "Melee Shield 1\rFront or Back Line: At the start of your turn, generate an extra resource.\rCarthan Command Vehicle Unit", "Mobile Command Center", 0, 3, 6), 1);
+        dlC.AddCard(new UnitCard(0, "Emergancy Med Drop", Faction.CARTH, "Deploy: Heal this Front Line 2 and each adjacent Front Line 1.\rCarthan Medical Drone Unit", "Forever Alive in the Dark!", 0, 0, 1), 2);
+        dlC.AddCard(new UnitCard(2, "Adv. Supply Drone", Faction.CARTH, "Support Carthan: Heal this Front Line 2 and gain 3 Resources.\rCarthan Medical Drone Unit", "762491", 0, 1, 2), 2);
+        dlC.AddCard(new UnitCard(3, "Exostellar Rover Marine", Faction.CARTH, "Front Line: If this has a Back Line, this has +2M, else this has +1R.\rCarthan Elite Infantry Unit", "In the Darkness, Everywhere!", 1, 1, 4), 2);
+        dlC.AddCard(new UnitCard(4, "Techrositioner Marine", Faction.CARTH, "Front Line Command: Discard a card to gain 1 Resource and give this +2R.\rCarthan Elite Engineering Infantry Unit", "“Lock; Mark; Two; Fire!”", 2, 0, 5), 2);
+        dlC.AddCard(new UnitCard(2, "Hover-Shield Projector", Faction.CARTH, "Support Carthan Infantry: Give this Front Line Ranged Shield 3 this turn. (when this is deployed behind Carthan Infantry, activate this ability)\rCarthan Drone Unit", "98432", 0, 1, 4), 2);
 
 
         DeckList dlJ = new DeckList();
@@ -106,6 +106,14 @@ public class Driver : MonoBehaviour {
         listOfProp[8].intValue = range;
         return listOfProp;
 
+    }
+
+    public CardProperties createHpCardProperty(int hp)
+    {
+        CardProperties cardProp = new CardProperties();
+        cardProp.element = elemList[6];
+        cardProp.intValue = hp;
+        return cardProp;
     }
 
     public TowerProperties[] createTowerProperties(int hp)
@@ -168,7 +176,7 @@ public class Driver : MonoBehaviour {
         return ans;
     }
 
-    public List<CardFrontEnd> loadFrontEnd2()
+    public List<CardFrontEnd> loadNewHP()
     {
         List<CardFrontEnd> ans = new List<CardFrontEnd>();
         foreach (Lane lane in gameManager.Lanes)
@@ -180,15 +188,10 @@ public class Driver : MonoBehaviour {
                     if (lane.Units[play, pos] != null)
                     {
                         Unit u = lane.Units[play, pos];
-                        string myName = u.Card.Name;
-                        string flavorText = u.Card.FlavorText;
-                        string mainText = u.Card.MainText;
-                        int cost = u.Card.DeployCost;
-                        int meleeAttack = u.Card.MeleeAttack;
-                        int rangedAttack = u.Card.RangedAttack;
-                        int hp = u.Card.HealthPoints;
-                        CardProperties[] listOfProperties = new CardProperties[9];
-                        listOfProperties = createCardProperties(myName, "TYPE", flavorText, mainText, cost, hp, meleeAttack, rangedAttack);
+                        int hp = u.HealthPoints;
+                        CardProperties hpprop = createHpCardProperty(hp);
+                        CardProperties[] listOfProperties = new CardProperties[1];
+                        listOfProperties[0] = hpprop; 
                         CardFrontEnd cardFront = new CardFrontEnd(listOfProperties);
                         ans.Add(cardFront);
                     }
@@ -208,44 +211,34 @@ public class Driver : MonoBehaviour {
         }
     }
 
+    public void updateCardsOntable()
+    {
+        List<CardFrontEnd> c = loadNewHP();
+        List<CardUI> cu = manager.loadCardUI();
+        Debug.Log("Lengths==" + (c.Count).ToString() + cu.Count.ToString());
+        for (int i = 0; i < c.Count; i++)
+        {
+            cu[i].loadHp(c[i]);
+        }
+    }
+
     void Update() {
         //updateUI();
         resoureCount = myMana.Count;
         switch (phase) {
             case Phase.DRAW:
-				gameManager.DrawPhase();
+                gameManager.DrawPhase();
 				//phase = Phase.PLACEMENT;
 				break;
 			case Phase.PLACEMENT:
                 // handled by UI
                 break;
 			case Phase.COMBAT:
-				//Debug.Log("LeftFront " + (gameManager.Lanes[0].Units[0, 0]==null));
-				//Debug.Log("LeftBack " + (gameManager.Lanes[0].Units[0, 1] == null));
-				//Debug.Log("MiddleFront " + (gameManager.Lanes[1].Units[0, 0] == null));
-				//Debug.Log("MiddleBack " + (gameManager.Lanes[1].Units[0, 1] == null));
-				//Debug.Log("RightFront " + (gameManager.Lanes[2].Units[0, 0] == null));
-				//Debug.Log("RightBack " + (gameManager.Lanes[2].Units[0, 0].HealthPoints));
-
+                manager.makeDraggable(false);
 				gameManager.CombatPhase();
-				
-                //Debug.Log("LeftFront After" + (gameManager.Lanes[0].Units[0, 0] == null));
-                //Debug.Log("LeftBack After" + (gameManager.Lanes[0].Units[0, 1] == null));
-                //Debug.Log("MiddleFront After" + (gameManager.Lanes[1].Units[0, 0] == null));
-                //Debug.Log("MiddleBack After" + (gameManager.Lanes[1].Units[0, 1] == null));
-                //Debug.Log("RightFront After" + (gameManager.Lanes[2].Units[0, 0] == null));
-                //Debug.Log("RightBack After" + (gameManager.Lanes[2].Units[0, 0].HealthPoints));
+                phase = gameManager.Over ? Phase.DONE : Phase.DRAW;
 
-                List<CardFrontEnd> c = loadFrontEnd2();
-                List<CardUI> cu = manager.loadCardUI();
-                Debug.Log("Lengths==" + (c.Count == cu.Count));
-                for (int i = 0; i < c.Count; i++)
-                {
-                    cu[i].LoadCard(c[i]);
-                }
-
-                //Debug.Log("HP:" + gameManager.Lanes[0].Units[0, 0].HealthPoints + "R:" + gameManager.Lanes[0].Units[0, 0].RangedAttack + "R:" + gameManager.Lanes[0].Units[0, 0].MeleeAttack);
-				phase = gameManager.Over ? Phase.DONE : Phase.DRAW;
+                updateTowerUI();
                 StartCoroutine(manager.damageAnims());
 				break;
 			case Phase.DONE:
@@ -261,8 +254,14 @@ public class Driver : MonoBehaviour {
 			new int[2] { 0, 0 },
 			new int[2] { 0, 1 },
 		};
+        string a = "T:";
+        foreach (Lane lane in gameManager.Lanes)
+        {
+            a += (lane.Towers[1] != null ? ""+lane.Towers[1].HP : "X") + " ";
+        }
+        Debug.Log(a);
 
-		foreach(int[] play_pos in loop) {
+        foreach (int[] play_pos in loop) {
 			string s = "";
 			foreach(Lane l in gameManager.Lanes) {
 				Unit u = l.Units[play_pos[0], play_pos[1]];
@@ -270,7 +269,14 @@ public class Driver : MonoBehaviour {
 			}
 			Debug.Log(s);
 		}
-	}
+
+        string b = "T:";
+        foreach (Lane lane in gameManager.Lanes)
+        {
+            b += (lane.Towers[0] != null ? "" + lane.Towers[0].HP : "X") + " ";
+        }
+        Debug.Log(b);
+    }
 
 	internal void PlayUnitCardAction(UnitCard c, Lane l, int play, int pos) {
 		foreach(Delta d in new PlayUnitCardAction(c, l, play, pos).GetDeltas(gameManager.Players[play]))

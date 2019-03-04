@@ -115,7 +115,7 @@ public class Manager : MonoBehaviour
     {
         yield return new WaitForSeconds(0.5f);
         mainBtnText.text = "Combat Done!";
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(3.5f);
         mainBtnText.text = "DRAW";
     }
 
@@ -197,6 +197,7 @@ public class Manager : MonoBehaviour
         }
         Driver.instance.phase = Phase.PLACEMENT;
         mainBtnText.text = "DEPLOY";
+        makeDraggable(true);
         yield return null;
         enemyPlay();
     }
@@ -333,6 +334,14 @@ public class Manager : MonoBehaviour
             cu.Add(cardHolders[5].transform.GetChild(0).GetComponent<CardUI>());
         return cu;
 		
+    }
+
+    public void makeDraggable(bool b)
+    {
+        for (int i = 0; i < handPlaceHolder.transform.childCount; i++)
+        {
+            handPlaceHolder.transform.GetChild(i).GetComponent<Draggable>().enabled = b;
+        }
     }
 
     public bool hasCard(GameObject[] g,int i)
