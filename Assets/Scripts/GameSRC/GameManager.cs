@@ -44,6 +44,15 @@ namespace SFB.Game.Management{
             }
         }
 
+		internal int[] getIndexOf(Unit u) {
+			for(int l = 0; l < lanes.Length; l++)
+				for(int play = 0; play < 2; play++)
+					for(int pos = 0; pos < 2; pos++)
+						if(lanes[l].Units[play, pos] == u)
+							return new int[] { l, play, pos };
+			return null;
+		}
+
         // when hidden list is null, will init players with "hidden decks" of unkown cards
         //      functionality intended for clients
         // when ids is null, will init with newly generated ids

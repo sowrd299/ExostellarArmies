@@ -5,9 +5,14 @@ using SFB.Game.Content;
 
 namespace SFB.Game {
 	public class UnitDelta : Delta {
-		private Unit unit;
-		internal Unit Unit {
-			get { return unit; }
+		private Unit target;
+		internal Unit Target {
+			get { return target; }
+		}
+
+		private Unit source;
+		internal Unit Source {
+			get { return source; }
 		}
 
 		private int amount;
@@ -20,39 +25,40 @@ namespace SFB.Game {
 			get { return dmgType; }
 		}
 
-		internal UnitDelta(Unit u, int a, DamageType t) {
-			unit = u;
+		internal UnitDelta(Unit t, int a, DamageType type, Unit s) {
+			target = t;
 			amount = a;
-			dmgType = t;
+			dmgType = type;
+			source = s;
 		}
 
 		internal override void Apply() {
 			switch(dmgType) {
 				case DamageType.RANGED:
-					unit.takeRangedDamage(amount);
+					target.takeRangedDamage(amount);
 					break;
 				case DamageType.MELEE:
-					unit.takeMeleeDamage(amount);
+					target.takeMeleeDamage(amount);
 					break;
 				case DamageType.TRUE:
-					unit.takeTrueDamage(amount);
+					target.takeTrueDamage(amount);
 					break;
 				case DamageType.HEAL:
-					unit.heal(amount);
+					target.heal(amount);
 					break;
 			}
 		}
 
 		internal override void Revert() {
 			if(dmgType == DamageType.HEAL) {
-				unit.takeTrueDamage(amount);
+				target.takeTrueDamage(amount);
 			} else {
 				int mod = (dmgType == DamageType.RANGED
-								? unit.getRangedDamageModifier()
+								? target.getRangedDamageModifier()
 								: (dmgType == DamageType.MELEE
-									? unit.getMeleeDamageModifier()
+									? target.getMeleeDamageModifier()
 									: 0));
-				unit.heal(amount >= mod ? amount - mod : 0);
+				target.heal(amount >= mod ? amount - mod : 0);
 			}
 		}
 
