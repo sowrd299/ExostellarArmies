@@ -4,7 +4,6 @@ using System.Xml;
 using System.Text;
 using System;
 using System.Linq;
-using UnityEngine;
 
 namespace SFB.Game.Management{
 
@@ -251,45 +250,55 @@ namespace SFB.Game.Management{
             foreach (Delta d in CombatManager.getRangedDeltas(lanes))
             {
                 ApplyDelta(d);
+                /*
                 if(d.GetType()==typeof(UnitDelta))
                     Debug.Log((d as UnitDelta).Amount);
                 else
                     Debug.Log("tower");
+                */
             }
-          Debug.Log("POST RANGED");
-          Driver.instance.printField();
+          //Debug.Log("POST RANGED");
+          //Driver.instance.printField();
           
         }
 
         public void CombatMellePhase()
         {
             cleanUp();
-            Debug.Log("POST CLEAN");
-            Driver.instance.printField();
+            //Debug.Log("POST CLEAN");
+            //Driver.instance.printField();
 
             foreach (Delta d in CombatManager.getMeleeDeltas(lanes))
             {
                 ApplyDelta(d);
+                /*
                 if((d.GetType() == typeof(UnitDelta)))
                     Debug.Log((d as UnitDelta).Amount);
                 else
                     Debug.Log("tower");
+                    */
             }
+            /*
             Debug.Log("POST MELEE"); 
             Driver.instance.printField();
+            */
 
         }
 
         public void CombatTowerPhase()
         {
-              cleanUp();
-              Debug.Log("POST CLEAN");
-              Driver.instance.printField();
+            cleanUp();
+            /*
+            Debug.Log("POST CLEAN");
+            Driver.instance.printField();
+            */
 
-              foreach(Delta d in CombatManager.getTowerDeltas(lanes))
-                  ApplyDelta(d);
-              Debug.Log("POST TOWER");
-              Driver.instance.printField();
+            foreach(Delta d in CombatManager.getTowerDeltas(lanes))
+                ApplyDelta(d);
+            /*
+            Debug.Log("POST TOWER");
+            Driver.instance.printField();
+            */
         }
 
 
@@ -319,7 +328,7 @@ namespace SFB.Game.Management{
 					for(int pos = 0; pos < l.Units.GetLength(1); pos++) {
 						Unit u = l.Units[play, pos];
 						if(u != null && u.HealthPoints <= 0) {
-							Debug.Log("kill " + play + " " + pos + " " + u.HealthPoints);
+							//Debug.Log("kill " + play + " " + pos + " " + u.HealthPoints);
 							deltas.AddRange(u.onDeath(play, pos, lanes, players));
 							if(l.isOccupied(play, pos))
 								l.kill(play, pos);
