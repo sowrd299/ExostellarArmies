@@ -94,7 +94,7 @@ namespace SFB.Game{
 					//Debug.Log("        T HP: " + target.HealthPoints);
 					//Debug.Log("        MOD: " + mod);
 
-					list.Add(new UnitDelta(target, deal, type));
+					list.Add(new UnitDelta(target, deal, type, this));
 					dmgLeft = dmgLeft - deal + getDamageLeftModifier(dmgLeft, deal);
 				}
 				pos++;

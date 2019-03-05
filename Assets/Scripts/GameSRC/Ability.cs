@@ -162,7 +162,7 @@ namespace SFB.Game {
 			foreach(Lane l in lanes)
 				for(int p = 0; p < l.Units.GetLength(1); p++)
 					if(l.Units[play, p] != null)
-						deltas.Add(new UnitDelta(l.Units[play, p], Num, UnitDelta.DamageType.HEAL));
+						deltas.Add(new UnitDelta(l.Units[play, p], Num, UnitDelta.DamageType.HEAL, null));
 			return deltas.ToArray();
 		}
 	}
