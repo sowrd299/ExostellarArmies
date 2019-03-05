@@ -239,10 +239,16 @@ namespace SFB.Game.Management{
 
         public void CombatRangePhase()
         {
+            foreach (Lane l in lanes)
+            {
+                l.advance();
+            }
             foreach (Delta d in CombatManager.getRangedDeltas(lanes))
             {
                 ApplyDelta(d);
-                if(d.GetType()==typeof(UnitDelta))
+                Unit u = (d as UnitDelta).Source;
+
+                if (d.GetType()==typeof(UnitDelta))
                     Debug.Log((d as UnitDelta).Amount);
                 else
                     Debug.Log("tower");
@@ -261,6 +267,7 @@ namespace SFB.Game.Management{
             foreach (Delta d in CombatManager.getMeleeDeltas(lanes))
             {
                 ApplyDelta(d);
+
                 if((d.GetType() == typeof(UnitDelta)))
                     Debug.Log((d as UnitDelta).Amount);
                 else

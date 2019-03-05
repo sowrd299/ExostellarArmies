@@ -42,6 +42,33 @@ public class Driver : MonoBehaviour {
         }
     }
 
+    private List<int> lane1Damages = new List<int>();
+    public List<int> Lane1Damages
+    {
+        get
+        {
+            return lane1Damages;
+        }
+    }
+
+    private List<int> lane2Damages = new List<int>();
+    public List<int> Lane2Damages
+    {
+        get
+        {
+            return lane2Damages;
+        }
+    }
+
+    private List<int> lane3Damages = new List<int>();
+    public List<int> Lane3Damages
+    {
+        get
+        {
+            return lane3Damages;
+        }
+    }
+
     void Awake()
     {
 		if (instance == null)
