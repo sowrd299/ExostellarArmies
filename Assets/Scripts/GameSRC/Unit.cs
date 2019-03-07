@@ -2,7 +2,6 @@ using SFB.Game.Management;
 using SFB.Game.Content;
 using System.Collections.Generic;
 using System;
-using UnityEngine;
 
 namespace SFB.Game{
 
@@ -55,9 +54,8 @@ namespace SFB.Game{
 			this.meleeAttack = card.MeleeAttack;
 			this.healthPoints = card.HealthPoints;
 			this.abilities = new AbilityList();
-//            Debug.Log("Ab==nul:" + (card.Abilities == null));
-			//foreach(Ability a in card.Abilities)
-				//this.abilities.Add(a);
+			foreach(Ability a in card.Abilities)
+				this.abilities.Add(a);
 			this.firstDeploy = true;
         }
 		
