@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace SFB.Game{
 
@@ -21,7 +22,7 @@ namespace SFB.Game{
 
 		private AbilityList abilities;
 		public AbilityList Abilities {
-			get; set;
+			get;
 		}
 
         public UnitCard(int cost, string name, Faction faction, string mainText, string flavorText, int rangedAttack, int meleeAttack, int healthPoints, AbilityList abList=null)
@@ -31,6 +32,7 @@ namespace SFB.Game{
 			this.meleeAttack = meleeAttack;
             this.healthPoints = healthPoints;
 			this.abilities = (abList == null ? new AbilityList() : abList);
+			Debug.Log(this.abilities);
         }
 
     }

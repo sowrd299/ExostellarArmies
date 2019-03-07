@@ -267,6 +267,7 @@ namespace SFB.Game.Management{
                 else
                     Debug.Log("tower");
             }
+
             Driver.instance.manager.loadDamages(sums);
             Debug.Log("POST RANGED");
             Driver.instance.printField();

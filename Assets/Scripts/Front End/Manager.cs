@@ -176,21 +176,26 @@ public class Manager : MonoBehaviour
 
         }
     }
-
-    //called when COMBAT Phase  starts
+	
     public IEnumerator damageAnims()
     {
         mainBtnText.text = "Range Combat!";
-        Driver.instance.gameManager.CombatRangePhase();//each calls the loadDamages
-        yield return new WaitForSeconds(3.5f);
+        Driver.instance.gameManager.CombatRangePhase();
+        Driver.instance.updateCardsOntable();
+        Driver.instance.updateTowerUI();
+        yield return new WaitForSeconds(1.5f);
         mainBtnText.text = "Melle Combat!";
         Driver.instance.gameManager.CombatMellePhase();
-        yield return new WaitForSeconds(3.5f);
+        Driver.instance.updateCardsOntable();
+        Driver.instance.updateTowerUI();
+        yield return new WaitForSeconds(1.5f);
         mainBtnText.text = "Tower Combat!";
-        Driver.instance.gameManager.CombatTowerPhase();
-        yield return new WaitForSeconds(3.5f);
+        Driver.instance.gameManager.CombatMellePhase();
+        Driver.instance.updateCardsOntable();
+        Driver.instance.updateTowerUI();
+        yield return new WaitForSeconds(1.5f);
         Driver.instance.gameManager.cleanUp();
-        mainBtnText.text = "Combat done";
+        mainBtnText.text = "Combat done1";
         yield return new WaitForSeconds(1f);
         mainBtnText.text = "Draw";
         Driver.instance.phase = Driver.instance.gameManager.Over ? Phase.DONE : Phase.DRAW;
@@ -451,7 +456,6 @@ public class Manager : MonoBehaviour
     {
         return g[i].transform.childCount > 0;
     }
-
 
     IEnumerator moveToFrontRow(GameObject[] g)
     {
