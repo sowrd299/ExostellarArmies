@@ -55,8 +55,10 @@ namespace SFB.Game{
 			this.meleeAttack = card.MeleeAttack;
 			this.healthPoints = card.HealthPoints;
 			this.abilities = new AbilityList();
-			foreach(Ability a in card.Abilities)
-				this.abilities.Add(a);
+			Debug.Log("R"+card.RangedAttack+"M"+card.MeleeAttack+"HP"+card.HealthPoints);
+			Debug.Log(card.Abilities);
+			//foreach(Ability a in card.Abilities)
+			//	this.abilities.Add(a);
 			this.firstDeploy = true;
         }
 		

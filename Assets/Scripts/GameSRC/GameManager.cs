@@ -257,7 +257,7 @@ namespace SFB.Game.Management{
                     Debug.Log("tower");
             }
           Debug.Log("POST RANGED");
-          Driver.instance.printField();
+          Driver.instance.printField(unit => unit.Abilities == null ? "N" : "G");
           
         }
 
