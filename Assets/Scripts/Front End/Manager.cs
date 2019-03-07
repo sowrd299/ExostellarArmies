@@ -45,6 +45,7 @@ public class Manager : MonoBehaviour
     public Text mainBtnText;
     [SerializeField]
     private Text handCapacity;
+    private bool foundMatch = false;
 
     private List<int> lane1Damages = new List<int>();
     public List<int> Lane1Damages
@@ -117,10 +118,23 @@ public class Manager : MonoBehaviour
         handCapacity.text = "Hand capacity\n" + handPlaceHolder.gameObject.transform.childCount.ToString()+"/3";
         resourseText.text = "Resources: " + Driver.instance.resoureCount.ToString();
         dropCostSumText.text = "DropCostSum: " + Driver.instance.dropCostSum.ToString();
+        if (!Driver.instance.DoneInitializing && !foundMatch) // Change to CLient.Instance later
+        {
+            mainBtnText.text = "Waiting for a  match!";
+            mainButton.enabled = false;
+            mainButton.GetComponent<Image>().color = Color.grey;
+        }
+        else if(Driver.instance.DoneInitializing && !foundMatch)
+        {
+            mainBtnText.text = "Draw";
+            mainButton.enabled = true;
+            mainButton.GetComponent<Image>().color = Color.green;
+        }
     }
 
     public void mainBtn()
     {
+
         switch (Driver.instance.phase)
         {
             case Phase.DRAW:
@@ -152,6 +166,8 @@ public class Manager : MonoBehaviour
                             }
                         }
                     }
+                    if (Driver.instance.NETWORK)
+                        Driver.instance.client.SendPlanningPhaseActions(actions.ToArray());
                     foreach(PlayUnitCardAction action in actions)
                     {
                         foreach (Delta del in action.GetDeltas(Driver.instance.gameManager.Players[0]))
