@@ -4,6 +4,7 @@ ScriptedImporter:
   fileIDToRecycleName:
     100000: gameObject/Cost
     400000: gameObject/Cost/Transform
+    2800000: texAtlas
     21200000: gameObject/Cost/SpriteRenderer
     21300000: sprite
     100100000: gameObject

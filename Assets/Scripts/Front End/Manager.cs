@@ -24,6 +24,8 @@ public class Manager : MonoBehaviour
     private GameObject enemyPlaceHolder;
     [SerializeField]
     private GameObject enemyHandPlaceHolder;
+    [SerializeField]
+    private GameObject damages;
 
 
     [SerializeField]
@@ -43,6 +45,70 @@ public class Manager : MonoBehaviour
     public Text mainBtnText;
     [SerializeField]
     private Text handCapacity;
+
+    private List<int> lane1Damages = new List<int>();
+    public List<int> Lane1Damages
+    {
+        get
+        {
+            return lane1Damages;
+        }
+    }
+
+    private List<int> lane2Damages = new List<int>();
+    public List<int> Lane2Damages
+    {
+        get
+        {
+            return lane2Damages;
+        }
+    }
+
+    private List<int> lane3Damages = new List<int>();
+    public List<int> Lane3Damages
+    {
+        get
+        {
+            return lane3Damages;
+        }
+    }
+
+    public void addDamages(int[,] sums)
+    {
+        lane1Damages.Add(sums[0, 0]);
+        lane1Damages.Add(sums[1, 0]);
+        lane2Damages.Add(sums[0, 1]);
+        lane2Damages.Add(sums[1, 1]);
+        lane3Damages.Add(sums[0, 2]);
+        lane3Damages.Add(sums[1, 2]);
+    }
+
+    public void clearDamages()
+    {
+        lane1Damages.Clear();
+        lane2Damages.Clear();
+        lane3Damages.Clear();
+    }
+
+    public void loadDamages(int[,] sums)
+    {
+        damages.SetActive(true);
+        DamageAnimationController d = damages.GetComponent<DamageAnimationController>();
+        List<GameObject> lanes = new List<GameObject>();
+        for (int i = 0; i < 3; i++)
+        {
+            lanes.Add(damages.transform.GetChild(i).gameObject);
+        }
+        for (int i = 0; i < lanes.Count; i++)
+        {
+            Text ourTotalDamage = lanes[i].transform.GetChild(0).GetComponent<Text>();
+            ourTotalDamage.text = sums[0, i].ToString();
+            Text enemyTotalDamage = lanes[i].transform.GetChild(1).GetComponent<Text>();
+            enemyTotalDamage.text = sums[1, i].ToString();
+        }
+        IEnumerator c = d.startAnim();
+        StartCoroutine(c);
+    }
 
 
     private void FixedUpdate()
@@ -92,7 +158,7 @@ public class Manager : MonoBehaviour
                             del.Apply();
                     }
                     placeAll();
-                    Driver.instance.phase = Phase.COMBAT;
+                    //Driver.instance.phase = Phase.COMBAT;
                 }
                 else
                 {
@@ -110,7 +176,7 @@ public class Manager : MonoBehaviour
 
         }
     }
-
+	
     public IEnumerator damageAnims()
     {
         mainBtnText.text = "Range Combat!";
@@ -303,8 +369,8 @@ public class Manager : MonoBehaviour
             l[i].transform.GetComponent<Draggable>().enabled = false;
             l[i].GetComponent<CardUI>().Old = true;
         }
-        //moveToFrontRow(myCardHolders);
-        //moveToFrontRow(cardHolders);
+        StartCoroutine(moveToFrontRow(myCardHolders));
+        StartCoroutine(moveToFrontRow(cardHolders));
     }
 
     public List<TowerUI> loadTowerUI()
@@ -391,12 +457,24 @@ public class Manager : MonoBehaviour
         return g[i].transform.childCount > 0;
     }
 
-    public void moveToFrontRow(GameObject[] g)
+    IEnumerator moveToFrontRow(GameObject[] g)
     {
         for (int i = 3; i <= 5; i++)
         {
             if (g[i].transform.childCount > 0 && g[i - 3].transform.childCount == 0)
-                StartCoroutine(moveTo(g[i].transform.GetChild(0).gameObject, g[i - 3]));
+            {
+                float timeOfTravel = 0.5f;
+                float elapsedTime = 0f;
+                Vector3 startingPosition = g[i].transform.GetChild(0).gameObject.transform.position;
+                while (elapsedTime < timeOfTravel)
+                {
+                    g[i].transform.GetChild(0).gameObject.transform.position = Vector3.Lerp(startingPosition, g[i - 3].transform.position, (elapsedTime / timeOfTravel));
+                    elapsedTime += Time.deltaTime;
+                    yield return null;
+                }
+                g[i].transform.GetChild(0).gameObject.transform.SetParent(g[i - 3].transform);
+            }
         }
+        Driver.instance.phase = Phase.COMBAT;
     }
 }
