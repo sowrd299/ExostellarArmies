@@ -252,18 +252,24 @@ namespace SFB.Game.Management{
             {
                 l.advance();
             }
+            Driver.instance.printField();
+            int[,] sums = new int[2,3];
             foreach (Delta d in CombatManager.getRangedDeltas(lanes))
             {
                 ApplyDelta(d);
-                Unit u = (d as UnitDelta).Source;
-
-                if (d.GetType()==typeof(UnitDelta))
+                if (d.GetType() == typeof(UnitDelta))
+                {
+                    Unit u = (d as UnitDelta).Target;
+                    int[] diffs = getIndexOf(u);
+                    sums[diffs[1], diffs[0]] += (d as UnitDelta).Amount;
                     Debug.Log((d as UnitDelta).Amount);
+                }
                 else
                     Debug.Log("tower");
             }
-          Debug.Log("POST RANGED");
-          Driver.instance.printField();
+            Driver.instance.manager.loadDamages(sums);
+            Debug.Log("POST RANGED");
+            Driver.instance.printField();
           
         }
 
@@ -272,21 +278,27 @@ namespace SFB.Game.Management{
             cleanUp();
             Debug.Log("POST CLEAN");
             Driver.instance.printField();
-
+            int[,] sums = new int[2, 3];
             foreach (Delta d in CombatManager.getMeleeDeltas(lanes))
             {
                 ApplyDelta(d);
-
-                if((d.GetType() == typeof(UnitDelta)))
+                if ((d.GetType() == typeof(UnitDelta)))
+                {
+                    Unit u = (d as UnitDelta).Target;
+                    int[] diffs = getIndexOf(u);
+                    sums[diffs[1], diffs[0]] += (d as UnitDelta).Amount;
                     Debug.Log((d as UnitDelta).Amount);
+                }
                 else
                     Debug.Log("tower");
             }
+            //Driver.instance.manager.loadDamages(sums);
+            Driver.instance.manager.loadDamages(sums);
             Debug.Log("POST MELEE"); 
             Driver.instance.printField();
 
         }
-
+            
         public void CombatTowerPhase()
         {
               cleanUp();
@@ -295,6 +307,7 @@ namespace SFB.Game.Management{
 
               foreach(Delta d in CombatManager.getTowerDeltas(lanes))
                   ApplyDelta(d);
+                  
               Debug.Log("POST TOWER");
               Driver.instance.printField();
         }

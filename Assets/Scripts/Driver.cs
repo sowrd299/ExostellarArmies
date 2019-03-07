@@ -42,32 +42,6 @@ public class Driver : MonoBehaviour {
         }
     }
 
-    private List<int> lane1Damages = new List<int>();
-    public List<int> Lane1Damages
-    {
-        get
-        {
-            return lane1Damages;
-        }
-    }
-
-    private List<int> lane2Damages = new List<int>();
-    public List<int> Lane2Damages
-    {
-        get
-        {
-            return lane2Damages;
-        }
-    }
-
-    private List<int> lane3Damages = new List<int>();
-    public List<int> Lane3Damages
-    {
-        get
-        {
-            return lane3Damages;
-        }
-    }
 
     void Awake()
     {
@@ -78,7 +52,6 @@ public class Driver : MonoBehaviour {
         DontDestroyOnLoad(gameObject);
 
 		DeckList dlC = new DeckList();
-		
         dlC.AddCard(new UnitCard(2, "Exostellar Snipers", Faction.CARTH, "Carthan Elite Ranging Infantry Unit", "Illuminate with Muzzle Flare!", 3, 1, 3), 1);
 		dlC.AddCard(new UnitCard(1, "Exostellar Vanshield Marines", Faction.CARTH, "Carthan Elite Infantry Unit", "“First into the Night!”", 1, 3, 5), 1);
 		dlC.AddCard(new UnitCard(2, "Exostellar Marine Squad", Faction.CARTH, "Carthan Elite Infantry Unit", "Boldly into the Night!", 2, 2, 4), 2);
@@ -267,9 +240,6 @@ public class Driver : MonoBehaviour {
                 break;
 			case Phase.COMBAT:
                 manager.makeDraggable(false);
-                //gameManager.CombatPhase();
-                //phase = gameManager.Over ? Phase.DONE : Phase.DRAW;
-                //updateTowerUI();
                 if (!combatStarted)
                 {
                     combatStarted = true;

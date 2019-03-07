@@ -24,6 +24,8 @@ public class Manager : MonoBehaviour
     private GameObject enemyPlaceHolder;
     [SerializeField]
     private GameObject enemyHandPlaceHolder;
+    [SerializeField]
+    private GameObject damages;
 
 
     [SerializeField]
@@ -43,6 +45,70 @@ public class Manager : MonoBehaviour
     public Text mainBtnText;
     [SerializeField]
     private Text handCapacity;
+
+    private List<int> lane1Damages = new List<int>();
+    public List<int> Lane1Damages
+    {
+        get
+        {
+            return lane1Damages;
+        }
+    }
+
+    private List<int> lane2Damages = new List<int>();
+    public List<int> Lane2Damages
+    {
+        get
+        {
+            return lane2Damages;
+        }
+    }
+
+    private List<int> lane3Damages = new List<int>();
+    public List<int> Lane3Damages
+    {
+        get
+        {
+            return lane3Damages;
+        }
+    }
+
+    public void addDamages(int[,] sums)
+    {
+        lane1Damages.Add(sums[0, 0]);
+        lane1Damages.Add(sums[1, 0]);
+        lane2Damages.Add(sums[0, 1]);
+        lane2Damages.Add(sums[1, 1]);
+        lane3Damages.Add(sums[0, 2]);
+        lane3Damages.Add(sums[1, 2]);
+    }
+
+    public void clearDamages()
+    {
+        lane1Damages.Clear();
+        lane2Damages.Clear();
+        lane3Damages.Clear();
+    }
+
+    public void loadDamages(int[,] sums)
+    {
+        damages.SetActive(true);
+        DamageAnimationController d = damages.GetComponent<DamageAnimationController>();
+        List<GameObject> lanes = new List<GameObject>();
+        for (int i = 0; i < 3; i++)
+        {
+            lanes.Add(damages.transform.GetChild(i).gameObject);
+        }
+        for (int i = 0; i < lanes.Count; i++)
+        {
+            Text ourTotalDamage = lanes[i].transform.GetChild(0).GetComponent<Text>();
+            ourTotalDamage.text = sums[0, i].ToString();
+            Text enemyTotalDamage = lanes[i].transform.GetChild(1).GetComponent<Text>();
+            enemyTotalDamage.text = sums[1, i].ToString();
+        }
+        IEnumerator c = d.startAnim();
+        StartCoroutine(c);
+    }
 
 
     private void FixedUpdate()
@@ -111,25 +177,20 @@ public class Manager : MonoBehaviour
         }
     }
 
+    //called when COMBAT Phase  starts
     public IEnumerator damageAnims()
     {
         mainBtnText.text = "Range Combat!";
-        Driver.instance.gameManager.CombatRangePhase();
-        Driver.instance.updateCardsOntable();
-        Driver.instance.updateTowerUI();
+        Driver.instance.gameManager.CombatRangePhase();//each calls the loadDamages
         yield return new WaitForSeconds(3.5f);
         mainBtnText.text = "Melle Combat!";
         Driver.instance.gameManager.CombatMellePhase();
-        Driver.instance.updateCardsOntable();
-        Driver.instance.updateTowerUI();
         yield return new WaitForSeconds(3.5f);
         mainBtnText.text = "Tower Combat!";
-        Driver.instance.gameManager.CombatMellePhase();
-        Driver.instance.updateCardsOntable();
-        Driver.instance.updateTowerUI();
+        Driver.instance.gameManager.CombatTowerPhase();
         yield return new WaitForSeconds(3.5f);
         Driver.instance.gameManager.cleanUp();
-        mainBtnText.text = "Combat done1";
+        mainBtnText.text = "Combat done";
         yield return new WaitForSeconds(1f);
         mainBtnText.text = "Draw";
         Driver.instance.phase = Driver.instance.gameManager.Over ? Phase.DONE : Phase.DRAW;
