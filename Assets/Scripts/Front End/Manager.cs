@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using SFB.Game;
 using SFB.Game.Management;
+using SFB.Net.Client;
 
 public class Manager : MonoBehaviour
 {
@@ -45,6 +46,7 @@ public class Manager : MonoBehaviour
     public Text mainBtnText;
     [SerializeField]
     private Text handCapacity;
+	private bool foundMatch = false;
 
     private List<int> lane1Damages = new List<int>();
     public List<int> Lane1Damages
@@ -117,7 +119,25 @@ public class Manager : MonoBehaviour
         handCapacity.text = "Hand capacity\n" + handPlaceHolder.gameObject.transform.childCount.ToString()+"/3";
         resourseText.text = "Resources: " + Driver.instance.resoureCount.ToString();
         dropCostSumText.text = "DropCostSum: " + Driver.instance.dropCostSum.ToString();
-    }
+		if(Driver.instance.NETWORK) {
+			if(!Client.Instance.DoneInitializing && !foundMatch) // Change to CLient.Instance later
+			{
+				mainBtnText.text = "Waiting for a  match!";
+				mainButton.enabled = false;
+				mainButton.GetComponent<Image>().color = Color.grey;
+			} else if(Client.Instance.DoneInitializing && !foundMatch) {
+				mainBtnText.text = "Draw";
+				mainButton.enabled = true;
+				mainButton.GetComponent<Image>().color = Color.green;
+			}
+		}
+	}
+
+	public void DrawPhase() {
+		spawnCards();
+		Driver.instance.updateTowerUI();
+		mainBtnText.text = "DRAWING...";
+	}
 
     public void mainBtn()
     {
@@ -203,6 +223,7 @@ public class Manager : MonoBehaviour
 
     public void applyEnemyDeltas()
     {
+		Debug.Log("ENEMY DELTAS");
         List<PlayUnitCardAction> actions = new List<PlayUnitCardAction>();
         for (int i = 0; i < cardHolders.Length; i++)
         {
@@ -239,7 +260,7 @@ public class Manager : MonoBehaviour
             GameObject tempCard2 = Instantiate(enemyCardPrefab, enemyPlaceHolder.transform);
             enemyCards.Add(tempCard2);
         }
-        Driver.instance.drawCards();
+//        Driver.instance.drawCards();
         StartCoroutine(moveToHand());
     }
 
@@ -281,7 +302,7 @@ public class Manager : MonoBehaviour
         mainBtnText.text = "DEPLOY";
         makeDraggable(true);
         yield return null;
-        enemyPlay();
+        //enemyPlay();
     }
 
     IEnumerator lerpColor(GameObject g)

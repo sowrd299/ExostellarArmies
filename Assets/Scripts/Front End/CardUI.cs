@@ -61,8 +61,8 @@ public class CardUI : MonoBehaviour
             //Destroy(this.gameObject);
         if (playerFrontEnds != null && playerFrontEnds.Count==0)
             playerFrontEnds = Driver.instance.loadFrontEnd(Driver.instance.gameManager.Players[0]);
-        if (enemyFrontEnds != null && enemyFrontEnds.Count == 0)
-            enemyFrontEnds = Driver.instance.loadFrontEnd(Driver.instance.gameManager.Players[1]);
+		if(enemyFrontEnds != null && enemyFrontEnds.Count == 0)
+			enemyFrontEnds = Driver.instance.loadFrontEnd(Driver.instance.gameManager.Players[1]);
 
         if (card==null)
         {

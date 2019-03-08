@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Driver : MonoBehaviour {
-	public bool NETWORK = false;
+	public bool NETWORK = true;
 
 	public static Driver instance = null;
 	public GameManager gameManager = null;
@@ -99,7 +99,7 @@ public class Driver : MonoBehaviour {
 		}
     }
 
-	public CardProperties[] createCardProperties(string name,string type,string flavor, string ability,int cost,int hp,int melee, int range)
+	public CardProperties[] createCardProperties(string name,string type,string flavor, string ability,int cost,int hp=-1,int melee=-1, int range=-1)
     {
         CardProperties[] listOfProp = new CardProperties[9];
         for (int i=0; i<listOfProp.Length; i++)
@@ -155,14 +155,21 @@ public class Driver : MonoBehaviour {
             string flavorText = p.Hand[i].FlavorText;
             string mainText = p.Hand[i].MainText;
             int cost = p.Hand[i].DeployCost;
-            UnitCard uc = p.Hand[i] as UnitCard;
-            int meleeAttack = uc.MeleeAttack;
-            int rangedAttack = uc.RangedAttack;
-            int hp = uc.HealthPoints;
-            CardProperties[] listOfProperties = new CardProperties[9];
-            listOfProperties = createCardProperties(myName, "TYPE", flavorText, mainText, cost, hp, meleeAttack, rangedAttack);
-            CardFrontEnd cardFront = new CardFrontEnd(listOfProperties);
-            ans.Add(cardFront);
+			if(p.Hand[i].GetType() == typeof(UnitCard)) {
+				UnitCard uc = p.Hand[i] as UnitCard;
+				int meleeAttack = uc.MeleeAttack;
+				int rangedAttack = uc.RangedAttack;
+				int hp = uc.HealthPoints;
+				CardProperties[] listOfProperties = new CardProperties[9];
+				listOfProperties = createCardProperties(myName, "TYPE", flavorText, mainText, cost, hp, meleeAttack, rangedAttack);
+				CardFrontEnd cardFront = new CardFrontEnd(listOfProperties);
+				ans.Add(cardFront);
+			} else {
+				CardProperties[] listOfProperties = new CardProperties[9];
+				listOfProperties = createCardProperties(myName, "TYPE", flavorText, mainText, cost);
+				CardFrontEnd cardFront = new CardFrontEnd(listOfProperties);
+				ans.Add(cardFront);
+			}
         }
         return ans;
     }
@@ -238,12 +245,13 @@ public class Driver : MonoBehaviour {
 
 
     void Update() { 
-		if(NETWORK && gameManager == null) {
-			gameManager = client.GameManager;
+		if(NETWORK && gameManager != null) {
+			myMana = gameManager?.Players[0].Mana;
 		}
+		Client.Instance.Update();
 
+		/*
 		if(gameManager != null) {
-
 			//updateUI();
 			resoureCount = myMana.Count;
 			switch(phase) {
@@ -269,7 +277,7 @@ public class Driver : MonoBehaviour {
 					print("Game Over: Player " + (gameManager.Players[0].Lives == 0 ? 2 : 1) + " Wins!");
 					break;
 			}
-		}
+		}*/
 	}
 
 	public void printField() {

@@ -6,7 +6,7 @@ using UnityEngine.UI;
 using SFB.Game;
 using SFB.Game.Content;
 using SFB.Game.Management;
-
+using SFB.Net.Client;
 
 public class DropZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPointerExitHandler
 {
@@ -14,11 +14,12 @@ public class DropZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
     private PlayUnitCardAction action;
     private Player p;
 
-    void Start()
+    void Update()
     {
         if (this.gameObject.tag == "CardHolder" )
         {
-            l = Driver.instance.gameManager.Lanes[this.transform.GetSiblingIndex()];
+			if(l == null)
+				l = Driver.instance?.gameManager?.Lanes[this.transform.GetSiblingIndex()];
         }
     }
 

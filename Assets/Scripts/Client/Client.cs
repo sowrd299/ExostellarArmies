@@ -40,11 +40,12 @@ namespace SFB.Net.Client {
 		private SocketManager socketManager;
 		private CardLoader cl;
 
-		private Client() {}
+		private Client() {
+			setPhase(ClientPhase.INIT);
+		}
 
 		public static void InitializeInstance(Driver d) {
-			instance.driver = d;
-			instance.Start();
+			Instance.driver = d;
 		}
 
 		private void ProcessDeltas(XmlDocument doc, CardLoader cl, bool verbose = false) {
@@ -55,6 +56,14 @@ namespace SFB.Net.Client {
 					Debug.Log("Processing delta: '" + e.OuterXml + "'");
 				}
 				d.Apply();
+				Debug.Log("P1 Hand" + gameManager.Players[0].Hand.Count);
+				Debug.Log("P2 Hand" + gameManager.Players[1].Hand.Count);
+				Debug.Log("P1 Deck" + gameManager.Players[0].Deck.Count);
+				Debug.Log("P2 Deck" + gameManager.Players[1].Deck.Count);
+				Debug.Log("P2 should be unknown " + gameManager.Players[1].Deck[0].Name);
+				Debug.Log("P1 Deck.ID" + gameManager.Players[0].Deck.ID);
+				Debug.Log("P2 Deck.ID" + gameManager.Players[1].Deck.ID);
+				driver.printField();
 			}
 		}
 
@@ -69,42 +78,39 @@ namespace SFB.Net.Client {
 			setPhase(ClientPhase.WAIT_PLANNING_END);
 		}
 
-		private void Start() {
-			setPhase(ClientPhase.INIT);
+		public void Update() {
+			if(phase == ClientPhase.INIT) {
+				//find local IP
+				IPHostEntry ipEntry = Dns.GetHostEntry(Dns.GetHostName());
+				IPAddress ipAddr = ipEntry.AddressList[0];
 
-			while(true) {
+				//consts
+				string HostName = "169.234.71.121";
+				const int Port = 4011;
+
+				//setup the connection
+				Socket socket = new Socket(AddressFamily.InterNetwork,
+						SocketType.Stream,
+						ProtocolType.Tcp);
+				socket.Connect(HostName, Port);
+				socketManager = new SocketManager(socket, "</file>");
+
+				//setup game objects
+				cl = new CardLoader();
+
+				setPhase(ClientPhase.WAIT_MATCH_START);
+			} else {
 				// receive a document
 				XmlDocument receivedDoc = socketManager.ReceiveXml();
-
+				/*
 				// check for match end
 				if(receivedDoc != null && receivedDoc.Attributes["type"] != null && receivedDoc.Attributes["type"].Value == "matchEnd") {
 					// TODO win/lose
-					break;
-				}
+					//break;
+				}*/
 
 				// depends on game phase
 				switch(phase) {
-					case ClientPhase.INIT:
-						//find local IP
-						IPHostEntry ipEntry = Dns.GetHostEntry(Dns.GetHostName());
-						IPAddress ipAddr = ipEntry.AddressList[0];
-
-						//consts
-						string HostName = "169.234.7.103";
-						const int Port = 4011;
-
-						//setup the connection
-						Socket socket = new Socket(AddressFamily.InterNetwork,
-								SocketType.Stream,
-								ProtocolType.Tcp);
-						socket.Connect(HostName, Port);
-						socketManager = new SocketManager(socket, "</file>");
-
-						//setup game objects
-						cl = new CardLoader();
-
-						setPhase(ClientPhase.WAIT_MATCH_START);
-						break;
 					case ClientPhase.WAIT_MATCH_START:
 						if(receivedDoc != null) {
 							// init the gamestate accordingly
@@ -122,6 +128,12 @@ namespace SFB.Net.Client {
 								laneIds.Add(e);
 							}
 							gameManager = new GameManager(playerIds: playerIds.ToArray(), laneIds: laneIds.ToArray());
+							driver.gameManager = gameManager;
+							Debug.Log("P1 Hand" + gameManager.Players[0].Hand.Count);
+							Debug.Log("P2 Hand" + gameManager.Players[1].Hand.Count);
+							Debug.Log("P1 Deck" + gameManager.Players[0].Deck.Count);
+							Debug.Log("P2 Deck" + gameManager.Players[1].Deck.Count);
+							driver.printField();
 
 							setPhase(ClientPhase.WAIT_TURN_START);
 						}
@@ -164,10 +176,34 @@ namespace SFB.Net.Client {
 				case ClientPhase.WAIT_TURN_START:
 					Debug.Log("Waiting for turn start...");
 					break;
+				case ClientPhase.PLANNING:
+					Debug.Log("PLANNING");
+					Debug.Log("P1 Hand" + gameManager.Players[0].Hand.Count);
+					Debug.Log("P2 Hand" + gameManager.Players[1].Hand.Count);
+					Debug.Log("P1 Deck" + gameManager.Players[0].Deck.Count);
+					Debug.Log("P2 Deck" + gameManager.Players[1].Deck.Count);
+					driver.printField();
+
+					driver.resoureCount = gameManager.Players[0].Mana.Count;
+					driver.manager.DrawPhase();
+					foreach(Delta d in driver.gameManager.Players[1].GetDrawDeltas()) {
+						d.Apply();
+						Debug.Log("Processing delta: " + d.GetType());
+					}
+					Debug.Log("P1 Hand" + gameManager.Players[0].Hand.Count);
+					Debug.Log("P2 Hand" + gameManager.Players[1].Hand.Count);
+					Debug.Log("P1 Deck" + gameManager.Players[0].Deck.Count);
+					Debug.Log("P2 Deck" + gameManager.Players[1].Deck.Count);
+					break;
 				case ClientPhase.WAIT_PLANNING_END:
 					Debug.Log("Waiting for enemy to finish planning...");
 					break;
 			}
+			phase = nPhase;
+		}
+
+		public void callFrontEndMainBtn() {
+			Driver.instance.manager.mainBtn();
 		}
 
 		protected override void handleSocketDeath(SocketManager sm) {

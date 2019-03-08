@@ -32,7 +32,7 @@ namespace SFB.Game{
 			this.meleeAttack = meleeAttack;
             this.healthPoints = healthPoints;
 			this.abilities = (abList == null ? new AbilityList() : abList);
-			Debug.Log(this.abilities);
+			//Debug.Log(this.abilities);
         }
 
     }
