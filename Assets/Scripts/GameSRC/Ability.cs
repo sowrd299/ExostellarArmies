@@ -25,6 +25,7 @@ namespace SFB.Game {
 		public virtual Delta[] onEachDeployPhase(int play, Lane[] lanes) { return new Delta[] { }; }
 		public virtual Delta[] onEachDeployPhase(int play, Player[] players) { return new Delta[] { }; }
 		public virtual Delta[] onEachDeployPhase(int play, Lane[] lanes, Player[] players) { return new Delta[] { }; }
+		internal virtual Delta[] onEachDeployPhase(int play, Lane l, Unit u) { return new Delta[] { }; }
 
 		// play is the player that owns the unit
 		public virtual Delta[] onDeath(int play, int pos) { return new Delta[] { }; }
@@ -36,8 +37,9 @@ namespace SFB.Game {
 		internal virtual Unit[,] filterTargets(Unit[,] arr, int oppPlay) { return arr; }
 		public virtual int takeMeleeDamageModifier() { return 0; }
 		public virtual int takeRangedDamageModifier() { return 0; }
-		public virtual int getDamageLeftModifier(int dmgLeft, int deal) { return 0; }
-		public virtual int getTowerDamageModifier() { return 0; }
+		public virtual int takeTowerDamageModifier() { return 0; }
+		public virtual int takeDamageLeftModifier(int dmgLeft, int deal) { return 0; }
+		public virtual int dealTowerDamageModifier() { return 0; }
 	}
 
 	public class AbilityList : List<Ability> {
@@ -92,24 +94,20 @@ namespace SFB.Game {
 			return !this.TrueForAll(ability => ability.GetType() != type);
 		}
 	}
-	
-	public class MeleeShield : Ability {
-		public MeleeShield(int n) : base(n) { }
-		public override int takeMeleeDamageModifier() { return Num; }
-	}
-	public class RangedShield : Ability {
-		public RangedShield(int n) : base(n) { }
-		public override int takeRangedDamageModifier() { return Num; }
+
+	public class Absorb : Ability {
+		public Absorb() : base() { }
+		public override int takeDamageLeftModifier(int dmgLeft, int deal) { return -dmgLeft; }
 	}
 
-	public class Siege : Ability {
-		public Siege(int n) : base(n) { }
-
-		public override int getTowerDamageModifier() {
-			return Num;
-		}
+	public class Spore : Ability {
+		public Spore(int n) : base(n) { }
+		public override Delta[] onDeath(int play, int pos, Player[] players) { return players[play].Mana.GetAddDeltas(Num); }
 	}
 
+	// BetaSwarm???
+
+	// say there were a unit that would always stay in the backline, lob would still lob over it
 	public class Lob : Ability {
 		public Lob() : base() { }
 
@@ -124,6 +122,37 @@ namespace SFB.Game {
 						nArr[oppPlay, i] = arr[oppPlay, i];
 				}
 			return nArr;
+		}
+	}
+	
+	public class MeleeShield : Ability {
+		public MeleeShield(int n) : base(n) { }
+		public override int takeMeleeDamageModifier() { return Num; }
+	}
+	public class RangedShield : Ability {
+		public RangedShield(int n) : base(n) { }
+		public override int takeRangedDamageModifier() { return Num; }
+	}
+	public class TowerShield : Ability {
+		public TowerShield(int n) : base(n) { }
+		public override int takeTowerDamageModifier() { return Num; }
+	}
+
+	public abstract class Rush : Ability {
+		internal override Delta[] onEachDeployPhase(int play, Lane l, Unit u) {
+			return (u != l.Units[play, rushTo()] ? l.getSwapPositionDeltas(play) : new Delta[0]);
+		}
+		public abstract int rushTo();
+	}
+	public class RushFront : Rush { public override int rushTo() { return 0; } }
+	public class RushBack : Rush { public override int rushTo() { return 1; } }
+
+
+	public class Siege : Ability {
+		public Siege(int n) : base(n) { }
+
+		public override int dealTowerDamageModifier() {
+			return Num;
 		}
 	}
 
@@ -145,13 +174,13 @@ namespace SFB.Game {
 			return l.ToArray();
 		}
 	}
-
+/*
 	public class Swarm : Ability {
 		public override Delta[] onInitialDeploy(int play, Lane[] lanes, Player[] players) {
 			return new Delta[] { };
 		}
 	}
-
+*/
 
 
 	// test

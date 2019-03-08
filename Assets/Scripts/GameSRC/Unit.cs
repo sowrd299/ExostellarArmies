@@ -84,10 +84,15 @@ namespace SFB.Game{
 				if(l.isOccupied(oppPlay, pos)) {
 					Unit target = units[oppPlay, pos];
 					int mod = (type == UnitDelta.DamageType.RANGED
-								? getRangedDamageModifier()
+								? getTakeRangedDamageModifier()
 								: (type == UnitDelta.DamageType.MELEE
-									? getMeleeDamageModifier()
-									: 0));
+									? getTakeMeleeDamageModifier()
+									: (type == UnitDelta.DamageType.TOWER
+										? getTakeTowerDamageModifier()
+										: 0
+										)
+									)
+								);
 					int deal = System.Math.Min(target.HealthPoints + mod, dmgLeft);
 					//Debug.Log("    DMG LEFT: " + dmgLeft);
 					//Debug.Log("        DEAL: " + deal);
@@ -102,21 +107,21 @@ namespace SFB.Game{
 
 			//Debug.Log("DMG AFTER UNITS: " + dmgLeft);
 			if(dmgLeft > 0)
-				list.Add(new TowerDelta(l.Towers[oppPlay], 1 + getTowerDamageModifier()));
+				list.Add(new TowerDelta(l.Towers[oppPlay], 1 + getTakeTowerDamageModifier()));
 
 			return list.ToArray();
 		}
 
 		public void takeRangedDamage(int dmg) {
-			healthPoints -= System.Math.Max(dmg - getRangedDamageModifier(), 0);
+			healthPoints -= System.Math.Max(dmg - getTakeRangedDamageModifier(), 0);
         }
 
         public void takeMeleeDamage(int dmg) {
-			healthPoints -= System.Math.Max(dmg - getMeleeDamageModifier(), 0);
+			healthPoints -= System.Math.Max(dmg - getTakeMeleeDamageModifier(), 0);
         }
 
-        public void takeTrueDamage(int dmg) {
-			healthPoints -= dmg;
+        public void takeTowerDamage(int dmg) {
+			healthPoints -= System.Math.Max(dmg - getTakeTowerDamageModifier(), 0);
 		}
 
 		public void heal(int amt) {
@@ -126,28 +131,35 @@ namespace SFB.Game{
 		public int getDamageLeftModifier(int dmgLeft, int deal) {
 			int sum = 0;
 			foreach(Ability a in abilities)
-				sum += abilities[0].getDamageLeftModifier(dmgLeft, deal);
+				sum += abilities[0].takeDamageLeftModifier(dmgLeft, deal);
 			return sum;
 		}
 
-		public int getTowerDamageModifier() {
+		public int getDealTowerDamageModifier() {
 			int sum = 0;
 			foreach(Ability a in abilities)
-				sum += abilities[0].getTowerDamageModifier();
+				sum += abilities[0].dealTowerDamageModifier();
 			return sum;
 		}
 
-		public int getRangedDamageModifier() {
+		public int getTakeRangedDamageModifier() {
 			int n = 0;
 			foreach(Ability a in abilities)
 				n += a.takeRangedDamageModifier();
 			return n;
 		}
 
-		public int getMeleeDamageModifier() {
+		public int getTakeMeleeDamageModifier() {
 			int n = 0;
 			foreach(Ability a in abilities)
 				n += a.takeMeleeDamageModifier();
+			return n;
+		}
+
+		public int getTakeTowerDamageModifier() {
+			int n = 0;
+			foreach(Ability a in abilities)
+				n += a.takeTowerDamageModifier();
 			return n;
 		}
 
@@ -162,13 +174,14 @@ namespace SFB.Game{
 			return deltas.ToArray();
 		}
 
-		public Delta[] onEachDeployPhase(int play, int pos, Lane[] lanes, Player[] players) {
+		public Delta[] onEachDeployPhase(int play, int pos, Lane l, Lane[] lanes, Player[] players) {
 			List<Delta> deltas = new List<Delta>();
 			foreach(Ability a in abilities) {
 				deltas.AddRange(a.onEachDeployPhase(play));
 				deltas.AddRange(a.onEachDeployPhase(play, lanes));
 				deltas.AddRange(a.onEachDeployPhase(play, players));
 				deltas.AddRange(a.onEachDeployPhase(play, lanes, players));
+				deltas.AddRange(a.onEachDeployPhase(play, l, this));
 			}
 			if(this.firstDeploy) {
 				deltas.AddRange(onInitialDeploy(play, lanes, players));

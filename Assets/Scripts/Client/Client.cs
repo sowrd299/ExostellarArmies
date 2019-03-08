@@ -14,7 +14,11 @@ namespace SFB.Net.Client {
 	public class Client : MessageHandler {
 		private static Client instance = null;
 		public static Client Instance {
-			get { return instance; }
+			get {
+				if(instance == null)
+					instance = new Client();
+				return instance;
+			}
 		}
 
 		public bool DoneInitializing {
@@ -36,13 +40,17 @@ namespace SFB.Net.Client {
 		private SocketManager socketManager;
 		private CardLoader cl;
 
-		private Client() {
+		private Client() {}
 
+		public static void InitializeInstance(Driver d) {
+			instance.driver = d;
+			instance.Start();
 		}
 
-		private static void ProcessDeltas(XmlDocument doc, CardLoader cl, bool verbose = false) {
+		private void ProcessDeltas(XmlDocument doc, CardLoader cl, bool verbose = false) {
 			foreach(XmlElement e in doc.GetElementsByTagName("delta")) {
 				Delta d = Delta.FromXml(e, cl);
+				Debug.Log(d.GetType());
 				if(verbose) {
 					Debug.Log("Processing delta: '" + e.OuterXml + "'");
 				}
@@ -59,13 +67,6 @@ namespace SFB.Net.Client {
 			socketManager.SendXml(doc);
 			socketManager.Send("<file type='lockInTurn'>");
 			setPhase(ClientPhase.WAIT_PLANNING_END);
-		}
-
-		public static void InitializeInstance(Driver d) {
-			if(instance == null)
-				instance = new Client();
-			instance.driver = d;
-			instance.Start();
 		}
 
 		private void Start() {
@@ -135,7 +136,7 @@ namespace SFB.Net.Client {
 						}
 						break;
 					case ClientPhase.PLANNING:
-						// handled by client / front end calling the below method:
+						// handled by front end calling the below method:
 						// Client.instance.SendPlanningPhaseActions(PlayerAction[] actions)
 						break;
 					case ClientPhase.WAIT_PLANNING_END:

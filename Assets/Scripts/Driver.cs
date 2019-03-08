@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Driver : MonoBehaviour {
-	public const bool NETWORK = false;
+	public bool NETWORK = false;
 
 	public static Driver instance = null;
 	public GameManager gameManager = null;
