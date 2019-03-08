@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using SFB.Game;
 using SFB.Game.Management;
+using SFB.Net.Client;
 
 public class Manager : MonoBehaviour
 {
@@ -118,17 +119,20 @@ public class Manager : MonoBehaviour
         handCapacity.text = "Hand capacity\n" + handPlaceHolder.gameObject.transform.childCount.ToString()+"/3";
         resourseText.text = "Resources: " + Driver.instance.resoureCount.ToString();
         dropCostSumText.text = "DropCostSum: " + Driver.instance.dropCostSum.ToString();
-        if (!Driver.instance.DoneInitializing && !foundMatch) // Change to CLient.Instance later
+        if(Driver.instance.NETWORK)
         {
-            mainBtnText.text = "Waiting for a  match!";
-            mainButton.enabled = false;
-            mainButton.GetComponent<Image>().color = Color.grey;
-        }
-        else if(Driver.instance.DoneInitializing && !foundMatch)
-        {
-            mainBtnText.text = "Draw";
-            mainButton.enabled = true;
-            mainButton.GetComponent<Image>().color = Color.green;
+            if (!Client.Instance.DoneInitializing && !foundMatch) // Change to CLient.Instance later
+            {
+                mainBtnText.text = "Waiting for a  match!";
+                mainButton.enabled = false;
+                mainButton.GetComponent<Image>().color = Color.grey;
+            }
+            else if (Client.Instance.DoneInitializing && !foundMatch)
+            {
+                mainBtnText.text = "Draw";
+                mainButton.enabled = true;
+                mainButton.GetComponent<Image>().color = Color.green;
+            }
         }
     }
 
@@ -166,6 +170,7 @@ public class Manager : MonoBehaviour
                             }
                         }
                     }
+
                     if (Driver.instance.NETWORK)
                         Driver.instance.client.SendPlanningPhaseActions(actions.ToArray());
                     foreach(PlayUnitCardAction action in actions)

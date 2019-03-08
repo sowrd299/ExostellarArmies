@@ -9,12 +9,9 @@ using UnityEngine;
 
 public class Driver : MonoBehaviour {
 	public bool NETWORK = false;
-	public bool DoneInitializing {
-		get { return gameManager != null; }
-	}
 
-    public static Driver instance = null;
-    public GameManager gameManager = null;
+	public static Driver instance = null;
+	public GameManager gameManager = null;
 	public Phase phase;
 
 	public Client client;
@@ -60,8 +57,7 @@ public class Driver : MonoBehaviour {
         DontDestroyOnLoad(gameObject);
 
 		if(NETWORK) {
-			client = Client.Instance;
-			client.Start();
+			//Client.InitializeInstance(this);
 		} else {
 
 			DeckList dlC = new DeckList();
@@ -238,8 +234,6 @@ public class Driver : MonoBehaviour {
         }
         manager.cleanup();
     }
-
-
 
     void Update() {
 		if(NETWORK && gameManager == null) {

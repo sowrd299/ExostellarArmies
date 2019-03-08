@@ -14,22 +14,23 @@ namespace SFB.Net.Client {
 	public class Client : MessageHandler {
 		private static Client instance = null;
 		public static Client Instance {
-			get {
-				if(instance == null)
-					instance = new Client();
-				return instance;
-			}
+			get { return instance; }
 		}
 
+		public bool DoneInitializing {
+			get { return gameManager != null; }
+		}
+
+		//private Driver driver;
 
 		private ClientPhase phase;
 		public ClientPhase Phase {
 			get { return phase; }
 		}
 
-		private GameManager gm;
+		private GameManager gameManager;
 		public GameManager GameManager {
-			get { return gm; }
+			get { return gameManager; }
 		}
 
 		private SocketManager socketManager;
@@ -60,7 +61,14 @@ namespace SFB.Net.Client {
 			setPhase(ClientPhase.WAIT_PLANNING_END);
 		}
 
-		public void Start() {
+		//public static void InitializeInstance(Driver d) {
+		//	if(instance == null)
+		//		instance = new Client();
+		//	instance.driver = d;
+		//	instance.Start();
+		//}
+
+		private void Start() {
 			setPhase(ClientPhase.INIT);
 
 			while(true) {
@@ -112,7 +120,7 @@ namespace SFB.Net.Client {
 							foreach(XmlElement e in receivedDoc.GetElementsByTagName("laneIds")) {
 								laneIds.Add(e);
 							}
-							gm = new GameManager(playerIds: playerIds.ToArray(), laneIds: laneIds.ToArray());
+							gameManager = new GameManager(playerIds: playerIds.ToArray(), laneIds: laneIds.ToArray());
 
 							setPhase(ClientPhase.WAIT_TURN_START);
 						}
