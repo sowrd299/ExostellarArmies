@@ -40,8 +40,8 @@ namespace SFB.Game {
 				case DamageType.MELEE:
 					target.takeMeleeDamage(amount);
 					break;
-				case DamageType.TRUE:
-					target.takeTrueDamage(amount);
+				case DamageType.TOWER:
+					target.takeTowerDamage(amount);
 					break;
 				case DamageType.HEAL:
 					target.heal(amount);
@@ -51,19 +51,19 @@ namespace SFB.Game {
 
 		internal override void Revert() {
 			if(dmgType == DamageType.HEAL) {
-				target.takeTrueDamage(amount);
+				target.takeTowerDamage(amount);
 			} else {
 				int mod = (dmgType == DamageType.RANGED
-								? target.getRangedDamageModifier()
+								? target.getTakeRangedDamageModifier()
 								: (dmgType == DamageType.MELEE
-									? target.getMeleeDamageModifier()
+									? target.getTakeMeleeDamageModifier()
 									: 0));
 				target.heal(amount >= mod ? amount - mod : 0);
 			}
 		}
 
 		public enum DamageType {
-			RANGED, MELEE, TRUE, HEAL
+			RANGED, MELEE, TOWER, HEAL
 		}
 	}
 }

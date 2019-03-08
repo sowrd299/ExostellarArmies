@@ -94,7 +94,31 @@ namespace SFB.Game.Content {
 		internal AddToLaneDelta[] getDeployDeltas(UnitCard card, int play, int pos) {
 			return new AddToLaneDelta[] { new AddToLaneDelta(this, card, play, pos) };
 		}
-		
+
+		internal SwapPositionDelta[] getSwapPositionDeltas(int play) {
+			return new SwapPositionDelta[] { new SwapPositionDelta(this, play) };
+		}
+
+		public class SwapPositionDelta : TargetedDelta<Lane> {
+			private int play;
+			private Lane lane;
+
+			public SwapPositionDelta(Lane l, int p) : base(l) {
+				lane = l;
+				play = p;
+			}
+
+			public SwapPositionDelta(XmlElement element, CardLoader loader) : base(element, Lane.IdIssuer, loader) { }
+
+			internal override void Apply() {
+				Unit u = lane.unitss[play, 0];
+				lane.unitss[play, 0] = lane.unitss[play, 1];
+				lane.unitss[play, 1] = u;
+			}
+
+			internal override void Revert() { Apply(); }
+		}
+
 
 		public class AddToLaneDelta : TargetedDelta<Lane> {
 			private int player;
