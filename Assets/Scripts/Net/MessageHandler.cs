@@ -1,5 +1,6 @@
 using System.Xml;
 using System.Collections.Generic;
+using System;
 
 namespace SFB.Net{
 
@@ -25,7 +26,11 @@ namespace SFB.Net{
                 // TODO: this is a dumb order of ops to care about what is my archetecture
                 StartAsyncReceive(from);
                 // handle the message
-                handleMessage(msg, from);
+				try{
+                	handleMessage(msg, from);
+				}catch(Exception e){
+					handleError(e, from);
+				}
             }
         }
 
@@ -41,7 +46,12 @@ namespace SFB.Net{
         public virtual void handleSocket(SocketManager socket){
             XmlDocument msg = socket.ReceiveXml();
             if(msg != null){
-                handleMessage(msg, socket);
+                // try... catch... to avoid malicious actto
+                try{
+                    handleMessage(msg, socket);
+                }catch(Exception e){
+					handleError(e, socket);
+                }
             }else if(!socket.Alive){
                 handleSocketDeath(socket);
             }
@@ -58,6 +68,10 @@ namespace SFB.Net{
                     from.Send("<file type='error'><msg>Unexpect message type: "+type+"</msg></file>");
                     break;
             }
+        }
+
+        private void handleError(Exception e, SocketManager socket){
+            socket.Send("<file type='error'><msg>Server handling message raised exception: "+e.Message+"</msg></file");
         }
 
         // returns an empty XML message in propper format, with type set to the given type
