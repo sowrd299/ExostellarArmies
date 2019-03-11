@@ -58,6 +58,11 @@ namespace SFB.Game {
 			// TODO: implement sorting here and in Add
 		}*/
 
+		public AbilityList() { }
+
+		public AbilityList(Ability[] list) :
+				base(list) { }
+
 		public new void Add(Ability a) {
 			if(this.hasType(a.GetType())) {
 				if(a.Num == -1) {
