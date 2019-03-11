@@ -56,7 +56,7 @@ namespace SFB.Net.Server{
                     "Death to Your Enemies", 0, 0, 1, new AbilityList(new Ability[]{new RangedShield(2), new MeleeShield(2)})),1);
 
             r.AddCard(new UnitCard(2, "Autonomous Range Finder", Faction.CARTH, "Supporting Carthan Deploy: Give this front line +3R this turn.",
-                    "56413", 0, 1, 3),2);
+                    "56413", 0, 1, 3, new AbiliryList()),2);
             return r;
         }
 
