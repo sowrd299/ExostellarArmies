@@ -16,7 +16,7 @@ namespace SFB.Net.Server{
         // hardcode carthan starter deck
         private DeckList CarthStarter(){
             DeckList r = new DeckList();
-            r.AddCard(newCardLoader.GetByID( "Exostellar Marine Squad"), 2);
+            r.AddCard(newCardLoader.GetByID("Exostellar Marine Squad"), 2);
             
             r.AddCard(newCardLoader.GetByID("Commercial Shipper"), 1);
 
@@ -30,15 +30,15 @@ namespace SFB.Net.Server{
 
             r.AddCard(newCardLoader.GetByID("XS Field Technician"), 1);
 
-            r.AddCard(newCardLoader.GetByID("Lt. Mgr Tul Yorves"),1);
+            r.AddCard(newCardLoader.GetByID("Lt. Mgr. Tul Yorves"),1);
 
             r.AddCard(newCardLoader.GetByID("Exostellar Snipers"),2);
 
-            r.AddCard(newCardLoader.GetByID("Cmdr Yos Lorth"),1);
+            r.AddCard(newCardLoader.GetByID("Cmdr. Yos Lorth"),1);
 
-            r.AddCard(newCardLoader.GetByID("Ancillary Medical OFficer"),1);
+            r.AddCard(newCardLoader.GetByID("Ancillary Medical Officer"),1);
 
-            r.AddCard(newCardLoader.GetByID("Pattle-Line Trauma Medic"),1);
+            r.AddCard(newCardLoader.GetByID("Battle-Line Trauma Medic"),1);
             
             r.AddCard(newCardLoader.GetByID("Emergency Med Drop"),1);
             

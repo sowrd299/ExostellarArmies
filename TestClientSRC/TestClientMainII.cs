@@ -35,6 +35,13 @@ namespace SFB.TestClient{
             Card card = new UnitCard(0, "Test Card", Faction.NONE, "Some text", "Some more text", 0, 0, 0, new AbilityList());
             Console.WriteLine("Testing UnknownCard == Card: {0}", unknownCard == card ? "Success" : "Fail");
 
+            // testing cardloader
+            CardLoader cl = new CardLoader();
+            Card c = cl.GetByID("Mercenary Phatasm");
+            Console.WriteLine("Successfully Loaded Card.");
+
+            // BEGIN NETWORKING
+
             //find local IP
             IPHostEntry ipEntry = Dns.GetHostEntry(Dns.GetHostName());
             IPAddress ipAddr = ipEntry.AddressList[0];
@@ -50,14 +57,13 @@ namespace SFB.TestClient{
             SocketManager socketManager = new SocketManager(socket, "</file>");
 
             //setup game objects
-            CardLoader cl = new CardLoader();
             GameManager gm;
             Player localPlayer;
 
             //join a game and do all the setup
             Console.WriteLine("Press Enter to join a game...");
             Console.ReadLine();
-            socketManager.Send("<file type='joinMatch'><deck id='testing'/></file>");
+            socketManager.Send("<file type='joinMatch'><deck id='carthStarter'/></file>");
 
             // get the matchStart message
             Console.WriteLine("Waiting for match start...");

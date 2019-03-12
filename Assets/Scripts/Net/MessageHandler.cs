@@ -72,6 +72,7 @@ namespace SFB.Net{
 
         private void handleError(Exception e, SocketManager socket){
             socket.Send("<file type='error'><msg>Server handling message raised exception: "+e.Message+"</msg></file");
+            Console.WriteLine("Recieced error: {0}\n...while handling message. Sent error back to sender.", e.Message);
         }
 
         // returns an empty XML message in propper format, with type set to the given type
