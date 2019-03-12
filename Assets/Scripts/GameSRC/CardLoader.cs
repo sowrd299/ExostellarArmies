@@ -7,7 +7,7 @@ namespace SFB.Game.Content {
     public class CardLoader : IdIssuer<Card>{ // maybe this doesn't want to be an IdIssuerr... sure feels like it does though
         IDictionary<string, UnitCard> m_listOfCards = new Dictionary<string, UnitCard>();
 
-        CardLoader()
+        public CardLoader()
         {
             m_listOfCards.Add("Mercenary Phatasm", new UnitCard(2, "Mercenary Phatasm", Faction.NONE, "Deploy: Your opponent reveals a card from their hand", "What do you want to know?", 1, 2, 3, new AbilityList()));
             m_listOfCards.Add("Commercial Shipper", new UnitCard(2, "Commercial Shipper", Faction.NONE, "Deploy: Draw a card, then put a card from your hand on the bottom of your deck", "Whatever you need, we got", 0, 3, 3, new AbilityList()));
