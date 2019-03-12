@@ -3645,7 +3645,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NETWORK: 1
-  phase: 0
   elemList:
   - {fileID: 11400000, guid: 8b9afe31435644a82a77ce3171e8a4ed, type: 2}
   - {fileID: 11400000, guid: c26b2474748cd43bc975fd75c131c766, type: 2}
@@ -5357,8 +5356,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 11500000, guid: 9ae34b591ca19024db67acea6cfa7075, type: 3}
-        m_MethodName: 
+      - m_Target: {fileID: 703788047}
+        m_MethodName: mainBtn
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

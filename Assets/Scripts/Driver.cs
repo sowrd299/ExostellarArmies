@@ -12,7 +12,6 @@ public class Driver : MonoBehaviour {
 
 	public static Driver instance = null;
 	public GameManager gameManager = null;
-	public Phase phase;
 
 	public Client client;
  
@@ -57,7 +56,7 @@ public class Driver : MonoBehaviour {
         DontDestroyOnLoad(gameObject);
 		
 		if(NETWORK) {
-			Client.InitializeInstance(this);
+			Client.SetDriver(this);
 		} else {
 
 			DeckList dlC = new DeckList();
@@ -91,8 +90,7 @@ public class Driver : MonoBehaviour {
 			DeckList[] deckLists = new DeckList[] { dlC, dlJ };
 			gameManager = new GameManager(deckLists);
 			myLanes = gameManager.Lanes;
-
-			phase = Phase.DRAW;
+			
 			myMana = gameManager.Players[0].Mana;
 			resoureCount = myMana.Count;
 			//loadWhenDraw();

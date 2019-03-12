@@ -54,7 +54,7 @@ public class CardUI : MonoBehaviour
 
     }
 
-    private void Update()
+    /*private void Update()
     {
         //int.TryParse(properties[6].text.text, out hp);
         //if (card!=null && hp <= 0)
@@ -78,7 +78,7 @@ public class CardUI : MonoBehaviour
             }
         }
         //Debug.Log("Name ="+this.gameObject.transform.GetSiblingIndex().ToString()+this.properties[0].text.text);
-    }
+    }*/
 
     //Updates all of the UI properties to the values in c
     public void LoadCard(CardFrontEnd c)

@@ -40,7 +40,7 @@ namespace SFB.Game{
 		}
 
 		// how many deployment phases the player gets
-		private ResourcePool deployPhases;
+		public ResourcePool deployPhases;
 		public int DeployPhases{
 			get{ return deployPhases.Count; }
 		}
@@ -137,7 +137,7 @@ namespace SFB.Game{
         }
 
 		public override string ToString() {
-			return name;
+			return name + ": " + deployPhases.Count + "DPs, " + Mana.Count + " Mana";
 		}
 	}
 
