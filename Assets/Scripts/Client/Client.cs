@@ -12,12 +12,12 @@ using UnityEngine;
 
 namespace SFB.Net.Client {
 	public class Client : MessageHandler {
-		private static Client instance = null;
+		private static Client inst = null;
 		public static Client Instance {
 			get {
-				if(instance == null)
-					instance = new Client();
-				return instance;
+				if(inst == null)
+					inst = new Client();
+				return inst;
 			}
 		}
 
@@ -44,7 +44,7 @@ namespace SFB.Net.Client {
 			setPhase(ClientPhase.INIT);
 		}
 
-		public static void InitializeInstance(Driver d) {
+		public static void SetDriver(Driver d) {
 			Instance.driver = d;
 		}
 
@@ -63,6 +63,10 @@ namespace SFB.Net.Client {
 				Debug.Log("P2 should be unknown " + gameManager.Players[1].Deck[0].Name);
 				Debug.Log("P1 Deck.ID" + gameManager.Players[0].Deck.ID);
 				Debug.Log("P2 Deck.ID" + gameManager.Players[1].Deck.ID);
+				Debug.Log("P1 Mana.ID" + gameManager.Players[0].Mana.ID);
+				Debug.Log("P2 Mana.ID" + gameManager.Players[1].Mana.ID);
+				Debug.Log("P1 deploy.ID" + gameManager.Players[0].deployPhases.ID);
+				Debug.Log("P2 deploy.ID" + gameManager.Players[1].deployPhases.ID);
 				driver.printField();
 			}
 		}
@@ -93,7 +97,7 @@ namespace SFB.Net.Client {
 				IPAddress ipAddr = ipEntry.AddressList[0];
 
 				//consts
-				string HostName = "169.234.71.121";
+				string HostName = "169.234.57.202";
 				const int Port = 4011;
 
 				//setup the connection
@@ -176,7 +180,7 @@ namespace SFB.Net.Client {
 			switch(nPhase) {
 				case ClientPhase.WAIT_MATCH_START:
 					//join a game
-					socketManager.Send("<file type='joinMatch'><deck id='testing'/></file>");
+					socketManager.Send("<file type='joinMatch'><deck id='carthStarter'/></file>");
 					Debug.Log("Sent joinMatch request...");
 					Debug.Log("Waiting for match start...");
 
@@ -193,7 +197,7 @@ namespace SFB.Net.Client {
 					driver.printField();
 
 					driver.resoureCount = gameManager.Players[0].Mana.Count;
-					driver.manager.DrawPhase();
+					driver.manager.StartDrawPhase(gameManager.Players);
 					foreach(Delta d in driver.gameManager.Players[1].GetDrawDeltas()) {
 						d.Apply();
 						Debug.Log("Processing delta: " + d.GetType());
@@ -202,16 +206,16 @@ namespace SFB.Net.Client {
 					Debug.Log("P2 Hand" + gameManager.Players[1].Hand.Count);
 					Debug.Log("P1 Deck" + gameManager.Players[0].Deck.Count);
 					Debug.Log("P2 Deck" + gameManager.Players[1].Deck.Count);
+
+					Debug.Log(gameManager.Players[0]);
+					Debug.Log(gameManager.Players[1]);
+
 					break;
 				case ClientPhase.WAIT_PLANNING_END:
 					Debug.Log("Waiting for enemy to finish planning...");
 					break;
 			}
 			phase = nPhase;
-		}
-
-		public void callFrontEndMainBtn() {
-			Driver.instance.manager.mainBtn();
 		}
 
 		protected override void handleSocketDeath(SocketManager sm) {

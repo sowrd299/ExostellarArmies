@@ -123,25 +123,50 @@ public class Manager : MonoBehaviour
 			if(!Client.Instance.DoneInitializing && !foundMatch) // Change to CLient.Instance later
 			{
 				mainBtnText.text = "Waiting for a  match!";
-				mainButton.enabled = false;
+				//mainButton.enabled = false;
 				mainButton.GetComponent<Image>().color = Color.grey;
-			} else if(Client.Instance.DoneInitializing && !foundMatch) {
+			}/* else if(Client.Instance.DoneInitializing && !foundMatch) {
 				mainBtnText.text = "Draw";
 				mainButton.enabled = true;
 				mainButton.GetComponent<Image>().color = Color.green;
-			}
+			}*/
 		}
 	}
 
-	public void DrawPhase() {
-		spawnCards();
-		Driver.instance.updateTowerUI();
+	public void StartDrawPhase(Player[] players) {
 		mainBtnText.text = "DRAWING...";
+		mainButton.GetComponent<Image>().color = new Color(102, 255, 102);
+		spawnCards(players);
+		Driver.instance.updateTowerUI();
 	}
 
-    public void mainBtn()
+	public void mainBtn()
     {
+		if(mainBtnText.text.Equals("LOCK IN PLANS")) {
+			if(Driver.instance.myMana.CanAfford(Driver.instance.dropCostSum)) {
+				List<PlayUnitCardAction> actions = new List<PlayUnitCardAction>();
+				for(int i = 0; i < myCardHolders.Length; i++) {
+					if(myCardHolders[i].transform.childCount > 0) {
+						CardUI c = myCardHolders[i].transform.GetChild(0).GetComponent<CardUI>();
 
+						if(c.Old == false) {
+							Card back = c.cardBackEnd;
+							if(myCardHolders[i].transform.parent.name.Contains("Front"))
+								actions.Add(new PlayUnitCardAction(back as UnitCard, Driver.instance.myLanes[i % 3], 0, 0));
+							else
+								actions.Add(new PlayUnitCardAction(back as UnitCard, Driver.instance.myLanes[i % 3], 0, 1));
+							//myCardHolders need to be in correct order
+						}
+					}
+				}
+				Debug.Log(actions.Count);
+
+				Client.Instance.SendPlanningPhaseActions(actions.ToArray());
+			} else {
+
+			}
+		}
+		/*
         switch (Driver.instance.phase)
         {
             case Phase.DRAW:
@@ -198,8 +223,8 @@ public class Manager : MonoBehaviour
                 mainButton.GetComponent<Button>().enabled = false;
                 break;
 
-        }
-    }
+        }*/
+	}
 	
     public IEnumerator damageAnims()
     {
@@ -222,7 +247,7 @@ public class Manager : MonoBehaviour
         mainBtnText.text = "Combat done1";
         yield return new WaitForSeconds(1f);
         mainBtnText.text = "Draw";
-        Driver.instance.phase = Driver.instance.gameManager.Over ? Phase.DONE : Phase.DRAW;
+        //Driver.instance.phase = Driver.instance.gameManager.Over ? Phase.DONE : Phase.DRAW;
     }
 
     public void applyEnemyDeltas()
@@ -252,7 +277,7 @@ public class Manager : MonoBehaviour
         }
     }
 
-    public void spawnCards()
+    public void spawnCards(Player[] players)
     {
         while (handPlaceHolder.gameObject.transform.childCount + cards.Count < 3)
         {
@@ -264,9 +289,22 @@ public class Manager : MonoBehaviour
             GameObject tempCard2 = Instantiate(enemyCardPrefab, enemyPlaceHolder.transform);
             enemyCards.Add(tempCard2);
         }
-//        Driver.instance.drawCards();
-        StartCoroutine(moveToHand());
-    }
+
+		List<CardFrontEnd> feList1 = Driver.instance.loadFrontEnd(players[0]);
+		//List<CardFrontEnd> feList2 = Driver.instance.loadFrontEnd(players[1]);
+
+		List<CardUI> ui1 = loadCardUIinHand(placeHolder);
+
+		Debug.Log(feList1.Count + " " + ui1.Count);
+
+		for(int i = 0; i < Mathf.Min(feList1.Count, ui1.Count); i++) {
+			Debug.Log("I"+i);
+			ui1[i].LoadCard(feList1[i]);
+		}
+
+		//        Driver.instance.drawCards();
+		StartCoroutine(moveToHand());
+	}
 
     IEnumerator moveToHand()
     {
@@ -302,9 +340,9 @@ public class Manager : MonoBehaviour
             }
             yield return new WaitForSeconds(0.3f);
         }
-        Driver.instance.phase = Phase.PLACEMENT;
-        mainBtnText.text = "DEPLOY";
-        makeDraggable(true);
+		mainBtnText.text = "LOCK IN PLANS";
+		mainButton.GetComponent<Image>().color = Color.green;
+		makeDraggable(true);
         yield return null;
         //enemyPlay();
     }
@@ -469,18 +507,16 @@ public class Manager : MonoBehaviour
 		
     }
 
-    public List<CardUI> loadCardUIinHand(GameObject g)
-    {
-        List<CardUI> cu = new List<CardUI>();
-        for (int i = 0; i < g.transform.childCount; i++)
-        {
-            CardUI c = g.transform.GetChild(i).GetComponent<CardUI>();
-            cu.Add(c);
-        }
-        return cu;
-    }
+	public List<CardUI> loadCardUIinHand(GameObject g) {
+		List<CardUI> cu = new List<CardUI>();
+		for(int i = 0; i < g.transform.childCount; i++) {
+			CardUI c = g.transform.GetChild(i).GetComponent<CardUI>();
+			cu.Add(c);
+		}
+		return cu;
+	}
 
-    public void makeDraggable(bool b)
+	public void makeDraggable(bool b)
     {
         for (int i = 0; i < handPlaceHolder.transform.childCount; i++)
         {
@@ -511,6 +547,6 @@ public class Manager : MonoBehaviour
                 g[i].transform.GetChild(0).gameObject.transform.SetParent(g[i - 3].transform);
             }
         }
-        Driver.instance.phase = Phase.COMBAT;
+        //Driver.instance.phase = Phase.COMBAT;
     }
 }
