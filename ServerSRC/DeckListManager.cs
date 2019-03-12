@@ -23,7 +23,7 @@ namespace SFB.Net.Server{
 
             r.AddCard(newCardLoader.GetByID("Adv. Infantry Support System"),2);
 
-            r.AddCard(newCardLoader.GetByID("Paladin-Class XS Marnines"),1);
+            r.AddCard(newCardLoader.GetByID("Paladin-Class XS Marines"),1);
 
             r.AddCard(newCardLoader.GetByID("Adv. Supply Drone"),2);
 
