@@ -118,7 +118,8 @@ namespace SFB.Game.Management{
 				foreach(Delta d in p.GetDrawDeltas()) {
 					deltas.Add(d);
 				}
-			}
+                deltas.Add(p.Mana.GetAddDeltas(6 - p.Lives)[0]);
+            }
 			return deltas.ToArray();
 		}
 
@@ -183,6 +184,7 @@ namespace SFB.Game.Management{
                     deltas.Add(d);
                 }
             }
+
             // cleanup and return
             return deltas.ToArray();
         }

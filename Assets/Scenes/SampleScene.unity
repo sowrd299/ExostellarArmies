@@ -2328,6 +2328,7 @@ GameObject:
   m_Component:
   - component: {fileID: 703788048}
   - component: {fileID: 703788047}
+  - component: {fileID: 703788049}
   m_Layer: 0
   m_Name: Manager
   m_TagString: Untagged
@@ -2342,7 +2343,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 703788046}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e4b92ba1f7b874312a5360fb37facf69, type: 3}
   m_Name: 
@@ -2399,6 +2400,49 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &703788049
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 703788046}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b44e569f668c1415ab74841e8d936eed, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sounds:
+  - name: Main
+    clip: {fileID: 8300000, guid: df404bf33831445f782301fd336424ec, type: 3}
+    volume: 0.5
+    pitch: 1.04
+    loop: 1
+    source: {fileID: 0}
+  - name: Tower Explosion 1
+    clip: {fileID: 8300000, guid: c3cd09083195442e69caa277d6fe1e07, type: 3}
+    volume: 0.5
+    pitch: 1.04
+    loop: 0
+    source: {fileID: 0}
+  - name: Tower Explosion
+    clip: {fileID: 8300000, guid: 2bb7af3a22ea44b7d85369b783b30e50, type: 3}
+    volume: 0.5
+    pitch: 1.04
+    loop: 0
+    source: {fileID: 0}
+  - name: Gunshot
+    clip: {fileID: 8300000, guid: 2283b588accf94200ad50abaeff2c372, type: 3}
+    volume: 0.5
+    pitch: 0.85
+    loop: 0
+    source: {fileID: 0}
+  - name: Gunshot 2
+    clip: {fileID: 8300000, guid: df404bf33831445f782301fd336424ec, type: 3}
+    volume: 0.5
+    pitch: 1.04
+    loop: 0
+    source: {fileID: 0}
 --- !u!1 &712680318 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 9011030224902039794, guid: 80a6cbfe76ede48d1aefb91c38da7814,
@@ -3631,7 +3675,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1221505656
 MonoBehaviour:
   m_ObjectHideFlags: 0

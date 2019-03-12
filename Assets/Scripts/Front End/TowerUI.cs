@@ -24,6 +24,7 @@ public class TowerUI : MonoBehaviour
 
     IEnumerator DestroyAndRespawn()
     {
+        AudioManager.instance.Play("Tower Explosion 1");
         float timeOfTravel = 0.5f;
         float elapsedTime = 0f;
         while (elapsedTime < timeOfTravel)

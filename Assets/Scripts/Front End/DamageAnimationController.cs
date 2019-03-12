@@ -116,6 +116,7 @@ public class DamageAnimationController : MonoBehaviour
 
     IEnumerator textShake(GameObject g)
     {
+        AudioManager.instance.Play("Gunshot");
         float elapsed = 0.0f;
         float timeOfTravel = 0.5f;
         Quaternion originalRotation = g.transform.rotation;

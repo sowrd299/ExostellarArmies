@@ -469,6 +469,17 @@ public class Manager : MonoBehaviour
 		
     }
 
+    public List<CardUI> loadCardUIinHand(GameObject g)
+    {
+        List<CardUI> cu = new List<CardUI>();
+        for (int i = 0; i < g.transform.childCount; i++)
+        {
+            CardUI c = g.transform.GetChild(i).GetComponent<CardUI>();
+            cu.Add(c);
+        }
+        return cu;
+    }
+
     public void makeDraggable(bool b)
     {
         for (int i = 0; i < handPlaceHolder.transform.childCount; i++)

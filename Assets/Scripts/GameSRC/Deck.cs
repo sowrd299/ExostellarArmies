@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Xml;
 using SFB.Game.Content;
 using SFB.Game.Management;
-using UnityEngine;
+//using UnityEngine;
 
 namespace SFB.Game{
 
@@ -80,7 +80,7 @@ namespace SFB.Game{
         // returns a delta that removes the top card from the deck
         // adding that card to the hand will need to be implemented elsewhere
         public RemoveFromDeckDelta[] GetDrawDeltas(int startingIndex = 0, int count = 1){
-			Debug.Log("I" + startingIndex + " C" + count);
+			//Debug.Log("I" + startingIndex + " C" + count);
 			RemoveFromDeckDelta[] r = new RemoveFromDeckDelta[count - startingIndex];
             for(int i = startingIndex; i < startingIndex+count; i++){
                 r[i-startingIndex] = new RemoveFromDeckDelta(this, this[i], 0);
