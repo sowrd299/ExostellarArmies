@@ -34,7 +34,6 @@ namespace SFB.Game.Content {
                "Front Line Persistent: Whenever an adjacent Font Line Infantry dies, Beta Swarm there", "Myxi jha maRtox lOz!", 0, 3, 7, new AbilityList()));
             m_listOfCards.Add("Exostellar Marine Squad", new UnitCard(3, "Exostellar Marine Squad", Faction.CARTH, "",
                     "Bravely into the Darkness", 2, 2, 4, new AbilityList()));
-            
             m_listOfCards.Add("Commercial Coms Relay", new UnitCard(0, "Commercial Coms Relay", Faction.NONE, "Deploy: Put a card from your hand beneath the top 4 cards of your deck.",
                     "Binding the Stars", 0, 1, 2, new AbilityList()));
             m_listOfCards.Add("Adv. Infantry Support System", new UnitCard(5, "Adv. Infantry Support System", Faction.CARTH, "Melee Shield 1\nPersistent: At the start of your turn, generate an extra .",
@@ -64,8 +63,11 @@ namespace SFB.Game.Content {
         }
 
         protected override Card handleMiss(string id){
-            // TODO: dummy implmentation
-            return m_listOfCards[id];
+			// TODO: dummy implmentation
+			if(m_listOfCards.ContainsKey(id))
+				return m_listOfCards[id];
+			else
+				throw new System.Exception("Card \"" + id + "\" not found");
         }
 
     }
