@@ -18,6 +18,10 @@ namespace SFB.Net.Server{
         private int numDeadClients; // the number of clients that have died; used to know if we actually have enough clients
         private DeckListManager deckListManager; // load and annylize player's deck lists
 
+        public int NumQueuedClients{
+            get{ return waitingClients.Count - numDeadClients; }
+        }
+
         public MatchMaker(){
             waitingClients = new Queue<MatchMakingInfo>();
             deckListManager = new DeckListManager();
@@ -54,12 +58,12 @@ namespace SFB.Net.Server{
                             client = waitingClients.Dequeue();
                             numDeadClients--;
                         }
-                        //Console.WriteLine("Adding player...");
+                        Console.WriteLine("Adding player...");
                         clients[i] = client.Socket;
-                        //Console.WriteLine("Loading deck...");
+                        Console.WriteLine("Loading deck...");
                         string deckID = client.EnqueueRequest.DocumentElement["deck"].Attributes["id"].Value;
                         decks[i] = deckListManager.LoadFromID(deckID);
-                        //Console.WriteLine("Player {0} ready!", i);
+                        Console.WriteLine("Player {0} ready!", i);
                     }
                     return new Match(clients,decks);
                 }
