@@ -33,7 +33,7 @@ namespace SFB.Net.Server{
 
             r.AddCard(newCardLoader.GetByID("Exostellar Snipers"),2);
 
-            r.AddCard(newCardLoader.GetByID(["Cmdr Yos Lorth"),1);
+            r.AddCard(newCardLoader.GetByID("Cmdr Yos Lorth"),1);
 
             r.AddCard(newCardLoader.GetByID("Ancillary Medical OFficer"),1);
 
