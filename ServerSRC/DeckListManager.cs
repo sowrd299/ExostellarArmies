@@ -15,33 +15,33 @@ namespace SFB.Net.Server{
         // hardcode carthan starter deck
         private DeckList CarthStarter(){
             DeckList r = new DeckList();
-            r.AddCard(newCardLoader.GetById( "Exostellar Marine Squad"), 2);
+            r.AddCard(newCardLoader.GetByID( "Exostellar Marine Squad"), 2);
 
-            r.AddCard(newCardLoader.GetById("Commercial Shipper"), 1);
+            r.AddCard(newCardLoader.GetByID("Commercial Shipper"), 1);
 
-            r.AddCard(newCardLoader.GetById("Commercial Coms Relay"),1);
+            r.AddCard(newCardLoader.GetByID("Commercial Coms Relay"),1);
 
-            r.AddCard(newCardLoader.GetById("Adv. Infantry Support System"),2);
+            r.AddCard(newCardLoader.GetByID("Adv. Infantry Support System"),2);
 
-            r.AddCard(newCardLoader.GetById("Paladin-Class XS Marnines"),1);
+            r.AddCard(newCardLoader.GetByID("Paladin-Class XS Marnines"),1);
 
-            r.AddCard(newCardLoader.GetById("Adv. Supply Drone"),2);
+            r.AddCard(newCardLoader.GetByID("Adv. Supply Drone"),2);
 
-            r.AddCard(newCardLoader.GetById("XS Field Technician"), 1);
+            r.AddCard(newCardLoader.GetByID("XS Field Technician"), 1);
 
-            r.AddCard(newCardLoader.GetById("Lt. Mgr Tul Yorves"),1);
+            r.AddCard(newCardLoader.GetByID("Lt. Mgr Tul Yorves"),1);
 
-            r.AddCard(newCardLoader.GetById("Exostellar Snipers"),2);
+            r.AddCard(newCardLoader.GetByID("Exostellar Snipers"),2);
 
-            r.AddCard(newCardLoader.GetById(["Cmdr Yos Lorth"),1);
+            r.AddCard(newCardLoader.GetByID(["Cmdr Yos Lorth"),1);
 
-            r.AddCard(newCardLoader.GetById("Ancillary Medical OFficer"),1);
+            r.AddCard(newCardLoader.GetByID("Ancillary Medical OFficer"),1);
 
-            r.AddCard(newCardLoader.GetById("Pattle-Line Trauma Medic"),1);
+            r.AddCard(newCardLoader.GetByID("Pattle-Line Trauma Medic"),1);
             
-            r.AddCard(newCardLoader.GetById("Emergency Med Drop"),1);
+            r.AddCard(newCardLoader.GetByID("Emergency Med Drop"),1);
             
-            r.AddCard(newCardLoader.GetById("Cannoneer Drone"),1);
+            r.AddCard(newCardLoader.GetByID("Cannoneer Drone"),1);
 
             r.AddCard(new UnitCard(2, "Autonomous Range Finder", Faction.CARTH, "Supporting Carthan Deploy: Give this front line +3R this turn.",
                     "56413", 0, 1, 3, new AbilityList()),2);
@@ -53,19 +53,19 @@ namespace SFB.Net.Server{
         {
             DeckList deck = new DeckList();
 
-            deck.AddCard(newCardLoader.GetById("Mercenary Phantasm"), 1);
-            deck.AddCard(newCardLoader.GetById("Commercial Shipper"), 1);
-            deck.AddCard(newCardLoader.GetById("Adaptive Protopod"), 2);
-            deck.AddCard(newCardLoader.GetById("Screaming Spore Spunner"), 1);
-            deck.AddCard(newCardLoader.GetById("Pod-Cap Yxuu maRroz"), 1);
-            deck.AddCard(newCardLoader.GetById("Undergrowth Smasher"), 1);
-            deck.AddCard(newCardLoader.GetById("Aftergrowth Spunner"), 1);
-            deck.AddCard(newCardLoader.GetById("Mulch Pod"), 2);
-            deck.AddCard(newCardLoader.GetById("Fecund Reflex Axon"), 2);
-            deck.AddCard(newCardLoader.GetById("Grafted Fang Spunner"), 2);
-            deck.AddCard(newCardLoader.GetById("Spore Pod"), 2);
-            deck.AddCard(newCardLoader.GetById("Horde Caller"), 2);
-            deck.AddCard(newCardLoader.GetById("Titanous Regrowth Trunk"), 2);
+            deck.AddCard(newCardLoader.GetByID("Mercenary Phantasm"), 1);
+            deck.AddCard(newCardLoader.GetByID("Commercial Shipper"), 1);
+            deck.AddCard(newCardLoader.GetByID("Adaptive Protopod"), 2);
+            deck.AddCard(newCardLoader.GetByID("Screaming Spore Spunner"), 1);
+            deck.AddCard(newCardLoader.GetByID("Pod-Cap Yxuu maRroz"), 1);
+            deck.AddCard(newCardLoader.GetByID("Undergrowth Smasher"), 1);
+            deck.AddCard(newCardLoader.GetByID("Aftergrowth Spunner"), 1);
+            deck.AddCard(newCardLoader.GetByID("Mulch Pod"), 2);
+            deck.AddCard(newCardLoader.GetByID("Fecund Reflex Axon"), 2);
+            deck.AddCard(newCardLoader.GetByID("Grafted Fang Spunner"), 2);
+            deck.AddCard(newCardLoader.GetByID("Spore Pod"), 2);
+            deck.AddCard(newCardLoader.GetByID("Horde Caller"), 2);
+            deck.AddCard(newCardLoader.GetByID("Titanous Regrowth Trunk"), 2);
 
             return deck;
         }
