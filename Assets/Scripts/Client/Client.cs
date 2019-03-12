@@ -72,6 +72,7 @@ namespace SFB.Net.Client {
 		}
 
 		public void SendPlanningPhaseActions(PlayerAction[] actions) {
+			Debug.Log("Sending " + actions.Length + " actions");
 			XmlDocument doc = NewEmptyMessage("gameAction");
 			foreach(PlayerAction a in actions) {
 				XmlElement e = a.ToXml(doc);
