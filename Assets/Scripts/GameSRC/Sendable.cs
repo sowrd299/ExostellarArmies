@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Text;
 using System.Xml;
 using System.Reflection;
 
@@ -14,7 +16,7 @@ namespace SFB.Game.Management{
     // a superclass for objects that can be sent across the network
     public abstract class Sendable{
 
-        protected static string XmlNodeName{
+        protected virtual string XmlNodeName{
             get{ return "sendable"; }
         }
 
@@ -27,6 +29,19 @@ namespace SFB.Game.Management{
             return e;
         }
 
+        // sets an an attribute of an XmlElement to a given values
+        protected static XmlAttribute SetXmlInt(XmlDocument doc, XmlElement e, string name, int val){
+            XmlAttribute a = doc.CreateAttribute(name);
+            a.Value = val.ToString();
+            e.SetAttributeNode(a);
+            return a;
+        }
+
+        // gets the value of a given integer element
+        protected static int GetXmlInt(XmlElement e, string name){
+            return Int32.Parse(e.Attributes[name].Value);
+        }
+
         // a class to contain static factory methods
         // having this be it's own less class allows us to use template to make the
         //      factory methods more generic
@@ -34,12 +49,27 @@ namespace SFB.Game.Management{
             // this will return a new instance of the Delta type specified in the XML
             // and return it
             public static T FromXml(XmlElement from, object[] constructionArgs = null, Type[] argTypes = null){
+                if(from == null){
+                    throw new IllegalSendableFactoryCallException("Cannot construct an object from null XML, you utter nitwit");
+                }
                 // get the type
                 string t = from.Attributes["type"].Value;
                 Type type = Type.GetType(t);
-                // get and validate the constructor arguments and their types
+                if(type == null){
+                    throw new IllegalSendableFactoryCallException("Type "+t+" does not exist");
+                }
+                // get the constructor arguments and their types
                 constructionArgs = constructionArgs ?? new object[]{from};
-                argTypes = argTypes ?? new Type[]{from.GetType()};
+                //argTypes = argTypes ?? new Type[]{from.GetType()};
+                // if arg types not specified, use construction args instead
+                if(argTypes == null){
+                    List<Type> argTypeList = new List<Type>();
+                    for(int i = 0; i < constructionArgs.Length; i++){
+                        argTypeList.Add(constructionArgs[i].GetType());
+                    }
+                    argTypes = argTypeList.ToArray();
+                }
+                // validate that they match
                 for(int i = 0; i < constructionArgs.Length; i++){
                     // error if lengths aren't the same or if types don't match
                     if(i >= argTypes.Length || !(constructionArgs[i].GetType() == argTypes[i])){

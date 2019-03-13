@@ -1,29 +1,28 @@
 using System.Xml;
+using SFB.Game.Content;
 
 namespace SFB.Game.Management{
 
     // a class to represent a move taken by a player
     // does NOT represent which player is attempting to take that action
-    public abstract class PlayerAction{
+    public abstract class PlayerAction : Sendable{
+
+        protected override string XmlNodeName{
+            get{ return "action"; }
+        }
 
         public PlayerAction(){
 
         }
 
-        public PlayerAction(XmlNode from){
+        public PlayerAction(XmlElement from){
 
         }
 
-        // gets an XML representation of the move
-        public XmlElement ToXml(XmlDocument doc){
-            XmlElement e = doc.CreateElement("action");
-            return e;
-        }
-
-        public static PlayerAction FromXml(XmlElement e){
-            // TODO: generalize implementation from Delta
-            // dummy implmenation
-            return null;
+        public static PlayerAction FromXml(XmlElement e, IdIssuer<Card> cl, IdIssuer<Lane> lanes){
+            object[] args = new object[]{e, cl, lanes};
+            PlayerAction pa = SendableFactory<PlayerAction>.FromXml(e, args);
+            return pa;
         }
 
         // returns if it is legal in the current gamestate...

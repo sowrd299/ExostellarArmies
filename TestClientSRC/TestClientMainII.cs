@@ -12,7 +12,7 @@ using SFB.Net;
 namespace SFB.TestClient{
 
     //A dummy client just for testing the server
-    public class TestClient{
+    public class TestClient {
         
 
         private static void ProcessDeltas(XmlDocument doc, CardLoader cl, bool verbose = false){
@@ -95,7 +95,6 @@ namespace SFB.TestClient{
             do{
                 turnStartDoc = socketManager.ReceiveXml();
             }while(turnStartDoc == null);
-            // get the turnStart message
             Console.WriteLine("Applying turn start deltas...");
             ProcessDeltas(turnStartDoc, cl, true);
 
@@ -103,6 +102,25 @@ namespace SFB.TestClient{
             foreach(Player p in gm.Players){
                 Console.WriteLine("\n{0} player has hand: {1}\n...deck: {2}\n", p == localPlayer? "Local" : "Enemy", p.Hand, p.Deck);
             }
+
+            // send a game action
+            Console.WriteLine("Press Enter to send a Player Action...");
+            Console.ReadLine();
+            XmlDocument playerActionDoc = MessageHandler.NewEmptyMessage("gameAction");
+            XmlElement playerActionElement = new PlayUnitCardAction(localPlayer.Hand[0] as UnitCard, gm.Lanes[0], 0, 0).ToXml(playerActionDoc);
+            playerActionDoc.DocumentElement.AppendChild(playerActionElement);
+            socketManager.SendXml(playerActionDoc);
+
+            // end the turn and get back the end of turn deltas
+            Console.WriteLine("Press Enter to end turn...");
+            Console.Read();
+            socketManager.Send("<file type='lockInTurn'></file>");
+            Console.WriteLine("Waiting for response from server..."); 
+            string endTurnResponse; 
+            do{
+                endTurnResponse = socketManager.Receive();
+            }while(endTurnResponse == null);
+            Console.WriteLine("Response from server: {0}",endTurnResponse);
             
             // end the test
             Console.WriteLine("Press Enter to disconnect...");

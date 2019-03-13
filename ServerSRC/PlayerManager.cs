@@ -10,6 +10,11 @@ namespace SFB.Net.Server.Matches{
     // a class to manage one specific player durring a match
     class PlayerManager : MessageHandler{
 
+        // TODO: this is a SUPER DUMB way to do this. I'm just lazy and it's week 10.
+        // but actually, this will need more meaningfull access to a card loader at some point
+        // most likely getting one passed in from Match, which gets one from the server
+        private static CardLoader cardLoader = new CardLoader();
+
         private enum State{ACTING, WAITING} 
 
         // the socket to the player's client
@@ -140,7 +145,7 @@ namespace SFB.Net.Server.Matches{
                 // handle player taking action
                 case "gameAction":
                     if(state == State.ACTING){
-                        PlayerAction a = PlayerAction.FromXml(msg.DocumentElement["action"]);
+                        PlayerAction a = PlayerAction.FromXml(msg.DocumentElement["action"], cardLoader, Lane.IdIssuer);
                         if(gameManager.IsLegalAction(player, a)){
                             Delta[] ds =  gameManager.GetActionDeltas(player, a);
                             // using three different for loops to:
