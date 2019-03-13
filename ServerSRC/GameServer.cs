@@ -116,7 +116,7 @@ namespace SFB.Net.Server{
                         removedSockets.Add(from); //remove the socket so that two classes aren't trying to handle it
                     }
                     MakeMatch();
-                    Console.WriteLine("...I guess they are waiting for a while. Okay.");
+                    //Console.WriteLine("...I guess they are waiting for a while. Okay.");
                     break;
                 default:
                     base.handleMessage(msg, from);

@@ -9,7 +9,7 @@ namespace SFB.Game.Content {
 
         public CardLoader()
         {
-            m_listOfCards.Add("Mercenary Phatasm", new UnitCard(2, "Mercenary Phatasm", Faction.NONE, "Deploy: Your opponent reveals a card from their hand", "What do you want to know?", 1, 2, 3, new AbilityList()));
+            m_listOfCards.Add("Mercenary Phantasm", new UnitCard(2, "Mercenary Phatasm", Faction.NONE, "Deploy: Your opponent reveals a card from their hand", "What do you want to know?", 1, 2, 3, new AbilityList()));
             m_listOfCards.Add("Commercial Shipper", new UnitCard(2, "Commercial Shipper", Faction.NONE, "Deploy: Draw a card, then put a card from your hand on the bottom of your deck", "Whatever you need, we got", 0, 3, 3, new AbilityList()));
             m_listOfCards.Add("Adaptive Protopod", new UnitCard(2, "Adaptive Protopod", Faction.MYXOR, "Support Infantry: This front line gains Spore 3 until end of turn.\nSupport Artillery: This gains Siege 1 until end of turn", 
                "MyxI jha maRtox lOz!", 2, 0, 2, new AbilityList()));
@@ -22,7 +22,7 @@ namespace SFB.Game.Content {
                     0, 2, 2, new AbilityList(new Ability[] { new Siege(3) })));
             m_listOfCards.Add("Mulch Pod", new UnitCard(2, "Mulch Pod", Faction.MYXOR, "Absorb\nDeath:Beta Swarm (if there is nothing in this back row, reveal the top card of your deck and play it at -1 Cost. If you can't, put it in your graveyard)",
                "Myxi jha maRtox IOz", 0, 1, 1, new AbilityList(new Ability[] { new Absorb() })));
-            m_listOfCards.Add("Fecund Reflux Axon", new UnitCard(2, "Fecund Reflex Axon", Faction.MYXOR, "Deploy...\nSupporting Myxori: Gain 3 s and this gets +3R this turn.\n" +
+            m_listOfCards.Add("Fecund Reflex Axon", new UnitCard(2, "Fecund Reflex Axon", Faction.MYXOR, "Deploy...\nSupporting Myxori: Gain 3 s and this gets +3R this turn.\n" +
                "Front Line:If there is no back line here, this gains Absorb until the end of turn.", "Myxi jha maRtox IOz", 0, 2, 2, new AbilityList()));
             m_listOfCards.Add("Grafted Fang Spunner", new UnitCard(1, "Grafted Fang Spunner", Faction.MYXOR, "Death:Beta Swarm (if there is nothing in this back row, reveal the top card of your deck and play it at -1 Cost. If you can't, put it in your graveyard)",
                "Myxi jha maRtox IOz", 0, 2, 2, new AbilityList()));
