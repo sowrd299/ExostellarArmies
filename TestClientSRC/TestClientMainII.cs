@@ -37,7 +37,7 @@ namespace SFB.TestClient{
 
             // testing cardloader
             CardLoader cl = new CardLoader();
-            Card c = cl.GetByID("Mercenary Phatasm");
+            Card c = cl.GetByID("Mercenary Phantasm");
             Console.WriteLine("Successfully Loaded Card.");
 
             // BEGIN NETWORKING
@@ -63,7 +63,7 @@ namespace SFB.TestClient{
             //join a game and do all the setup
             Console.WriteLine("Press Enter to join a game...");
             Console.ReadLine();
-            socketManager.Send("<file type='joinMatch'><deck id='carthStarter'/></file>");
+            socketManager.Send("<file type='joinMatch'><deck id='myxorStarter'/></file>");
 
             // get the matchStart message
             Console.WriteLine("Waiting for match start...");
