@@ -45,6 +45,14 @@ public class Driver : MonoBehaviour {
         }
     }
 
+    [SerializeField]
+    private Sprite exostellar;
+    [SerializeField]
+    private Sprite jirnorn;
+    [SerializeField]
+    private Sprite myxori;
+
+
 
     void Awake()
     {
@@ -95,7 +103,7 @@ public class Driver : MonoBehaviour {
 		}
     }
 
-	public CardProperties[] createCardProperties(string name,string type,string flavor, string ability,int cost,int hp=-1,int melee=-1, int range=-1)
+	public CardProperties[] createCardProperties(string name,string type,string flavor, string ability,Sprite sp, int cost,int hp=-1,int melee=-1, int range=-1)
     {
         CardProperties[] listOfProp = new CardProperties[9];
         for (int i=0; i<listOfProp.Length; i++)
@@ -108,6 +116,7 @@ public class Driver : MonoBehaviour {
         listOfProp[1].stringValue = type;
         listOfProp[2].stringValue = flavor;
         listOfProp[3].stringValue = ability;
+        listOfProp[4].sprite = sp;
         listOfProp[5].intValue = cost;
         listOfProp[6].intValue = hp;
         listOfProp[7].intValue = melee;
@@ -151,18 +160,26 @@ public class Driver : MonoBehaviour {
             string flavorText = p.Hand[i].FlavorText;
             string mainText = p.Hand[i].MainText;
             int cost = p.Hand[i].DeployCost;
-			if(p.Hand[i].GetType() == typeof(UnitCard)) {
+            Sprite sp = null;
+            if (p.Hand[i].Faction == Faction.CARTH || p.Hand[i].Faction == Faction.NONE)
+                sp = exostellar;
+            else if (p.Hand[i].Faction == Faction.JIRNOR)
+                sp = jirnorn;
+            else if (p.Hand[i].Faction == Faction.MYXOR)
+                sp = myxori;
+
+            if (p.Hand[i].GetType() == typeof(UnitCard)) {
 				UnitCard uc = p.Hand[i] as UnitCard;
 				int meleeAttack = uc.MeleeAttack;
 				int rangedAttack = uc.RangedAttack;
 				int hp = uc.HealthPoints;
 				CardProperties[] listOfProperties = new CardProperties[9];
-				listOfProperties = createCardProperties(myName, "TYPE", flavorText, mainText, cost, hp, meleeAttack, rangedAttack);
+				listOfProperties = createCardProperties(myName, "TYPE", flavorText, mainText, sp, cost, hp, meleeAttack, rangedAttack);
 				CardFrontEnd cardFront = new CardFrontEnd(listOfProperties);
 				ans.Add(cardFront);
 			} else {
 				CardProperties[] listOfProperties = new CardProperties[9];
-				listOfProperties = createCardProperties(myName, "TYPE", flavorText, mainText, cost);
+				listOfProperties = createCardProperties(myName, "TYPE", flavorText, mainText, sp,cost);
 				CardFrontEnd cardFront = new CardFrontEnd(listOfProperties);
 				ans.Add(cardFront);
 			}
