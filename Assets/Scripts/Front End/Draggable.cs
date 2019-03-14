@@ -49,7 +49,9 @@ public class Draggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
     {
 
         this.transform.position = eventData.position;
-        if(placeHolder.transform.parent != placeHolderParent)
+        Debug.Log("placeHolder.transform.parent" + (placeHolder.transform.parent == null));
+        Debug.Log("placeHolderParent" + (placeHolderParent == null));
+        if (placeHolder.transform.parent != placeHolderParent)
         {
             placeHolder.transform.SetParent(placeHolderParent);
         }

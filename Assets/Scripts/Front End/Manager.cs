@@ -151,6 +151,7 @@ public class Manager : MonoBehaviour
 
 						if(c.Old == false) {
 							Card back = c.cardBackEnd;
+                            Debug.Log("Back:"+back == null);
 							if(myCardHolders[i].transform.parent.name.Contains("Front"))
 								actions.Add(new PlayUnitCardAction(back as UnitCard, Driver.instance.myLanes[i % 3], 0, 0));
 							else
