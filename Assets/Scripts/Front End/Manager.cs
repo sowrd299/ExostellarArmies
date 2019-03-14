@@ -122,7 +122,7 @@ public class Manager : MonoBehaviour
 		if(Driver.instance.NETWORK) {
 			if(!Client.Instance.DoneInitializing && !foundMatch) // Change to CLient.Instance later
 			{
-				mainBtnText.text = "Waiting for a  match!";
+				mainBtnText.text = "Waiting for match!";
 				//mainButton.enabled = false;
 				mainButton.GetComponent<Image>().color = Color.grey;
 			}/* else if(Client.Instance.DoneInitializing && !foundMatch) {
