@@ -151,10 +151,11 @@ public class Manager : MonoBehaviour
 
 						if(c.Old == false) {
 							Card back = c.cardBackEnd;
+							Debug.Log("BACK " + (back == null));
 							if(myCardHolders[i].transform.parent.name.Contains("Front"))
-								actions.Add(new PlayUnitCardAction(back as UnitCard, Driver.instance.myLanes[i % 3], 0, 0));
+								actions.Add(new PlayUnitCardAction(back as UnitCard, Client.Instance.GameManager.Lanes[i % 3], 0, 0));
 							else
-								actions.Add(new PlayUnitCardAction(back as UnitCard, Driver.instance.myLanes[i % 3], 0, 1));
+								actions.Add(new PlayUnitCardAction(back as UnitCard, Client.Instance.GameManager.Lanes[i % 3], 0, 1));
 							//myCardHolders need to be in correct order
 						}
 					}
@@ -263,9 +264,9 @@ public class Manager : MonoBehaviour
                 {
                     Card back = c.cardBackEnd;
                     if (cardHolders[i].transform.parent.name.Contains("Front"))
-                        actions.Add(new PlayUnitCardAction(back as UnitCard, Driver.instance.myLanes[i % 3], 1, 0));
+                        actions.Add(new PlayUnitCardAction(back as UnitCard, Client.Instance.GameManager.Lanes[i % 3], 1, 0));
                     else
-                        actions.Add(new PlayUnitCardAction(back as UnitCard, Driver.instance.myLanes[i % 3], 1, 1));
+                        actions.Add(new PlayUnitCardAction(back as UnitCard, Client.Instance.GameManager.Lanes[i % 3], 1, 1));
                 }
                 c.Old = true;
             }

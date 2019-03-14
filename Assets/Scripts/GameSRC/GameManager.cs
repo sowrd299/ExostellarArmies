@@ -42,13 +42,13 @@ namespace SFB.Game.Management{
                 return lanes;
             }
         }
-
+		/*
         // WHERE ALL PENDING PENDING INPUT REQUESTS GO
         private List<InputRequest> pendingInputRequests;
         public InputRequest[] PendingInputRequests{
             get{ return pendingInputRequests.ToArray(); }
         }
-
+		*/
 		internal int[] getIndexOf(Unit u) {
 			for(int l = 0; l < lanes.Length; l++)
 				for(int play = 0; play < 2; play++)
