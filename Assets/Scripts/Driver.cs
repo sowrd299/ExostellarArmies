@@ -24,7 +24,6 @@ public class Driver : MonoBehaviour {
     public Manager manager;
     public ResourcePool myMana;
     private ResourcePool enemyMana;
-    public Lane[] myLanes=null;
 
     public int resoureCount = 0;
     public int dropCostSum = 0;
@@ -89,7 +88,6 @@ public class Driver : MonoBehaviour {
 			// Each deck has 16 cards in it
 			DeckList[] deckLists = new DeckList[] { dlC, dlJ };
 			gameManager = new GameManager(deckLists);
-			myLanes = gameManager.Lanes;
 			
 			myMana = gameManager.Players[0].Mana;
 			resoureCount = myMana.Count;
