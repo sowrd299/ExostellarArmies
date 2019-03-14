@@ -14,10 +14,15 @@ public class Draggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
     public Transform placeHolderParent = null;
     private GameObject placeHolder = null;
 
+    [SerializeField]
+    private Sprite miniCard;
+    private SVGImage bckg;
+
     public GameObject myHand = null;
     void Start()
     {
         myHand = GameObject.FindWithTag("MyHand");
+        bckg = this.gameObject.transform.GetChild(0).GetChild(0).GetChild(0).GetComponent<SVGImage>();
     }
 
     public void OnBeginDrag(PointerEventData eventData)
@@ -29,7 +34,7 @@ public class Draggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
         {
             Driver.instance.dropCostSum -= cardCost;
         }
-        myHand.GetComponent<Image>().raycastTarget = true;
+        myHand.GetComponent<SVGImage>().raycastTarget = true;
         placeHolder = new GameObject();
         placeHolder.transform.SetParent(this.transform.parent);
         LayoutElement le = placeHolder.AddComponent<LayoutElement>();
@@ -47,10 +52,7 @@ public class Draggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
 
     public void OnDrag(PointerEventData eventData)
     {
-
         this.transform.position = eventData.position;
-        Debug.Log("placeHolder.transform.parent" + (placeHolder.transform.parent == null));
-        Debug.Log("placeHolderParent" + (placeHolderParent == null));
         if (placeHolder.transform.parent != placeHolderParent)
         {
             placeHolder.transform.SetParent(placeHolderParent);
@@ -78,8 +80,17 @@ public class Draggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
         if (parentToReturnTo.gameObject.tag == "CardHolder")
         {
             Driver.instance.dropCostSum += cardCost;
+            //Change to Mini Card
+            bckg.sprite = miniCard;
+            Vector3 v = new Vector3(1f, 0.4f, 1f);
+            bckg.gameObject.transform.localScale = v;
+            for (int i = 1; i < this.gameObject.transform.GetChild(0).GetChild(0).childCount; i++)
+            {
+                this.gameObject.transform.GetChild(0).GetChild(0).GetChild(i).gameObject.SetActive(false);
+            }
         }
-        myHand.GetComponent<Image>().raycastTarget = false;
+        myHand.GetComponent<SVGImage>().raycastTarget = false;
+        Debug.Log(parentToReturnTo.gameObject.name);
         this.transform.SetParent(parentToReturnTo);
         this.transform.SetSiblingIndex(placeHolder.transform.GetSiblingIndex());
         this.transform.position = new Vector3(this.transform.position.x, this.transform.position.y, 0f);

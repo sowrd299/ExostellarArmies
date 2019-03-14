@@ -26,12 +26,17 @@ public class DropZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
     public void OnDrop(PointerEventData eventData)
     {
         Draggable d = eventData.pointerDrag.GetComponent<Draggable>();
+        Debug.Log("bbb" + (d == null));
         if (d != null)
         {
             CardUI c = d.gameObject.GetComponent<CardUI>();
             p = Driver.instance.gameManager.Players[0];
+            Debug.Log("aaaa"+ this.gameObject.tag);
             if (this.gameObject.tag == "CardHolder" && this.gameObject.transform.childCount <= 1)
+            {
                 d.ParentToReturnTo = this.transform;
+            }
+
             else if(this.gameObject.tag == "MyHand")
                 d.ParentToReturnTo = this.transform;
             else if(this.gameObject.tag == "EnemyCardHolder" && d.gameObject.tag == "MyCards")
