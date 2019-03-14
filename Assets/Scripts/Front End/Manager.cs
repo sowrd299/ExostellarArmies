@@ -151,7 +151,6 @@ public class Manager : MonoBehaviour
 
 						if(c.Old == false) {
 							Card back = c.cardBackEnd;
-							Debug.Log("BACK " + (back == null));
 							if(myCardHolders[i].transform.parent.name.Contains("Front"))
 								actions.Add(new PlayUnitCardAction(back as UnitCard, Client.Instance.GameManager.Lanes[i % 3], 0, 0));
 							else
@@ -160,7 +159,6 @@ public class Manager : MonoBehaviour
 						}
 					}
 				}
-				Debug.Log(actions.Count);
 
 				Client.Instance.SendPlanningPhaseActions(actions.ToArray());
 			} else {
