@@ -86,7 +86,7 @@ namespace SFB.Net.Client {
 				XmlElement e = a.ToXml(doc);
 				doc.DocumentElement.AppendChild(e);
 			}
-			Debug.Log(doc.OuterXml);
+			Debug.Log("Sending PlayerAction: " + doc.OuterXml);
 			socketManager.SendXml(doc);
 			socketManager.Send("<file type='lockInTurn'>");
 			setPhase(ClientPhase.WAIT_PLANNING_END);
