@@ -73,11 +73,20 @@ namespace SFB.Net.Client {
 
 		public void SendPlanningPhaseActions(PlayerAction[] actions) {
 			Debug.Log("Sending " + actions.Length + " actions");
+			/*String s = "<file type='gameAction'>";
+			foreach(PlayerAction a in actions) {
+				XmlElement e = a.ToXml(doc);
+				Debug.Log(e.OuterXml);
+				s += e.OuterXml;
+			}
+			s += 
+			socketManager.Send(s);*/
 			XmlDocument doc = NewEmptyMessage("gameAction");
 			foreach(PlayerAction a in actions) {
 				XmlElement e = a.ToXml(doc);
-				doc.AppendChild(e);
+				doc.DocumentElement.AppendChild(e);
 			}
+			Debug.Log("Sending PlayerAction: " + doc.OuterXml);
 			socketManager.SendXml(doc);
 			socketManager.Send("<file type='lockInTurn'>");
 			setPhase(ClientPhase.WAIT_PLANNING_END);

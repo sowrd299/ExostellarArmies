@@ -159,7 +159,6 @@ public class Manager : MonoBehaviour
 						}
 					}
 				}
-				Debug.Log(actions.Count);
 
 				Client.Instance.SendPlanningPhaseActions(actions.ToArray());
 			} else {

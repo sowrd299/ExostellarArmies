@@ -7,6 +7,9 @@ namespace SFB.Game {
 	public class TowerDelta : Delta {
 		private Tower tower;
 		private int amount;
+		public int Amount {
+			get { return amount; }
+		}
 
 		public TowerDelta(Tower t, int amt) {
 			tower = t;
