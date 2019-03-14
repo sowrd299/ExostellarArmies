@@ -1888,7 +1888,7 @@ MonoBehaviour:
     image: {fileID: 0}
     element: {fileID: 11400000, guid: 6da532ebc0c5c427a8b33a00014bc60f, type: 2}
   - text: {fileID: 0}
-    image: {fileID: 0}
+    image: {fileID: 7207093993789769784}
     element: {fileID: 11400000, guid: e42ab5aaa89294e75a7cb333032c43b7, type: 2}
   - text: {fileID: 2209705394794001776}
     image: {fileID: 0}
@@ -2081,7 +2081,7 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 21300000, guid: 5440b001f7dc34248925618d95151a61, type: 3}
+  m_Sprite: {fileID: 0}
 --- !u!1 &8184313462791474841
 GameObject:
   m_ObjectHideFlags: 0
