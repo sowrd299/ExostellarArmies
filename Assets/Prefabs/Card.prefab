@@ -900,7 +900,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 0}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -1888,7 +1888,7 @@ MonoBehaviour:
     image: {fileID: 0}
     element: {fileID: 11400000, guid: 6da532ebc0c5c427a8b33a00014bc60f, type: 2}
   - text: {fileID: 0}
-    image: {fileID: 378426677}
+    image: {fileID: 0}
     element: {fileID: 11400000, guid: e42ab5aaa89294e75a7cb333032c43b7, type: 2}
   - text: {fileID: 2209705394794001776}
     image: {fileID: 0}
@@ -1916,7 +1916,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   placeHolderParent: {fileID: 0}
-  miniCard: {fileID: 21300000, guid: 50dfcdc032c1c4b0e8a87c95b235a13c, type: 3}
+  miniCard: {fileID: 21300000, guid: 751dd9a163c8a9546b7ca340555b417b, type: 3}
   myHand: {fileID: 0}
 --- !u!225 &35534340
 CanvasGroup:

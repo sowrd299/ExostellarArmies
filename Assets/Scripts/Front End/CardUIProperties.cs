@@ -7,6 +7,6 @@ using UnityEngine.UI;
 public class CardUIProperties 
 {
     public Text text;
-    public Image image;
+    public SVGImage image;
     public Element element;
 }
