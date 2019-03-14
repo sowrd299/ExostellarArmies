@@ -105,16 +105,18 @@ namespace SFB.Net.Server{
 
         public override void handleMessage(XmlDocument msg, SocketManager from){
             string type = msg.DocumentElement.Attributes["type"].Value;
-            Console.WriteLine("While in 'Main Menu', Recieved message from client of type {0}", type);
+            //Console.WriteLine("While in 'Main Menu', Recieved message from client of type {0}", type);
             //handle different types of messages
             switch(type){
                 //go to match making
                 case "joinMatch":
                     matchMaker.Enqueueu(from, msg);
+                    Console.WriteLine("A client has entered the lob. Loby size is {0}.", matchMaker.NumQueuedClients);
                     lock(removedSockets){
                         removedSockets.Add(from); //remove the socket so that two classes aren't trying to handle it
                     }
                     MakeMatch();
+                    //Console.WriteLine("...I guess they are waiting for a while. Okay.");
                     break;
                 default:
                     base.handleMessage(msg, from);
@@ -137,16 +139,16 @@ namespace SFB.Net.Server{
         // starts a new match, if it can
         internal Match MakeMatch(){
             Match newMatch = matchMaker.MakeMatch();
+            Console.WriteLine("Match making finished...");
             if(newMatch != null){
                 Console.WriteLine("Starting game!");
-                // TODO: multithread! (maybe?)
                 newMatch.AsynchStart(ReturnClients);
             }
             return newMatch;
         }
 
         // returns the given sockets to the management of the game server "main menu"
-        // TODO: this is just a really dump way to do this
+        // TODO: this is just a really dumb way to do this
         internal void ReturnClients(SocketManager[] client){
             lock(clientSockets){
                 // for each given client, record that it is here and start receiving from it

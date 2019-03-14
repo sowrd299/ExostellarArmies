@@ -30,6 +30,7 @@ namespace SFB.Net{
                 	handleMessage(msg, from);
 				}catch(Exception e){
 					handleError(e, from);
+                    Console.WriteLine("...was handling message: {0}", msg.OuterXml);
 				}
             }
         }
@@ -72,6 +73,7 @@ namespace SFB.Net{
 
         private void handleError(Exception e, SocketManager socket){
             socket.Send("<file type='error'><msg>Server handling message raised exception: "+e.Message+"</msg></file");
+            Console.WriteLine("Recieced error: {0}\n{1}\n...while handling message. Sent error back to sender.", e.Message, e.StackTrace);
         }
 
         // returns an empty XML message in propper format, with type set to the given type
