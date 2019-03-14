@@ -145,34 +145,37 @@ namespace SFB.Net.Server.Matches{
                 // handle player taking action
                 case "gameAction":
                     if(state == State.ACTING){
-                        PlayerAction a = PlayerAction.FromXml(msg.DocumentElement["action"], cardLoader, Lane.IdIssuer);
-                        if(gameManager.IsLegalAction(player, a)){
-                            Delta[] ds =  gameManager.GetActionDeltas(player, a);
-                            // using three different for loops to:
-                            //  1) send message faster
-                            //  2) spend less time in each lock
+                        // forloop to handle all actions in the message
+                        foreach (XmlElement actionElement in msg.GetElementsByTagName("action")){
+                            PlayerAction a = PlayerAction.FromXml(actionElement, cardLoader, Lane.IdIssuer);
+                            if(gameManager.IsLegalAction(player, a)){
+                                Delta[] ds =  gameManager.GetActionDeltas(player, a);
+                                // using three different for loops to:
+                                //  1) send message faster
+                                //  2) spend less time in each lock
 
-                            // update the gamestate
-                            lock(gameManager){
-                                foreach(Delta d in ds){
-                                    gameManager.ApplyDelta(d);
+                                // update the gamestate
+                                lock(gameManager){
+                                    foreach(Delta d in ds){
+                                        gameManager.ApplyDelta(d);
+                                    }
                                 }
-                            }
-                            // build and send the reponse
-                            XmlDocument resp = NewEmptyMessage("actionDeltas");
-                            foreach(Delta d in ds){
-                                XmlElement e = d.ToXml(resp);
-                                resp.DocumentElement.AppendChild(e);
-                            }
-                            socket.SendXml(resp);
-                            // log the turn deltas
-                            lock(turnDeltas){
+                                // build and send the reponse
+                                XmlDocument resp = NewEmptyMessage("actionDeltas");
                                 foreach(Delta d in ds){
-                                    turnDeltas.Add(d);
+                                    XmlElement e = d.ToXml(resp);
+                                    resp.DocumentElement.AppendChild(e);
                                 }
+                                socket.SendXml(resp);
+                                // log the turn deltas
+                                lock(turnDeltas){
+                                    foreach(Delta d in ds){
+                                        turnDeltas.Add(d);
+                                    }
+                                }
+                            }else{
+                                from.Send("<file type='error'><msg>Illegal game action</msg></file>");
                             }
-                        }else{
-                            from.Send("<file type='error'><msg>Illegal game action</msg></file>");
                         }
                     }else{
                         from.Send("<file type='error'><msg>Cannot take game actions now</msg></file>");
