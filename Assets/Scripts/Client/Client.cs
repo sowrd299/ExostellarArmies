@@ -41,46 +41,26 @@ namespace SFB.Net.Client {
 		private CardLoader cl;
 
 		private Client() {
-			setPhase(ClientPhase.INIT);
+			phase = ClientPhase.INIT;
 		}
 
 		public static void SetDriver(Driver d) {
+			Debug.Log("Driver for Client set.");
 			Instance.driver = d;
 		}
 
 		private void ProcessDeltas(XmlDocument doc, CardLoader cl, bool verbose = false) {
 			foreach(XmlElement e in doc.GetElementsByTagName("delta")) {
 				Delta d = Delta.FromXml(e, cl);
-				Debug.Log(d.GetType());
 				if(verbose) {
-					Debug.Log("Processing delta: '" + e.OuterXml + "'");
+					Debug.Log("    processing delta: '" + e.OuterXml + "'");
 				}
 				d.Apply();
-				Debug.Log("P1 Hand" + gameManager.Players[0].Hand.Count);
-				Debug.Log("P2 Hand" + gameManager.Players[1].Hand.Count);
-				Debug.Log("P1 Deck" + gameManager.Players[0].Deck.Count);
-				Debug.Log("P2 Deck" + gameManager.Players[1].Deck.Count);
-				Debug.Log("P2 should be unknown " + gameManager.Players[1].Deck[0].Name);
-				Debug.Log("P1 Deck.ID" + gameManager.Players[0].Deck.ID);
-				Debug.Log("P2 Deck.ID" + gameManager.Players[1].Deck.ID);
-				Debug.Log("P1 Mana.ID" + gameManager.Players[0].Mana.ID);
-				Debug.Log("P2 Mana.ID" + gameManager.Players[1].Mana.ID);
-				Debug.Log("P1 deploy.ID" + gameManager.Players[0].deployPhases.ID);
-				Debug.Log("P2 deploy.ID" + gameManager.Players[1].deployPhases.ID);
-				driver.printField();
 			}
 		}
 
 		public void SendPlanningPhaseActions(PlayerAction[] actions) {
-			Debug.Log("Sending " + actions.Length + " actions");
-			/*String s = "<file type='gameAction'>";
-			foreach(PlayerAction a in actions) {
-				XmlElement e = a.ToXml(doc);
-				Debug.Log(e.OuterXml);
-				s += e.OuterXml;
-			}
-			s += 
-			socketManager.Send(s);*/
+			Debug.Log("Sending " + actions.Length + " PlayerActions");
 			XmlDocument doc = NewEmptyMessage("gameAction");
 			foreach(PlayerAction a in actions) {
 				XmlElement e = a.ToXml(doc);
@@ -89,19 +69,16 @@ namespace SFB.Net.Client {
 			Debug.Log("Sending PlayerActions: " + doc.OuterXml);
 			socketManager.SendXml(doc);
 			socketManager.Send("<file type='lockInTurn'>");
-			setPhase(ClientPhase.WAIT_TURN_START);
+
+
+			phase = ClientPhase.WAIT_TURN_START;
+			Debug.Log("Waiting for turn start...");
 		}
-
-
-		//public static void InitializeInstance(Driver d) {
-		//	if(instance == null)
-		//		instance = new Client();
-		//	instance.driver = d;
-		//	instance.Start();
-		//}
 
 		public void Update() {
 			if(phase == ClientPhase.INIT) {
+				Debug.Log("Connecting to Server...");
+
 				//find local IP
 				IPHostEntry ipEntry = Dns.GetHostEntry(Dns.GetHostName());
 				IPAddress ipAddr = ipEntry.AddressList[0];
@@ -115,12 +92,18 @@ namespace SFB.Net.Client {
 						SocketType.Stream,
 						ProtocolType.Tcp);
 				socket.Connect(HostName, Port);
+				Debug.Log("Connected!");
 				socketManager = new SocketManager(socket, "</file>");
 
 				//setup game objects
 				cl = new CardLoader();
 
-				setPhase(ClientPhase.WAIT_MATCH_START);
+				// wait for match to be made
+				phase = ClientPhase.WAIT_MATCH_START;
+				socketManager.Send("<file type='joinMatch'><deck id='carthStarter'/></file>");
+				Debug.Log("Sent joinMatch request...");
+				Debug.Log("Waiting for match to be made...");
+
 			} else {
 				// receive a document
 				XmlDocument receivedDoc = socketManager.ReceiveXml();
@@ -136,7 +119,7 @@ namespace SFB.Net.Client {
 					case ClientPhase.WAIT_MATCH_START:
 						if(receivedDoc != null) {
 							// init the gamestate accordingly
-							Debug.Log("Initializing game state...");
+							Debug.Log("Initializing gameManager...");
 							int localPlayerIndex = 0;
 							List<XmlElement> playerIds = new List<XmlElement>();
 							foreach(XmlElement e in receivedDoc.GetElementsByTagName("playerIds")) {
@@ -151,22 +134,29 @@ namespace SFB.Net.Client {
 							}
 							gameManager = new GameManager(playerIds: playerIds.ToArray(), laneIds: laneIds.ToArray());
 							driver.gameManager = gameManager;
-							Debug.Log("P1 Hand" + gameManager.Players[0].Hand.Count);
-							Debug.Log("P2 Hand" + gameManager.Players[1].Hand.Count);
-							Debug.Log("P1 Deck" + gameManager.Players[0].Deck.Count);
-							Debug.Log("P2 Deck" + gameManager.Players[1].Deck.Count);
-							driver.printField();
 
-							setPhase(ClientPhase.WAIT_TURN_START);
+
+							phase = ClientPhase.WAIT_TURN_START;
+							Debug.Log("Waiting for turn start...");
 						}
 
 						break;
 					case ClientPhase.WAIT_TURN_START:
 						// wait for turnStart message
 						if(receivedDoc != null) {
-							Debug.Log("Applying turn start deltas...");
+							Debug.Log("Received turn start deltas; applying them:");
 							ProcessDeltas(receivedDoc, cl, true);
-							setPhase(ClientPhase.PLANNING);
+
+							driver.manager.StartDrawPhase(gameManager.Players);
+
+
+
+							phase = ClientPhase.PLANNING;
+							Debug.Log("Planning Phase Begun");
+							foreach(Delta d in driver.gameManager.Players[1].GetDrawDeltas()) {
+								d.Apply();
+								Debug.Log("Processing delta: " + d.GetType());
+							}
 						}
 						break;
 					case ClientPhase.PLANNING:
@@ -176,46 +166,7 @@ namespace SFB.Net.Client {
 				}
 			}
 		}
-
-		private void setPhase(ClientPhase nPhase) {
-			switch(nPhase) {
-				case ClientPhase.WAIT_MATCH_START:
-					//join a game
-					socketManager.Send("<file type='joinMatch'><deck id='carthStarter'/></file>");
-					Debug.Log("Sent joinMatch request...");
-					Debug.Log("Waiting for match start...");
-
-					break;
-				case ClientPhase.WAIT_TURN_START:
-					Debug.Log("Waiting for turn start...");
-					break;
-				case ClientPhase.PLANNING:
-					Debug.Log("PLANNING");
-					Debug.Log("P1 Hand" + gameManager.Players[0].Hand.Count);
-					Debug.Log("P2 Hand" + gameManager.Players[1].Hand.Count);
-					Debug.Log("P1 Deck" + gameManager.Players[0].Deck.Count);
-					Debug.Log("P2 Deck" + gameManager.Players[1].Deck.Count);
-					driver.printField();
-
-					driver.resoureCount = gameManager.Players[0].Mana.Count;
-					driver.manager.StartDrawPhase(gameManager.Players);
-					foreach(Delta d in driver.gameManager.Players[1].GetDrawDeltas()) {
-						d.Apply();
-						Debug.Log("Processing delta: " + d.GetType());
-					}
-					Debug.Log("P1 Hand" + gameManager.Players[0].Hand.Count);
-					Debug.Log("P2 Hand" + gameManager.Players[1].Hand.Count);
-					Debug.Log("P1 Deck" + gameManager.Players[0].Deck.Count);
-					Debug.Log("P2 Deck" + gameManager.Players[1].Deck.Count);
-
-					Debug.Log(gameManager.Players[0]);
-					Debug.Log(gameManager.Players[1]);
-
-					break;
-			}
-			phase = nPhase;
-		}
-
+		
 		protected override void handleSocketDeath(SocketManager sm) {
 			// TODO
 		}

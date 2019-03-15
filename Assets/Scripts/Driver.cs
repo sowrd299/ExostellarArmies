@@ -24,8 +24,7 @@ public class Driver : MonoBehaviour {
     public Manager manager;
     public ResourcePool myMana;
     private ResourcePool enemyMana;
-
-    public int resoureCount = 0;
+	
     public int dropCostSum = 0;
 
     private List<CardFrontEnd> listofUIOnTable = new List<CardFrontEnd>();
@@ -98,7 +97,6 @@ public class Driver : MonoBehaviour {
 			gameManager = new GameManager(deckLists);
 			
 			myMana = gameManager.Players[0].Mana;
-			resoureCount = myMana.Count;
 			//loadWhenDraw();
 		}
     }

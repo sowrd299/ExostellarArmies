@@ -138,16 +138,19 @@ namespace SFB.Game.Management{
 			return CombatManager.getMeleeDeltas(lanes);
 		}
 
+		/*
 		// returns the outcomes of a player taking a given action
 		public Delta[] GetActionDeltas(Player player, PlayerAction a){
             // and old dummy implementation:
             // return new Delta[]{new Deck.RemoveFromDeckDelta(player.Deck, null, 0)}; // this implementation intrinsically throws errors
             // real implementation:
             return a.GetDeltas(player);
-        }
+        }*/
 
         // Get deltas for after a deployment phase ends
+		// Decrease # of deploy phases, activate deploy effects
         public Delta[] GetEndDeployDeltas(){
+			// decrease each player's # of deploy phases
             List<Delta> deltas = new List<Delta>();
             foreach(Player p in players){
                 foreach(Delta d in p.GetPostDeployPhaseDeltas()){
@@ -155,7 +158,7 @@ namespace SFB.Game.Management{
                 }
             }
 
-			// TODO: activate deploy affects here, probably
+			// activate deploy affects here
 			foreach(Lane l in lanes)
 				for(int play = 0; play < l.Units.GetLength(0); play++) // player
 					for(int pos = 0; pos < l.Units.GetLength(1); pos++) // front/back row
@@ -176,13 +179,56 @@ namespace SFB.Game.Management{
             return r;
         }
 
-        // return the results if the turn were to end right then
-        // more specifically, returns the combine results of every phase
-        //  from the currently ending deployment phase up to the draw phase
-        //  before the next deploy phase
-        // TODO: is this REALLY the best way to do this...
-        // probably should depricate this...
-        public Delta[] GetTurnDeltas(){
+		// VARIOUS ADMIN METHODS
+
+		// returns and XML representation of the ID of the lane in each index
+		public XmlElement[] GetLaneIDs(XmlDocument doc) {
+			XmlElement[] r = new XmlElement[lanes.Length];
+			for(int i = 0; i < lanes.Length; i++) {
+				r[i] = doc.CreateElement("laneIds");
+				XmlAttribute id = doc.CreateAttribute("id");
+				id.Value = lanes[i].ID;
+				r[i].SetAttributeNode(id);
+				XmlAttribute index = doc.CreateAttribute("index");
+				index.Value = i.ToString();
+				r[i].SetAttributeNode(index);
+			}
+			return r;
+		}
+
+		// to be called after every phase
+		public Delta[] cleanUp() {
+			List<Delta> deltas = new List<Delta>();
+			foreach(Lane l in lanes) {
+				// clean units
+				for(int play = 0; play < l.Units.GetLength(0); play++)
+					for(int pos = 0; pos < l.Units.GetLength(1); pos++) {
+						Unit u = l.Units[play, pos];
+						if(u != null && u.HealthPoints <= 0) {
+							//Debug.Log("kill " + play + " " + pos + " " + u.HealthPoints);
+							deltas.AddRange(u.onDeath(play, pos, lanes, players));
+							if(l.isOccupied(play, pos))
+								l.kill(play, pos);
+						}
+					}
+
+				// clean towers -> player lives
+				for(int i = 0; i < l.Towers.Length; i++) {
+					if(l.Towers[i].HP <= 0) {
+						players[i].takeDamage();
+						l.Towers[i].revive();
+						players[i].AddDeployPhase();
+					}
+				}
+			}
+			return deltas.ToArray();
+		}
+
+
+		// BELOW ARE NO LONGER USED
+
+		// x
+		public Delta[] GetTurnDeltas(){
             List<Delta> deltas = new List<Delta>();
             // card draws; at some point change this over to the draw phase
             // only draw for players who have deployment phases left
@@ -196,7 +242,7 @@ namespace SFB.Game.Management{
             return deltas.ToArray();
         }
 
-
+		// x
 		public void DrawPhase() {
 			foreach(Player p in players) {
 				Delta[] ds = p.GetDrawDeltas();
@@ -208,53 +254,8 @@ namespace SFB.Game.Management{
 			}
 		}
 
-        //public void CombatPhase() {
-        //	Debug.Log("PRE COMBAT");
-        //	Driver.instance.printField();
-
-        //          foreach (Delta d in CombatManager.getRangedDeltas(lanes))
-        //          {
-        //              ApplyDelta(d);
-        //              if(d.GetType()==typeof(UnitDelta))
-        //                  Debug.Log((d as UnitDelta).Amount);
-        //              else
-        //              {
-        //                  Debug.Log("tower");
-        //              }
-        //          }
-        //	Debug.Log("POST RANGED");
-        //	Driver.instance.printField();
-        //          Driver.instance.updateCardsOntable();
-        //	cleanUp();
-        //	Debug.Log("POST CLEAN");
-        //	Driver.instance.printField();
-
-        //	foreach (Delta d in CombatManager.getMeleeDeltas(lanes))
-        //          {
-        //              ApplyDelta(d);
-        //              if((d.GetType() == typeof(UnitDelta)))
-        //                  Debug.Log((d as UnitDelta).Amount);
-        //              else
-        //                  Debug.Log("tower");
-        //          }
-        //	Debug.Log("POST MELEE");
-        //	Driver.instance.printField();
-        //          Driver.instance.updateCardsOntable();
-        //          cleanUp();
-        //	Debug.Log("POST CLEAN");
-        //	Driver.instance.printField();
-
-        //	foreach(Delta d in CombatManager.getTowerDeltas(lanes))
-        //		ApplyDelta(d);
-        //	Debug.Log("POST TOWER");
-        //	Driver.instance.printField();
-        //          Driver.instance.updateCardsOntable();
-        //          cleanUp();
-        //	Debug.Log("POST COMBAT");
-        //	Driver.instance.printField();
-        //}
-
-        public void CombatRangePhase()
+		// x
+		public void CombatRangePhase()
         {
             foreach (Lane l in lanes)
             {
@@ -282,6 +283,7 @@ namespace SFB.Game.Management{
           
         }
 
+		// x
         public void CombatMellePhase()
         {
             cleanUp();
@@ -307,8 +309,9 @@ namespace SFB.Game.Management{
             //Debug.Log("POST MELEE"); 
             //Driver.instance.printField();
         }
-            
-        public void CombatTowerPhase()
+
+		// x
+		public void CombatTowerPhase()
         {
               cleanUp();
               //Debug.Log("POST CLEAN");
@@ -320,53 +323,5 @@ namespace SFB.Game.Management{
               //Debug.Log("POST TOWER");
               //Driver.instance.printField();
         }
-
-
-        // VARIOUS ADMIN METHODS
-
-        // returns and XML representation of the ID of the lane in each index
-        public XmlElement[] GetLaneIDs(XmlDocument doc){
-            XmlElement[] r = new XmlElement[lanes.Length];
-            for(int i = 0; i < lanes.Length; i++){
-                r[i] = doc.CreateElement("laneIds");
-                XmlAttribute id = doc.CreateAttribute("id");
-                id.Value = lanes[i].ID;
-                r[i].SetAttributeNode(id);
-                XmlAttribute index = doc.CreateAttribute("index");
-                index.Value = i.ToString();
-                r[i].SetAttributeNode(index);
-            }
-            return r;
-        }
-
-        // to be called after every phase
-		public Delta[] cleanUp() {
-			List<Delta> deltas = new List<Delta>();
-			foreach(Lane l in lanes) {
-				// clean units
-				for(int play = 0; play < l.Units.GetLength(0); play++)
-					for(int pos = 0; pos < l.Units.GetLength(1); pos++) {
-						Unit u = l.Units[play, pos];
-						if(u != null && u.HealthPoints <= 0) {
-							//Debug.Log("kill " + play + " " + pos + " " + u.HealthPoints);
-							deltas.AddRange(u.onDeath(play, pos, lanes, players));
-							if(l.isOccupied(play, pos))
-								l.kill(play, pos);
-						}
-					}
-
-				// clean towers -> player lives
-				for(int i = 0; i < l.Towers.Length; i++) {
-					if(l.Towers[i].HP <= 0) {
-						players[i].takeDamage();
-						l.Towers[i].revive();
-                        players[i].AddDeployPhase();
-					}
-				}
-			}
-			return deltas.ToArray();
-		}
-
     }
-
 }
