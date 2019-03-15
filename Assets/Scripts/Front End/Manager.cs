@@ -117,8 +117,8 @@ public class Manager : MonoBehaviour
     {
         currentState.startActions();
         handCapacity.text = "Hand capacity\n" + handPlaceHolder.gameObject.transform.childCount.ToString()+"/3";
-        resourseText.text = "Resources: " + Driver.instance.resoureCount.ToString();
-        dropCostSumText.text = "DropCostSum: " + Driver.instance.dropCostSum.ToString();
+        resourseText.text = "Resources: " + Driver.instance?.gameManager?.Players[0]?.Mana?.Count.ToString();
+        dropCostSumText.text = "DropCostSum: " + Driver.instance?.dropCostSum.ToString();
 		if(Driver.instance.NETWORK) {
 			if(!Client.Instance.DoneInitializing && !foundMatch) // Change to CLient.Instance later
 			{
@@ -162,9 +162,9 @@ public class Manager : MonoBehaviour
 
 				Client.Instance.SendPlanningPhaseActions(actions.ToArray());
 				mainBtnText.text = "WAITING FOR OPPONENT";
-				mainButton.GetComponent<Image>().color = Color.blue;
+				mainButton.GetComponent<Image>().color = new Color(153, 204, 255);
 			} else {
-
+				Debug.Log("CANNOT AFFORD");
 			}
 		}
 		/*
@@ -295,8 +295,6 @@ public class Manager : MonoBehaviour
 		//List<CardFrontEnd> feList2 = Driver.instance.loadFrontEnd(players[1]);
 
 		List<CardUI> ui1 = loadCardUIinHand(placeHolder);
-
-		Debug.Log(feList1.Count + " " + ui1.Count);
 
 		for(int i = 0; i < Mathf.Min(feList1.Count, ui1.Count); i++) {
 			//Debug.Log("I"+i);
