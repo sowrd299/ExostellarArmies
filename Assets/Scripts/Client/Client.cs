@@ -164,6 +164,9 @@ namespace SFB.Net.Client {
 					case ClientPhase.PLANNING:
 						// handled by front end calling the below method:
 						// Client.instance.SendPlanningPhaseActions(PlayerAction[] actions)
+						if(receivedDoc != null)
+							ProcessDeltas(receivedDoc, cl, true);
+
 						break;
 				}
 			}
