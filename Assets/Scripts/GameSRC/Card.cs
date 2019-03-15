@@ -25,6 +25,12 @@ namespace SFB.Game{
             get { return name; }
         }
 
+        // returns a public-facing identifier not share with any other card
+        // used to define what counts as two copies of the same card
+        public string UniqueName{
+            get { return name; }
+        }
+
         // return the cards unique identifier, whatever that is;
         // mostly here so I can recycle IdIssuer code for Card Loader
         public string ID{ 
@@ -60,6 +66,11 @@ namespace SFB.Game{
 		}
 
         // EQUALITY, here to enable UnkownCard
+        public override bool Equals(object obj)
+        {
+            return this.UniqueName == (obj as Card)?.UniqueName;
+        }
+
         // favors expanded definition of equality over shrunken ones
         public static bool operator == (Card a, Card b){
             //handles null
