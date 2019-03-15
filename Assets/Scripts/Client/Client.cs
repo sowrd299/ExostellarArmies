@@ -142,21 +142,29 @@ namespace SFB.Net.Client {
 					case ClientPhase.WAIT_TURN_START:
 						// wait for turnStart message
 						if(receivedDoc != null) {
-							Debug.Log("Received turn start deltas; applying them:");
-							ProcessDeltas(receivedDoc, cl, true);
+							String type = receivedDoc?.DocumentElement?.Attributes["type"]?.Value;
+							Debug.Log("type received: " + type);
+							if(type == "turnStart") {
+								Debug.Log("Received turn start deltas; applying them:");
+								ProcessDeltas(receivedDoc, cl, true);
 
-							driver.updateTowerUI();
-							driver.updateCardsOntable();
-							driver.manager.StartDrawPhase(gameManager.Players);
+								driver.updateTowerUI();
+								driver.updateCardsOntable();
+								driver.manager.StartDrawPhase(gameManager.Players);
 
 
 
 
-							phase = ClientPhase.PLANNING;
-							Debug.Log("Planning Phase Begun");
-							foreach(Delta d in driver.gameManager.Players[1].GetDrawDeltas()) {
-								d.Apply();
-								Debug.Log("Processing delta: " + d.GetType());
+								phase = ClientPhase.PLANNING;
+								Debug.Log("Planning Phase Begun");
+								foreach(Delta d in driver.gameManager.Players[1].GetDrawDeltas()) {
+									d.Apply();
+									Debug.Log("Processing delta: " + d.GetType());
+								}
+							} else if(type == "actionDeltas") {
+								ProcessDeltas(receivedDoc, cl, true);
+							} else {
+								Debug.Log("Received document of type " + type + " in ClientPhase.WAIT_TURN_START");
 							}
 						}
 						break;
