@@ -107,11 +107,10 @@ namespace SFB.Net.Client {
 			} else {
 				// receive a document
 				XmlDocument receivedDoc = socketManager.ReceiveXml();
-				/*
+				
 				// check for match end
-				if(receivedDoc != null && receivedDoc.Attributes["type"] != null && receivedDoc.Attributes["type"].Value == "matchEnd") {
+				/*if(receivedDoc != null && receivedDoc?.Attributes["type"] != null && receivedDoc?.Attributes["type"]?.Value == "matchEnd") {
 					// TODO win/lose
-					//break;
 				}*/
 
 				// depends on game phase
@@ -147,7 +146,10 @@ namespace SFB.Net.Client {
 							Debug.Log("Received turn start deltas; applying them:");
 							ProcessDeltas(receivedDoc, cl, true);
 
+							driver.updateTowerUI();
+							driver.updateCardsOntable();
 							driver.manager.StartDrawPhase(gameManager.Players);
+
 
 
 
