@@ -107,7 +107,7 @@ namespace SFB.Net.Client {
 				IPAddress ipAddr = ipEntry.AddressList[0];
 
 				//consts
-				string HostName = "169.234.86.68";
+				string HostName = "169.234.8.199";
 				const int Port = 4011;
 
 				//setup the connection

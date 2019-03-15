@@ -88,6 +88,14 @@ public class Draggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
             {
                 this.gameObject.transform.GetChild(0).GetChild(0).GetChild(i).gameObject.SetActive(false);
             }
+            GameObject cost = this.gameObject.transform.GetChild(0).GetChild(1).gameObject;
+            Vector3 costV = new Vector3(cost.transform.position.x-3f, cost.transform.position.y- 73f, cost.transform.position.z);
+            cost.transform.position = costV;
+            GameObject stats = this.gameObject.transform.GetChild(0).GetChild(2).gameObject;
+            Vector3 statsV = new Vector3(stats.transform.position.x + 110f, stats.transform.position.y-25f, stats.transform.position.z);
+            stats.transform.position = statsV;
+            GameObject details = this.gameObject.transform.GetChild(0).GetChild(3).gameObject;
+            details.SetActive(false);
         }
         myHand.GetComponent<SVGImage>().raycastTarget = false;
         Debug.Log(parentToReturnTo.gameObject.name);

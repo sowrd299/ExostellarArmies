@@ -1916,7 +1916,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   placeHolderParent: {fileID: 0}
-  miniCard: {fileID: 21300000, guid: 751dd9a163c8a9546b7ca340555b417b, type: 3}
+  miniCard: {fileID: 21300000, guid: 50dfcdc032c1c4b0e8a87c95b235a13c, type: 3}
   myHand: {fileID: 0}
 --- !u!225 &35534340
 CanvasGroup:
