@@ -161,6 +161,8 @@ public class Manager : MonoBehaviour
 				}
 
 				Client.Instance.SendPlanningPhaseActions(actions.ToArray());
+				mainBtnText.text = "WAITING FOR OPPONENT";
+				mainButton.GetComponent<Image>().color = Color.blue;
 			} else {
 
 			}
@@ -297,7 +299,7 @@ public class Manager : MonoBehaviour
 		Debug.Log(feList1.Count + " " + ui1.Count);
 
 		for(int i = 0; i < Mathf.Min(feList1.Count, ui1.Count); i++) {
-			Debug.Log("I"+i);
+			//Debug.Log("I"+i);
 			ui1[i].LoadCard(feList1[i]);
 		}
 
@@ -345,7 +347,7 @@ public class Manager : MonoBehaviour
         yield return null;
         //enemyPlay();
     }
-
+	/*
     IEnumerator lerpColor(GameObject g)
     {
         yield return new WaitForSeconds(1f);
@@ -359,7 +361,7 @@ public class Manager : MonoBehaviour
             yield return null;
         }
         mainBtnText.text = "DEPLOY";
-    }
+    }*/
 
     IEnumerator moveTo(GameObject g, GameObject v)
     {

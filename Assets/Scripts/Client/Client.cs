@@ -86,10 +86,10 @@ namespace SFB.Net.Client {
 				XmlElement e = a.ToXml(doc);
 				doc.DocumentElement.AppendChild(e);
 			}
-			Debug.Log("Sending PlayerAction: " + doc.OuterXml);
+			Debug.Log("Sending PlayerActions: " + doc.OuterXml);
 			socketManager.SendXml(doc);
 			socketManager.Send("<file type='lockInTurn'>");
-			setPhase(ClientPhase.WAIT_PLANNING_END);
+			setPhase(ClientPhase.WAIT_TURN_START);
 		}
 
 
@@ -107,7 +107,7 @@ namespace SFB.Net.Client {
 				IPAddress ipAddr = ipEntry.AddressList[0];
 
 				//consts
-				string HostName = "169.234.86.68";
+				string HostName = "169.234.8.199";
 				const int Port = 4011;
 
 				//setup the connection
@@ -173,15 +173,6 @@ namespace SFB.Net.Client {
 						// handled by front end calling the below method:
 						// Client.instance.SendPlanningPhaseActions(PlayerAction[] actions)
 						break;
-					case ClientPhase.WAIT_PLANNING_END:
-						// wait for actionDeltas message
-						receivedDoc = socketManager.ReceiveXml();
-						if(receivedDoc != null) {
-							Debug.Log("Applying action deltas...");
-							ProcessDeltas(receivedDoc, cl, true);
-							setPhase(ClientPhase.WAIT_TURN_START);
-						}
-						break;
 				}
 			}
 		}
@@ -221,9 +212,6 @@ namespace SFB.Net.Client {
 					Debug.Log(gameManager.Players[1]);
 
 					break;
-				case ClientPhase.WAIT_PLANNING_END:
-					Debug.Log("Waiting for enemy to finish planning...");
-					break;
 			}
 			phase = nPhase;
 		}
@@ -234,7 +222,7 @@ namespace SFB.Net.Client {
 
 		public enum ClientPhase {
 			INIT, WAIT_MATCH_START,
-			WAIT_TURN_START, PLANNING, WAIT_PLANNING_END
+			WAIT_TURN_START, PLANNING
 		}
 	}
 }
