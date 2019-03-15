@@ -68,8 +68,7 @@ namespace SFB.Net.Client {
 			}
 			Debug.Log("Sending PlayerActions: " + doc.OuterXml);
 			socketManager.SendXml(doc);
-			socketManager.Send("<file type='lockInTurn'>");
-
+			socketManager.Send("<file type='lockInTurn'></file>");
 
 			phase = ClientPhase.WAIT_TURN_START;
 			Debug.Log("Waiting for turn start...");
