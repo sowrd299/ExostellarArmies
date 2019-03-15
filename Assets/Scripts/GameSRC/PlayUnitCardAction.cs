@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using SFB.Game.Content;
 using System.Xml;
+using System;
 
 namespace SFB.Game.Management {
 	public class PlayUnitCardAction : PlayerAction {
@@ -46,9 +47,17 @@ namespace SFB.Game.Management {
 		}
 
 		internal override bool IsLegalAction(Player p) {
-         return p.Hand.Contains(card) &&
+			// TODO: testing
+        	bool r = p.Hand.Contains(card) &&
 					!lane.isOccupied(play, pos) &&
 					p.Mana.CanAfford(card.DeployCost);
+			if(!r){
+				Console.WriteLine("Checking legal action: {0}, {1}, {2}",
+						p.Hand.Contains(card) ? "Have card" : "Don't have card",
+						!lane.isOccupied(play, pos) ? "Space is free" : "Space isn't free",
+						p.Mana.CanAfford(card.DeployCost) ? "Can afford" : "Can't afford");
+			}
+			return r;
 		}
 		
 		internal override Delta[] GetDeltas(Player p) {
