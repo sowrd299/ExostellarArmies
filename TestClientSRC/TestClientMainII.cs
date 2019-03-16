@@ -15,6 +15,15 @@ namespace SFB.TestClient{
     public class TestClient {
         
 
+        private static string SimpleGetResponse(SocketManager socketManager, bool verbose = false){
+            string response; 
+            do{
+                response = socketManager.Receive();
+            }while(response == null);
+            if(verbose) Console.WriteLine("Response from server: {0}",response);
+            return response;
+        }
+
         private static void ProcessDeltas(XmlDocument doc, CardLoader cl, bool verbose = false){
             foreach(XmlElement e in doc.GetElementsByTagName("delta")){
                 Delta d = Delta.FromXml(e, cl);
@@ -103,24 +112,25 @@ namespace SFB.TestClient{
                 Console.WriteLine("\n{0} player has hand: {1}\n...deck: {2}\n", p == localPlayer? "Local" : "Enemy", p.Hand, p.Deck);
             }
 
-            // send a game action
-            Console.WriteLine("Press Enter to send a Player Action...");
-            Console.ReadLine();
-            XmlDocument playerActionDoc = MessageHandler.NewEmptyMessage("gameAction");
-            XmlElement playerActionElement = new PlayUnitCardAction(localPlayer.Hand[0] as UnitCard, gm.Lanes[0], 0, 0).ToXml(playerActionDoc);
-            playerActionDoc.DocumentElement.AppendChild(playerActionElement);
-            socketManager.SendXml(playerActionDoc);
+            for(int i = 0; i < 10 ; i++){
+                // send a game action
+                Console.WriteLine("Press Enter to send a Player Action...");
+                Console.ReadLine();
+                XmlDocument playerActionDoc = MessageHandler.NewEmptyMessage("gameAction");
+                XmlElement playerActionElement = new PlayUnitCardAction(localPlayer.Hand[0] as UnitCard, gm.Lanes[0], 0, 0).ToXml(playerActionDoc);
+                playerActionDoc.DocumentElement.AppendChild(playerActionElement);
+                playerActionElement = new PlayUnitCardAction(localPlayer.Hand[1] as UnitCard, gm.Lanes[0], 0, 1).ToXml(playerActionDoc);
+                playerActionDoc.DocumentElement.AppendChild(playerActionElement);
+                socketManager.SendXml(playerActionDoc);
+                SimpleGetResponse(socketManager, true);
 
-            // end the turn and get back the end of turn deltas
-            Console.WriteLine("Press Enter to end turn...");
-            Console.Read();
-            socketManager.Send("<file type='lockInTurn'></file>");
-            Console.WriteLine("Waiting for response from server..."); 
-            string endTurnResponse; 
-            do{
-                endTurnResponse = socketManager.Receive();
-            }while(endTurnResponse == null);
-            Console.WriteLine("Response from server: {0}",endTurnResponse);
+                // end the turn and get back the end of turn deltas
+                Console.WriteLine("Press Enter to end turn...");
+                Console.Read();
+                socketManager.Send("<file type='lockInTurn'></file>");
+                Console.WriteLine("Waiting for response from server..."); 
+                SimpleGetResponse(socketManager, true);
+            }
             
             // end the test
             Console.WriteLine("Press Enter to disconnect...");

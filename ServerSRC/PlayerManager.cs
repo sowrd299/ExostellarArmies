@@ -75,9 +75,14 @@ namespace SFB.Net.Server.Matches{
         }
 
         // to be called at the start of the game
-        public void Start(XmlElement[] otherPlayersIDs, XmlElement[] laneIds){
+        public void Start(XmlElement[] otherPlayersIDs, XmlElement[] laneIds, int sideIndex){
             //TODO: maybe match start should be sent by the match itself?
             XmlDocument doc = NewEmptyMessage("matchStart");
+            // add in side index
+            XmlAttribute sideIndexAttr = doc.CreateAttribute("sideIndex");
+            sideIndexAttr.Value = sideIndex.ToString();
+            doc.DocumentElement.SetAttributeNode(sideIndexAttr);
+            // and in local player IDs
             XmlElement friendlyIDs = player.GetPlayerIDs(doc);
             XmlAttribute side = doc.CreateAttribute("side");
             side.Value = "local";

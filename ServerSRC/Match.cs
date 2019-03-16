@@ -63,7 +63,7 @@ namespace SFB.Net.Server.Matches{
             // send all the players all the ids and get them started
             XmlElement[] laneIds = gameManager.GetLaneIDs(doc);
             for(int i = 0; i < players.Length; i++){
-                players[i].Start(playerIds[i].ToArray(), laneIds);
+                players[i].Start(playerIds[i].ToArray(), laneIds, i);
             }
             returnCallback = rc; 
             // start the first turn;
