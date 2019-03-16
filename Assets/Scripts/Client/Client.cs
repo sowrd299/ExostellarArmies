@@ -37,6 +37,11 @@ namespace SFB.Net.Client {
 			get { return gameManager; }
 		}
 
+		private int sideIndex;
+		public int SideIndex {
+			get { return sideIndex; }
+		}
+
 		private SocketManager socketManager;
 		private CardLoader cl;
 
