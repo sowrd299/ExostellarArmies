@@ -143,7 +143,7 @@ namespace SFB.Net.Client {
 						// wait for turnStart message
 						if(receivedDoc != null) {
 							String type = receivedDoc?.DocumentElement?.Attributes["type"]?.Value;
-							Debug.Log("type received: " + type);
+							Debug.Log("received type: " + type);
 							if(type == "turnStart") {
 								Debug.Log("Received turn start deltas; applying them:");
 								ProcessDeltas(receivedDoc, cl, true);
