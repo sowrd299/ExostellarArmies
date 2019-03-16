@@ -138,7 +138,6 @@ namespace SFB.Game.Management{
 			return CombatManager.getMeleeDeltas(lanes);
 		}
 
-		
 		// returns the outcomes of a player taking a given action
 		public Delta[] GetActionDeltas(Player player, PlayerAction a){
             // and old dummy implementation:
