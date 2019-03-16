@@ -1,6 +1,7 @@
 using System.Xml;
 using System.Collections.Generic;
 using System.Linq;
+using System;
 using SFB.Game.Content;
 using SFB.Game.Management;
 using SFB.Game;
@@ -146,6 +147,8 @@ namespace SFB.Net.Server.Matches{
                 case "gameAction":
                     if(state == State.ACTING){
                         // forloop to handle all actions in the message
+                        // will handle up-to but not past any illegal actions given
+                        XmlDocument resp = NewEmptyMessage("actionDeltas");
                         foreach (XmlElement actionElement in msg.GetElementsByTagName("action")){
                             PlayerAction a = PlayerAction.FromXml(actionElement, cardLoader, Lane.IdIssuer);
                             if(gameManager.IsLegalAction(player, a)){
@@ -161,12 +164,10 @@ namespace SFB.Net.Server.Matches{
                                     }
                                 }
                                 // build and send the reponse
-                                XmlDocument resp = NewEmptyMessage("actionDeltas");
                                 foreach(Delta d in ds){
                                     XmlElement e = d.ToXml(resp);
                                     resp.DocumentElement.AppendChild(e);
                                 }
-                                socket.SendXml(resp);
                                 // log the turn deltas
                                 lock(turnDeltas){
                                     foreach(Delta d in ds){
@@ -175,8 +176,10 @@ namespace SFB.Net.Server.Matches{
                                 }
                             }else{
                                 from.Send("<file type='error'><msg>Illegal game action</msg></file>");
+                                break;
                             }
                         }
+                        socket.SendXml(resp);
                     }else{
                         from.Send("<file type='error'><msg>Cannot take game actions now</msg></file>");
                     }
@@ -185,7 +188,9 @@ namespace SFB.Net.Server.Matches{
                 case "lockInTurn":
                     if(state == State.ACTING){
                         // ...
-                        state = State.WAITING; // after locking in, the player may make no more actions
+                        // TES
+                        Console.WriteLine("Turn locked in...");
+                        state = State.WAITING; // after locking in, the player may makthough maybe I should fixe no more actions
                         eotCallback();
                     }else{
                         from.Send("<file type='error'><msg>You probably sent 'lockInTurn' multiple times</msg></file>");

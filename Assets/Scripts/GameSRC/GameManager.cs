@@ -138,14 +138,14 @@ namespace SFB.Game.Management{
 			return CombatManager.getMeleeDeltas(lanes);
 		}
 
-		/*
+		//*
 		// returns the outcomes of a player taking a given action
 		public Delta[] GetActionDeltas(Player player, PlayerAction a){
             // and old dummy implementation:
             // return new Delta[]{new Deck.RemoveFromDeckDelta(player.Deck, null, 0)}; // this implementation intrinsically throws errors
             // real implementation:
             return a.GetDeltas(player);
-        }*/
+        }//*/
 
         // Get deltas for after a deployment phase ends
 		// Decrease # of deploy phases, activate deploy effects

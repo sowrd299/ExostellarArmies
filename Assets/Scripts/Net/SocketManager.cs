@@ -92,6 +92,7 @@ namespace SFB.Net{
                 //*/
             }
             //handle EOF
+            // TODO: handle text buffer better without EOF
             if(eof == ""){ //if no EOF set, just spit out the message
                 return text;
             }
@@ -144,6 +145,7 @@ namespace SFB.Net{
         }
 
         private void endAsynchReceiveXml(IAsyncResult ar){
+            Console.WriteLine("Data incoming...");
             lock(asynchReceivingLock){
                 // no long have an outstanding async receive
                 asynchReceiving = false;
@@ -187,6 +189,7 @@ namespace SFB.Net{
         //send a given message to the client
         public void Send(string msg){
             byte[] data = Encoding.UTF8.GetBytes(msg);
+            // textBuffer += Receive(); // get and buffer any text that may be clogging up the system
             socket.Send(data);
         }
 
