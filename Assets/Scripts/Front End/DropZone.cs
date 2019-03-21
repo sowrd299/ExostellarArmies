@@ -30,7 +30,7 @@ public class DropZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
         if (d != null)
         {
             CardUI c = d.gameObject.GetComponent<CardUI>();
-            p = Driver.instance.gameManager.Players[0];
+            p = Driver.instance.gameManager.Players[Client.Instance.SideIndex];
             Debug.Log("aaaa"+ this.gameObject.tag);
             if (this.gameObject.tag == "CardHolder" && this.gameObject.transform.childCount <= 1)
             {

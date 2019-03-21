@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using SFB.Game;
 using SFB.Game.Content;
 using SFB.Game.Management;
+using SFB.Net.Client;
 
 public class CardUI : MonoBehaviour
 {
@@ -22,9 +23,9 @@ public class CardUI : MonoBehaviour
     {
         get { 
             if(!this.gameObject.name.Contains("Enemy"))
-                return Driver.instance.gameManager.Players[0].Hand.IndexOf(cardBackEnd); 
+                return Driver.instance.gameManager.Players[Client.Instance.SideIndex].Hand.IndexOf(cardBackEnd); 
             else
-                return Driver.instance.gameManager.Players[1].Hand.IndexOf(cardBackEnd);
+                return Driver.instance.gameManager.Players[Mathf.Abs(Client.Instance.SideIndex-1)].Hand.IndexOf(cardBackEnd);
         }
     }
     private bool old = false;
@@ -48,9 +49,9 @@ public class CardUI : MonoBehaviour
         //handIndex = this.transform.GetSiblingIndex();
 
         if (!this.gameObject.name.Contains("Enemy"))
-            cardBackEnd = Driver.instance.gameManager.Players[0].Hand[this.transform.GetSiblingIndex()];
+            cardBackEnd = Driver.instance.gameManager.Players[Client.Instance.SideIndex].Hand[this.transform.GetSiblingIndex()];
         else
-            cardBackEnd = Driver.instance.gameManager.Players[1].Hand[this.transform.GetSiblingIndex()];
+            cardBackEnd = Driver.instance.gameManager.Players[Mathf.Abs(Client.Instance.SideIndex-1)].Hand[this.transform.GetSiblingIndex()];
 
     }
 
@@ -84,7 +85,7 @@ public class CardUI : MonoBehaviour
     public void LoadCard(CardFrontEnd c)
     {
         if (c == null)
-         return;
+			return;
         for (int i=0; i<c.properties.Length; i++)
         {
             CardProperties cp = c.properties[i];

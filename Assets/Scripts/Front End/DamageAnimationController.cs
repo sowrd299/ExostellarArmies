@@ -94,11 +94,11 @@ public class DamageAnimationController : MonoBehaviour
         Driver.instance.updateCardsOntable();
         Driver.instance.updateTowerUI();
         yield return new WaitForSeconds(1f);
-        turnOfAllTexts();
+        turnOffAllTexts();
 
     }
 
-    void turnOfAllTexts()
+    void turnOffAllTexts()
     {
         for (int i = 0; i < l1Texts.Count; i++)
         {

@@ -138,6 +138,12 @@ namespace SFB.Net.Client {
 							gameManager = new GameManager(playerIds: playerIds.ToArray(), laneIds: laneIds.ToArray());
 							driver.gameManager = gameManager;
 
+							Debug.Log("Side Index?");
+							foreach(XmlElement e in receivedDoc.GetElementsByTagName("sideIndex")) {
+								Debug.Log(e.Value);
+								int.TryParse(e.Value, out sideIndex);
+							}
+
 
 							phase = ClientPhase.WAIT_TURN_START;
 							Debug.Log("Waiting for turn start...");

@@ -119,18 +119,17 @@ public class Manager : MonoBehaviour
         handCapacity.text = "Hand capacity\n" + handPlaceHolder.gameObject.transform.childCount.ToString()+"/3";
         resourseText.text = "Resources: " + Driver.instance?.gameManager?.Players[Client.Instance.SideIndex]?.Mana?.Count.ToString();
         dropCostSumText.text = "DropCostSum: " + Driver.instance?.dropCostSum.ToString();
-		if(Driver.instance.NETWORK) {
-			if(!Client.Instance.DoneInitializing && !foundMatch) // Change to CLient.Instance later
-			{
-				mainBtnText.text = "Waiting for match!";
-				//mainButton.enabled = false;
-				mainButton.GetComponent<Image>().color = Color.grey;
-			}/* else if(Client.Instance.DoneInitializing && !foundMatch) {
-				mainBtnText.text = "Draw";
-				mainButton.enabled = true;
-				mainButton.GetComponent<Image>().color = Color.green;
-			}*/
-		}
+
+		if(!Client.Instance.DoneInitializing && !foundMatch)
+		{
+			mainBtnText.text = "Waiting for match!";
+			//mainButton.enabled = false;
+			mainButton.GetComponent<Image>().color = Color.grey;
+		}/* else if(Client.Instance.DoneInitializing && !foundMatch) {
+			mainBtnText.text = "Draw";
+			mainButton.enabled = true;
+			mainButton.GetComponent<Image>().color = Color.green;
+		}*/
 	}
 
 	public void StartDrawPhase(Player[] players) {
@@ -143,7 +142,7 @@ public class Manager : MonoBehaviour
 	public void mainBtn()
     {
 		if(mainBtnText.text.Equals("LOCK IN PLANS")) {
-			if(Driver.instance.myMana.CanAfford(Driver.instance.dropCostSum)) {
+			if(Client.Instance.GameManager.Players[Client.Instance.SideIndex].Mana.CanAfford(Driver.instance.dropCostSum)) {
 				List<PlayUnitCardAction> actions = new List<PlayUnitCardAction>();
 				for(int i = 0; i < myCardHolders.Length; i++) {
 					if(myCardHolders[i].transform.childCount > 0) {
@@ -291,7 +290,7 @@ public class Manager : MonoBehaviour
             enemyCards.Add(tempCard2);
         }
 
-		List<CardFrontEnd> feList1 = Driver.instance.loadFrontEnd(players[0]);
+		List<CardFrontEnd> feList1 = Driver.instance.loadFrontEnd(players[Client.Instance.SideIndex]);
 		//List<CardFrontEnd> feList2 = Driver.instance.loadFrontEnd(players[1]);
 
 		List<CardUI> ui1 = loadCardUIinHand(placeHolder);
