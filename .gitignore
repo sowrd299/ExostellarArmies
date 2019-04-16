@@ -38,6 +38,3 @@ sysinfo.txt
 # Builds
 *.apk
 *.unitypackage
-
-# Images
-*.svg.meta

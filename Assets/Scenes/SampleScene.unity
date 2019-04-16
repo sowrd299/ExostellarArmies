@@ -3626,7 +3626,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 46be69a3f7a591649bf728bd562468a4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  NETWORK: 1
   elemList:
   - {fileID: 11400000, guid: 8b9afe31435644a82a77ce3171e8a4ed, type: 2}
   - {fileID: 11400000, guid: c26b2474748cd43bc975fd75c131c766, type: 2}
@@ -3640,7 +3639,6 @@ MonoBehaviour:
   towerElem: {fileID: 11400000, guid: cfe0ea45134f44f41899f0717276b9e1, type: 2}
   combatStarted: 0
   manager: {fileID: 703788047}
-  resoureCount: 0
   dropCostSum: 0
   exostellar: {fileID: 21300000, guid: 5440b001f7dc34248925618d95151a61, type: 3}
   jirnorn: {fileID: 21300000, guid: 096b924e61b1446518fd12319cc15ddf, type: 3}
@@ -4612,7 +4610,7 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 21300000, guid: 17744eb94af12794cbd170de9232d7a3, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 7f8d2826eaec5a64fa27ed3f50f7adb7, type: 3}
 --- !u!222 &1633669831
 CanvasRenderer:
   m_ObjectHideFlags: 0
