@@ -88,7 +88,7 @@ namespace SFB.Net.Client {
 				IPAddress ipAddr = ipEntry.AddressList[0];
 
 				//consts
-				string HostName = "169.234.71.114";
+				string HostName = "169.234.23.59";
 				const int Port = 4011;
 
 				//setup the connection
@@ -123,13 +123,21 @@ namespace SFB.Net.Client {
 						if(receivedDoc != null) {
 							// init the gamestate accordingly
 							Debug.Log("Initializing gameManager...");
-							int localPlayerIndex = 0;
+
+							Debug.Log(receivedDoc.OuterXml);
+							sideIndex = int.Parse(receivedDoc.DocumentElement.Attributes["sideIndex"].Value);
+							Debug.Log("Side Index: " + sideIndex);
+
+							//int localPlayerIndex = 0;
 							List<XmlElement> playerIds = new List<XmlElement>();
 							foreach(XmlElement e in receivedDoc.GetElementsByTagName("playerIds")) {
-								if(e.Attributes["side"].Value == "local") {
-									localPlayerIndex = playerIds.Count;
-								}
-								playerIds.Add(e);
+								//if(e.Attributes["side"].Value == "local") {
+								//	localPlayerIndex = playerIds.Count;
+								//}
+								if(sideIndex == 0)
+									playerIds.Add(e);
+								else
+									playerIds.Insert(0, e);
 							}
 							List<XmlElement> laneIds = new List<XmlElement>();
 							foreach(XmlElement e in receivedDoc.GetElementsByTagName("laneIds")) {
@@ -137,13 +145,6 @@ namespace SFB.Net.Client {
 							}
 							gameManager = new GameManager(playerIds: playerIds.ToArray(), laneIds: laneIds.ToArray());
 							driver.gameManager = gameManager;
-
-							Debug.Log("Side Index?");
-							foreach(XmlElement e in receivedDoc.GetElementsByTagName("sideIndex")) {
-								Debug.Log(e.Value);
-								int.TryParse(e.Value, out sideIndex);
-							}
-
 
 							phase = ClientPhase.WAIT_TURN_START;
 							Debug.Log("Waiting for turn start...");
