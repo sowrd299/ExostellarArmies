@@ -88,7 +88,7 @@ namespace SFB.Net.Client {
 				IPAddress ipAddr = ipEntry.AddressList[0];
 
 				//consts
-				string HostName = "169.234.23.59";
+				string HostName = "169.234.9.109";
 				const int Port = 4011;
 
 				//setup the connection
@@ -164,12 +164,12 @@ namespace SFB.Net.Client {
 								driver.updateCardsOntable();
 								driver.manager.StartDrawPhase(gameManager.Players);
 
-
+								
 
 
 								phase = ClientPhase.PLANNING;
 								Debug.Log("Planning Phase Begun");
-								foreach(Delta d in driver.gameManager.Players[1].GetDrawDeltas()) {
+								foreach(Delta d in driver.gameManager.Players[1-sideIndex].GetDrawDeltas()) {
 									d.Apply();
 									Debug.Log("Processing delta: " + d.GetType());
 								}
