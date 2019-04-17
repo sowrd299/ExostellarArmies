@@ -3,6 +3,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Collections.Generic;
 using System.Xml;
+using System.Linq;
 using SFB.Net.Server.Matches;
 
 namespace SFB.Net.Server{
@@ -30,7 +31,7 @@ namespace SFB.Net.Server{
         public GameServer(){
             //get the IP address
             ipEntry = Dns.GetHostEntry(Dns.GetHostName());
-            ipAddr = ipEntry.AddressList[0];
+            ipAddr = ipEntry.AddressList.First(addr => addr.AddressFamily == AddressFamily.InterNetwork);
             //setup socket managers
             ncl = new NewClientManager(ipAddr, Port);
             clientSockets = new HashSet<SocketManager>();
