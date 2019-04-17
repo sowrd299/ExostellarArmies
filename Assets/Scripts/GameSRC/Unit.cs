@@ -14,7 +14,7 @@ namespace SFB.Game{
 
         private UnitCard card; //the card the unit is an instance of
 		public UnitCard Card {
-			get;
+			get { return card; }
 		}
 
         private int rangedAttack;
