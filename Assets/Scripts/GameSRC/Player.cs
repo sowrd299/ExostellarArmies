@@ -52,6 +52,7 @@ namespace SFB.Game{
 
         // optionally takes ids to be used instead of generating new ones
 		internal Player(string name, DeckList d, XmlElement ids = null){
+			
             //if given id's, manage them
             string deckId = ""; //if this is passed in, will still generate ID
             string handId = ""; //if this is passed in, will still generate ID
@@ -63,9 +64,10 @@ namespace SFB.Game{
                 manaId= ids.Attributes["mana"].Value;
                 depId= ids.Attributes["dep"].Value;
             }
-            //deck
+			//deck
 			this.deck = new Deck(deckId);
             deck.LoadCards(d);
+			deck.Shuffle();
             //hand
 			this.hand = new Hand(handId);
 			this.handSize = 3; // CONST HAND SIZE IMPLEMENTED HERE

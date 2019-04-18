@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Xml;
 using SFB.Game.Content;
@@ -31,7 +32,7 @@ namespace SFB.Game{
 
 		// adds cards in the deck from a decklist; inserts at random locations
 		public void LoadCards(DeckList cards){
-			System.Random rand = new System.Random();
+			System.Random rand = new System.Random(Guid.NewGuid().GetHashCode());
 			// for each different card in the deck
 			foreach(Card c in cards.GetCards()){
                 // for each copy of that deck
@@ -50,7 +51,7 @@ namespace SFB.Game{
                 for(int i = 0; i < this.Count; i++)
                     indexes.Add(i);
 
-                System.Random rand = new System.Random();
+                System.Random rand = new System.Random(Guid.NewGuid().GetHashCode());
                 List<int> randList = new List<int>();
                 while(indexes.Count > 0) {
                     int idx = indexes[rand.Next(0, indexes.Count)];

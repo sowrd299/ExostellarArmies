@@ -8,7 +8,7 @@ namespace SFB.Game{
     // TODO: this really should just a singleton to save memory
     public class UnknownCard : Card {
 
-        public UnknownCard() : base(20, "Unkown", Faction.NONE, "You do not know what this card is.", "Now stop peaking.") {}
+        public UnknownCard() : base(20, "Unknown", Faction.NONE, "You do not know what this card is.", "Now stop peaking.") {}
 
 
         // IMPLEMENTING EQUALITY

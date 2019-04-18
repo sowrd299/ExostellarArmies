@@ -340,6 +340,9 @@ public class Manager : MonoBehaviour
         }
 		mainBtnText.text = "LOCK IN PLANS";
 		mainButton.GetComponent<Image>().color = Color.green;
+
+		mainBtnText.text = "" + new System.Random().Next();
+
 		makeDraggable(true);
         yield return null;
         //enemyPlay();

@@ -4,7 +4,6 @@ using System.Xml;
 using System.Text;
 using System;
 using System.Linq;
-//using UnityEngine;
 
 namespace SFB.Game.Management{
 
@@ -74,7 +73,6 @@ namespace SFB.Game.Management{
                 DeckList hiddenList =  new DeckList();
                 hiddenList.AddCard(new UnknownCard(), 20); // TODO: support decks of different sizes?
                 DeckList list = deckLists != null ? deckLists[i] : hiddenList;
-//				Debug.Log($"GM init i={i} id={(playerIds != null ? playerIds[i] : null)}");
 
 				players[i] = new Player("Player " + (i+1), list, playerIds != null ? playerIds[i] : null);
             }

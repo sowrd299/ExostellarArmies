@@ -85,7 +85,7 @@ namespace SFB.Net.Server{
                         return r;
                 case "carthStarter":
                         return CarthStarter();
-                case "myxorStarter":
+                case "myxoriStarter":
                         return MyxoriStarter();
                 default:
                         return new DeckList();
