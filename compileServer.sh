@@ -1,1 +1,1 @@
-csc ./ServerSRC/*.cs ./Assets/Scripts/GameSRC/*.cs ./Assets/Scripts/Net/*.cs
+csc -recurse:./ServerSRC/*.cs -recurse:./Assets/Scripts/GameSRC/*.cs -recurse:./Assets/Scripts/Net/*.cs

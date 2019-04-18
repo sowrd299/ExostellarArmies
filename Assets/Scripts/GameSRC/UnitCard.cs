@@ -21,7 +21,7 @@ namespace SFB.Game{
 
 		private AbilityList abilities;
 		public AbilityList Abilities {
-			get;
+			get { return abilities; }
 		}
 
         public UnitCard(int cost, string name, Faction faction, string mainText, string flavorText, int rangedAttack, int meleeAttack, int healthPoints, AbilityList abList=null)
