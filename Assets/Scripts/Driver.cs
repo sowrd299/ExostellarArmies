@@ -143,6 +143,7 @@ public class Driver : MonoBehaviour {
 
     public List<CardFrontEnd> loadFrontEnd(Player p)
     {
+		Debug.Log($"loadFrontEnd for player {p.Name}");
         List<CardFrontEnd> ans = new List<CardFrontEnd>();
         for (int i = 0; i < p.HandSize; i++)
         {

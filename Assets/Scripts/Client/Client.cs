@@ -131,13 +131,14 @@ namespace SFB.Net.Client {
 							//int localPlayerIndex = 0;
 							List<XmlElement> playerIds = new List<XmlElement>();
 							foreach(XmlElement e in receivedDoc.GetElementsByTagName("playerIds")) {
-								//if(e.Attributes["side"].Value == "local") {
+								// if(e.Attributes["side"].Value == "local") {
 								//	localPlayerIndex = playerIds.Count;
 								//}
-								if(sideIndex == 0)
+
+								//if(sideIndex == 0)
 									playerIds.Add(e);
-								else
-									playerIds.Insert(0, e);
+								//else
+								//	playerIds.Insert(0, e);
 							}
 							List<XmlElement> laneIds = new List<XmlElement>();
 							foreach(XmlElement e in receivedDoc.GetElementsByTagName("laneIds")) {
@@ -145,6 +146,9 @@ namespace SFB.Net.Client {
 							}
 							gameManager = new GameManager(playerIds: playerIds.ToArray(), laneIds: laneIds.ToArray());
 							driver.gameManager = gameManager;
+
+							Debug.Log($"P0(Mana-{gameManager.Players[0].Mana.ID}, Hand-{gameManager.Players[0].Hand.ID}, Deck-{gameManager.Players[0].Deck.ID}");
+							Debug.Log($"P1(Mana-{gameManager.Players[1].Mana.ID}, Hand-{gameManager.Players[1].Hand.ID}, Deck-{gameManager.Players[1].Deck.ID}");
 
 							phase = ClientPhase.WAIT_TURN_START;
 							Debug.Log("Waiting for turn start...");
