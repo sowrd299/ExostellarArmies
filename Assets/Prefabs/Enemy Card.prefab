@@ -1835,7 +1835,7 @@ RectTransform:
   m_GameObject: {fileID: 6374767821707340389}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.25, y: 0.25, z: 1}
+  m_LocalScale: {x: 0.4, y: 0.4, z: 1}
   m_Children:
   - {fileID: 2209705393403740615}
   - {fileID: 1897389538}
@@ -1861,33 +1861,34 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   card: {fileID: 0}
   properties:
-  - text: {fileID: 2209705395013451064}
+  - element: {fileID: 11400000, guid: 8b9afe31435644a82a77ce3171e8a4ed, type: 2}
+    text: {fileID: 2209705395013451064}
     image: {fileID: 0}
-    element: {fileID: 11400000, guid: 8b9afe31435644a82a77ce3171e8a4ed, type: 2}
-  - text: {fileID: 2209705395154985839}
+  - element: {fileID: 11400000, guid: c26b2474748cd43bc975fd75c131c766, type: 2}
+    text: {fileID: 2209705395154985839}
     image: {fileID: 0}
-    element: {fileID: 11400000, guid: c26b2474748cd43bc975fd75c131c766, type: 2}
-  - text: {fileID: 2209705393878752952}
+  - element: {fileID: 11400000, guid: 6255b99563a7c495992811777a675e5d, type: 2}
+    text: {fileID: 2209705393878752952}
     image: {fileID: 0}
-    element: {fileID: 11400000, guid: 6255b99563a7c495992811777a675e5d, type: 2}
-  - text: {fileID: 2209705395253232660}
+  - element: {fileID: 11400000, guid: 6da532ebc0c5c427a8b33a00014bc60f, type: 2}
+    text: {fileID: 2209705395253232660}
     image: {fileID: 0}
-    element: {fileID: 11400000, guid: 6da532ebc0c5c427a8b33a00014bc60f, type: 2}
-  - text: {fileID: 0}
-    image: {fileID: 378426677}
-    element: {fileID: 11400000, guid: e42ab5aaa89294e75a7cb333032c43b7, type: 2}
-  - text: {fileID: 2209705394794001776}
+  - element: {fileID: 11400000, guid: e42ab5aaa89294e75a7cb333032c43b7, type: 2}
+    text: {fileID: 0}
     image: {fileID: 0}
-    element: {fileID: 11400000, guid: 0833e71fad6ca442daa21b8c64758602, type: 2}
-  - text: {fileID: 2209705395035939540}
+  - element: {fileID: 11400000, guid: 0833e71fad6ca442daa21b8c64758602, type: 2}
+    text: {fileID: 2209705394794001776}
     image: {fileID: 0}
-    element: {fileID: 11400000, guid: 4ee4825dd23a14c91bf8150d4d6139d5, type: 2}
-  - text: {fileID: 2209705394706410014}
+  - element: {fileID: 11400000, guid: 4ee4825dd23a14c91bf8150d4d6139d5, type: 2}
+    text: {fileID: 2209705395035939540}
     image: {fileID: 0}
-    element: {fileID: 11400000, guid: 67b425464022a4fd595b0abc942fd251, type: 2}
-  - text: {fileID: 2209705395291305454}
+  - element: {fileID: 11400000, guid: 67b425464022a4fd595b0abc942fd251, type: 2}
+    text: {fileID: 2209705394706410014}
     image: {fileID: 0}
-    element: {fileID: 11400000, guid: 753be10aa7e2e41eb9296e4a98ad979d, type: 2}
+  - element: {fileID: 11400000, guid: 753be10aa7e2e41eb9296e4a98ad979d, type: 2}
+    text: {fileID: 2209705395291305454}
+    image: {fileID: 0}
+  hpElement: {fileID: 0}
 --- !u!114 &8639076190155446269
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1901,6 +1902,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   placeHolderParent: {fileID: 0}
+  miniCard: {fileID: 0}
   myHand: {fileID: 0}
 --- !u!225 &35534340
 CanvasGroup:

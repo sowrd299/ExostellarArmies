@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Serialization;
 using SFB.Game;
 using SFB.Game.Management;
 using SFB.Net.Client;
@@ -25,14 +26,20 @@ public class Manager : MonoBehaviour
     private GameObject enemyPlaceHolder;
     [SerializeField]
     private GameObject enemyHandPlaceHolder;
+	[SerializeField]
+	private HandController hand;
+	[SerializeField]
+	private HandController enemyHand;
     [SerializeField]
     private GameObject damages;
 
 
     [SerializeField]
-    private GameObject[] cardHolders;
+	[FormerlySerializedAs("myCardHolders")]
+    public GameObject[] myUnitHolders;
     [SerializeField]
-    public GameObject[] myCardHolders;
+	[FormerlySerializedAs("cardHolders")]
+    private GameObject[] enemyUnitHolders;
     [SerializeField]
     private GameObject[] towerHolders;
 
@@ -144,13 +151,13 @@ public class Manager : MonoBehaviour
 		if(mainBtnText.text.Equals("LOCK IN PLANS")) {
 			if(Client.Instance.GameManager.Players[Client.Instance.SideIndex].Mana.CanAfford(Driver.instance.dropCostSum)) {
 				List<PlayUnitCardAction> actions = new List<PlayUnitCardAction>();
-				for(int i = 0; i < myCardHolders.Length; i++) {
-					if(myCardHolders[i].transform.childCount > 0) {
-						CardUI c = myCardHolders[i].transform.GetChild(0).GetComponent<CardUI>();
+				for(int i = 0; i < myUnitHolders.Length; i++) {
+					if(myUnitHolders[i].transform.childCount > 0) {
+						CardUI c = myUnitHolders[i].transform.GetChild(0).GetComponent<CardUI>();
 
 						if(c.Old == false) {
 							Card back = c.cardBackEnd;
-							if(myCardHolders[i].transform.parent.name.Contains("Front"))
+							if(myUnitHolders[i].transform.parent.name.Contains("Front"))
 								actions.Add(new PlayUnitCardAction(back as UnitCard, Client.Instance.GameManager.Lanes[i % 3], 0, 0));
 							else
 								actions.Add(new PlayUnitCardAction(back as UnitCard, Client.Instance.GameManager.Lanes[i % 3], 0, 1));
@@ -254,15 +261,15 @@ public class Manager : MonoBehaviour
     {
 		Debug.Log("ENEMY DELTAS");
         List<PlayUnitCardAction> actions = new List<PlayUnitCardAction>();
-        for (int i = 0; i < cardHolders.Length; i++)
+        for (int i = 0; i < enemyUnitHolders.Length; i++)
         {
-            if (cardHolders[i].transform.childCount > 0)
+            if (enemyUnitHolders[i].transform.childCount > 0)
             {
-                CardUI c = cardHolders[i].transform.GetChild(0).GetComponent<CardUI>();
+                CardUI c = enemyUnitHolders[i].transform.GetChild(0).GetComponent<CardUI>();
                 if (c.Old == false)
                 {
                     Card back = c.cardBackEnd;
-                    if (cardHolders[i].transform.parent.name.Contains("Front"))
+                    if (enemyUnitHolders[i].transform.parent.name.Contains("Front"))
                         actions.Add(new PlayUnitCardAction(back as UnitCard, Client.Instance.GameManager.Lanes[i % 3], 1, 0));
                     else
                         actions.Add(new PlayUnitCardAction(back as UnitCard, Client.Instance.GameManager.Lanes[i % 3], 1, 1));
@@ -279,18 +286,21 @@ public class Manager : MonoBehaviour
 
     public void spawnCards(Player[] players)
     {
-        while (handPlaceHolder.gameObject.transform.childCount + cards.Count < 3)
+		int handCardCount = hand.GetCardCount();
+        while (handCardCount + cards.Count < 3)
         {
             GameObject tempCard = Instantiate(cardPrefab, placeHolder.transform);
             cards.Add(tempCard);
         }
-        while (enemyHandPlaceHolder.gameObject.transform.childCount + enemyCards.Count < 3)
+
+		int enemyHandCardCount = enemyHand.GetCardCount();
+        while (enemyHandCardCount + enemyCards.Count < 3)
         {
             GameObject tempCard2 = Instantiate(enemyCardPrefab, enemyPlaceHolder.transform);
             enemyCards.Add(tempCard2);
         }
 
-		List<CardFrontEnd> feList1 = Driver.instance.loadFrontEnd(players[Client.Instance.SideIndex]);
+		List<CardData> feList1 = Driver.instance.loadFrontEnd(players[Client.Instance.SideIndex]);
 		//List<CardFrontEnd> feList2 = Driver.instance.loadFrontEnd(players[1]);
 
 		List<CardUI> ui1 = loadCardUIinHand(placeHolder);
@@ -306,38 +316,13 @@ public class Manager : MonoBehaviour
 
     IEnumerator moveToHand()
     {
-        while (cards.Count>0 || enemyCards.Count>0)
-        {
-            float timeOfTravel = 0.25f;
-            float elapsedTime = 0f;
+        Coroutine drawCoroutine = hand.MoveToHand(cards);
+		Coroutine enemyDrawCoroutine = enemyHand.MoveToHand(enemyCards);
+		yield return drawCoroutine;
+		yield return enemyDrawCoroutine;
+		cards.Clear();
+		enemyCards.Clear();
 
-            if (cards.Count>0)
-            {
-                Vector3 startingPosition = cards[0].transform.position;
-                while (elapsedTime < timeOfTravel)
-                {
-                    cards[0].transform.position = Vector3.Lerp(startingPosition, handPlaceHolder.transform.position, (elapsedTime / timeOfTravel));
-                    elapsedTime += Time.deltaTime;
-                    yield return null;
-                }
-                cards[0].gameObject.transform.SetParent(handPlaceHolder.transform);
-                cards.RemoveAt(0);
-            }
-            elapsedTime = 0;
-            if (enemyCards.Count>0)
-            {
-                Vector3 startingPosition = enemyCards[0].transform.position;
-                while (elapsedTime < timeOfTravel)
-                {
-                    enemyCards[0].transform.position = Vector3.Lerp(startingPosition, enemyHandPlaceHolder.transform.position, (elapsedTime / timeOfTravel));
-                    elapsedTime += Time.deltaTime;
-                    yield return null;
-                }
-                enemyCards[0].gameObject.transform.SetParent(enemyHandPlaceHolder.transform);
-                enemyCards.RemoveAt(0);
-            }
-            yield return new WaitForSeconds(0.3f);
-        }
 		mainBtnText.text = "LOCK IN PLANS";
 		mainButton.GetComponent<Image>().color = Color.green;
 
@@ -396,9 +381,9 @@ public class Manager : MonoBehaviour
         }
         for (int i = 0; i < l.Count; i++)
         {
-            if (cardHolders[list[i]].transform.childCount == 0)
+            if (enemyUnitHolders[list[i]].transform.childCount == 0)
             {
-                StartCoroutine(moveTo(l[i], cardHolders[list[i]]));
+                StartCoroutine(moveTo(l[i], enemyUnitHolders[list[i]]));
             }
 
         }
@@ -406,21 +391,21 @@ public class Manager : MonoBehaviour
 
     public void flipCards()
     {
-        for (int i = 0; i < cardHolders.Length; i++)
+        for (int i = 0; i < enemyUnitHolders.Length; i++)
         {
 
-            if(cardHolders[i].transform.childCount>0)
-                cardHolders[i].transform.GetChild(0).GetChild(0).GetChild(4).gameObject.SetActive(false); ;
+            if(enemyUnitHolders[i].transform.childCount>0)
+                enemyUnitHolders[i].transform.GetChild(0).GetChild(0).GetChild(4).gameObject.SetActive(false); ;
         }
     }
 
     public void placeAll()
     {
         List<GameObject> l = new List<GameObject>();
-        for (int i = 0; i < myCardHolders.Length; i++)
+        for (int i = 0; i < myUnitHolders.Length; i++)
         {
-            if(myCardHolders[i].transform.childCount > 0)
-                l.Add(myCardHolders[i].transform.GetChild(0).gameObject);
+            if(myUnitHolders[i].transform.childCount > 0)
+                l.Add(myUnitHolders[i].transform.GetChild(0).gameObject);
         }
         for (int i = 0; i < l.Count; i++)
         {
@@ -428,11 +413,11 @@ public class Manager : MonoBehaviour
             l[i].transform.localScale = v;
 
             Destroy(l[i].transform.GetChild(1).GetComponent<CardInstance>());
-            l[i].transform.GetComponent<Draggable>().enabled = false;
+            // l[i].transform.GetComponent<Draggable>().enabled = false;
             l[i].GetComponent<CardUI>().Old = true;
         }
-        StartCoroutine(moveToFrontRow(myCardHolders));
-        StartCoroutine(moveToFrontRow(cardHolders));
+        StartCoroutine(moveToFrontRow(myUnitHolders));
+        StartCoroutine(moveToFrontRow(enemyUnitHolders));
     }
 
     public List<TowerUI> loadTowerUI()
@@ -447,26 +432,26 @@ public class Manager : MonoBehaviour
 
     public void cleanup()
     {
-        for (int i = 0; i < cardHolders.Length; i++)
+        for (int i = 0; i < enemyUnitHolders.Length; i++)
         {
-            if(cardHolders[i].transform.childCount>0)
+            if(enemyUnitHolders[i].transform.childCount>0)
             {
-                CardUI c = cardHolders[i].transform.GetChild(0).GetComponent<CardUI>();
+                CardUI c = enemyUnitHolders[i].transform.GetChild(0).GetComponent<CardUI>();
                 int hp;
-                int.TryParse(c.properties[6].text.text, out hp);
+                int.TryParse(c.propertyDisplays[6].text.text, out hp);
                 if (hp <= 0)
-                    Destroy(cardHolders[i].transform.GetChild(0).gameObject);
+                    Destroy(enemyUnitHolders[i].transform.GetChild(0).gameObject);
             }
         }
-        for (int i = 0; i < myCardHolders.Length; i++)
+        for (int i = 0; i < myUnitHolders.Length; i++)
         {
-            if (myCardHolders[i].transform.childCount > 0)
+            if (myUnitHolders[i].transform.childCount > 0)
             {
-                CardUI c2 = myCardHolders[i].transform.GetChild(0).GetComponent<CardUI>();
+                CardUI c2 = myUnitHolders[i].transform.GetChild(0).GetComponent<CardUI>();
                 int hp;
-                int.TryParse(c2.properties[6].text.text, out hp);
+                int.TryParse(c2.propertyDisplays[6].text.text, out hp);
                 if (hp <= 0)
-                    Destroy(myCardHolders[i].transform.GetChild(0).gameObject);
+                    Destroy(myUnitHolders[i].transform.GetChild(0).gameObject);
             }
         }
     }
@@ -476,32 +461,32 @@ public class Manager : MonoBehaviour
     {
         List<CardUI> cu = new List<CardUI>();
         //Left Lane
-        if (hasCard(myCardHolders, 0))
-            cu.Add(myCardHolders[0].transform.GetChild(0).GetComponent<CardUI>());
-        if (hasCard(myCardHolders, 3))
-            cu.Add(myCardHolders[3].transform.GetChild(0).GetComponent<CardUI>());
-        if (hasCard(cardHolders, 0))
-            cu.Add(cardHolders[0].transform.GetChild(0).GetComponent<CardUI>());
-        if (hasCard(cardHolders, 3))
-            cu.Add(cardHolders[3].transform.GetChild(0).GetComponent<CardUI>());
+        if (hasCard(myUnitHolders, 0))
+            cu.Add(myUnitHolders[0].transform.GetChild(0).GetComponent<CardUI>());
+        if (hasCard(myUnitHolders, 3))
+            cu.Add(myUnitHolders[3].transform.GetChild(0).GetComponent<CardUI>());
+        if (hasCard(enemyUnitHolders, 0))
+            cu.Add(enemyUnitHolders[0].transform.GetChild(0).GetComponent<CardUI>());
+        if (hasCard(enemyUnitHolders, 3))
+            cu.Add(enemyUnitHolders[3].transform.GetChild(0).GetComponent<CardUI>());
         //Middle Lane
-        if (hasCard(myCardHolders, 1))
-            cu.Add(myCardHolders[1].transform.GetChild(0).GetComponent<CardUI>());
-        if (hasCard(myCardHolders, 4))
-            cu.Add(myCardHolders[4].transform.GetChild(0).GetComponent<CardUI>());
-        if (hasCard(cardHolders, 1))
-            cu.Add(cardHolders[1].transform.GetChild(0).GetComponent<CardUI>());
-        if (hasCard(cardHolders, 4))
-            cu.Add(cardHolders[4].transform.GetChild(0).GetComponent<CardUI>());
+        if (hasCard(myUnitHolders, 1))
+            cu.Add(myUnitHolders[1].transform.GetChild(0).GetComponent<CardUI>());
+        if (hasCard(myUnitHolders, 4))
+            cu.Add(myUnitHolders[4].transform.GetChild(0).GetComponent<CardUI>());
+        if (hasCard(enemyUnitHolders, 1))
+            cu.Add(enemyUnitHolders[1].transform.GetChild(0).GetComponent<CardUI>());
+        if (hasCard(enemyUnitHolders, 4))
+            cu.Add(enemyUnitHolders[4].transform.GetChild(0).GetComponent<CardUI>());
         //RightLane
-        if (hasCard(myCardHolders, 2))
-            cu.Add(myCardHolders[2].transform.GetChild(0).GetComponent<CardUI>());
-        if (hasCard(myCardHolders, 5))
-            cu.Add(myCardHolders[5].transform.GetChild(0).GetComponent<CardUI>());
-        if (hasCard(cardHolders, 2))
-            cu.Add(cardHolders[2].transform.GetChild(0).GetComponent<CardUI>());
-        if (hasCard(cardHolders, 5))
-            cu.Add(cardHolders[5].transform.GetChild(0).GetComponent<CardUI>());
+        if (hasCard(myUnitHolders, 2))
+            cu.Add(myUnitHolders[2].transform.GetChild(0).GetComponent<CardUI>());
+        if (hasCard(myUnitHolders, 5))
+            cu.Add(myUnitHolders[5].transform.GetChild(0).GetComponent<CardUI>());
+        if (hasCard(enemyUnitHolders, 2))
+            cu.Add(enemyUnitHolders[2].transform.GetChild(0).GetComponent<CardUI>());
+        if (hasCard(enemyUnitHolders, 5))
+            cu.Add(enemyUnitHolders[5].transform.GetChild(0).GetComponent<CardUI>());
         return cu;
 		
     }
@@ -517,10 +502,10 @@ public class Manager : MonoBehaviour
 
 	public void makeDraggable(bool b)
     {
-        for (int i = 0; i < handPlaceHolder.transform.childCount; i++)
-        {
-            handPlaceHolder.transform.GetChild(i).GetComponent<Draggable>().enabled = b;
-        }
+        // for (int i = 0; i < handPlaceHolder.transform.childCount; i++)
+        // {
+        //     handPlaceHolder.transform.GetChild(i).GetComponent<Draggable>().enabled = b;
+        // }
     }
 
     public bool hasCard(GameObject[] g,int i)
