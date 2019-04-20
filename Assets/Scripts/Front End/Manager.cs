@@ -173,64 +173,6 @@ public class Manager : MonoBehaviour
 				Debug.Log("CANNOT AFFORD");
 			}
 		}
-		/*
-        switch (Driver.instance.phase)
-        {
-            case Phase.DRAW:
-                spawnCards();
-                Driver.instance.updateTowerUI();
-                mainBtnText.text = "DRAWING...";
-                break;
-            case Phase.PLACEMENT:
-                if(Driver.instance.myMana.CanAfford(Driver.instance.dropCostSum)){ 
-                    mainBtnText.text = "COMBAT!";
-                    mainButton.gameObject.GetComponent<Image>().color = Color.green;
-                    Driver.instance.dropCostSum = 0;
-                    flipCards();
-                    applyEnemyDeltas();
-                    List<PlayUnitCardAction> actions = new List<PlayUnitCardAction>();
-                    for (int i = 0; i < myCardHolders.Length; i++)
-                    {
-                        if(myCardHolders[i].transform.childCount>0)
-                        {
-                            CardUI c = myCardHolders[i].transform.GetChild(0).GetComponent<CardUI>();
-
-                            if (c.Old == false) {
-                                Card back = c.cardBackEnd;
-                                if (myCardHolders[i].transform.parent.name.Contains("Front"))
-                                    actions.Add(new PlayUnitCardAction(back as UnitCard, Driver.instance.myLanes[i % 3], 0, 0));
-                                else
-                                    actions.Add(new PlayUnitCardAction(back as UnitCard, Driver.instance.myLanes[i % 3], 0, 1));
-                                //myCardHolders need to be in correct order
-                            }
-                        }
-                    }
-
-                    if (Driver.instance.NETWORK)
-                        Driver.instance.client.SendPlanningPhaseActions(actions.ToArray());
-                    foreach(PlayUnitCardAction action in actions)
-                    {
-                        foreach (Delta del in action.GetDeltas(Driver.instance.gameManager.Players[0]))
-                            del.Apply();
-                    }
-                    placeAll();
-                    //Driver.instance.phase = Phase.COMBAT;
-                }
-                else
-                {
-                    mainBtnText.text = "Cant Afford!";
-                    mainButton.gameObject.GetComponent<Image>().color = Color.red;
-                    StartCoroutine(lerpColor(mainButton.gameObject));
-                }
-                break;
-            case Phase.COMBAT:
-                break;
-            case Phase.DONE:
-                mainBtnText.text = "DONE";
-                mainButton.GetComponent<Button>().enabled = false;
-                break;
-
-        }*/
 	}
 	
     public IEnumerator damageAnims()
