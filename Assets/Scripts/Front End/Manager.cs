@@ -242,7 +242,7 @@ public class Manager : MonoBehaviour
             enemyCards.Add(tempCard2);
         }
 
-		List<CardData> feList1 = Driver.instance.loadFrontEnd(players[Client.Instance.SideIndex]);
+		List<CardPropertyMap> feList1 = Driver.instance.loadFrontEnd(players[Client.Instance.SideIndex]);
 		//List<CardFrontEnd> feList2 = Driver.instance.loadFrontEnd(players[1]);
 
 		List<CardUI> ui1 = loadCardUIinHand(placeHolder);

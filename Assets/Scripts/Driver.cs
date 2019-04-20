@@ -23,16 +23,16 @@ public class Driver : MonoBehaviour {
 	
     public int dropCostSum = 0;
 
-    private List<CardData> listofUIOnTable = new List<CardData>();
-    public  List<CardData> ListofUIOnTable
+    private List<CardPropertyMap> listofUIOnTable = new List<CardPropertyMap>();
+    public  List<CardPropertyMap> ListofUIOnTable
     {
         get
         {
             return listofUIOnTable;
         }
     }
-    private List<CardData> listofEnemyUI = new List<CardData>();
-    public List<CardData> ListofEnemyUI
+    private List<CardPropertyMap> listofEnemyUI = new List<CardPropertyMap>();
+    public List<CardPropertyMap> ListofEnemyUI
     {
         get
         {
@@ -141,10 +141,10 @@ public class Driver : MonoBehaviour {
 ////        enemyMana.Add(2);
     }
 
-    public List<CardData> loadFrontEnd(Player p)
+    public List<CardPropertyMap> loadFrontEnd(Player p)
     {
 		Debug.Log($"loadFrontEnd for {p.Name}");
-        List<CardData> ans = new List<CardData>();
+        List<CardPropertyMap> ans = new List<CardPropertyMap>();
         for (int i = 0; i < p.HandSize; i++)
         {
 //            Debug.Log("NAME:: " + p.Hand[i].Name);
@@ -167,12 +167,12 @@ public class Driver : MonoBehaviour {
 				int hp = uc.HealthPoints;
 				CardProperty[] listOfProperties = new CardProperty[9];
 				listOfProperties = createCardProperties(myName, "TYPE", flavorText, mainText, sp, cost, hp, meleeAttack, rangedAttack);
-				CardData cardFront = new CardData(listOfProperties);
+				CardPropertyMap cardFront = new CardPropertyMap(listOfProperties);
 				ans.Add(cardFront);
 			} else {
 				CardProperty[] listOfProperties = new CardProperty[9];
 				listOfProperties = createCardProperties(myName, "TYPE", flavorText, mainText, sp,cost);
-				CardData cardFront = new CardData(listOfProperties);
+				CardPropertyMap cardFront = new CardPropertyMap(listOfProperties);
 				ans.Add(cardFront);
 			}
         }
@@ -200,9 +200,9 @@ public class Driver : MonoBehaviour {
         return ans;
     }
 
-    public List<CardData> loadNewHP()
+    public List<CardPropertyMap> loadNewHP()
     {
-        List<CardData> ans = new List<CardData>();
+        List<CardPropertyMap> ans = new List<CardPropertyMap>();
         foreach (Lane lane in gameManager.Lanes)
         {
             for (int play = 0; play < lane.Units.GetLength(0); play++)
@@ -216,7 +216,7 @@ public class Driver : MonoBehaviour {
                         CardProperty hpprop = createHpCardProperty(hp);
                         CardProperty[] listOfProperties = new CardProperty[1];
                         listOfProperties[0] = hpprop; 
-                        CardData cardFront = new CardData(listOfProperties);
+                        CardPropertyMap cardFront = new CardPropertyMap(listOfProperties);
                         ans.Add(cardFront);
                     }
                 }
@@ -237,7 +237,7 @@ public class Driver : MonoBehaviour {
 
     public void updateCardsOntable()
     {
-        List<CardData> c = loadNewHP();
+        List<CardPropertyMap> c = loadNewHP();
         List<CardUI> cu = manager.loadCardUI();
         Debug.Log("Lengths==" + (c.Count).ToString() + cu.Count.ToString());
         for (int i = 0; i < c.Count; i++)

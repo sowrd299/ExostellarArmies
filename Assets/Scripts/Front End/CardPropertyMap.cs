@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-// Class attached to Card Prefab, contains array of properties(all the texts,images,ints with their Element type)
-[CreateAssetMenu(menuName = "Data/Card Data")]
-public class CardData : ScriptableObject
+// Class attached to Card Prefab, maps the card element to its value
+[CreateAssetMenu(menuName = "Data/Card Property Map")]
+public class CardPropertyMap : ScriptableObject
 {
 	public CardProperty[] properties;
 
@@ -13,7 +13,7 @@ public class CardData : ScriptableObject
 	private Dictionary<Element, CardProperty> propertyMap =>
 		_propertyMap ?? (_propertyMap = properties.ToDictionary(property => property.element, property => property));
 
-	public CardData(CardProperty[] cardProp)
+	public CardPropertyMap(CardProperty[] cardProp)
 	{
 		this.properties = cardProp;
 	}

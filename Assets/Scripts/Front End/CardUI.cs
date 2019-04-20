@@ -12,7 +12,7 @@ using SFB.Net.Client;
 public class CardUI : MonoBehaviour
 {
 	//public Card cardBackEnd;
-	public CardData cardData;
+	public CardPropertyMap cardData;
 	public CardUIProperty[] propertyDisplays;
 	public Element hpElement;
 
@@ -21,8 +21,8 @@ public class CardUI : MonoBehaviour
 	private Dictionary<Element, CardUIProperty> propertyDisplayMap =>
 		_propertyDisplayMap ?? (_propertyDisplayMap = propertyDisplays.ToDictionary(property => property.element, property => property));
 
-	private List<CardData> playerFrontEnds = new List<CardData>();
-	private List<CardData> enemyFrontEnds = new List<CardData>();
+	private List<CardPropertyMap> playerFrontEnds = new List<CardPropertyMap>();
+	private List<CardPropertyMap> enemyFrontEnds = new List<CardPropertyMap>();
 
 	public int handIndex
 	{
@@ -44,7 +44,7 @@ public class CardUI : MonoBehaviour
 	}
    
 	//Updates all of the UI properties to the values in c
-	public void LoadCard(CardData card)
+	public void LoadCard(CardPropertyMap card)
 	{
 		if (card == null) return;
 
@@ -71,7 +71,7 @@ public class CardUI : MonoBehaviour
 		}
 	}
 
-	public void loadHp(CardData card)
+	public void loadHp(CardPropertyMap card)
 	{
 		if (card == null)
 			return;
