@@ -1,38 +1,21 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using SFB.Game.Management;
 
 public class HandController : MonoBehaviour
 {
+	[Header("Draw Animation")]
 	public Transform drawOrigin;
 	public float travelTime;
 	public AnimationCurve travelCurve;
 	public float interval;
 
+	private HashSet<PlayUnitCardAction> playActions = new HashSet<PlayUnitCardAction>();
+
 	public Coroutine MoveToHand(List<GameObject> cards)
 	{
 		return StartCoroutine(AnimateMoveToHand(cards));
-	}
-
-	public int GetCardCount()
-	{
-		int count = 0;
-
-		foreach (Transform child in transform)
-		{
-			if (child.childCount > 0) count++;
-		}
-
-		return count;
-	}
-
-	private Transform GetNextAvailableCardHolder()
-	{
-		foreach (Transform child in transform)
-		{
-			if (child.childCount == 0) return child;
-		}
-		return null;
 	}
 
 	private IEnumerator AnimateMoveToHand(List<GameObject> cards)
@@ -61,5 +44,44 @@ public class HandController : MonoBehaviour
 
 			yield return new WaitForSeconds(interval);
 		}
+	}
+
+	public int GetCardCount()
+	{
+		int count = 0;
+
+		foreach (Transform child in transform)
+		{
+			if (child.childCount > 0) count++;
+		}
+
+		return count;
+	}
+
+	private Transform GetNextAvailableCardHolder()
+	{
+		foreach (Transform child in transform)
+		{
+			if (child.childCount == 0) return child;
+		}
+		return null;
+	}
+
+	public void AddPlayAction(PlayUnitCardAction action)
+	{
+		playActions.Add(action);
+	}
+
+	public void RemovePlayAction(PlayUnitCardAction action)
+	{
+		playActions.Remove(action);
+	}
+
+	public IEnumerable<PlayUnitCardAction> ExportActions()
+	{
+		PlayUnitCardAction[] exportActions = new PlayUnitCardAction[playActions.Count];
+		playActions.CopyTo(exportActions);
+		playActions.Clear();
+		return exportActions;
 	}
 }
