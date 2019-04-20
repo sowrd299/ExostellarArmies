@@ -1,8 +1,9 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using SFB.Game.Management;
 
 namespace SFB.Game.Content {
-	public class Tower {
+	public class Tower : IIDed {
+		private static IdIssuer<Tower> idIssuer = new IdIssuer<Tower>();
+
 		private int maxHP;
 		private int hp;
 		public int HP {
@@ -16,11 +17,17 @@ namespace SFB.Game.Content {
 			set { damage = value; }
 		}
 
+		readonly public string id;
+		public string ID {
+			get { return id; }
+		}
+
 		public Tower() {
 			maxHP = 2;
 			hp = maxHP;
 			baseDamage = 1;
 			damage = baseDamage;
+			id = idIssuer.IssueId(this);
 		}
 
 		public void takeDamage(int n) {
