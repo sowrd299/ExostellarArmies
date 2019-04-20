@@ -8,6 +8,7 @@ using SFB.Net.Client;
 public class UnitHolder : MonoBehaviour
 {
 	public int laneIndex;
+	public int positionIndex;
 
 	public GameObject unitPrefab;
 
@@ -22,7 +23,7 @@ public class UnitHolder : MonoBehaviour
 			unit.GetComponent<CardUI>().cardBackEnd as UnitCard,
 			Driver.instance.gameManager.Lanes[laneIndex],
 			Client.Instance.SideIndex,
-			0 // TODO: Use real pos
+			positionIndex
 		));
 
 		Destroy(source.gameObject);
