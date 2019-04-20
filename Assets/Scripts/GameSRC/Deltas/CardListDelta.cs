@@ -1,6 +1,4 @@
 using System.Xml;
-using System.Collections.Generic;
-using System.Text;
 using System;
 using SFB.Game.Management;
 using SFB.Game.Content;
