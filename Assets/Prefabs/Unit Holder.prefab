@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 3355989812553523947}
   - component: {fileID: 3355989812553523946}
   - component: {fileID: 428995242073966735}
+  - component: {fileID: 8058892881969067549}
   - component: {fileID: 1150468085272710650}
   - component: {fileID: 7782447135756318161}
   m_Layer: 5
@@ -120,6 +121,36 @@ MonoBehaviour:
     m_TypeName: DropEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
   hintColor: {r: 1, g: 1, b: 1, a: 0.5019608}
   hoverColor: {r: 0.78431374, g: 1, b: 0.78431374, a: 0.5019608}
+--- !u!114 &8058892881969067549
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3355989812553523951}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 92e410742b1236748a43801f1b21617b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  type: {fileID: 11400000, guid: ddd151f5a05570740b136b4e1bd6cf84, type: 2}
+  onDrop:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 7782447135756318161}
+        m_MethodName: OnUnitDrop
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_TypeName: DropEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  hintColor: {r: 1, g: 1, b: 1, a: 0.5019608}
+  hoverColor: {r: 0.7843138, g: 1, b: 0.7843138, a: 0.5019608}
 --- !u!114 &1150468085272710650
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -148,5 +179,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   laneIndex: 0
+  positionIndex: 0
   unitPrefab: {fileID: 6374767821707340389, guid: 1575872a8435f564fa0214b566db3a09,
     type: 3}
+  hand: {fileID: 0}
