@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class TowerUI : MonoBehaviour
 {
-    public TowerFrontEnd tower;
-    public TowerUIProperties[] properties;
+    public TowerData tower;
+    public TowerUIProperty[] properties;
     private int hp;
     // Start is called before the first frame update
     private void Start()
@@ -42,15 +42,15 @@ public class TowerUI : MonoBehaviour
         }
     }
 
-    public void LoadTower(TowerFrontEnd t)
+    public void LoadTower(TowerData t)
     {
         if (t == null)
             return;
         this.tower = t;
         for (int i = 0; i < t.properties.Length; i++)
         {
-            TowerProperties tp = t.properties[i];
-            TowerUIProperties p = GetProperty(tp.element);
+            TowerProperty tp = t.properties[i];
+            TowerUIProperty p = GetProperty(tp.element);
             if (p == null)
                 continue;
 
@@ -65,9 +65,9 @@ public class TowerUI : MonoBehaviour
         }
     }
 
-    public TowerUIProperties GetProperty(Element e)
+    public TowerUIProperty GetProperty(Element e)
     {
-        TowerUIProperties res = null;
+        TowerUIProperty res = null;
         for (int i = 0; i < properties.Length; i++)
         {
             if (properties[i].element == e)//

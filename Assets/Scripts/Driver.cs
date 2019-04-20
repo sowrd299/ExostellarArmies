@@ -23,16 +23,16 @@ public class Driver : MonoBehaviour {
 	
     public int dropCostSum = 0;
 
-    private List<CardFrontEnd> listofUIOnTable = new List<CardFrontEnd>();
-    public  List<CardFrontEnd> ListofUIOnTable
+    private List<CardData> listofUIOnTable = new List<CardData>();
+    public  List<CardData> ListofUIOnTable
     {
         get
         {
             return listofUIOnTable;
         }
     }
-    private List<CardFrontEnd> listofEnemyUI = new List<CardFrontEnd>();
-    public List<CardFrontEnd> ListofEnemyUI
+    private List<CardData> listofEnemyUI = new List<CardData>();
+    public List<CardData> ListofEnemyUI
     {
         get
         {
@@ -95,12 +95,12 @@ public class Driver : MonoBehaviour {
 		*/
     }
 
-	public CardProperties[] createCardProperties(string name,string type,string flavor, string ability,Sprite sp, int cost,int hp=-1,int melee=-1, int range=-1)
+	public CardProperty[] createCardProperties(string name,string type,string flavor, string ability,Sprite sp, int cost,int hp=-1,int melee=-1, int range=-1)
     {
-        CardProperties[] listOfProp = new CardProperties[9];
+        CardProperty[] listOfProp = new CardProperty[9];
         for (int i=0; i<listOfProp.Length; i++)
         {
-            CardProperties cardProp = new CardProperties();
+            CardProperty cardProp = new CardProperty();
             cardProp.element = elemList[i];
             listOfProp[i] = cardProp;
         }
@@ -117,18 +117,18 @@ public class Driver : MonoBehaviour {
 
     }
 
-    public CardProperties createHpCardProperty(int hp)
+    public CardProperty createHpCardProperty(int hp)
     {
-        CardProperties cardProp = new CardProperties();
+        CardProperty cardProp = new CardProperty();
         cardProp.element = elemList[6];
         cardProp.intValue = hp;
         return cardProp;
     }
 
-    public TowerProperties[] createTowerProperties(int hp)
+    public TowerProperty[] createTowerProperties(int hp)
     {
-        TowerProperties[] listOfProp = new TowerProperties[1];
-        TowerProperties towerProp = new TowerProperties();
+        TowerProperty[] listOfProp = new TowerProperty[1];
+        TowerProperty towerProp = new TowerProperty();
         towerProp.element = towerElem;
         listOfProp[0]=towerProp;
         listOfProp[0].intValue = hp;
@@ -141,10 +141,10 @@ public class Driver : MonoBehaviour {
 ////        enemyMana.Add(2);
     }
 
-    public List<CardFrontEnd> loadFrontEnd(Player p)
+    public List<CardData> loadFrontEnd(Player p)
     {
 		Debug.Log($"loadFrontEnd for {p.Name}");
-        List<CardFrontEnd> ans = new List<CardFrontEnd>();
+        List<CardData> ans = new List<CardData>();
         for (int i = 0; i < p.HandSize; i++)
         {
 //            Debug.Log("NAME:: " + p.Hand[i].Name);
@@ -165,23 +165,23 @@ public class Driver : MonoBehaviour {
 				int meleeAttack = uc.MeleeAttack;
 				int rangedAttack = uc.RangedAttack;
 				int hp = uc.HealthPoints;
-				CardProperties[] listOfProperties = new CardProperties[9];
+				CardProperty[] listOfProperties = new CardProperty[9];
 				listOfProperties = createCardProperties(myName, "TYPE", flavorText, mainText, sp, cost, hp, meleeAttack, rangedAttack);
-				CardFrontEnd cardFront = new CardFrontEnd(listOfProperties);
+				CardData cardFront = new CardData(listOfProperties);
 				ans.Add(cardFront);
 			} else {
-				CardProperties[] listOfProperties = new CardProperties[9];
+				CardProperty[] listOfProperties = new CardProperty[9];
 				listOfProperties = createCardProperties(myName, "TYPE", flavorText, mainText, sp,cost);
-				CardFrontEnd cardFront = new CardFrontEnd(listOfProperties);
+				CardData cardFront = new CardData(listOfProperties);
 				ans.Add(cardFront);
 			}
         }
         return ans;
     }
 
-    public List<TowerFrontEnd> loadTowerFrontEnd()
+    public List<TowerData> loadTowerFrontEnd()
     {
-        List<TowerFrontEnd> ans = new List<TowerFrontEnd>();
+        List<TowerData> ans = new List<TowerData>();
         foreach (Lane lane in gameManager.Lanes)
         {
             for (int play = 0; play < lane.Towers.Length; play++)
@@ -190,9 +190,9 @@ public class Driver : MonoBehaviour {
                 {
                     Tower t = lane.Towers[play];
                     int hp = t.HP;
-                    TowerProperties[] tp = new TowerProperties[1];//For now 1, later will probably need Damage,Sprite
+                    TowerProperty[] tp = new TowerProperty[1];//For now 1, later will probably need Damage,Sprite
                     tp = createTowerProperties(hp);
-                    TowerFrontEnd tf = new TowerFrontEnd(tp);
+                    TowerData tf = new TowerData(tp);
                     ans.Add(tf);
                 }
             }
@@ -200,9 +200,9 @@ public class Driver : MonoBehaviour {
         return ans;
     }
 
-    public List<CardFrontEnd> loadNewHP()
+    public List<CardData> loadNewHP()
     {
-        List<CardFrontEnd> ans = new List<CardFrontEnd>();
+        List<CardData> ans = new List<CardData>();
         foreach (Lane lane in gameManager.Lanes)
         {
             for (int play = 0; play < lane.Units.GetLength(0); play++)
@@ -213,10 +213,10 @@ public class Driver : MonoBehaviour {
                     {
                         Unit u = lane.Units[play, pos];
                         int hp = u.HealthPoints;
-                        CardProperties hpprop = createHpCardProperty(hp);
-                        CardProperties[] listOfProperties = new CardProperties[1];
+                        CardProperty hpprop = createHpCardProperty(hp);
+                        CardProperty[] listOfProperties = new CardProperty[1];
                         listOfProperties[0] = hpprop; 
-                        CardFrontEnd cardFront = new CardFrontEnd(listOfProperties);
+                        CardData cardFront = new CardData(listOfProperties);
                         ans.Add(cardFront);
                     }
                 }
@@ -227,7 +227,7 @@ public class Driver : MonoBehaviour {
 
     public void updateTowerUI()
     {
-        List<TowerFrontEnd> t = loadTowerFrontEnd();
+        List<TowerData> t = loadTowerFrontEnd();
         List<TowerUI> tu = manager.loadTowerUI();
         for (int i = 0; i < t.Count; i++)
         {
@@ -237,7 +237,7 @@ public class Driver : MonoBehaviour {
 
     public void updateCardsOntable()
     {
-        List<CardFrontEnd> c = loadNewHP();
+        List<CardData> c = loadNewHP();
         List<CardUI> cu = manager.loadCardUI();
         Debug.Log("Lengths==" + (c.Count).ToString() + cu.Count.ToString());
         for (int i = 0; i < c.Count; i++)

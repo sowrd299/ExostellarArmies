@@ -29,7 +29,7 @@ public class Draggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
     {
         CardUI c = this.gameObject.GetComponent<CardUI>();
         int cardCost;
-        int.TryParse(c.properties[5].text.text, out cardCost);
+        int.TryParse(c.propertyDisplays[5].text.text, out cardCost);
         if (this.transform.parent.gameObject.tag == "CardHolder")
         {
             Driver.instance.dropCostSum -= cardCost;
@@ -76,7 +76,7 @@ public class Draggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
         //Debug.Log("End Drag");
         CardUI c = this.gameObject.GetComponent<CardUI>();
         int cardCost;
-        int.TryParse(c.properties[5].text.text, out cardCost);
+        int.TryParse(c.propertyDisplays[5].text.text, out cardCost);
         if (parentToReturnTo.gameObject.tag == "CardHolder")
         {
             Driver.instance.dropCostSum += cardCost;

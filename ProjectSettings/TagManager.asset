@@ -9,6 +9,7 @@ TagManager:
   - EnemyCardHolder
   - MyCards
   - MyHand
+  - DragLayer
   layers:
   - Default
   - TransparentFX
