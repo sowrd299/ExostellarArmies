@@ -19,7 +19,7 @@ public class DropZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
         if (this.gameObject.tag == "CardHolder" )
         {
 			if(l == null)
-				l = Driver.instance?.gameManager?.Lanes[this.transform.GetSiblingIndex()];
+				l = Driver.instance?.gameManager?.Lanes[this.transform.GetSiblingIndex() % 3];
         }
     }
 

@@ -32,8 +32,8 @@ namespace SFB.Game {
 		}
 
 		public UnitDelta(XmlElement from, CardLoader cl) : base(from, cl) {
-			this.target = Int32.Parse(from.Attributes["index"].Value);
-			this.mode = from.Attributes["mode"].Value == "add" ? Mode.ADD : Mode.REMOVE; // use remove as default b/c more likely to error if chosen eroniously
+			//this.target = Int32.Parse(from.Attributes["index"].Value);
+			//this.mode = from.Attributes["mode"].Value == "add" ? Mode.ADD : Mode.REMOVE; // use remove as default b/c more likely to error if chosen eroniously
 		}
 
 		public override XmlElement ToXml(XmlDocument doc) {
