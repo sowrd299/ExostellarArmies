@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using SFB.Game.Management;
 
-public class HandController : MonoBehaviour
+public class HandManager : MonoBehaviour
 {
 	[Header("Draw Animation")]
 	public Transform drawOrigin;

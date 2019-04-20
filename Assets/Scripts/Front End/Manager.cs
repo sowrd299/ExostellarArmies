@@ -27,9 +27,9 @@ public class Manager : MonoBehaviour
     [SerializeField]
     private GameObject enemyHandPlaceHolder;
 	[SerializeField]
-	private HandController hand;
+	private HandManager hand;
 	[SerializeField]
-	private HandController enemyHand;
+	private HandManager enemyHand;
     [SerializeField]
     private GameObject damages;
 
