@@ -79,9 +79,9 @@ public class HandManager : MonoBehaviour
 
 	public IEnumerable<PlayUnitCardAction> ExportActions()
 	{
-		PlayUnitCardAction[] exportActions = new PlayUnitCardAction[playActions.Count];
-		playActions.CopyTo(exportActions);
+		PlayUnitCardAction[] exports = new PlayUnitCardAction[playActions.Count];
+		playActions.CopyTo(exports);
 		playActions.Clear();
-		return exportActions;
+		return exports;
 	}
 }
