@@ -153,22 +153,6 @@ public class Manager : MonoBehaviour
 		{
 			if (Client.instance.gameManager.Players[Client.instance.sideIndex].Mana.CanAfford(Driver.instance.dropCostSum))
 			{
-				// List<PlayUnitCardAction> actions = new List<PlayUnitCardAction>();
-				// for(int i = 0; i < myUnitHolders.Length; i++) {
-				// 	if(myUnitHolders[i].transform.childCount > 0) {
-				// 		CardUI c = myUnitHolders[i].transform.GetChild(0).GetComponent<CardUI>();
-
-				// 		if(c.Old == false) {
-				// 			Card back = c.cardBackEnd;
-				// 			if(myUnitHolders[i].transform.parent.name.Contains("Front"))
-				// 				actions.Add(new PlayUnitCardAction(back as UnitCard, Client.instance.gameManager.Lanes[i % 3], 0, 0));
-				// 			else
-				// 				actions.Add(new PlayUnitCardAction(back as UnitCard, Client.instance.gameManager.Lanes[i % 3], 0, 1));
-				// 			//myCardHolders need to be in correct order
-				// 		}
-				// 	}
-				// }
-
 				PlayUnitCardAction[] actions = hand.ExportActions();
 
 				Client.instance.SendPlanningPhaseActions(actions);
