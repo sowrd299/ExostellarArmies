@@ -180,6 +180,8 @@ namespace SFB.Net.Client
 			{
 				XmlDocument receivedDoc = socketManager.ReceiveXml();
 
+				if (receivedDoc == null) return;
+
 				// check for match end
 				/*if(receivedDoc != null && receivedDoc?.Attributes["type"] != null && receivedDoc?.Attributes["type"]?.Value == "matchEnd") {
 					// TODO: win/lose
@@ -189,27 +191,16 @@ namespace SFB.Net.Client
 				switch (phase)
 				{
 					case ClientPhase.WAIT_MATCH_START:
-						if (receivedDoc != null)
-						{
-							InitializeMatch(receivedDoc);
-						}
-
+						InitializeMatch(receivedDoc);
 						break;
 					case ClientPhase.WAIT_TURN_START:
 						// wait for turnStart message
-						if (receivedDoc != null)
-						{
-							ProcessTurnStart(receivedDoc);
-						}
+						ProcessTurnStart(receivedDoc);
 						break;
 					case ClientPhase.PLANNING:
 						// handled by front end calling the below method:
 						// Client.instance.SendPlanningPhaseActions(PlayerAction[] actions)
-						if (receivedDoc != null)
-						{
-							ProcessDeltas(receivedDoc, cardLoader, true);
-						}
-
+						ProcessDeltas(receivedDoc, cardLoader, true);
 						break;
 				}
 			}
