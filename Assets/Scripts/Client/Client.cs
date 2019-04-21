@@ -3,6 +3,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Xml;
 using System.Collections.Generic;
+using System.Linq;
 //using System.Diagnostics;
 using SFB.Game.Management;
 using SFB.Game.Content;
@@ -110,22 +111,16 @@ namespace SFB.Net.Client
 			sideIndex = int.Parse(document.DocumentElement.Attributes["sideIndex"].Value);
 			Debug.Log("Side Index: " + sideIndex);
 
-			//int localPlayerIndex = 0;
-			List<XmlElement> playerIds = new List<XmlElement>();
-			foreach (XmlElement e in document.GetElementsByTagName("playerIds"))
-			{
-				if (sideIndex == 0)
-					playerIds.Add(e);
-				else
-					playerIds.Insert(0, e);
-			}
-			List<XmlElement> laneIds = new List<XmlElement>();
-			foreach (XmlElement e in document.GetElementsByTagName("laneIds"))
-			{
-				laneIds.Add(e);
-			}
-			gameManager = new GameManager(playerIds: playerIds.ToArray(), laneIds: laneIds.ToArray());
-			driver.gameManager = gameManager;
+			IEnumerable<XmlElement> playerIdNodes = document.GetElementsByTagName("playerIds").Cast<XmlElement>();
+			XmlElement[] playerIds = new XmlElement[2];
+			XmlElement localPlayerElement = playerIdNodes.First(element => element.Attributes["side"].Value == "local");
+			XmlElement opponentPlayerElement = playerIdNodes.First(element => element.Attributes["side"].Value == "opponent");
+			playerIds[sideIndex] = localPlayerElement;
+			playerIds[1 - sideIndex] = opponentPlayerElement;
+
+			XmlElement[] laneIds = document.GetElementsByTagName("laneIds").Cast<XmlElement>().ToArray();
+			
+			driver.gameManager = gameManager = new GameManager(playerIds: playerIds, laneIds: laneIds);
 
 			phase = ClientPhase.WAIT_TURN_START;
 			Debug.Log("Waiting for turn start...");
@@ -147,18 +142,11 @@ namespace SFB.Net.Client
 				Debug.Log("Received turn start deltas; applying them:");
 				ProcessDeltas(document, cardLoader, true);
 
-				/*foreach(Card c in gameManager.Players[sideIndex].Hand)
-					Debug.Log(c.Name);
-				Debug.Log("-");
-				foreach(Card c in gameManager.Players[1-sideIndex].Hand)
-					Debug.Log(c.Name);*/
-
 				driver.updateTowerUI();
 				driver.updateCardsOntable();
 				driver.manager.StartDrawPhase(gameManager.Players);
 
 				phase = ClientPhase.PLANNING;
-
 			}
 			else if (type == "actionDeltas")
 			{
