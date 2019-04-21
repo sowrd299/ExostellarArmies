@@ -270,21 +270,6 @@ public class Manager : MonoBehaviour
 
         yield return null;
     }
-	/*
-    IEnumerator lerpColor(GameObject g)
-    {
-        yield return new WaitForSeconds(1f);
-        mainBtnText.text = "";
-        float ElapsedTime = 0.0f;
-        float TotalTime = 0.4f;
-        while (ElapsedTime < TotalTime)
-        {
-            ElapsedTime += Time.deltaTime;
-            g.GetComponent<Image>().color = Color.Lerp(Color.red, Color.green, (ElapsedTime / TotalTime));
-            yield return null;
-        }
-        mainBtnText.text = "DEPLOY";
-    }*/
 
     IEnumerator moveTo(GameObject g, GameObject v)
     {
