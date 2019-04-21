@@ -133,6 +133,9 @@ namespace SFB.Net.Client
 			if (type == "turnStart")
 			{
 				Debug.Log("Planning Phase Begun");
+				
+				driver.manager.StartDrawPhase(gameManager.Players);
+
 				foreach (Delta d in driver.gameManager.Players[1 - sideIndex].GetDrawDeltas())
 				{
 					d.Apply();
@@ -144,7 +147,6 @@ namespace SFB.Net.Client
 
 				driver.updateTowerUI();
 				driver.updateCardsOntable();
-				driver.manager.StartDrawPhase(gameManager.Players);
 
 				phase = ClientPhase.PLANNING;
 			}
