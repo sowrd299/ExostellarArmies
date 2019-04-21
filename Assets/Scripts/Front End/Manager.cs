@@ -124,8 +124,8 @@ public class Manager : MonoBehaviour
 	{
 		currentState.startActions();
 		handCapacity.text = "Hand capacity\n" + handPlaceHolder.gameObject.transform.childCount.ToString() + "/3";
-		resourseText.text = "Resources: " + Driver.instance?.gameManager?.Players[Client.instance.sideIndex]?.Mana?.Count.ToString();
-		dropCostSumText.text = "DropCostSum: " + Driver.instance?.dropCostSum.ToString();
+		// resourseText.text = "Resources: " + Driver.instance?.gameManager?.Players[Client.instance.sideIndex]?.Mana?.Count.ToString();
+		// dropCostSumText.text = "DropCostSum: " + Driver.instance?.dropCostSum.ToString();
 
 		if (!Client.instance.initialized && !foundMatch)
 		{
