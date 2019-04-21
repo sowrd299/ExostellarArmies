@@ -268,9 +268,7 @@ public class Manager : MonoBehaviour
 		mainBtnText.text = "LOCK IN PLANS";
 		mainButton.GetComponent<Image>().color = Color.green;
 
-		makeDraggable(true);
         yield return null;
-        //enemyPlay();
     }
 	/*
     IEnumerator lerpColor(GameObject g)
@@ -355,7 +353,6 @@ public class Manager : MonoBehaviour
             l[i].transform.localScale = v;
 
             Destroy(l[i].transform.GetChild(1).GetComponent<CardInstance>());
-            // l[i].transform.GetComponent<Draggable>().enabled = false;
             l[i].GetComponent<CardUI>().Old = true;
         }
         StartCoroutine(moveToFrontRow(myUnitHolders));
@@ -441,14 +438,6 @@ public class Manager : MonoBehaviour
 		}
 		return cu;
 	}
-
-	public void makeDraggable(bool b)
-    {
-        // for (int i = 0; i < handPlaceHolder.transform.childCount; i++)
-        // {
-        //     handPlaceHolder.transform.GetChild(i).GetComponent<Draggable>().enabled = b;
-        // }
-    }
 
     public bool hasCard(GameObject[] g,int i)
     {

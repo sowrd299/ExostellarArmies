@@ -250,35 +250,6 @@ public class Driver : MonoBehaviour {
 
     void Update() {
 		Client.Instance.Update();
-
-		/*
-		if(gameManager != null) {
-			//updateUI();
-			resoureCount = myMana.Count;
-			switch(phase) {
-				case Phase.DRAW:
-					combatStarted = false;
-					gameManager.DrawPhase();
-					//phase = Phase.PLACEMENT;
-					break;
-				case Phase.PLACEMENT:
-					// handled by UI
-					break;
-				case Phase.COMBAT:
-					manager.makeDraggable(false);
-					//gameManager.CombatPhase();
-					//phase = gameManager.Over ? Phase.DONE : Phase.DRAW;
-					//updateTowerUI();
-					if(!combatStarted) {
-						combatStarted = true;
-						StartCoroutine(manager.damageAnims());
-					}
-					break;
-				case Phase.DONE:
-					print("Game Over: Player " + (gameManager.Players[0].Lives == 0 ? 2 : 1) + " Wins!");
-					break;
-			}
-		}*/
 	}
 
 	public void printField() {
