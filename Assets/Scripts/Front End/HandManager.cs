@@ -77,7 +77,7 @@ public class HandManager : MonoBehaviour
 		playActions.Remove(action);
 	}
 
-	public IEnumerable<PlayUnitCardAction> ExportActions()
+	public PlayUnitCardAction[] ExportActions()
 	{
 		Debug.Log($"Exporting {playActions.Count} play actions");
 		PlayUnitCardAction[] exports = new PlayUnitCardAction[playActions.Count];
