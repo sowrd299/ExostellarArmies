@@ -1,5 +1,6 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Serialization;
@@ -13,10 +14,10 @@ public class Manager : MonoBehaviour
 
 	[SerializeField]
 	private GameObject cardPrefab;
-	public List<GameObject> cards = new List<GameObject>();
+	public List<GameObject> newCards = new List<GameObject>();
 	[SerializeField]
 	private GameObject enemyCardPrefab;
-	public List<GameObject> enemyCards = new List<GameObject>();
+	public List<GameObject> newEnemyCards = new List<GameObject>();
 
 	[SerializeField]
 	private GameObject placeHolder;
@@ -155,7 +156,7 @@ public class Manager : MonoBehaviour
 		{
 			if (Client.instance.gameManager.Players[Client.instance.sideIndex].Mana.CanAfford(Driver.instance.dropCostSum))
 			{
-				PlayUnitCardAction[] actions = hand.ExportActions();
+				PlayUnitCardAction[] actions = handManager.ExportActions();
 
 				Client.instance.SendPlanningPhaseActions(actions);
 				mainBtnText.text = "WAITING FOR OPPONENT";
@@ -221,43 +222,40 @@ public class Manager : MonoBehaviour
 
 	public void spawnCards(Player[] players)
 	{
-		int handCardCount = hand.GetCardCount();
-		while (handCardCount + cards.Count < 3)
+		int handCardCount = handManager.GetCardCount();
+		while (handCardCount + newCards.Count < 3)
 		{
-			GameObject tempCard = Instantiate(cardPrefab, placeHolder.transform);
-			cards.Add(tempCard);
+			GameObject card = Instantiate(cardPrefab, placeHolder.transform);
+			newCards.Add(card);
 		}
 
-		int enemyHandCardCount = enemyHand.GetCardCount();
-		while (enemyHandCardCount + enemyCards.Count < 3)
+		int enemyHandCardCount = enemyHandManager.GetCardCount();
+		while (enemyHandCardCount + newEnemyCards.Count < 3)
 		{
 			GameObject tempCard2 = Instantiate(enemyCardPrefab, enemyPlaceHolder.transform);
-			enemyCards.Add(tempCard2);
+			newEnemyCards.Add(tempCard2);
 		}
 
 		List<CardPropertyMap> feList1 = Driver.instance.loadFrontEnd(players[Client.instance.sideIndex]);
-		//List<CardFrontEnd> feList2 = Driver.instance.loadFrontEnd(players[1]);
 
 		List<CardUI> ui1 = loadCardUIinHand(placeHolder);
 
 		for (int i = 0; i < Mathf.Min(feList1.Count, ui1.Count); i++)
 		{
-			//Debug.Log("I"+i);
 			ui1[i].LoadCard(feList1[i]);
 		}
 
-		//        Driver.instance.drawCards();
 		StartCoroutine(moveToHand());
 	}
 
 	IEnumerator moveToHand()
 	{
-		Coroutine drawCoroutine = hand.MoveToHand(cards);
-		Coroutine enemyDrawCoroutine = enemyHand.MoveToHand(enemyCards);
+		Coroutine drawCoroutine = handManager.MoveToHand(newCards);
+		Coroutine enemyDrawCoroutine = enemyHandManager.MoveToHand(newEnemyCards);
 		yield return drawCoroutine;
 		yield return enemyDrawCoroutine;
-		cards.Clear();
-		enemyCards.Clear();
+		newCards.Clear();
+		newEnemyCards.Clear();
 
 		mainBtnText.text = "LOCK IN PLANS";
 		mainButton.GetComponent<Image>().color = Color.green;
