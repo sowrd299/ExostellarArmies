@@ -48,6 +48,8 @@ public class ResourceDisplayController : MonoBehaviour
 			{
 				pips[i].CrossFadeAlpha(1, pulseTime / 2, true);
 			}
+
+			yield return new WaitForSeconds(pulseTime / 2);
 		}
 	}
 }
