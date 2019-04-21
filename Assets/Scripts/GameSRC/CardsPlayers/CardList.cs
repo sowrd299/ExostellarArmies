@@ -19,7 +19,7 @@ namespace SFB.Game
 		public new virtual void Insert(int index, Card item)
 		{
 			base.Insert(index, item);
-			afterInsert(item);
+			if (afterInsert != null) afterInsert(item);
 		}
 	}
 }
