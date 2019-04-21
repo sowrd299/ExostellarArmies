@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using SFB.Game.Management;
@@ -10,6 +10,8 @@ public class HandManager : MonoBehaviour
 	public float travelTime;
 	public AnimationCurve travelCurve;
 	public float interval;
+
+	private Hand hand;
 
 	private HashSet<PlayUnitCardAction> playActions = new HashSet<PlayUnitCardAction>();
 
@@ -43,6 +45,38 @@ public class HandManager : MonoBehaviour
 			card.transform.position = targetPosition;
 
 			yield return new WaitForSeconds(interval);
+		}
+	}
+
+	private void OnEnable()
+	{
+		if (hand != null)
+		{
+			hand.afterInsert += OnInsertCard;
+		}
+	}
+
+	public void TrackHand(Hand hand)
+	{
+		if (this.hand != null)
+		{
+			throw new System.Exception($"HandManager already tracking a hand (id: {this.hand.ID}), cannot track another hand (id: {hand.ID})");
+		}
+
+		this.hand = hand;
+		OnEnable();
+	}
+
+	private void OnInsertCard(Card newCard)
+	{
+		// TODO: Switch to using this
+	}
+
+	private void OnDisable()
+	{
+		if (hand != null)
+		{
+			hand.afterInsert -= OnInsertCard;
 		}
 	}
 
