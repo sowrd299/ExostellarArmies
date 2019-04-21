@@ -114,8 +114,53 @@ public class Driver : MonoBehaviour {
         listOfProp[7].intValue = melee;
         listOfProp[8].intValue = range;
         return listOfProp;
-
     }
+
+	public CardProperty[] createCardProperties(Card card)
+	{
+		if (card is UnitCard)
+		{
+			UnitCard unitCard = card as UnitCard;
+
+			return createCardProperties(
+				card.Name,
+				"TYPE",
+				card.FlavorText,
+				card.MainText,
+				GetSpriteForFaction(card.Faction),
+				card.DeployCost,
+				unitCard.HealthPoints,
+				unitCard.MeleeAttack,
+				unitCard.RangedAttack
+			);
+		}
+		else
+		{
+			return createCardProperties(
+				card.Name,
+				"TYPE",
+				card.FlavorText,
+				card.MainText,
+				GetSpriteForFaction(card.Faction),
+				card.DeployCost
+			);
+		}
+	}
+
+	private Sprite GetSpriteForFaction(Faction faction)
+	{
+		switch (faction)
+		{
+			case Faction.CARTH:
+			case Faction.NONE:
+			default:
+				return exostellar;
+			case Faction.JIRNOR:
+				return jirnorn;
+			case Faction.MYXOR:
+				return myxori;
+		}
+	}
 
     public CardProperty createHpCardProperty(int hp)
     {
@@ -138,7 +183,6 @@ public class Driver : MonoBehaviour {
     public void drawCards()
     {
           gameManager.Players[Client.instance.sideIndex].GetDeployPhaseDeltas()[0].Apply();
-////        enemyMana.Add(2);
     }
 
     public List<CardPropertyMap> loadFrontEnd(Player p)
@@ -147,34 +191,7 @@ public class Driver : MonoBehaviour {
         List<CardPropertyMap> ans = new List<CardPropertyMap>();
         for (int i = 0; i < p.HandSize; i++)
         {
-//            Debug.Log("NAME:: " + p.Hand[i].Name);
-            string myName = p.Hand[i].Name;
-            string flavorText = p.Hand[i].FlavorText;
-            string mainText = p.Hand[i].MainText;
-            int cost = p.Hand[i].DeployCost;
-            Sprite sp = null;
-            if (p.Hand[i].Faction == Faction.CARTH || p.Hand[i].Faction == Faction.NONE)
-                sp = exostellar;
-            else if (p.Hand[i].Faction == Faction.JIRNOR)
-                sp = jirnorn;
-            else if (p.Hand[i].Faction == Faction.MYXOR)
-                sp = myxori;
-
-            if (p.Hand[i].GetType() == typeof(UnitCard)) {
-				UnitCard uc = p.Hand[i] as UnitCard;
-				int meleeAttack = uc.MeleeAttack;
-				int rangedAttack = uc.RangedAttack;
-				int hp = uc.HealthPoints;
-				CardProperty[] listOfProperties = new CardProperty[9];
-				listOfProperties = createCardProperties(myName, "TYPE", flavorText, mainText, sp, cost, hp, meleeAttack, rangedAttack);
-				CardPropertyMap cardFront = new CardPropertyMap(listOfProperties);
-				ans.Add(cardFront);
-			} else {
-				CardProperty[] listOfProperties = new CardProperty[9];
-				listOfProperties = createCardProperties(myName, "TYPE", flavorText, mainText, sp,cost);
-				CardPropertyMap cardFront = new CardPropertyMap(listOfProperties);
-				ans.Add(cardFront);
-			}
+			ans.Add(new CardPropertyMap(createCardProperties(p.Hand[i])));
         }
         return ans;
     }
