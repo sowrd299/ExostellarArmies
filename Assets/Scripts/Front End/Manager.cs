@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -27,9 +27,11 @@ public class Manager : MonoBehaviour
 	[SerializeField]
 	private GameObject enemyHandPlaceHolder;
 	[SerializeField]
-	private HandManager hand;
+	[FormerlySerializedAs("hand")]
+	private HandManager handManager;
 	[SerializeField]
-	private HandManager enemyHand;
+	[FormerlySerializedAs("enemyHand")]
+	private HandManager enemyHandManager;
 	[SerializeField]
 	private GameObject damages;
 
