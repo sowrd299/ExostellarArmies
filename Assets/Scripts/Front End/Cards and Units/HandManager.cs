@@ -101,6 +101,7 @@ public class HandManager : MonoBehaviour
 		return null;
 	}
 
+	// TODO: Should probably fork the play action related functions into a separate manager.
 	public void AddPlayAction(PlayUnitCardAction action)
 	{
 		playActions.Add(action);
