@@ -8,7 +8,7 @@ namespace SFB.Game.Management {
 	public class PlayUnitCardAction : PlayerAction {
 
 		SendableTarget<Card> cardTarget;
-		private UnitCard card{
+		public UnitCard card{
 			get{ return cardTarget.Target as UnitCard; }
 		}
 

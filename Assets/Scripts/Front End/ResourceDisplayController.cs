@@ -9,6 +9,7 @@ public class ResourceDisplayController : MonoBehaviour
 	public GameObject[] pipContainers;
 
 	public float pulseTime;
+	public HandManager hand;
 
 	private IEnumerator Start()
 	{
@@ -25,26 +26,26 @@ public class ResourceDisplayController : MonoBehaviour
 
 		while (true)
 		{
-			int totalResources = Driver.instance.gameManager.Players[Client.instance.sideIndex].Mana.Count;
-			int totalDropCost = Driver.instance.dropCostSum;
+			int resourceCount = Driver.instance.gameManager.Players[Client.instance.sideIndex].Mana.Count;
+			int deploymentCost = hand.deploymentCost;
 
-			for (int i = 0; i < Mathf.Min(totalResources - totalDropCost, pips.Count); i++)
+			for (int i = 0; i < Mathf.Min(resourceCount - deploymentCost, pips.Count); i++)
 			{
 				pips[i].CrossFadeAlpha(1, 0, true);
 			}
-			for (int i = Mathf.Max(totalResources, 0); i < pips.Count; i++)
+			for (int i = Mathf.Max(resourceCount, 0); i < pips.Count; i++)
 			{
 				pips[i].CrossFadeAlpha(0, 0, true);
 			}
 
-			for (int i = Mathf.Max(totalResources - totalDropCost, 0); i < Mathf.Min(totalResources, pips.Count); i++)
+			for (int i = Mathf.Max(resourceCount - deploymentCost, 0); i < Mathf.Min(resourceCount, pips.Count); i++)
 			{
 				pips[i].CrossFadeAlpha(0, pulseTime / 2, true);
 			}
 
 			yield return new WaitForSeconds(pulseTime / 2);
 
-			for (int i = Mathf.Max(totalResources - totalDropCost, 0); i < Mathf.Min(totalResources, pips.Count); i++)
+			for (int i = Mathf.Max(resourceCount - deploymentCost, 0); i < Mathf.Min(resourceCount, pips.Count); i++)
 			{
 				pips[i].CrossFadeAlpha(1, pulseTime / 2, true);
 			}

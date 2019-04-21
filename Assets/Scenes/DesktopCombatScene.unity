@@ -2339,16 +2339,16 @@ MonoBehaviour:
   currentState: {fileID: 11400000, guid: 311e2e7eec17047b4b81bf115d547984, type: 2}
   cardPrefab: {fileID: 6374767821707340389, guid: fcc11faf6afe54d15a2e38196298ab5f,
     type: 3}
-  cards: []
+  newCards: []
   enemyCardPrefab: {fileID: 6374767821707340389, guid: 0fde701c5854444a092ed4264bbdb133,
     type: 3}
-  enemyCards: []
+  newEnemyCards: []
   placeHolder: {fileID: 1872612532}
   handPlaceHolder: {fileID: 2098364036}
   enemyPlaceHolder: {fileID: 457992754}
   enemyHandPlaceHolder: {fileID: 915842669}
-  hand: {fileID: 2098364039}
-  enemyHand: {fileID: 915842672}
+  handManager: {fileID: 2098364039}
+  enemyHandManager: {fileID: 915842672}
   damages: {fileID: 439715774}
   myUnitHolders:
   - {fileID: 1775903987}
@@ -3330,6 +3330,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a8e9dc09572eac04eb68a29c2c6182e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  cardPrefab: {fileID: 6374767821707340389, guid: 0fde701c5854444a092ed4264bbdb133,
+    type: 3}
   drawOrigin: {fileID: 2018072783}
   travelTime: 0.3
   travelCurve:
@@ -3667,6 +3669,7 @@ MonoBehaviour:
   - {fileID: 347245397}
   - {fileID: 1392651773}
   pulseTime: 0.5
+  hand: {fileID: 2098364039}
 --- !u!1 &1042926130
 GameObject:
   m_ObjectHideFlags: 0
@@ -6799,7 +6802,6 @@ GameObject:
   m_Component:
   - component: {fileID: 2098364037}
   - component: {fileID: 2098364040}
-  - component: {fileID: 2098364041}
   - component: {fileID: 2098364038}
   - component: {fileID: 2098364039}
   m_Layer: 5
@@ -6867,6 +6869,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a8e9dc09572eac04eb68a29c2c6182e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  cardPrefab: {fileID: 6374767821707340389, guid: fcc11faf6afe54d15a2e38196298ab5f,
+    type: 3}
   drawOrigin: {fileID: 992228639}
   travelTime: 0.3
   travelCurve:
@@ -6902,18 +6906,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2098364036}
   m_CullTransparentMesh: 0
---- !u!114 &2098364041
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2098364036}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 02db77d9b11b14311bbed836cc70b000, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &2137784814
 GameObject:
   m_ObjectHideFlags: 0
