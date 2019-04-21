@@ -124,10 +124,10 @@ public class Manager : MonoBehaviour
     {
         currentState.startActions();
         handCapacity.text = "Hand capacity\n" + handPlaceHolder.gameObject.transform.childCount.ToString()+"/3";
-        resourseText.text = "Resources: " + Driver.instance?.gameManager?.Players[Client.Instance.SideIndex]?.Mana?.Count.ToString();
+        resourseText.text = "Resources: " + Driver.instance?.gameManager?.Players[Client.instance.sideIndex]?.Mana?.Count.ToString();
         dropCostSumText.text = "DropCostSum: " + Driver.instance?.dropCostSum.ToString();
 
-		if(!Client.Instance.DoneInitializing && !foundMatch)
+		if(!Client.instance.initialized && !foundMatch)
 		{
 			mainBtnText.text = "Waiting for match!";
 			//mainButton.enabled = false;
@@ -149,7 +149,7 @@ public class Manager : MonoBehaviour
 	public void mainBtn()
     {
 		if(mainBtnText.text.Equals("LOCK IN PLANS")) {
-			if(Client.Instance.GameManager.Players[Client.Instance.SideIndex].Mana.CanAfford(Driver.instance.dropCostSum)) {
+			if(Client.instance.gameManager.Players[Client.instance.sideIndex].Mana.CanAfford(Driver.instance.dropCostSum)) {
 				List<PlayUnitCardAction> actions = new List<PlayUnitCardAction>();
 				for(int i = 0; i < myUnitHolders.Length; i++) {
 					if(myUnitHolders[i].transform.childCount > 0) {
@@ -158,15 +158,15 @@ public class Manager : MonoBehaviour
 						if(c.Old == false) {
 							Card back = c.cardBackEnd;
 							if(myUnitHolders[i].transform.parent.name.Contains("Front"))
-								actions.Add(new PlayUnitCardAction(back as UnitCard, Client.Instance.GameManager.Lanes[i % 3], 0, 0));
+								actions.Add(new PlayUnitCardAction(back as UnitCard, Client.instance.gameManager.Lanes[i % 3], 0, 0));
 							else
-								actions.Add(new PlayUnitCardAction(back as UnitCard, Client.Instance.GameManager.Lanes[i % 3], 0, 1));
+								actions.Add(new PlayUnitCardAction(back as UnitCard, Client.instance.gameManager.Lanes[i % 3], 0, 1));
 							//myCardHolders need to be in correct order
 						}
 					}
 				}
 
-				Client.Instance.SendPlanningPhaseActions(actions.ToArray());
+				Client.instance.SendPlanningPhaseActions(actions.ToArray());
 				mainBtnText.text = "WAITING FOR OPPONENT";
 				mainButton.GetComponent<Image>().color = new Color(153, 204, 255);
 			} else {
@@ -212,9 +212,9 @@ public class Manager : MonoBehaviour
                 {
                     Card back = c.cardBackEnd;
                     if (enemyUnitHolders[i].transform.parent.name.Contains("Front"))
-                        actions.Add(new PlayUnitCardAction(back as UnitCard, Client.Instance.GameManager.Lanes[i % 3], 1, 0));
+                        actions.Add(new PlayUnitCardAction(back as UnitCard, Client.instance.gameManager.Lanes[i % 3], 1, 0));
                     else
-                        actions.Add(new PlayUnitCardAction(back as UnitCard, Client.Instance.GameManager.Lanes[i % 3], 1, 1));
+                        actions.Add(new PlayUnitCardAction(back as UnitCard, Client.instance.gameManager.Lanes[i % 3], 1, 1));
                 }
                 c.Old = true;
             }
@@ -242,7 +242,7 @@ public class Manager : MonoBehaviour
             enemyCards.Add(tempCard2);
         }
 
-		List<CardPropertyMap> feList1 = Driver.instance.loadFrontEnd(players[Client.Instance.SideIndex]);
+		List<CardPropertyMap> feList1 = Driver.instance.loadFrontEnd(players[Client.instance.sideIndex]);
 		//List<CardFrontEnd> feList2 = Driver.instance.loadFrontEnd(players[1]);
 
 		List<CardUI> ui1 = loadCardUIinHand(placeHolder);

@@ -137,7 +137,7 @@ public class Driver : MonoBehaviour {
 
     public void drawCards()
     {
-          gameManager.Players[Client.Instance.SideIndex].GetDeployPhaseDeltas()[0].Apply();
+          gameManager.Players[Client.instance.sideIndex].GetDeployPhaseDeltas()[0].Apply();
 ////        enemyMana.Add(2);
     }
 
@@ -249,7 +249,7 @@ public class Driver : MonoBehaviour {
 
 
     void Update() {
-		Client.Instance.Update();
+		Client.instance.Update();
 	}
 
 	public void printField() {
@@ -282,7 +282,7 @@ public class Driver : MonoBehaviour {
         string b = "T:";
         foreach (Lane lane in gameManager.Lanes)
         {
-            b += (lane.Towers[Client.Instance.SideIndex] != null ? "" + lane.Towers[Client.Instance.SideIndex].HP : "X") + " ";
+            b += (lane.Towers[Client.instance.sideIndex] != null ? "" + lane.Towers[Client.instance.sideIndex].HP : "X") + " ";
         }
         Debug.Log(b);
     }

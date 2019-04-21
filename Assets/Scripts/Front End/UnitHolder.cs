@@ -22,7 +22,7 @@ public class UnitHolder : MonoBehaviour
 		return new PlayUnitCardAction(
 			card,
 			Driver.instance.gameManager.Lanes[laneIndex],
-			Client.Instance.SideIndex,
+			Client.instance.sideIndex,
 			positionIndex
 		);
 	}

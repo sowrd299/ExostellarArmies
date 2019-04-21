@@ -29,9 +29,9 @@ public class CardUI : MonoBehaviour
 		get
 		{
 			if (!this.gameObject.name.Contains("Enemy"))
-				return Driver.instance.gameManager.Players[Client.Instance.SideIndex].Hand.IndexOf(cardBackEnd);
+				return Driver.instance.gameManager.Players[Client.instance.sideIndex].Hand.IndexOf(cardBackEnd);
 			else
-				return Driver.instance.gameManager.Players[Mathf.Abs(Client.Instance.SideIndex - 1)].Hand.IndexOf(cardBackEnd);
+				return Driver.instance.gameManager.Players[Mathf.Abs(Client.instance.sideIndex - 1)].Hand.IndexOf(cardBackEnd);
 		}
 	}
 	public bool Old = false;
