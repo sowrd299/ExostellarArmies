@@ -146,7 +146,10 @@ public class Manager : MonoBehaviour
 	{
 		mainBtnText.text = "DRAWING...";
 		mainButton.GetComponent<Image>().color = new Color(102, 255, 102);
-		spawnCards(players);
+
+		handManager.TrackHand(players[Client.instance.sideIndex].Hand);
+		enemyHandManager.TrackHand(players[1-Client.instance.sideIndex].Hand);
+
 		Driver.instance.updateTowerUI();
 	}
 
@@ -218,49 +221,6 @@ public class Manager : MonoBehaviour
 			foreach (Delta del in action.GetDeltas(Driver.instance.gameManager.Players[1]))
 				del.Apply();
 		}
-	}
-
-	public void spawnCards(Player[] players)
-	{
-		int handCardCount = handManager.GetCardCount();
-		while (handCardCount + newCards.Count < 3)
-		{
-			GameObject card = Instantiate(cardPrefab, placeHolder.transform);
-			newCards.Add(card);
-		}
-
-		int enemyHandCardCount = enemyHandManager.GetCardCount();
-		while (enemyHandCardCount + newEnemyCards.Count < 3)
-		{
-			GameObject tempCard2 = Instantiate(enemyCardPrefab, enemyPlaceHolder.transform);
-			newEnemyCards.Add(tempCard2);
-		}
-
-		List<CardPropertyMap> feList1 = Driver.instance.loadFrontEnd(players[Client.instance.sideIndex]);
-
-		List<CardUI> ui1 = loadCardUIinHand(placeHolder);
-
-		for (int i = 0; i < Mathf.Min(feList1.Count, ui1.Count); i++)
-		{
-			ui1[i].LoadCard(feList1[i]);
-		}
-
-		StartCoroutine(moveToHand());
-	}
-
-	IEnumerator moveToHand()
-	{
-		Coroutine drawCoroutine = handManager.MoveToHand(newCards);
-		Coroutine enemyDrawCoroutine = enemyHandManager.MoveToHand(newEnemyCards);
-		yield return drawCoroutine;
-		yield return enemyDrawCoroutine;
-		newCards.Clear();
-		newEnemyCards.Clear();
-
-		mainBtnText.text = "LOCK IN PLANS";
-		mainButton.GetComponent<Image>().color = Color.green;
-
-		yield return null;
 	}
 
 	IEnumerator moveTo(GameObject g, GameObject v)

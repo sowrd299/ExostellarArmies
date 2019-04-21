@@ -1,10 +1,17 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using System;
 using UnityEngine;
 using SFB.Game.Management;
+using SFB.Game.Content;
+using SFB.Game;
 
 public class HandManager : MonoBehaviour
 {
+	[Header("Object References")]
+	public GameObject cardPrefab;
+
 	[Header("Draw Animation")]
 	public Transform drawOrigin;
 	public float travelTime;
@@ -12,40 +19,15 @@ public class HandManager : MonoBehaviour
 	public float interval;
 
 	private Hand hand;
+	private Queue<IEnumerator> drawAnimationQueue = new Queue<IEnumerator>();
 
 	private HashSet<PlayUnitCardAction> playActions = new HashSet<PlayUnitCardAction>();
 
-	public Coroutine MoveToHand(List<GameObject> cards)
+	public int deploymentCost => playActions.Sum(action => action.card.DeployCost);
+
+	private void Awake()
 	{
-		return StartCoroutine(AnimateMoveToHand(cards));
-	}
-
-	private IEnumerator AnimateMoveToHand(List<GameObject> cards)
-	{
-		Debug.Log($"Adding {cards.Count} card to hand display");
-		foreach (GameObject card in cards)
-		{
-			Transform cardHolder = GetNextAvailableCardHolder();
-
-			Vector3 startPosition = drawOrigin.position;
-			Vector3 targetPosition = cardHolder.transform.position;
-			card.transform.SetParent(cardHolder);
-			card.transform.position = startPosition;
-
-			float startTime = Time.time;
-			while (Time.time - startTime < travelTime)
-			{
-				card.transform.position = Vector3.Lerp(
-					startPosition,
-					targetPosition,
-					travelCurve.Evaluate((Time.time - startTime) / travelTime)
-				);
-				yield return null;
-			}
-			card.transform.position = targetPosition;
-
-			yield return new WaitForSeconds(interval);
-		}
+		StartCoroutine(MainLoop());
 	}
 
 	private void OnEnable()
@@ -69,7 +51,48 @@ public class HandManager : MonoBehaviour
 
 	private void OnInsertCard(Card newCard)
 	{
-		// TODO: Switch to using this
+		Transform cardHolder = GetNextAvailableCardHolder();
+		GameObject cardObject = Instantiate(cardPrefab, cardHolder);
+
+		CardUI cardUI = cardObject.GetComponent<CardUI>();
+		cardUI.cardBackEnd = newCard;
+		cardUI.LoadCard(new CardPropertyMap(Driver.instance.createCardProperties(newCard)));
+		
+		drawAnimationQueue.Enqueue(AnimateMoveToHand(cardObject));
+	}
+
+	private IEnumerator AnimateMoveToHand(GameObject cardObject)
+	{
+		Vector3 startPosition = drawOrigin.position;
+		Vector3 targetPosition = cardObject.transform.parent.position;
+		cardObject.transform.position = startPosition;
+
+		float startTime = Time.time;
+		while (Time.time - startTime < travelTime)
+		{
+			cardObject.transform.position = Vector3.Lerp(
+				startPosition,
+				targetPosition,
+				travelCurve.Evaluate((Time.time - startTime) / travelTime)
+			);
+			yield return null;
+		}
+		cardObject.transform.position = targetPosition;
+
+		yield return new WaitForSeconds(interval);
+	}
+
+	private IEnumerator MainLoop()
+	{
+		while (true)
+		{
+			while (drawAnimationQueue.Count > 0)
+			{
+				yield return StartCoroutine(drawAnimationQueue.Dequeue());
+			}
+
+			yield return null;
+		}
 	}
 
 	private void OnDisable()
