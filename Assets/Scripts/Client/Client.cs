@@ -132,7 +132,6 @@ namespace SFB.Net.Client
 			{
 				Debug.Log("Planning Phase Begun");
 				
-				driver.manager.StartDrawPhase();
 
 				foreach (Delta d in driver.gameManager.Players[1 - sideIndex].GetDrawDeltas())
 				{
@@ -142,6 +141,8 @@ namespace SFB.Net.Client
 
 				Debug.Log("Received turn start deltas; applying them:");
 				ProcessDeltas(document, cardLoader, true);
+
+				driver.manager.AfterDrawPhase();
 
 				driver.updateTowerUI();
 				driver.updateCardsOntable();

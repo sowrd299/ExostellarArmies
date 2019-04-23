@@ -150,12 +150,25 @@ public class Manager : MonoBehaviour
 		enemyHandManager.TrackHand(players[1 - Client.instance.sideIndex].Hand);
 	}
 
-	public void StartDrawPhase()
+	public void AfterDrawPhase()
 	{
-		mainBtnText.text = "DRAWING...";
-		mainButton.GetComponent<Image>().color = new Color(102, 255, 102);
+		StartCoroutine(AnimateDrawPhase());
 
 		Driver.instance.updateTowerUI();
+	}
+
+	private IEnumerator AnimateDrawPhase()
+	{
+		mainBtnText.text = "DRAWING...";
+		mainButton.enabled = false;
+
+		Coroutine myDraw = handManager.DrawCards();
+		Coroutine enemyDraw = enemyHandManager.DrawCards();
+		yield return myDraw;
+		yield return enemyDraw;
+
+		mainBtnText.text = "LOCK IN PLANS";
+		mainButton.enabled = true;
 	}
 
 	public void mainBtn()
