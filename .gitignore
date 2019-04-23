@@ -38,3 +38,7 @@ sysinfo.txt
 # Builds
 *.apk
 *.unitypackage
+
+# User-specific files
+/Assets/Resources/hostaddr.txt
+/Assets/Resources/hostaddr.txt.meta

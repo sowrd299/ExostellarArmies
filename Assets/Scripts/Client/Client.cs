@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Net;
 using System.Net.Sockets;
 using System.Xml;
@@ -76,12 +76,8 @@ namespace SFB.Net.Client
 		{
 			Debug.Log("Connecting to Server...");
 
-			//find local IP
-			IPHostEntry ipEntry = Dns.GetHostEntry(Dns.GetHostName());
-			IPAddress ipAddr = ipEntry.AddressList[0];
-
-			//consts
-			string HostName = "192.168.56.1";
+			// Consts
+			string HostName = Resources.Load<TextAsset>("hostaddr").text.Trim();
 			const int Port = 4011;
 
 			//setup the connection
