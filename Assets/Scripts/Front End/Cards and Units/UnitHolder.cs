@@ -15,7 +15,7 @@ public class UnitHolder : MonoBehaviour
 
 	public HandManager hand;
 
-	private PlayUnitCardAction playAction;
+	public PlayUnitCardAction playAction;
 
 	private PlayUnitCardAction CreatePlayCardAction(UnitCard card)
 	{

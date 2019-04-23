@@ -33,6 +33,7 @@ public class HandManager : MonoBehaviour
 		StartCoroutine(MainLoop());
 	}
 
+	#region Draw animation handling
 	private void OnEnable()
 	{
 		if (hand != null)
@@ -59,12 +60,7 @@ public class HandManager : MonoBehaviour
 
 	private IEnumerator AnimateMoveToHand(Card newCard)
 	{
-		Transform cardHolder = GetNextAvailableCardHolder();
-		GameObject cardObject = Instantiate(cardPrefab, cardHolder);
-
-		CardUI cardUI = cardObject.GetComponent<CardUI>();
-		cardUI.cardBackEnd = newCard;
-		cardUI.LoadCard(new CardPropertyMap(Driver.instance.createCardProperties(newCard)));
+		GameObject cardObject = CreateCardDisplay(newCard);
 
 		Vector3 startPosition = drawOrigin.position;
 		Vector3 targetPosition = cardObject.transform.parent.position;
@@ -117,6 +113,32 @@ public class HandManager : MonoBehaviour
 			hand.afterInsert -= OnInsertCard;
 		}
 	}
+	#endregion
+
+	private GameObject CreateCardDisplay(Card cardBackEnd)
+	{
+		Transform cardHolder = GetNextAvailableCardHolder();
+		GameObject cardObject = Instantiate(cardPrefab, cardHolder);
+
+		CardUI cardUI = cardObject.GetComponent<CardUI>();
+		cardUI.cardBackEnd = cardBackEnd;
+		cardUI.LoadCard(new CardPropertyMap(Driver.instance.createCardProperties(cardBackEnd)));
+
+		return cardObject;
+	}
+
+	public void OnUnitDrop(DragSource source)
+	{
+		UnitHolder holder = source.originalParent.GetComponent<UnitHolder>();
+
+		RemovePlayAction(holder.playAction);
+		holder.playAction = null;
+
+		GameObject cardObject = CreateCardDisplay(source.GetComponent<CardUI>().cardBackEnd);
+		cardObject.transform.position = cardObject.transform.parent.position;
+
+		Destroy(source.gameObject);
+	}
 
 	public int GetCardCount()
 	{
@@ -128,21 +150,6 @@ public class HandManager : MonoBehaviour
 		}
 
 		return count;
-	}
-
-	public List<CardUI> GetCardUIs()
-	{
-		List<CardUI> result = new List<CardUI>();
-
-		foreach (Transform cardHolder in transform)
-		{
-			if (cardHolder.childCount > 0)
-			{
-				result.Add(cardHolder.GetChild(0).GetComponent<CardUI>());
-			}
-		}
-
-		return result;
 	}
 
 	private Transform GetNextAvailableCardHolder()
