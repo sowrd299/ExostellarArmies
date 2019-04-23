@@ -30,12 +30,12 @@ namespace SFB.Game.Content {
 			id = idIssuer.IssueId(this);
 		}
 
-		public void takeDamage(int n) {
-			hp -= n;
+		public void TakeDamage(int amount) {
+			hp -= amount;
 		}
 
-		public void undoTakeDamage(int n) {
-			hp += n;
+		public void UndoTakeDamage(int amount) {
+			hp += amount;
 		}
 
 		public void revive() {
