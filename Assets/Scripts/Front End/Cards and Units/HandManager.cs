@@ -51,18 +51,18 @@ public class HandManager : MonoBehaviour
 
 	private void OnInsertCard(Card newCard)
 	{
+		drawAnimationQueue.Enqueue(AnimateMoveToHand(newCard));
+	}
+
+	private IEnumerator AnimateMoveToHand(Card newCard)
+	{
 		Transform cardHolder = GetNextAvailableCardHolder();
 		GameObject cardObject = Instantiate(cardPrefab, cardHolder);
 
 		CardUI cardUI = cardObject.GetComponent<CardUI>();
 		cardUI.cardBackEnd = newCard;
 		cardUI.LoadCard(new CardPropertyMap(Driver.instance.createCardProperties(newCard)));
-		
-		drawAnimationQueue.Enqueue(AnimateMoveToHand(cardObject));
-	}
 
-	private IEnumerator AnimateMoveToHand(GameObject cardObject)
-	{
 		Vector3 startPosition = drawOrigin.position;
 		Vector3 targetPosition = cardObject.transform.parent.position;
 		cardObject.transform.position = startPosition;
