@@ -10,6 +10,8 @@ using SFB.Net.Client;
 
 public class Manager : MonoBehaviour
 {
+	private static Player[] players => Driver.instance.gameManager.Players;
+
 	public State currentState;
 
 	[SerializeField]
@@ -142,13 +144,16 @@ public class Manager : MonoBehaviour
 		}*/
 	}
 
-	public void StartDrawPhase(Player[] players)
+	public void InitializeManagers()
+	{
+		handManager.TrackHand(players[Client.instance.sideIndex].Hand);
+		enemyHandManager.TrackHand(players[1 - Client.instance.sideIndex].Hand);
+	}
+
+	public void StartDrawPhase()
 	{
 		mainBtnText.text = "DRAWING...";
 		mainButton.GetComponent<Image>().color = new Color(102, 255, 102);
-
-		handManager.TrackHand(players[Client.instance.sideIndex].Hand);
-		enemyHandManager.TrackHand(players[1-Client.instance.sideIndex].Hand);
 
 		Driver.instance.updateTowerUI();
 	}

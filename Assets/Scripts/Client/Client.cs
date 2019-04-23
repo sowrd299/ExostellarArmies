@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Net;
 using System.Net.Sockets;
 using System.Xml;
@@ -118,6 +118,8 @@ namespace SFB.Net.Client
 			
 			driver.gameManager = gameManager = new GameManager(playerIds: playerIds, laneIds: laneIds);
 
+			driver.manager.InitializeManagers();
+
 			phase = ClientPhase.WAIT_TURN_START;
 			Debug.Log("Waiting for turn start...");
 		}
@@ -130,7 +132,7 @@ namespace SFB.Net.Client
 			{
 				Debug.Log("Planning Phase Begun");
 				
-				driver.manager.StartDrawPhase(gameManager.Players);
+				driver.manager.StartDrawPhase();
 
 				foreach (Delta d in driver.gameManager.Players[1 - sideIndex].GetDrawDeltas())
 				{
