@@ -130,21 +130,6 @@ public class HandManager : MonoBehaviour
 		return count;
 	}
 
-	public List<CardUI> GetCardUIs()
-	{
-		List<CardUI> result = new List<CardUI>();
-
-		foreach (Transform cardHolder in transform)
-		{
-			if (cardHolder.childCount > 0)
-			{
-				result.Add(cardHolder.GetChild(0).GetComponent<CardUI>());
-			}
-		}
-
-		return result;
-	}
-
 	private Transform GetNextAvailableCardHolder()
 	{
 		foreach (Transform child in transform)
