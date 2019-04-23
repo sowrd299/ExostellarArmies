@@ -49,7 +49,7 @@ namespace SFB.Net.Client
 				Delta d = Delta.FromXml(element, loader);
 				if (verbose)
 				{
-					Debug.Log($"    processing delta: '{element.OuterXml}'");
+					Debug.Log($"Processing delta: '{element.OuterXml}'\nDelta is: {d}");
 				}
 				d.Apply();
 			}
