@@ -124,14 +124,19 @@ namespace SFB.Game.Content {
 			private int player;
 			private int pos;
 
-            internal AddToLaneDelta(Lane lane, UnitCard card, int player, int pos) : base(lane)
+            internal AddToLaneDelta(Lane lane, UnitCard card, int player, int pos)
+				: base(lane)
             {
                 this.card = new SendableTarget<Card>("card", card);
                 this.player = player;
                 this.pos = pos;
             }
 
-            public AddToLaneDelta(XmlElement element, CardLoader loader) : base(element, Lane.IdIssuer, loader) { }
+            public AddToLaneDelta(XmlElement element, CardLoader loader)
+				: base(element, Lane.IdIssuer, loader)
+			{
+
+			}
 
 
             public override bool VisibleTo(Player p)
