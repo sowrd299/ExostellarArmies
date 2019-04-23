@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -10,6 +10,8 @@ using SFB.Net.Client;
 
 public class Manager : MonoBehaviour
 {
+	public static Manager instance => Driver.instance.manager;
+
 	private static Player[] players => Driver.instance.gameManager.Players;
 	private static GameManager gameManager => Driver.instance.gameManager;
 	private static Player myPlayer => gameManager.Players[Client.instance.sideIndex];
@@ -168,6 +170,20 @@ public class Manager : MonoBehaviour
 
 		mainBtnText.text = "LOCK IN PLANS";
 		mainButton.interactable = true;
+	}
+
+	public void ValidateDropCost()
+	{
+		if (handManager.deploymentCost > myPlayer.Mana.Count)
+		{
+			mainButton.interactable = false;
+			mainBtnText.text = "Not enough resources!";
+		}
+		else
+		{
+			mainButton.interactable = true;
+			mainBtnText.text = "LOCK IN PLANS";
+		}
 	}
 
 	public void mainBtn()
