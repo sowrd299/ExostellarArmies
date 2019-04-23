@@ -49,7 +49,7 @@ public class HandManager : MonoBehaviour
 		OnEnable();
 	}
 
-	private void OnInsertCard(Card newCard)
+	private void OnInsertCard(int index, Card newCard)
 	{
 		drawAnimationQueue.Enqueue(AnimateMoveToHand(newCard));
 	}
