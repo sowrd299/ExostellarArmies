@@ -118,7 +118,7 @@ namespace SFB.Net.Client
 			
 			driver.gameManager = gameManager = new GameManager(playerIds: playerIds, laneIds: laneIds);
 
-			driver.manager.InitializeManagers();
+			driver.manager.InitializeUI();
 
 			phase = ClientPhase.WAIT_TURN_START;
 			Debug.Log("Waiting for turn start...");

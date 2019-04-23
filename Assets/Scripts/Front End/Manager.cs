@@ -135,17 +135,14 @@ public class Manager : MonoBehaviour
 		if (!Client.instance.initialized && !foundMatch)
 		{
 			mainBtnText.text = "Waiting for match!";
-			//mainButton.enabled = false;
-			mainButton.GetComponent<Image>().color = Color.grey;
-		}/* else if(Client.Instance.DoneInitializing && !foundMatch) {
-			mainBtnText.text = "Draw";
-			mainButton.enabled = true;
-			mainButton.GetComponent<Image>().color = Color.green;
-		}*/
+			mainButton.enabled = false;
+		}
 	}
 
-	public void InitializeManagers()
+	public void InitializeUI()
 	{
+		mainButton.enabled = true;
+
 		handManager.TrackHand(players[Client.instance.sideIndex].Hand);
 		enemyHandManager.TrackHand(players[1 - Client.instance.sideIndex].Hand);
 	}
