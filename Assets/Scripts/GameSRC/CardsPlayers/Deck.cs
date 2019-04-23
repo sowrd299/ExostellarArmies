@@ -8,7 +8,7 @@ using SFB.Game.Management;
 namespace SFB.Game{
 
     // represents a player's deck of cards while they are playing
-    class Deck : CardList {
+    public class Deck : CardList {
 
         // from whence all player id's at issued; static to avoid repeats
         private static IdIssuer<Deck> idIssuer = new IdIssuer<Deck>();

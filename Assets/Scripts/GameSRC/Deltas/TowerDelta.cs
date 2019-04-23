@@ -17,8 +17,10 @@ namespace SFB.Game {
 			amount = amt;
 		}
 
-		internal TowerDelta(XmlElement from, IdIssuer<Tower> issuer, CardLoader loader) : base(from, loader) {
-			sendableTower = new SendableTarget<Tower>("tower", from, issuer);
+		internal TowerDelta(XmlElement from, CardLoader loader)
+			: base(from, loader)
+		{
+			sendableTower = new SendableTarget<Tower>("tower", from, Tower.idIssuer);
 			amount = Int32.Parse(from.Attributes["amount"].Value);
 		}
 

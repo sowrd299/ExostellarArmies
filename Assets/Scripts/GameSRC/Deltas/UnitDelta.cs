@@ -32,9 +32,9 @@ namespace SFB.Game {
 			sendableSource = new SendableTarget<Unit>("source", s);
 		}
 
-		internal UnitDelta(XmlElement from, IdIssuer<Unit> issuer, CardLoader cl) : base(from, cl) {
-			sendableTarget = new SendableTarget<Unit>("target", from, issuer);
-			sendableSource = new SendableTarget<Unit>("source", from, issuer);
+		internal UnitDelta(XmlElement from, CardLoader cl) : base(from, cl) {
+			sendableTarget = new SendableTarget<Unit>("target", from, Unit.idIssuer);
+			sendableSource = new SendableTarget<Unit>("source", from, Unit.idIssuer);
 			amount = Int32.Parse(from.Attributes["amount"].Value);
 			dmgType = StringToDamageType(from.Attributes["type"].Value);
 		}

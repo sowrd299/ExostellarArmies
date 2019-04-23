@@ -8,7 +8,7 @@ namespace SFB.Game {
 // management will just treat is as a generic Delta
 
     // a class to represent removing the given card from the given index the give card from the given index
-    public class CardListDelta<T> : TargetedDelta<T> where T : CardList {
+    public abstract class CardListDelta<T> : TargetedDelta<T> where T : CardList {
 
         public enum Mode { ADD, REMOVE }
 

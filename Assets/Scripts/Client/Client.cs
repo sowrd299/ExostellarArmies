@@ -81,7 +81,7 @@ namespace SFB.Net.Client
 			IPAddress ipAddr = ipEntry.AddressList[0];
 
 			//consts
-			string HostName = "192.168.99.1";
+			string HostName = "192.168.56.1";
 			const int Port = 4011;
 
 			//setup the connection
@@ -156,7 +156,7 @@ namespace SFB.Net.Client
 			}
 			else
 			{
-				Debug.Log("Received document of type " + type + " in ClientPhase.WAIT_TURN_START");
+				Debug.Log("Received unexpected document of type " + type + " in ClientPhase.WAIT_TURN_START");
 			}
 		}
 

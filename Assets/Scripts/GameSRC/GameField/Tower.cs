@@ -2,7 +2,7 @@
 
 namespace SFB.Game.Content {
 	public class Tower : IIDed {
-		private static IdIssuer<Tower> idIssuer = new IdIssuer<Tower>();
+		public static IdIssuer<Tower> idIssuer = new IdIssuer<Tower>();
 
 		private int maxHP;
 		private int hp;
