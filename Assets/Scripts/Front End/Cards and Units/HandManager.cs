@@ -33,6 +33,7 @@ public class HandManager : MonoBehaviour
 		StartCoroutine(MainLoop());
 	}
 
+#region Draw animation handling
 	private void OnEnable()
 	{
 		if (hand != null)
@@ -117,6 +118,7 @@ public class HandManager : MonoBehaviour
 			hand.afterInsert -= OnInsertCard;
 		}
 	}
+#endregion
 
 	public int GetCardCount()
 	{
