@@ -151,15 +151,15 @@ public class Manager : MonoBehaviour
 
 	public void ValidateDropCost()
 	{
-		if (myHandManager.deploymentCost > myPlayer.Mana.Count)
-		{
-			mainButton.interactable = false;
-			mainButtonText.text = "Not enough resources!";
-		}
-		else
+		if (myPlayer.Mana.CanAfford(myHandManager.deploymentCost))
 		{
 			mainButton.interactable = true;
 			mainButtonText.text = "LOCK IN PLANS";
+		}
+		else
+		{
+			mainButton.interactable = false;
+			mainButtonText.text = "Not enough resources!";
 		}
 	}
 
@@ -167,7 +167,7 @@ public class Manager : MonoBehaviour
 	{
 		if (mainButtonText.text.Equals("LOCK IN PLANS"))
 		{
-			if (Client.instance.gameManager.Players[Client.instance.sideIndex].Mana.CanAfford(Driver.instance.dropCostSum))
+			if (myPlayer.Mana.CanAfford(myHandManager.deploymentCost))
 			{
 				PlayUnitCardAction[] actions = myHandManager.ExportActions();
 
