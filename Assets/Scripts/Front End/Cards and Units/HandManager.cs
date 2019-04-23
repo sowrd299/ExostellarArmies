@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System;
 using UnityEngine;
+using UnityEngine.UI;
 using SFB.Game.Management;
 using SFB.Game.Content;
 using SFB.Game;
@@ -11,6 +12,8 @@ public class HandManager : MonoBehaviour
 {
 	[Header("Object References")]
 	public GameObject cardPrefab;
+
+	public Button mainButton;
 
 	[Header("Draw Animation")]
 	public Transform drawOrigin;
@@ -88,10 +91,22 @@ public class HandManager : MonoBehaviour
 		{
 			while (drawAnimationQueue.Count > 0)
 			{
+				if (mainButton != null)
+				{
+					mainButton.enabled = false;
+					mainButton.GetComponentInChildren<Text>().text = "Drawing...";
+				}
+
 				yield return StartCoroutine(drawAnimationQueue.Dequeue());
 			}
 
-			yield return null;
+			if (mainButton != null)
+			{
+				mainButton.enabled = true;
+				mainButton.GetComponentInChildren<Text>().text = "LOCK IN PLANS";
+			}
+
+			yield return new WaitUntil(() => drawAnimationQueue.Count > 0);
 		}
 	}
 

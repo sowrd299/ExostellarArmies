@@ -3332,6 +3332,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cardPrefab: {fileID: 6374767821707340389, guid: 0fde701c5854444a092ed4264bbdb133,
     type: 3}
+  mainButton: {fileID: 0}
   drawOrigin: {fileID: 2018072783}
   travelTime: 0.3
   travelCurve:
@@ -6871,6 +6872,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cardPrefab: {fileID: 6374767821707340389, guid: fcc11faf6afe54d15a2e38196298ab5f,
     type: 3}
+  mainButton: {fileID: 1850977258}
   drawOrigin: {fileID: 992228639}
   travelTime: 0.3
   travelCurve:
