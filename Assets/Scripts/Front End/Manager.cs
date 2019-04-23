@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -11,6 +11,8 @@ using SFB.Net.Client;
 public class Manager : MonoBehaviour
 {
 	private static Player[] players => Driver.instance.gameManager.Players;
+	private static GameManager gameManager => Driver.instance.gameManager;
+	private static Player myPlayer => gameManager.Players[Client.instance.sideIndex];
 
 	public State currentState;
 
