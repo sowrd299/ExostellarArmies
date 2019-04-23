@@ -2337,17 +2337,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currentState: {fileID: 11400000, guid: 311e2e7eec17047b4b81bf115d547984, type: 2}
-  cardPrefab: {fileID: 6374767821707340389, guid: fcc11faf6afe54d15a2e38196298ab5f,
-    type: 3}
-  newCards: []
-  enemyCardPrefab: {fileID: 6374767821707340389, guid: 0fde701c5854444a092ed4264bbdb133,
-    type: 3}
-  newEnemyCards: []
-  placeHolder: {fileID: 1872612532}
-  handPlaceHolder: {fileID: 2098364036}
-  enemyPlaceHolder: {fileID: 457992754}
-  enemyHandPlaceHolder: {fileID: 915842669}
-  handManager: {fileID: 2098364039}
+  myHandManager: {fileID: 2098364039}
   enemyHandManager: {fileID: 915842672}
   damages: {fileID: 439715774}
   myUnitHolders:
@@ -2371,10 +2361,8 @@ MonoBehaviour:
   - {fileID: 163301119}
   - {fileID: 1431206951}
   - {fileID: 321965700}
-  resourseText: {fileID: 0}
-  dropCostSumText: {fileID: 0}
   mainButton: {fileID: 1850977258}
-  mainBtnText: {fileID: 714702954}
+  mainButtonText: {fileID: 714702954}
   handCapacity: {fileID: 693415131}
 --- !u!4 &703788048
 Transform:
@@ -5730,7 +5718,7 @@ GameObject:
   - component: {fileID: 1850977259}
   - component: {fileID: 1850977258}
   m_Layer: 5
-  m_Name: MainBtn
+  m_Name: Main Button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
