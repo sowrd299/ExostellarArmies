@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System;
 using UnityEngine;
+using UnityEngine.UI;
 using SFB.Game.Management;
 using SFB.Game.Content;
 using SFB.Game;
@@ -11,6 +12,8 @@ public class HandManager : MonoBehaviour
 {
 	[Header("Object References")]
 	public GameObject cardPrefab;
+
+	public Button mainButton;
 
 	[Header("Draw Animation")]
 	public Transform drawOrigin;
@@ -51,18 +54,18 @@ public class HandManager : MonoBehaviour
 
 	private void OnInsertCard(Card newCard)
 	{
+		drawAnimationQueue.Enqueue(AnimateMoveToHand(newCard));
+	}
+
+	private IEnumerator AnimateMoveToHand(Card newCard)
+	{
 		Transform cardHolder = GetNextAvailableCardHolder();
 		GameObject cardObject = Instantiate(cardPrefab, cardHolder);
 
 		CardUI cardUI = cardObject.GetComponent<CardUI>();
 		cardUI.cardBackEnd = newCard;
 		cardUI.LoadCard(new CardPropertyMap(Driver.instance.createCardProperties(newCard)));
-		
-		drawAnimationQueue.Enqueue(AnimateMoveToHand(cardObject));
-	}
 
-	private IEnumerator AnimateMoveToHand(GameObject cardObject)
-	{
 		Vector3 startPosition = drawOrigin.position;
 		Vector3 targetPosition = cardObject.transform.parent.position;
 		cardObject.transform.position = startPosition;
@@ -88,10 +91,22 @@ public class HandManager : MonoBehaviour
 		{
 			while (drawAnimationQueue.Count > 0)
 			{
+				if (mainButton != null)
+				{
+					mainButton.enabled = false;
+					mainButton.GetComponentInChildren<Text>().text = "Drawing...";
+				}
+
 				yield return StartCoroutine(drawAnimationQueue.Dequeue());
 			}
 
-			yield return null;
+			if (mainButton != null)
+			{
+				mainButton.enabled = true;
+				mainButton.GetComponentInChildren<Text>().text = "LOCK IN PLANS";
+			}
+
+			yield return new WaitUntil(() => drawAnimationQueue.Count > 0);
 		}
 	}
 
