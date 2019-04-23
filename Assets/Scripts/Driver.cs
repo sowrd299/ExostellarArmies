@@ -23,16 +23,16 @@ public class Driver : MonoBehaviour {
 	
     public int dropCostSum = 0;
 
-    private List<CardData> listofUIOnTable = new List<CardData>();
-    public  List<CardData> ListofUIOnTable
+    private List<CardPropertyMap> listofUIOnTable = new List<CardPropertyMap>();
+    public  List<CardPropertyMap> ListofUIOnTable
     {
         get
         {
             return listofUIOnTable;
         }
     }
-    private List<CardData> listofEnemyUI = new List<CardData>();
-    public List<CardData> ListofEnemyUI
+    private List<CardPropertyMap> listofEnemyUI = new List<CardPropertyMap>();
+    public List<CardPropertyMap> ListofEnemyUI
     {
         get
         {
@@ -114,8 +114,53 @@ public class Driver : MonoBehaviour {
         listOfProp[7].intValue = melee;
         listOfProp[8].intValue = range;
         return listOfProp;
-
     }
+
+	public CardProperty[] createCardProperties(Card card)
+	{
+		if (card is UnitCard)
+		{
+			UnitCard unitCard = card as UnitCard;
+
+			return createCardProperties(
+				card.Name,
+				"TYPE",
+				card.FlavorText,
+				card.MainText,
+				GetSpriteForFaction(card.Faction),
+				card.DeployCost,
+				unitCard.HealthPoints,
+				unitCard.MeleeAttack,
+				unitCard.RangedAttack
+			);
+		}
+		else
+		{
+			return createCardProperties(
+				card.Name,
+				"TYPE",
+				card.FlavorText,
+				card.MainText,
+				GetSpriteForFaction(card.Faction),
+				card.DeployCost
+			);
+		}
+	}
+
+	private Sprite GetSpriteForFaction(Faction faction)
+	{
+		switch (faction)
+		{
+			case Faction.CARTH:
+			case Faction.NONE:
+			default:
+				return exostellar;
+			case Faction.JIRNOR:
+				return jirnorn;
+			case Faction.MYXOR:
+				return myxori;
+		}
+	}
 
     public CardProperty createHpCardProperty(int hp)
     {
@@ -137,44 +182,16 @@ public class Driver : MonoBehaviour {
 
     public void drawCards()
     {
-          gameManager.Players[Client.Instance.SideIndex].GetDeployPhaseDeltas()[0].Apply();
-////        enemyMana.Add(2);
+          gameManager.Players[Client.instance.sideIndex].GetDeployPhaseDeltas()[0].Apply();
     }
 
-    public List<CardData> loadFrontEnd(Player p)
+    public List<CardPropertyMap> loadFrontEnd(Player p)
     {
 		Debug.Log($"loadFrontEnd for {p.Name}");
-        List<CardData> ans = new List<CardData>();
+        List<CardPropertyMap> ans = new List<CardPropertyMap>();
         for (int i = 0; i < p.HandSize; i++)
         {
-//            Debug.Log("NAME:: " + p.Hand[i].Name);
-            string myName = p.Hand[i].Name;
-            string flavorText = p.Hand[i].FlavorText;
-            string mainText = p.Hand[i].MainText;
-            int cost = p.Hand[i].DeployCost;
-            Sprite sp = null;
-            if (p.Hand[i].Faction == Faction.CARTH || p.Hand[i].Faction == Faction.NONE)
-                sp = exostellar;
-            else if (p.Hand[i].Faction == Faction.JIRNOR)
-                sp = jirnorn;
-            else if (p.Hand[i].Faction == Faction.MYXOR)
-                sp = myxori;
-
-            if (p.Hand[i].GetType() == typeof(UnitCard)) {
-				UnitCard uc = p.Hand[i] as UnitCard;
-				int meleeAttack = uc.MeleeAttack;
-				int rangedAttack = uc.RangedAttack;
-				int hp = uc.HealthPoints;
-				CardProperty[] listOfProperties = new CardProperty[9];
-				listOfProperties = createCardProperties(myName, "TYPE", flavorText, mainText, sp, cost, hp, meleeAttack, rangedAttack);
-				CardData cardFront = new CardData(listOfProperties);
-				ans.Add(cardFront);
-			} else {
-				CardProperty[] listOfProperties = new CardProperty[9];
-				listOfProperties = createCardProperties(myName, "TYPE", flavorText, mainText, sp,cost);
-				CardData cardFront = new CardData(listOfProperties);
-				ans.Add(cardFront);
-			}
+			ans.Add(new CardPropertyMap(createCardProperties(p.Hand[i])));
         }
         return ans;
     }
@@ -200,9 +217,9 @@ public class Driver : MonoBehaviour {
         return ans;
     }
 
-    public List<CardData> loadNewHP()
+    public List<CardPropertyMap> loadNewHP()
     {
-        List<CardData> ans = new List<CardData>();
+        List<CardPropertyMap> ans = new List<CardPropertyMap>();
         foreach (Lane lane in gameManager.Lanes)
         {
             for (int play = 0; play < lane.Units.GetLength(0); play++)
@@ -216,7 +233,7 @@ public class Driver : MonoBehaviour {
                         CardProperty hpprop = createHpCardProperty(hp);
                         CardProperty[] listOfProperties = new CardProperty[1];
                         listOfProperties[0] = hpprop; 
-                        CardData cardFront = new CardData(listOfProperties);
+                        CardPropertyMap cardFront = new CardPropertyMap(listOfProperties);
                         ans.Add(cardFront);
                     }
                 }
@@ -237,7 +254,7 @@ public class Driver : MonoBehaviour {
 
     public void updateCardsOntable()
     {
-        List<CardData> c = loadNewHP();
+        List<CardPropertyMap> c = loadNewHP();
         List<CardUI> cu = manager.loadCardUI();
         Debug.Log("Lengths==" + (c.Count).ToString() + cu.Count.ToString());
         for (int i = 0; i < c.Count; i++)
@@ -249,36 +266,7 @@ public class Driver : MonoBehaviour {
 
 
     void Update() {
-		Client.Instance.Update();
-
-		/*
-		if(gameManager != null) {
-			//updateUI();
-			resoureCount = myMana.Count;
-			switch(phase) {
-				case Phase.DRAW:
-					combatStarted = false;
-					gameManager.DrawPhase();
-					//phase = Phase.PLACEMENT;
-					break;
-				case Phase.PLACEMENT:
-					// handled by UI
-					break;
-				case Phase.COMBAT:
-					manager.makeDraggable(false);
-					//gameManager.CombatPhase();
-					//phase = gameManager.Over ? Phase.DONE : Phase.DRAW;
-					//updateTowerUI();
-					if(!combatStarted) {
-						combatStarted = true;
-						StartCoroutine(manager.damageAnims());
-					}
-					break;
-				case Phase.DONE:
-					print("Game Over: Player " + (gameManager.Players[0].Lives == 0 ? 2 : 1) + " Wins!");
-					break;
-			}
-		}*/
+		Client.instance.Update();
 	}
 
 	public void printField() {
@@ -311,7 +299,7 @@ public class Driver : MonoBehaviour {
         string b = "T:";
         foreach (Lane lane in gameManager.Lanes)
         {
-            b += (lane.Towers[Client.Instance.SideIndex] != null ? "" + lane.Towers[Client.Instance.SideIndex].HP : "X") + " ";
+            b += (lane.Towers[Client.instance.sideIndex] != null ? "" + lane.Towers[Client.instance.sideIndex].HP : "X") + " ";
         }
         Debug.Log(b);
     }

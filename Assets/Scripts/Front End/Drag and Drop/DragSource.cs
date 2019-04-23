@@ -16,7 +16,7 @@ public class DragSource : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
 	[HideInInspector]
 	public bool dropSuccess;
 	private Transform dragLayer;
-	private Transform originalParent;
+	public Transform originalParent { get; private set; }
 	private Vector3 originalPosition;
 	private Vector2 startPointerPosition;
 

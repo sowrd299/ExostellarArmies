@@ -8,7 +8,7 @@ namespace SFB.Game.Management {
 	public class PlayUnitCardAction : PlayerAction {
 
 		SendableTarget<Card> cardTarget;
-		private UnitCard card{
+		public UnitCard card{
 			get{ return cardTarget.Target as UnitCard; }
 		}
 
@@ -20,11 +20,11 @@ namespace SFB.Game.Management {
 		private int pos;
 
 		private int sideIndex; 
-
-		public PlayUnitCardAction(UnitCard c, Lane l, int sideIndex, int pos) {
-			this.cardTarget = new SendableTarget<Card>("card",c);
-			this.laneTarget = new SendableTarget<Lane>("lane",l);
-			this.pos = pos;
+		
+		public PlayUnitCardAction(UnitCard card, Lane lane, int sideIndex, int position) {
+			this.cardTarget = new SendableTarget<Card>("card",card);
+			this.laneTarget = new SendableTarget<Lane>("lane",lane);
+			this.pos = position;
 			this.sideIndex = sideIndex;
         }
 

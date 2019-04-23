@@ -3,6 +3,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Xml;
 using System.Collections.Generic;
+using System.Linq;
 //using System.Diagnostics;
 using SFB.Game.Management;
 using SFB.Game.Content;
@@ -10,64 +11,56 @@ using SFB.Game;
 using SFB.Net;
 using UnityEngine;
 
-namespace SFB.Net.Client {
-	public class Client : MessageHandler {
-		private static Client inst = null;
-		public static Client Instance {
-			get {
-				if(inst == null)
-					inst = new Client();
-				return inst;
-			}
-		}
+namespace SFB.Net.Client
+{
+	public class Client : MessageHandler
+	{
+		private static Client _instance = null;
+		public static Client instance => _instance ?? (_instance = new Client());
 
-		public bool DoneInitializing {
-			get { return gameManager != null; }
-		}
+		public bool initialized => gameManager != null;
 
 		private Driver driver;
 
-		private ClientPhase phase;
-		public ClientPhase Phase {
-			get { return phase; }
-		}
+		public ClientPhase phase { get; private set; }
 
-		private GameManager gameManager;
-		public GameManager GameManager {
-			get { return gameManager; }
-		}
+		public GameManager gameManager { get; private set; }
 
-		private int sideIndex;
-		public int SideIndex {
-			get { return sideIndex; }
-		}
+		public int sideIndex { get; private set; }
 
 		private SocketManager socketManager;
-		private CardLoader cl;
+		private CardLoader cardLoader;
 
-		private Client() {
+		private Client()
+		{
 			phase = ClientPhase.INIT;
 		}
 
-		public static void SetDriver(Driver d) {
+		public static void SetDriver(Driver d)
+		{
 			Debug.Log("Driver for Client set.");
-			Instance.driver = d;
+			instance.driver = d;
 		}
 
-		private void ProcessDeltas(XmlDocument doc, CardLoader cl, bool verbose = false) {
-			foreach(XmlElement e in doc.GetElementsByTagName("delta")) {
-				Delta d = Delta.FromXml(e, cl);
-				if(verbose) {
-					Debug.Log("    processing delta: '" + e.OuterXml + "'");
+		private void ProcessDeltas(XmlDocument doc, CardLoader loader, bool verbose = false)
+		{
+			foreach (XmlElement element in doc.GetElementsByTagName("delta"))
+			{
+				Delta d = Delta.FromXml(element, loader);
+				if (verbose)
+				{
+					Debug.Log($"    processing delta: '{element.OuterXml}'");
 				}
 				d.Apply();
 			}
 		}
 
-		public void SendPlanningPhaseActions(PlayerAction[] actions) {
+		public void SendPlanningPhaseActions(PlayerAction[] actions)
+		{
 			Debug.Log("Sending " + actions.Length + " PlayerActions");
 			XmlDocument doc = NewEmptyMessage("gameAction");
-			foreach(PlayerAction a in actions) {
+			foreach (PlayerAction a in actions)
+			{
 				XmlElement e = a.ToXml(doc);
 				doc.DocumentElement.AppendChild(e);
 			}
@@ -79,135 +72,141 @@ namespace SFB.Net.Client {
 			Debug.Log("Waiting for turn start...");
 		}
 
-		public void Update() {
-			if(phase == ClientPhase.INIT) {
-				Debug.Log("Connecting to Server...");
+		private void Connect()
+		{
+			Debug.Log("Connecting to Server...");
 
-				//find local IP
-				IPHostEntry ipEntry = Dns.GetHostEntry(Dns.GetHostName());
-				IPAddress ipAddr = ipEntry.AddressList[0];
+			//find local IP
+			IPHostEntry ipEntry = Dns.GetHostEntry(Dns.GetHostName());
+			IPAddress ipAddr = ipEntry.AddressList[0];
 
-				//consts
-				string HostName = "192.168.99.1";
-				const int Port = 4011;
+			//consts
+			string HostName = "192.168.99.1";
+			const int Port = 4011;
 
-				//setup the connection
-				Socket socket = new Socket(AddressFamily.InterNetwork,
-						SocketType.Stream,
-						ProtocolType.Tcp);
-				socket.Connect(HostName, Port);
-				Debug.Log("Connected!");
-				socketManager = new SocketManager(socket, "</file>");
+			//setup the connection
+			Socket socket = new Socket(AddressFamily.InterNetwork,
+					SocketType.Stream,
+					ProtocolType.Tcp);
+			socket.Connect(HostName, Port);
+			Debug.Log("Connected!");
+			socketManager = new SocketManager(socket, "</file>");
 
-				//setup game objects
-				cl = new CardLoader();
+			//setup game objects
+			cardLoader = new CardLoader();
 
-				// wait for match to be made
-				phase = ClientPhase.WAIT_MATCH_START;
-				socketManager.Send("<file type='joinMatch'><deck id='carthStarter'/></file>");
-				Debug.Log("Sent joinMatch request...");
-				Debug.Log("Waiting for match to be made...");
+			// wait for match to be made
+			phase = ClientPhase.WAIT_MATCH_START;
+			socketManager.Send("<file type='joinMatch'><deck id='carthStarter'/></file>");
+			Debug.Log("Sent joinMatch request...");
+			Debug.Log("Waiting for match to be made...");
+		}
 
-			} else {
-				// receive a document
-				XmlDocument receivedDoc = socketManager.ReceiveXml();
+		private void InitializeMatch(XmlDocument document)
+		{
+			// init the gamestate accordingly
+			Debug.Log("Initializing gameManager...");
+
+			Debug.Log(document.OuterXml);
+			sideIndex = int.Parse(document.DocumentElement.Attributes["sideIndex"].Value);
+			Debug.Log("Side Index: " + sideIndex);
+
+			IEnumerable<XmlElement> playerIdNodes = document.GetElementsByTagName("playerIds").Cast<XmlElement>();
+			XmlElement[] playerIds = new XmlElement[2];
+			XmlElement localPlayerElement = playerIdNodes.First(element => element.Attributes["side"].Value == "local");
+			XmlElement opponentPlayerElement = playerIdNodes.First(element => element.Attributes["side"].Value == "opponent");
+			playerIds[sideIndex] = localPlayerElement;
+			playerIds[1 - sideIndex] = opponentPlayerElement;
+
+			XmlElement[] laneIds = document.GetElementsByTagName("laneIds").Cast<XmlElement>().ToArray();
+			
+			driver.gameManager = gameManager = new GameManager(playerIds: playerIds, laneIds: laneIds);
+
+			phase = ClientPhase.WAIT_TURN_START;
+			Debug.Log("Waiting for turn start...");
+		}
+
+		private void ProcessTurnStart(XmlDocument document)
+		{
+			String type = document?.DocumentElement?.Attributes["type"]?.Value;
+			Debug.Log("received type: " + type);
+			if (type == "turnStart")
+			{
+				Debug.Log("Planning Phase Begun");
 				
+				driver.manager.StartDrawPhase(gameManager.Players);
+
+				foreach (Delta d in driver.gameManager.Players[1 - sideIndex].GetDrawDeltas())
+				{
+					d.Apply();
+					Debug.Log("Processing draw delta: " + d.GetType());
+				}
+
+				Debug.Log("Received turn start deltas; applying them:");
+				ProcessDeltas(document, cardLoader, true);
+
+				driver.updateTowerUI();
+				driver.updateCardsOntable();
+
+				phase = ClientPhase.PLANNING;
+			}
+			else if (type == "actionDeltas")
+			{
+				ProcessDeltas(document, cardLoader, true);
+			}
+			else
+			{
+				Debug.Log("Received document of type " + type + " in ClientPhase.WAIT_TURN_START");
+			}
+		}
+
+		public void Update()
+		{
+			if (phase == ClientPhase.INIT)
+			{
+				Connect();
+			}
+			else
+			{
+				XmlDocument receivedDoc = socketManager.ReceiveXml();
+
+				if (receivedDoc == null) return;
+
 				// check for match end
 				/*if(receivedDoc != null && receivedDoc?.Attributes["type"] != null && receivedDoc?.Attributes["type"]?.Value == "matchEnd") {
-					// TODO win/lose
+					// TODO: win/lose
 				}*/
 
 				// depends on game phase
-				switch(phase) {
+				switch (phase)
+				{
 					case ClientPhase.WAIT_MATCH_START:
-						if(receivedDoc != null) {
-							// init the gamestate accordingly
-							Debug.Log("Initializing gameManager...");
-
-							Debug.Log(receivedDoc.OuterXml);
-							sideIndex = int.Parse(receivedDoc.DocumentElement.Attributes["sideIndex"].Value);
-							Debug.Log("Side Index: " + sideIndex);
-
-							//int localPlayerIndex = 0;
-							List<XmlElement> playerIds = new List<XmlElement>();
-							foreach(XmlElement e in receivedDoc.GetElementsByTagName("playerIds")) {
-								// if(e.Attributes["side"].Value == "local") {
-								//	localPlayerIndex = playerIds.Count;
-								//}
-
-								if(sideIndex == 0)
-									playerIds.Add(e);
-								else
-									playerIds.Insert(0, e);
-							}
-							List<XmlElement> laneIds = new List<XmlElement>();
-							foreach(XmlElement e in receivedDoc.GetElementsByTagName("laneIds")) {
-								laneIds.Add(e);
-							}
-							gameManager = new GameManager(playerIds: playerIds.ToArray(), laneIds: laneIds.ToArray());
-							driver.gameManager = gameManager;
-
-							phase = ClientPhase.WAIT_TURN_START;
-							Debug.Log("Waiting for turn start...");
-						}
-
+						InitializeMatch(receivedDoc);
 						break;
 					case ClientPhase.WAIT_TURN_START:
 						// wait for turnStart message
-						if(receivedDoc != null) {
-							String type = receivedDoc?.DocumentElement?.Attributes["type"]?.Value;
-							Debug.Log("received type: " + type);
-							if(type == "turnStart") {
-								Debug.Log("Planning Phase Begun");
-								foreach(Delta d in driver.gameManager.Players[1 - sideIndex].GetDrawDeltas()) {
-									d.Apply();
-									Debug.Log("Processing draw delta: " + d.GetType());
-								}
-
-								Debug.Log("Received turn start deltas; applying them:");
-								ProcessDeltas(receivedDoc, cl, true);
-
-								/*foreach(Card c in gameManager.Players[sideIndex].Hand)
-									Debug.Log(c.Name);
-								Debug.Log("-");
-								foreach(Card c in gameManager.Players[1-sideIndex].Hand)
-									Debug.Log(c.Name);*/
-
-								driver.updateTowerUI();
-								driver.updateCardsOntable();
-								driver.manager.StartDrawPhase(gameManager.Players);
-
-								
-
-
-								phase = ClientPhase.PLANNING;
-								
-							} else if(type == "actionDeltas") {
-								ProcessDeltas(receivedDoc, cl, true);
-							} else {
-								Debug.Log("Received document of type " + type + " in ClientPhase.WAIT_TURN_START");
-							}
-						}
+						ProcessTurnStart(receivedDoc);
 						break;
 					case ClientPhase.PLANNING:
-						
 						// handled by front end calling the below method:
 						// Client.instance.SendPlanningPhaseActions(PlayerAction[] actions)
-						if(receivedDoc != null)
-							ProcessDeltas(receivedDoc, cl, true);
-
+						ProcessDeltas(receivedDoc, cardLoader, true);
 						break;
 				}
 			}
 		}
-		
-		protected override void handleSocketDeath(SocketManager sm) {
-			// TODO
+
+		protected override void handleSocketDeath(SocketManager sm)
+		{
+			// TODO: Halp
 		}
 
-		public enum ClientPhase {
-			INIT, WAIT_MATCH_START,
-			WAIT_TURN_START, PLANNING
+		public enum ClientPhase
+		{
+			INIT,
+			WAIT_MATCH_START,
+			WAIT_TURN_START,
+			PLANNING
 		}
 	}
 }
