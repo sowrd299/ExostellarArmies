@@ -135,13 +135,13 @@ public class Manager : MonoBehaviour
 		if (!Client.instance.initialized && !foundMatch)
 		{
 			mainBtnText.text = "Waiting for match!";
-			mainButton.enabled = false;
+			mainButton.interactable = false;
 		}
 	}
 
 	public void InitializeUI()
 	{
-		mainButton.enabled = true;
+		mainButton.interactable = true;
 
 		handManager.TrackHand(players[Client.instance.sideIndex].Hand);
 		enemyHandManager.TrackHand(players[1 - Client.instance.sideIndex].Hand);
@@ -157,7 +157,7 @@ public class Manager : MonoBehaviour
 	private IEnumerator AnimateDrawPhase()
 	{
 		mainBtnText.text = "DRAWING...";
-		mainButton.enabled = false;
+		mainButton.interactable = false;
 
 		Coroutine myDraw = handManager.DrawCards();
 		Coroutine enemyDraw = enemyHandManager.DrawCards();
@@ -165,7 +165,7 @@ public class Manager : MonoBehaviour
 		yield return enemyDraw;
 
 		mainBtnText.text = "LOCK IN PLANS";
-		mainButton.enabled = true;
+		mainButton.interactable = true;
 	}
 
 	public void mainBtn()
