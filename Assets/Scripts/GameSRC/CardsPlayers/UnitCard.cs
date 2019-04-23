@@ -3,7 +3,7 @@ using System.Collections.Generic;
 namespace SFB.Game{
 
     // this file actually implements all cards that exist in the game
-    class UnitCard : Card {
+    public class UnitCard : Card {
 		private int rangedAttack;
 		public int RangedAttack {
 			get { return rangedAttack; }

@@ -21,7 +21,7 @@ namespace SFB.Game.Management {
 
 		private int sideIndex; 
 
-		internal PlayUnitCardAction(UnitCard c, Lane l, int sideIndex, int pos) {
+		public PlayUnitCardAction(UnitCard c, Lane l, int sideIndex, int pos) {
 			this.cardTarget = new SendableTarget<Card>("card",c);
 			this.laneTarget = new SendableTarget<Lane>("lane",l);
 			this.pos = pos;
