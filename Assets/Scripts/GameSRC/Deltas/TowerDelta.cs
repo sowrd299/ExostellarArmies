@@ -17,7 +17,7 @@ namespace SFB.Game {
 			amount = amt;
 		}
 
-		internal TowerDelta(XmlElement from, CardLoader loader)
+		public TowerDelta(XmlElement from, CardLoader loader)
 			: base(from, loader)
 		{
 			sendableTower = new SendableTarget<Tower>("tower", from, Tower.idIssuer);
@@ -37,11 +37,11 @@ namespace SFB.Game {
 		}
 
 		internal override void Apply() {
-			sendableTower.Target.takeDamage(amount);
+			sendableTower.Target.TakeDamage(amount);
 		}
 
 		internal override void Revert() {
-			sendableTower.Target.undoTakeDamage(amount);
+			sendableTower.Target.UndoTakeDamage(amount);
 		}
 	}
 }

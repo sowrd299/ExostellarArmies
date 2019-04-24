@@ -4,7 +4,7 @@ using SFB.Game.Management;
 
 namespace SFB.Game
 {
-	public delegate void CardEvent(Card card);
+	public delegate void InsertCardEvent(int index, Card item);
 
 	// A parent class for decks and hands
 	public abstract class CardList : List<Card>, IIDed
@@ -14,12 +14,12 @@ namespace SFB.Game
 			get;
 		}
 
-		public event CardEvent afterInsert;
+		public event InsertCardEvent afterInsert;
 
 		public new virtual void Insert(int index, Card item)
 		{
 			base.Insert(index, item);
-			if (afterInsert != null) afterInsert(item);
+			if (afterInsert != null) afterInsert(index, item);
 		}
 	}
 }

@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Net;
 using System.Net.Sockets;
 using System.Collections.Generic;
@@ -28,16 +29,23 @@ namespace SFB.Net.Server{
         // logic (and socket) managers
         private MatchMaker matchMaker;
 
-        public GameServer(){
-            //get the IP address
-            ipEntry = Dns.GetHostEntry(Dns.GetHostName());
-            ipAddr = ipEntry.AddressList.First(addr => addr.AddressFamily == AddressFamily.InterNetwork);
-            //setup socket managers
-            ncl = new NewClientManager(ipAddr, Port);
-            clientSockets = new HashSet<SocketManager>();
-            removedSockets = new HashSet<SocketManager>();
-            matchMaker = new MatchMaker();
-        }
+		public GameServer()
+		{
+			//get the IP address
+			ipEntry = Dns.GetHostEntry(Dns.GetHostName());
+			ipAddr = ipEntry.AddressList.First(addr => addr.AddressFamily == AddressFamily.InterNetwork);
+			//setup socket managers
+			ncl = new NewClientManager(ipAddr, Port);
+			clientSockets = new HashSet<SocketManager>();
+			removedSockets = new HashSet<SocketManager>();
+			matchMaker = new MatchMaker();
+
+			string path = Path.Combine("Assets", "Resources", "hostaddr.txt");
+			using (StreamWriter writer = File.CreateText(path))
+			{
+				writer.WriteLine(ipAddr.ToString());
+			}
+		}
 
         //to be called once per mainloop
         public void Update(){

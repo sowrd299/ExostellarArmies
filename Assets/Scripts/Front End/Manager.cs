@@ -10,28 +10,17 @@ using SFB.Net.Client;
 
 public class Manager : MonoBehaviour
 {
+	public static Manager instance => Driver.instance.manager;
+
+	private static Player[] players => Driver.instance.gameManager.Players;
+	private static GameManager gameManager => Driver.instance.gameManager;
+	private static Player myPlayer => gameManager.Players[Client.instance.sideIndex];
+
 	public State currentState;
 
 	[SerializeField]
-	private GameObject cardPrefab;
-	public List<GameObject> newCards = new List<GameObject>();
+	private HandManager myHandManager;
 	[SerializeField]
-	private GameObject enemyCardPrefab;
-	public List<GameObject> newEnemyCards = new List<GameObject>();
-
-	[SerializeField]
-	private GameObject placeHolder;
-	[SerializeField]
-	private GameObject handPlaceHolder;
-	[SerializeField]
-	private GameObject enemyPlaceHolder;
-	[SerializeField]
-	private GameObject enemyHandPlaceHolder;
-	[SerializeField]
-	[FormerlySerializedAs("hand")]
-	private HandManager handManager;
-	[SerializeField]
-	[FormerlySerializedAs("enemyHand")]
 	private HandManager enemyHandManager;
 	[SerializeField]
 	private GameObject damages;
@@ -46,14 +35,8 @@ public class Manager : MonoBehaviour
 	[SerializeField]
 	private GameObject[] towerHolders;
 
-	[SerializeField]
-	private Text resourseText;
-	[SerializeField]
-	private Text dropCostSumText;
-	[SerializeField]
 	public Button mainButton;
-	[SerializeField]
-	public Text mainBtnText;
+	public Text mainButtonText;
 	[SerializeField]
 	private Text handCapacity;
 	private bool foundMatch = false;
@@ -126,43 +109,70 @@ public class Manager : MonoBehaviour
 	private void FixedUpdate()
 	{
 		currentState.startActions();
-		handCapacity.text = "Hand capacity\n" + handPlaceHolder.gameObject.transform.childCount.ToString() + "/3";
+		handCapacity.text = "Hand capacity\n" + myHandManager.GetCardCount() + "/3";
 		// resourseText.text = "Resources: " + Driver.instance?.gameManager?.Players[Client.instance.sideIndex]?.Mana?.Count.ToString();
 		// dropCostSumText.text = "DropCostSum: " + Driver.instance?.dropCostSum.ToString();
 
 		if (!Client.instance.initialized && !foundMatch)
 		{
-			mainBtnText.text = "Waiting for match!";
-			//mainButton.enabled = false;
-			mainButton.GetComponent<Image>().color = Color.grey;
-		}/* else if(Client.Instance.DoneInitializing && !foundMatch) {
-			mainBtnText.text = "Draw";
-			mainButton.enabled = true;
-			mainButton.GetComponent<Image>().color = Color.green;
-		}*/
+			mainButtonText.text = "Waiting for match!";
+			mainButton.interactable = false;
+		}
 	}
 
-	public void StartDrawPhase(Player[] players)
+	public void InitializeUI()
 	{
-		mainBtnText.text = "DRAWING...";
-		mainButton.GetComponent<Image>().color = new Color(102, 255, 102);
+		mainButton.interactable = true;
 
-		handManager.TrackHand(players[Client.instance.sideIndex].Hand);
-		enemyHandManager.TrackHand(players[1-Client.instance.sideIndex].Hand);
+		myHandManager.TrackHand(players[Client.instance.sideIndex].Hand);
+		enemyHandManager.TrackHand(players[1 - Client.instance.sideIndex].Hand);
+	}
+
+	public void AfterDrawPhase()
+	{
+		StartCoroutine(AnimateDrawPhase());
 
 		Driver.instance.updateTowerUI();
 	}
 
+	private IEnumerator AnimateDrawPhase()
+	{
+		mainButtonText.text = "DRAWING...";
+		mainButton.interactable = false;
+
+		Coroutine myDraw = myHandManager.DrawCards();
+		Coroutine enemyDraw = enemyHandManager.DrawCards();
+		yield return myDraw;
+		yield return enemyDraw;
+
+		mainButtonText.text = "LOCK IN PLANS";
+		mainButton.interactable = true;
+	}
+
+	public void ValidateDropCost()
+	{
+		if (myPlayer.Mana.CanAfford(myHandManager.deploymentCost))
+		{
+			mainButton.interactable = true;
+			mainButtonText.text = "LOCK IN PLANS";
+		}
+		else
+		{
+			mainButton.interactable = false;
+			mainButtonText.text = "Not enough resources!";
+		}
+	}
+
 	public void mainBtn()
 	{
-		if (mainBtnText.text.Equals("LOCK IN PLANS"))
+		if (mainButtonText.text.Equals("LOCK IN PLANS"))
 		{
-			if (Client.instance.gameManager.Players[Client.instance.sideIndex].Mana.CanAfford(Driver.instance.dropCostSum))
+			if (myPlayer.Mana.CanAfford(myHandManager.deploymentCost))
 			{
-				PlayUnitCardAction[] actions = handManager.ExportActions();
+				PlayUnitCardAction[] actions = myHandManager.ExportActions();
 
 				Client.instance.SendPlanningPhaseActions(actions);
-				mainBtnText.text = "WAITING FOR OPPONENT";
+				mainButtonText.text = "WAITING FOR OPPONENT";
 				mainButton.GetComponent<Image>().color = new Color(153, 204, 255);
 			}
 			else
@@ -174,25 +184,25 @@ public class Manager : MonoBehaviour
 
 	public IEnumerator damageAnims()
 	{
-		mainBtnText.text = "Range Combat!";
+		mainButtonText.text = "Range Combat!";
 		Driver.instance.gameManager.CombatRangePhase();
 		Driver.instance.updateCardsOntable();
 		Driver.instance.updateTowerUI();
 		yield return new WaitForSeconds(1.5f);
-		mainBtnText.text = "Melle Combat!";
+		mainButtonText.text = "Melle Combat!";
 		Driver.instance.gameManager.CombatMellePhase();
 		Driver.instance.updateCardsOntable();
 		Driver.instance.updateTowerUI();
 		yield return new WaitForSeconds(1.5f);
-		mainBtnText.text = "Tower Combat!";
+		mainButtonText.text = "Tower Combat!";
 		Driver.instance.gameManager.CombatMellePhase();
 		Driver.instance.updateCardsOntable();
 		Driver.instance.updateTowerUI();
 		yield return new WaitForSeconds(1.5f);
 		Driver.instance.gameManager.cleanUp();
-		mainBtnText.text = "Combat done1";
+		mainButtonText.text = "Combat done1";
 		yield return new WaitForSeconds(1f);
-		mainBtnText.text = "Draw";
+		mainButtonText.text = "Draw";
 		//Driver.instance.phase = Driver.instance.gameManager.Over ? Phase.DONE : Phase.DRAW;
 	}
 
@@ -239,31 +249,32 @@ public class Manager : MonoBehaviour
 
 	public void enemyPlay()
 	{
-		List<GameObject> l = new List<GameObject>();
-		for (int i = 0; i < enemyHandPlaceHolder.transform.childCount; i++)
-		{
-			l.Add(enemyHandPlaceHolder.transform.GetChild(i).gameObject);
-		}
+		// TODO: Implement actual enemy action display instead of whatever this is
+		// List<GameObject> l = new List<GameObject>();
+		// for (int i = 0; i < enemyHandPlaceHolder.transform.childCount; i++)
+		// {
+		// 	l.Add(enemyHandPlaceHolder.transform.GetChild(i).gameObject);
+		// }
 
-		//Rand List of 3ints from 1 to 6
-		List<int> list = new List<int>(new int[3]);
-		for (int j = 0; j < list.Count; j++)
-		{
-			int rand = Random.Range(1, 6);
-			while (list.Contains(rand))
-			{
-				rand = Random.Range(1, 6);
-			}
-			list[j] = rand;
-		}
-		for (int i = 0; i < l.Count; i++)
-		{
-			if (enemyUnitHolders[list[i]].transform.childCount == 0)
-			{
-				StartCoroutine(moveTo(l[i], enemyUnitHolders[list[i]]));
-			}
+		// //Rand List of 3ints from 1 to 6
+		// List<int> list = new List<int>(new int[3]);
+		// for (int j = 0; j < list.Count; j++)
+		// {
+		// 	int rand = Random.Range(1, 6);
+		// 	while (list.Contains(rand))
+		// 	{
+		// 		rand = Random.Range(1, 6);
+		// 	}
+		// 	list[j] = rand;
+		// }
+		// for (int i = 0; i < l.Count; i++)
+		// {
+		// 	if (enemyUnitHolders[list[i]].transform.childCount == 0)
+		// 	{
+		// 		StartCoroutine(moveTo(l[i], enemyUnitHolders[list[i]]));
+		// 	}
 
-		}
+		// }
 	}
 
 	public void flipCards()

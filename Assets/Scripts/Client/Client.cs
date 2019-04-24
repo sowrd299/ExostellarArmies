@@ -49,7 +49,7 @@ namespace SFB.Net.Client
 				Delta d = Delta.FromXml(element, loader);
 				if (verbose)
 				{
-					Debug.Log($"    processing delta: '{element.OuterXml}'");
+					Debug.Log($"Processing delta: '{element.OuterXml}'\nDelta is: {d}");
 				}
 				d.Apply();
 			}
@@ -76,12 +76,8 @@ namespace SFB.Net.Client
 		{
 			Debug.Log("Connecting to Server...");
 
-			//find local IP
-			IPHostEntry ipEntry = Dns.GetHostEntry(Dns.GetHostName());
-			IPAddress ipAddr = ipEntry.AddressList[0];
-
-			//consts
-			string HostName = "192.168.56.1";
+			// Consts
+			string HostName = Resources.Load<TextAsset>("hostaddr").text.Trim();
 			const int Port = 4011;
 
 			//setup the connection
@@ -118,9 +114,11 @@ namespace SFB.Net.Client
 			playerIds[sideIndex] = localPlayerElement;
 			playerIds[1 - sideIndex] = opponentPlayerElement;
 
-			XmlElement[] laneIds = document.GetElementsByTagName("laneIds").Cast<XmlElement>().ToArray();
+			XmlElement[] laneIds = document.GetElementsByTagName(Lane.TAG_NAME).Cast<XmlElement>().ToArray();
 			
-			driver.gameManager = gameManager = new GameManager(playerIds: playerIds, laneIds: laneIds);
+			driver.gameManager = gameManager = new GameManager(serializedPlayers: playerIds, serializedLanes: laneIds);
+
+			driver.manager.InitializeUI();
 
 			phase = ClientPhase.WAIT_TURN_START;
 			Debug.Log("Waiting for turn start...");
@@ -134,7 +132,6 @@ namespace SFB.Net.Client
 			{
 				Debug.Log("Planning Phase Begun");
 				
-				driver.manager.StartDrawPhase(gameManager.Players);
 
 				foreach (Delta d in driver.gameManager.Players[1 - sideIndex].GetDrawDeltas())
 				{
@@ -144,6 +141,8 @@ namespace SFB.Net.Client
 
 				Debug.Log("Received turn start deltas; applying them:");
 				ProcessDeltas(document, cardLoader, true);
+
+				driver.manager.AfterDrawPhase();
 
 				driver.updateTowerUI();
 				driver.updateCardsOntable();

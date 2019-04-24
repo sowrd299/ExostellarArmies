@@ -28,10 +28,6 @@ public class HandManager : MonoBehaviour
 
 	public int deploymentCost => playActions.Sum(action => action.card.DeployCost);
 
-	private void Awake()
-	{
-		StartCoroutine(MainLoop());
-	}
 
 	#region Draw animation handling
 	private void OnEnable()
@@ -53,7 +49,7 @@ public class HandManager : MonoBehaviour
 		OnEnable();
 	}
 
-	private void OnInsertCard(Card newCard)
+	private void OnInsertCard(int index, Card newCard)
 	{
 		drawAnimationQueue.Enqueue(AnimateMoveToHand(newCard));
 	}
@@ -81,28 +77,16 @@ public class HandManager : MonoBehaviour
 		yield return new WaitForSeconds(interval);
 	}
 
-	private IEnumerator MainLoop()
+	public Coroutine DrawCards()
 	{
-		while (true)
+		return StartCoroutine(AnimateDrawCards());
+	}
+
+	private IEnumerator AnimateDrawCards()
+	{
+		while (drawAnimationQueue.Count > 0)
 		{
-			while (drawAnimationQueue.Count > 0)
-			{
-				if (mainButton != null)
-				{
-					mainButton.enabled = false;
-					mainButton.GetComponentInChildren<Text>().text = "Drawing...";
-				}
-
-				yield return StartCoroutine(drawAnimationQueue.Dequeue());
-			}
-
-			if (mainButton != null)
-			{
-				mainButton.enabled = true;
-				mainButton.GetComponentInChildren<Text>().text = "LOCK IN PLANS";
-			}
-
-			yield return new WaitUntil(() => drawAnimationQueue.Count > 0);
+			yield return StartCoroutine(drawAnimationQueue.Dequeue());
 		}
 	}
 
@@ -138,6 +122,7 @@ public class HandManager : MonoBehaviour
 		cardObject.transform.position = cardObject.transform.parent.position;
 
 		Destroy(source.gameObject);
+		Manager.instance.ValidateDropCost();
 	}
 
 	public int GetCardCount()
