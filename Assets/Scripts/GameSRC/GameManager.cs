@@ -65,28 +65,28 @@ namespace SFB.Game.Management{
         //      functionality intended for servers
         // when both are null, will start a game with no players
         // MUST KEEP THE INDEXES OF THE OBJECTS GIVEN TO IT
-        public GameManager(DeckList[] deckLists = null, XmlElement[] playerIds = null, XmlElement[] laneIds = null){
+        public GameManager(DeckList[] deckLists = null, XmlElement[] serializedPlayers = null, XmlElement[] serializedLanes = null){
             // setup players
-            int numPlayers = deckLists != null ? deckLists.Length : (playerIds != null ? playerIds.Length : 0);
+            int numPlayers = deckLists != null ? deckLists.Length : (serializedPlayers != null ? serializedPlayers.Length : 0);
             players = new Player[numPlayers];
             for(int i = 0; i < numPlayers; i++){
                 DeckList hiddenList =  new DeckList();
                 hiddenList.AddCard(new UnknownCard(), 20); // TODO: support decks of different sizes?
                 DeckList list = deckLists != null ? deckLists[i] : hiddenList;
 
-				players[i] = new Player("Player " + (i+1), list, playerIds != null ? playerIds[i] : null);
+				players[i] = new Player("Player " + (i+1), list, serializedPlayers != null ? serializedPlayers[i] : null);
             }
             // setup lanes
-            if(laneIds == null){ // ...from scratch
+            if(serializedLanes == null){ // ...from scratch
                 lanes = new Lane[NumLanes];
                 for(int i = 0; i < NumLanes; i++){
                     lanes[i] = new Lane();
                 }
             }else{ // ...with pre-determined ids
-                lanes = new Lane[laneIds.Length];
-                for(int i = 0; i < laneIds.Length; i++){
-                    int j = Int32.Parse(laneIds[i].Attributes["index"].Value);
-                    lanes[j] = new Lane(laneIds[i].Attributes["id"].Value);
+                lanes = new Lane[serializedLanes.Length];
+                for(int i = 0; i < serializedLanes.Length; i++){
+                    int j = Int32.Parse(serializedLanes[i].Attributes["index"].Value);
+                    lanes[j] = new Lane(serializedLanes[i]);
                 }
             }
         }
@@ -182,18 +182,9 @@ namespace SFB.Game.Management{
 		// VARIOUS ADMIN METHODS
 
 		// returns and XML representation of the ID of the lane in each index
-		public XmlElement[] GetLaneIDs(XmlDocument doc) {
-			XmlElement[] r = new XmlElement[lanes.Length];
-			for(int i = 0; i < lanes.Length; i++) {
-				r[i] = doc.CreateElement("laneIds");
-				XmlAttribute id = doc.CreateAttribute("id");
-				id.Value = lanes[i].ID;
-				r[i].SetAttributeNode(id);
-				XmlAttribute index = doc.CreateAttribute("index");
-				index.Value = i.ToString();
-				r[i].SetAttributeNode(index);
-			}
-			return r;
+		public XmlElement[] GetLaneIDs(XmlDocument doc)
+		{
+			return lanes.Select((lane, index) => lane.ToXml(doc, index)).ToArray();
 		}
 
 		// to be called after every phase
@@ -216,7 +207,7 @@ namespace SFB.Game.Management{
 				for(int i = 0; i < l.Towers.Length; i++) {
 					if(l.Towers[i].HP <= 0) {
 						players[i].takeDamage();
-						l.Towers[i].revive();
+						l.Towers[i].Revive();
 						players[i].AddDeployPhase();
 					}
 				}

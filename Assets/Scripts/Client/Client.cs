@@ -116,7 +116,7 @@ namespace SFB.Net.Client
 
 			XmlElement[] laneIds = document.GetElementsByTagName("laneIds").Cast<XmlElement>().ToArray();
 			
-			driver.gameManager = gameManager = new GameManager(playerIds: playerIds, laneIds: laneIds);
+			driver.gameManager = gameManager = new GameManager(serializedPlayers: playerIds, serializedLanes: laneIds);
 
 			driver.manager.InitializeUI();
 
