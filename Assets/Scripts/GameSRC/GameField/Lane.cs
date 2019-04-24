@@ -8,6 +8,8 @@ namespace SFB.Game.Content
 {
 	public class Lane : IIDed
 	{
+		public const string TAG_NAME = "laneIds";
+
 		private static IdIssuer<Lane> idIssuer = new IdIssuer<Lane>();
 		public static IdIssuer<Lane> IdIssuer
 		{
@@ -45,7 +47,7 @@ namespace SFB.Game.Content
 			idIssuer.RegisterId(id, this);
 
 			towers = new Tower[2];
-			foreach (XmlElement towerElement in from.GetElementsByTagName("tower"))
+			foreach (XmlElement towerElement in from.GetElementsByTagName(Tower.TAG_NAME))
 			{
 				int towerIndex = int.Parse(towerElement.Attributes["index"].Value);
 				towers[towerIndex] = new Tower(towerElement);
@@ -55,7 +57,7 @@ namespace SFB.Game.Content
 
 		public XmlElement ToXml(XmlDocument doc, int index)
 		{
-			XmlElement element = doc.CreateElement("laneIds");
+			XmlElement element = doc.CreateElement(TAG_NAME);
 
 			element.SetAttribute("id", ID);
 			element.SetAttribute("index", index.ToString());

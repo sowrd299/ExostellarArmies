@@ -114,7 +114,7 @@ namespace SFB.Net.Client
 			playerIds[sideIndex] = localPlayerElement;
 			playerIds[1 - sideIndex] = opponentPlayerElement;
 
-			XmlElement[] laneIds = document.GetElementsByTagName("laneIds").Cast<XmlElement>().ToArray();
+			XmlElement[] laneIds = document.GetElementsByTagName(Lane.TAG_NAME).Cast<XmlElement>().ToArray();
 			
 			driver.gameManager = gameManager = new GameManager(serializedPlayers: playerIds, serializedLanes: laneIds);
 

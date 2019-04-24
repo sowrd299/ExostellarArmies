@@ -5,6 +5,8 @@ namespace SFB.Game.Content
 {
 	public class Tower : IIDed
 	{
+		public const string TAG_NAME = "tower";
+
 		public static IdIssuer<Tower> idIssuer = new IdIssuer<Tower>();
 
 		private int maxHP;
@@ -51,7 +53,7 @@ namespace SFB.Game.Content
 
 		public XmlElement ToXml(XmlDocument doc, int index)
 		{
-			XmlElement element = doc.CreateElement("tower");
+			XmlElement element = doc.CreateElement(TAG_NAME);
 
 			element.SetAttribute("id", ID);
 			element.SetAttribute("index", index.ToString());
