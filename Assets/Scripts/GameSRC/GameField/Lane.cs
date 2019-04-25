@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using SFB.Game.Management;
 using SFB.Game.Content;
 using System.Xml;
+using System;
 
 namespace SFB.Game.Content
 {
@@ -167,17 +168,40 @@ namespace SFB.Game.Content
 
 		public class AddToLaneDelta : TargetedDelta<Lane>
 		{
-			private int player;
+			private int sideIndex;
 			private int pos;
 			
-			public AddToLaneDelta(Lane lane, UnitCard card, int player, int pos) : base(lane)
+			public AddToLaneDelta(Lane lane, UnitCard card, int sideIndex, int pos)
+				: base(lane)
 			{
-				this.card = new SendableTarget<Card>("card", card);
-				this.player = player;
+				this.sendableCard = new SendableTarget<Card>("card", card);
+				this.sideIndex = sideIndex;
 				this.pos = pos;
 			}
 
-			public AddToLaneDelta(XmlElement element, CardLoader loader) : base(element, Lane.IdIssuer, loader) { }
+			public AddToLaneDelta(XmlElement from, CardLoader loader)
+				: base(from, Lane.IdIssuer, loader)
+			{
+				this.sendableCard = new SendableTarget<Card>("card", from, loader);
+				this.sideIndex = Int32.Parse(from.Attributes["sideIndex"].Value);
+				this.pos = Int32.Parse(from.Attributes["pos"].Value);
+			}
+
+			public override XmlElement ToXml(XmlDocument doc) {
+				XmlElement r = base.ToXml(doc);
+
+				r.SetAttributeNode(sendableCard.ToXml(doc));
+
+				XmlAttribute sideIndexAttr = doc.CreateAttribute("sideIndex");
+				sideIndexAttr.Value = ""+sideIndex;
+				r.SetAttributeNode(sideIndexAttr);
+
+				XmlAttribute posAttr = doc.CreateAttribute("pos");
+				posAttr.Value = "" + pos;
+				r.SetAttributeNode(posAttr);
+
+				return r;
+			}
 
 
 			public override bool VisibleTo(Player p)
@@ -187,17 +211,17 @@ namespace SFB.Game.Content
 
 			internal override void Apply()
 			{
-				if ((target as Lane).isOccupied(this.player, this.pos))
+				if ((target as Lane).isOccupied(this.sideIndex, this.pos))
 					throw new IllegalDeltaException("The lane and position you wish to put that Unit is already occupied");
-				(target as Lane).place(this.card.Target as UnitCard, this.player, this.pos);
+				(target as Lane).place(this.sendableCard.Target as UnitCard, this.sideIndex, this.pos);
 			}
 
 			internal override void Revert()
 			{
-				if (!(target as Lane).isOccupied(this.player, this.pos))
+				if (!(target as Lane).isOccupied(this.sideIndex, this.pos))
 					throw new IllegalDeltaException("The lane and position you wish to remove that Unit from is already empty");
 
-				(target as Lane).remove(this.player, this.pos);
+				(target as Lane).remove(this.sideIndex, this.pos);
 			}
 		}
 

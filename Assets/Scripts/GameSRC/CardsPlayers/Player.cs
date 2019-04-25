@@ -95,6 +95,10 @@ namespace SFB.Game{
 			return l.ToArray();
 		}
 
+		public Delta[] GetManaDeltas() {
+			return mana.GetAddDeltas(6 - lives);
+		}
+
 		// get the deltas for when this tower goes down
 		public Delta[] GetDeployPhaseDeltas(){
 			return deployPhases.GetAddDeltas(1);

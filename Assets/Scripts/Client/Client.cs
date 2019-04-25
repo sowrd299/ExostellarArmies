@@ -132,9 +132,15 @@ namespace SFB.Net.Client
 			{
 				Debug.Log("Planning Phase Begun");
 				
-
+				// draw for opponent
 				foreach (Delta d in driver.gameManager.Players[1 - sideIndex].GetDrawDeltas())
 				{
+					d.Apply();
+					Debug.Log("Processing draw delta: " + d.GetType());
+				}
+
+				// add mana for opponent
+				foreach(Delta d in driver.gameManager.Players[1 - sideIndex].Mana.GetAddDeltas(2)) {
 					d.Apply();
 					Debug.Log("Processing draw delta: " + d.GetType());
 				}

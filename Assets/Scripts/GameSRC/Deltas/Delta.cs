@@ -18,9 +18,9 @@ namespace SFB.Game.Management{
 
         // I am assuming here enough different deltas will want this
         // that it is worth just sharing the code
-        protected SendableTarget<Card> card;
+        protected SendableTarget<Card> sendableCard;
         public Card Card{
-            get{ return card.Target; }
+            get{ return sendableCard.Target; }
         }
 
         // the string presentation of the type, for use in making XML's
@@ -33,19 +33,19 @@ namespace SFB.Game.Management{
         // non-Xml constructor: for use when originating a delta (server side)
         // every child class needs one
         public Delta(){
-            card = new SendableTarget<Card>("card", null);
+            sendableCard = new SendableTarget<Card>("card", null);
         }
 
         // an alternate non-Xml constructor
         public Delta(Card c){
-            card = new SendableTarget<Card>("card", c);
+            sendableCard = new SendableTarget<Card>("card", c);
         }
 
         // Xml constructor: for use when getting an XML representatino based  on Xml for a network message (client side)
         // every child class needs one THAT TAKES EXACTLY ONE XML ELEMENT AND A CARD LOADER
         // THESE CONSTRUCTORS ARE PUBLIC FOR REFLECTION; THEY ARE NOT MEANT TO BE CALLED EXTERNALLY
         public Delta(XmlElement from, CardLoader cardLoader){
-            card = new SendableTarget<Card>("card", from, cardLoader);
+            sendableCard = new SendableTarget<Card>("card", from, cardLoader);
         }
 
         public virtual XmlElement ToXml(XmlDocument doc){
@@ -55,7 +55,7 @@ namespace SFB.Game.Management{
             typeAttr.Value = type;
             e.SetAttributeNode(typeAttr);
             // attach the card
-            e.SetAttributeNode(card.ToXml(doc));
+            e.SetAttributeNode(sendableCard.ToXml(doc));
             return e;
         }
 
