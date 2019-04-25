@@ -182,30 +182,6 @@ public class Manager : MonoBehaviour
 		}
 	}
 
-	public IEnumerator damageAnims()
-	{
-		mainButtonText.text = "Range Combat!";
-		Driver.instance.gameManager.CombatRangePhase();
-		Driver.instance.updateCardsOntable();
-		Driver.instance.updateTowerUI();
-		yield return new WaitForSeconds(1.5f);
-		mainButtonText.text = "Melle Combat!";
-		Driver.instance.gameManager.CombatMellePhase();
-		Driver.instance.updateCardsOntable();
-		Driver.instance.updateTowerUI();
-		yield return new WaitForSeconds(1.5f);
-		mainButtonText.text = "Tower Combat!";
-		Driver.instance.gameManager.CombatMellePhase();
-		Driver.instance.updateCardsOntable();
-		Driver.instance.updateTowerUI();
-		yield return new WaitForSeconds(1.5f);
-		Driver.instance.gameManager.cleanUp();
-		mainButtonText.text = "Combat done1";
-		yield return new WaitForSeconds(1f);
-		mainButtonText.text = "Draw";
-		//Driver.instance.phase = Driver.instance.gameManager.Over ? Phase.DONE : Phase.DRAW;
-	}
-
 	public void applyEnemyDeltas()
 	{
 		Debug.Log("ENEMY DELTAS");

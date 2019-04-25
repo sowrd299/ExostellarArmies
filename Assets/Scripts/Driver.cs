@@ -9,15 +9,15 @@ using UnityEngine;
 
 public class Driver : MonoBehaviour {
 	public static Driver instance = null;
-	public GameManager gameManager = null;
 
 	public Client client;
+
+	public GameManager gameManager;
  
     [SerializeField]
     private Element[] elemList;
     [SerializeField]
     private Element towerElem;
-    public bool combatStarted = false;
 
     public Manager manager;
 	
@@ -182,7 +182,7 @@ public class Driver : MonoBehaviour {
 
     public void drawCards()
     {
-          gameManager.Players[Client.instance.sideIndex].GetDeployPhaseDeltas()[0].Apply();
+		Client.instance.gameManager.Players[Client.instance.sideIndex].GetDeployPhaseDeltas()[0].Apply();
     }
 
     public List<CardPropertyMap> loadFrontEnd(Player p)
@@ -199,7 +199,7 @@ public class Driver : MonoBehaviour {
     public List<TowerData> loadTowerFrontEnd()
     {
         List<TowerData> ans = new List<TowerData>();
-        foreach (Lane lane in gameManager.Lanes)
+        foreach (Lane lane in Client.instance.gameManager.Lanes)
         {
             for (int play = 0; play < lane.Towers.Length; play++)
             {
@@ -220,7 +220,7 @@ public class Driver : MonoBehaviour {
     public List<CardPropertyMap> loadNewHP()
     {
         List<CardPropertyMap> ans = new List<CardPropertyMap>();
-        foreach (Lane lane in gameManager.Lanes)
+        foreach (Lane lane in Client.instance.gameManager.Lanes)
         {
             for (int play = 0; play < lane.Units.GetLength(0); play++)
             {
@@ -281,7 +281,7 @@ public class Driver : MonoBehaviour {
 			new int[2] { 0, 1 },
 		};
         string a = "T:";
-        foreach (Lane lane in gameManager.Lanes)
+        foreach (Lane lane in Client.instance.gameManager.Lanes)
         {
             a += (lane.Towers[1] != null ? ""+lane.Towers[1].HP : "X") + " ";
         }
@@ -289,7 +289,7 @@ public class Driver : MonoBehaviour {
 
         foreach (int[] play_pos in loop) {
 			string s = "";
-			foreach(Lane l in gameManager.Lanes) {
+			foreach(Lane l in Client.instance.gameManager.Lanes) {
 				Unit u = l.Units[play_pos[0], play_pos[1]];
 				s += (u!=null ? func(u) : "X") + " ";
 			}
@@ -297,17 +297,12 @@ public class Driver : MonoBehaviour {
 		}
 
         string b = "T:";
-        foreach (Lane lane in gameManager.Lanes)
+        foreach (Lane lane in Client.instance.gameManager.Lanes)
         {
             b += (lane.Towers[Client.instance.sideIndex] != null ? "" + lane.Towers[Client.instance.sideIndex].HP : "X") + " ";
         }
         Debug.Log(b);
     }
-
-	internal void PlayUnitCardAction(UnitCard c, Lane l, int play, int pos) {
-		foreach(Delta d in new PlayUnitCardAction(c, l, play, pos).GetDeltas(gameManager.Players[play]))
-			d.Apply();
-	}
 }
 
 public enum Phase {

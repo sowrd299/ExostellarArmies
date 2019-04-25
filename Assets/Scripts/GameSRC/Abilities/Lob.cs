@@ -3,7 +3,6 @@ using System.Collections.Generic;
 
 namespace SFB.Game
 {
-    // say there were a unit that would always stay in the backline, lob would still lob over it
     public class Lob : Ability
     {
         public Lob() : base() { }

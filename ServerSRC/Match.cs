@@ -132,8 +132,19 @@ namespace SFB.Net.Server.Matches{
                         turnDeltas.Add(d);
                         gameManager.ApplyDelta(d);
                     }
-                    // start of the next turn
-                    foreach(Delta d in gameManager.GetStartTurnDeltas()){
+
+					// tower damage
+					foreach(Delta d in gameManager.GetTowerDamageDeltas()) {
+						turnDeltas.Add(d);
+						gameManager.ApplyDelta(d);
+					}
+					foreach(Delta d in gameManager.cleanUp()) {
+						turnDeltas.Add(d);
+						gameManager.ApplyDelta(d);
+					}
+
+					// start of the next turn
+					foreach(Delta d in gameManager.GetStartTurnDeltas()){
                         turnDeltas.Add(d);
                         gameManager.ApplyDelta(d);
                     }

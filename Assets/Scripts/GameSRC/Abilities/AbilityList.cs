@@ -2,22 +2,8 @@
 using System.Collections.Generic;
 
 namespace SFB.Game
-{    public class AbilityList : List<Ability> {
-		
-		// abilities must be in a set order because of filtering targets to damage
-		// otherwise, say if you had flying and lob, depending on the order, the targets
-		//     would be filtered differently - do you skip a target for
-		//     lob before or after looking at only flying targets?
-		// currently no clashes bc flying doesn't exist, but it could happen
-		/*
-		private static Type[] order = new Type[] {
-			typeof(RangedShield), typeof(MeleeShield), typeof(Lob)
-		};
-
-		public AbilityList(params Ability[] abilities) : base(abilities) {
-			// TODO: implement sorting here and in Add
-		}*/
-
+{
+	public class AbilityList : List<Ability> {
 		public AbilityList() { }
 
 		public AbilityList(Ability[] list) :
@@ -58,5 +44,22 @@ namespace SFB.Game
 		public bool hasType(Type type) {
 			return !this.TrueForAll(ability => ability.GetType() != type);
 		}
+
+		// abilities must be in a set order because of filtering targets to damage
+		// otherwise, say if you had flying and lob, depending on the order, the targets
+		//     would be filtered differently - do you skip a target for
+		//     lob before or after looking at only flying targets?
+		// currently no clashes bc flying doesn't exist, but it could happen
+		// say there were a unit that would always stay in the backline,
+		// lob would still lob over it
+
+		/*
+		private static Type[] order = new Type[] {
+			typeof(RangedShield), typeof(MeleeShield), typeof(Lob)
+		};
+
+		public AbilityList(params Ability[] abilities) : base(abilities) {
+			// TODO: implement sorting here and in Add
+		}*/
 	}
 }

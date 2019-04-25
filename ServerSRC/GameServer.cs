@@ -120,7 +120,7 @@ namespace SFB.Net.Server{
                 //go to match making
                 case "joinMatch":
                     matchMaker.Enqueueu(from, msg);
-                    Console.WriteLine("A client has entered the lob. Loby size is {0}.", matchMaker.NumQueuedClients);
+                    Console.WriteLine("A client has entered the lobby. Lobby size is {0}.", matchMaker.NumQueuedClients);
                     lock(removedSockets){
                         removedSockets.Add(from); //remove the socket so that two classes aren't trying to handle it
                     }

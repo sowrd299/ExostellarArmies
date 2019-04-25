@@ -109,6 +109,7 @@ namespace SFB.Game.Management{
         //   whose deltas haven't been applied yet
 
         // get deltas for the absolute start of the turn
+		// add deploy phases
         public Delta[] GetStartTurnDeltas(){
             List<Delta> deltas = new List<Delta>();
             foreach(Player p in players){
@@ -139,6 +140,11 @@ namespace SFB.Game.Management{
 			return CombatManager.getMeleeDeltas(lanes);
 		}
 
+		public Delta[] GetTowerDamageDeltas() {
+			return CombatManager.getTowerDeltas(lanes);
+		}
+
+
 		// returns the outcomes of a player taking a given action
 		public Delta[] GetActionDeltas(Player player, PlayerAction a){
             // and old dummy implementation:
@@ -147,6 +153,7 @@ namespace SFB.Game.Management{
             return a.GetDeltas(player);
         }
 
+		// wow
         // Get deltas for after a deployment phase ends
 		// Decrease # of deploy phases, activate deploy effects
         public Delta[] GetEndDeployDeltas(){
@@ -214,105 +221,5 @@ namespace SFB.Game.Management{
 			}
 			return deltas.ToArray();
 		}
-
-
-		// BELOW ARE NO LONGER USED
-
-		// x
-		public Delta[] GetTurnDeltas(){
-            List<Delta> deltas = new List<Delta>();
-            // card draws; at some point change this over to the draw phase
-            // only draw for players who have deployment phases left
-            foreach(Player p in players.Where((x) => {return x.DeployPhases > 0;})){ 
-                foreach(Delta d in p.GetDrawDeltas()){
-                    deltas.Add(d);
-                }
-            }
-
-            // cleanup and return
-            return deltas.ToArray();
-        }
-
-		// x
-		public void DrawPhase() {
-			foreach(Player p in players) {
-				Delta[] ds = p.GetDrawDeltas();
-
-				//send network??
-
-				foreach(Delta d in ds)
-					ApplyDelta(d);
-			}
-		}
-
-		// x
-		public void CombatRangePhase()
-        {
-            foreach (Lane l in lanes)
-            {
-                l.advance();
-            }
-            //Driver.instance.printField();
-            int[,] sums = new int[2,3];
-            foreach (Delta d in CombatManager.getRangedDeltas(lanes))
-            {
-                ApplyDelta(d);
-                if (d.GetType() == typeof(UnitDelta))
-                {
-                    Unit u = (d as UnitDelta).Target;
-                    int[] diffs = getIndexOf(u);
-                    sums[diffs[1], diffs[0]] += (d as UnitDelta).Amount;
-                   //Debug.Log((d as UnitDelta).Amount);
-                }
-                //else
-                    //Debug.Log("tower");
-            }
-
-            //Driver.instance.manager.loadDamages(sums);
-            //Debug.Log("POST RANGED");
-            //Driver.instance.printField();
-          
-        }
-
-		// x
-        public void CombatMellePhase()
-        {
-            cleanUp();
-           // Debug.Log("POST CLEAN");
-           //Driver.instance.printField();
-            int[,] sums = new int[2, 3];
-            foreach (Delta d in CombatManager.getMeleeDeltas(lanes))
-            {
-                ApplyDelta(d);
-                if ((d.GetType() == typeof(UnitDelta)))
-                {
-                    Unit u = (d as UnitDelta).Target;
-                    int[] diffs = getIndexOf(u);
-                    sums[diffs[1], diffs[0]] += (d as UnitDelta).Amount;
-                    //Debug.Log((d as UnitDelta).Amount);
-                }
-                //else
-                    //Debug.Log("tower");
-            }
-
-            //Driver.instance.manager.loadDamages(sums);
-            //Driver.instance.manager.loadDamages(sums);
-            //Debug.Log("POST MELEE"); 
-            //Driver.instance.printField();
-        }
-
-		// x
-		public void CombatTowerPhase()
-        {
-              cleanUp();
-              //Debug.Log("POST CLEAN");
-              //Driver.instance.printField();
-
-              foreach(Delta d in CombatManager.getTowerDeltas(lanes))
-                  ApplyDelta(d);
-                  
-              //Debug.Log("POST TOWER");
-              //Driver.instance.printField();
-        }
     }
 }

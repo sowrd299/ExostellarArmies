@@ -58,7 +58,7 @@ namespace SFB.Game.Management {
 
 			return deltas.ToArray();
 		}
-
+		
 		public static Delta[] getTowerDeltas(Lane[] lanes) {
 			List<Delta> list = new List<Delta>();
 
