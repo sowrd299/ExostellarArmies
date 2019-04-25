@@ -256,7 +256,7 @@ public class Driver : MonoBehaviour {
     {
         List<CardPropertyMap> c = loadNewHP();
         List<CardUI> cu = manager.loadCardUI();
-        Debug.Log("Lengths==" + (c.Count).ToString() + cu.Count.ToString());
+		Debug.Log($"CardProperties length {c.Count.ToString()}; CardUIs length {cu.Count.ToString()}");
         for (int i = 0; i < c.Count; i++)
         {
             cu[i].loadHp(c[i]);
