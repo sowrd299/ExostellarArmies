@@ -183,6 +183,7 @@ namespace SFB.Game.Content
 				this.sideIndex = sideIndex;
 				this.pos = pos;
 				this.unit = new Unit(card);
+				Console.WriteLine($"AddToLaneDelta constructed with unit id ${unit.id}");
 			}
 
 			public AddToLaneDelta(XmlElement from, CardLoader loader)
