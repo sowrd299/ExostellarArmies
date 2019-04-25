@@ -69,7 +69,6 @@ namespace SFB.Game{
 			//foreach(Ability a in card.Abilities)
 			//	this.abilities.Add(a);
 			this.firstDeploy = true;
-			UnityEngine.Debug.Log($"unit created with id {id}");
 		}
 		
 		public Delta[] getRangedDamagingDeltas(Lane l, int oppPlay) {
