@@ -803,6 +803,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Back Left
       objectReference: {fileID: 0}
+    - target: {fileID: 7782447135756318161, guid: c8c47f99776f16647b21d788cc416c3c,
+        type: 3}
+      propertyPath: positionIndex
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3355989812553523944, guid: c8c47f99776f16647b21d788cc416c3c,
         type: 3}
       propertyPath: m_RootOrder
@@ -3797,6 +3802,16 @@ PrefabInstance:
       propertyPath: m_Name
       value: Back Middle
       objectReference: {fileID: 0}
+    - target: {fileID: 7782447135756318161, guid: c8c47f99776f16647b21d788cc416c3c,
+        type: 3}
+      propertyPath: laneIndex
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7782447135756318161, guid: c8c47f99776f16647b21d788cc416c3c,
+        type: 3}
+      propertyPath: positionIndex
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3355989812553523944, guid: c8c47f99776f16647b21d788cc416c3c,
         type: 3}
       propertyPath: m_RootOrder
@@ -3861,6 +3876,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Front Middle
+      objectReference: {fileID: 0}
+    - target: {fileID: 7782447135756318161, guid: c8c47f99776f16647b21d788cc416c3c,
+        type: 3}
+      propertyPath: laneIndex
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3355989812553523944, guid: c8c47f99776f16647b21d788cc416c3c,
         type: 3}
@@ -3961,7 +3981,6 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 67b425464022a4fd595b0abc942fd251, type: 2}
   - {fileID: 11400000, guid: 753be10aa7e2e41eb9296e4a98ad979d, type: 2}
   towerElem: {fileID: 11400000, guid: cfe0ea45134f44f41899f0717276b9e1, type: 2}
-  combatStarted: 0
   manager: {fileID: 703788047}
   dropCostSum: 0
   exostellar: {fileID: 21300000, guid: 5440b001f7dc34248925618d95151a61, type: 3}
@@ -4760,6 +4779,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Back Right
+      objectReference: {fileID: 0}
+    - target: {fileID: 7782447135756318161, guid: c8c47f99776f16647b21d788cc416c3c,
+        type: 3}
+      propertyPath: laneIndex
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7782447135756318161, guid: c8c47f99776f16647b21d788cc416c3c,
+        type: 3}
+      propertyPath: positionIndex
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3355989812553523944, guid: c8c47f99776f16647b21d788cc416c3c,
         type: 3}
@@ -6101,6 +6130,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Front Right
+      objectReference: {fileID: 0}
+    - target: {fileID: 7782447135756318161, guid: c8c47f99776f16647b21d788cc416c3c,
+        type: 3}
+      propertyPath: laneIndex
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 3355989812553523944, guid: c8c47f99776f16647b21d788cc416c3c,
         type: 3}
