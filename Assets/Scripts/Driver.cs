@@ -3,6 +3,7 @@ using SFB.Game.Content;
 using SFB.Game.Management;
 using SFB.Net.Client;
 using System;
+using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -116,6 +117,21 @@ public class Driver : MonoBehaviour {
         return listOfProp;
     }
 
+	public CardProperty[] createCardProperties(Unit unit)
+	{
+		return createCardProperties(
+			unit.Card.Name,
+			"TYPE",
+			unit.Card.FlavorText,
+			unit.Card.MainText,
+			GetSpriteForFaction(unit.Card.Faction),
+			unit.Card.DeployCost,
+			unit.HealthPoints,
+			unit.MeleeAttack,
+			unit.RangedAttack
+		);
+	}
+
 	public CardProperty[] createCardProperties(Card card)
 	{
 		if (card is UnitCard)
@@ -217,30 +233,25 @@ public class Driver : MonoBehaviour {
         return ans;
     }
 
-    public List<CardPropertyMap> loadNewHP()
-    {
-        List<CardPropertyMap> ans = new List<CardPropertyMap>();
-        foreach (Lane lane in Client.instance.gameManager.Lanes)
-        {
-            for (int play = 0; play < lane.Units.GetLength(0); play++)
-            {
-                for (int pos = 0; pos < lane.Units.GetLength(1); pos++)
-                {
-                    if (lane.Units[play, pos] != null)
-                    {
-                        Unit u = lane.Units[play, pos];
-                        int hp = u.HealthPoints;
-                        CardProperty hpprop = createHpCardProperty(hp);
-                        CardProperty[] listOfProperties = new CardProperty[1];
-                        listOfProperties[0] = hpprop; 
-                        CardPropertyMap cardFront = new CardPropertyMap(listOfProperties);
-                        ans.Add(cardFront);
-                    }
-                }
-            }
-        }
-        return ans;  
-    }
+	public List<CardPropertyMap> loadNewHP()
+	{
+		List<CardPropertyMap> ans = new List<CardPropertyMap>();
+		foreach (Lane lane in Client.instance.gameManager.Lanes)
+		{
+			foreach (Unit unit in lane.Units)
+			{
+				if (unit == null) continue;
+
+				int hp = unit.HealthPoints;
+				CardProperty hpProp = createHpCardProperty(hp);
+				CardProperty[] listOfProperties = new CardProperty[1];
+				listOfProperties[0] = hpProp;
+				CardPropertyMap cardFront = new CardPropertyMap(listOfProperties);
+				ans.Add(cardFront);
+			}
+		}
+		return ans;
+	}
 
     public void updateTowerUI()
     {
@@ -254,6 +265,9 @@ public class Driver : MonoBehaviour {
 
     public void updateCardsOntable()
     {
+		manager.ApplyEnemyUnits();
+
+		Debug.Log($"There are {Client.instance.gameManager.Lanes.Select<Lane, int>(lane => lane.Units.Cast<Unit>().Where(unit => unit != null).Count()).Sum()} units total");
         List<CardPropertyMap> c = loadNewHP();
         List<CardUI> cu = manager.loadCardUI();
 		Debug.Log($"CardProperties length {c.Count.ToString()}; CardUIs length {cu.Count.ToString()}");

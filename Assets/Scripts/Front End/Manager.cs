@@ -6,6 +6,7 @@ using UnityEngine.UI;
 using UnityEngine.Serialization;
 using SFB.Game;
 using SFB.Game.Management;
+using SFB.Game.Content;
 using SFB.Net.Client;
 
 public class Manager : MonoBehaviour
@@ -223,34 +224,49 @@ public class Manager : MonoBehaviour
 		g.transform.SetParent(v.transform);
 	}
 
-	public void enemyPlay()
+	public void ApplyEnemyUnits()
 	{
-		// TODO: Implement actual enemy action display instead of whatever this is
-		// List<GameObject> l = new List<GameObject>();
-		// for (int i = 0; i < enemyHandPlaceHolder.transform.childCount; i++)
-		// {
-		// 	l.Add(enemyHandPlaceHolder.transform.GetChild(i).gameObject);
-		// }
+		for (int laneIndex = 0; laneIndex < gameManager.Lanes.Length; laneIndex++)
+		{
+			Lane lane = gameManager.Lanes[laneIndex];
 
-		// //Rand List of 3ints from 1 to 6
-		// List<int> list = new List<int>(new int[3]);
-		// for (int j = 0; j < list.Count; j++)
-		// {
-		// 	int rand = Random.Range(1, 6);
-		// 	while (list.Contains(rand))
-		// 	{
-		// 		rand = Random.Range(1, 6);
-		// 	}
-		// 	list[j] = rand;
-		// }
-		// for (int i = 0; i < l.Count; i++)
-		// {
-		// 	if (enemyUnitHolders[list[i]].transform.childCount == 0)
-		// 	{
-		// 		StartCoroutine(moveTo(l[i], enemyUnitHolders[list[i]]));
-		// 	}
+			for (int unitPos = 0; unitPos < 2; unitPos++)
+			{
+				Unit unit = lane.Units[1 - Client.instance.sideIndex, unitPos];
+				Transform unitHolder = enemyUnitHolders.First(
+					holder => holder.GetComponent<UnitHolder>().laneIndex == laneIndex && holder.GetComponent<UnitHolder>().positionIndex == unitPos
+				).transform;
 
-		// }
+				if (unit == null)
+				{
+					foreach (Transform child in unitHolder)
+					{
+						Destroy(child);
+					}
+				}
+				else
+				{
+					GameObject unitObject;
+
+					if (unitHolder.childCount == 0)
+					{
+						unitObject = unitHolder.GetComponent<UnitHolder>().InstantiateUnit(
+							unit.Card,
+							new CardPropertyMap(
+								Driver.instance.createCardProperties(unit)
+							)
+						);
+					}
+					else
+					{
+						unitObject = unitHolder.GetChild(0).gameObject;
+						unitObject.GetComponent<CardUI>().LoadCard(
+							new CardPropertyMap(Driver.instance.createCardProperties(unit))
+						);
+					}
+				}
+			}
+		}
 	}
 
 	public void flipCards()

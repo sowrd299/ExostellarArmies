@@ -27,15 +27,23 @@ public class UnitHolder : MonoBehaviour
 		);
 	}
 
-	public void OnCardDrop(DragSource source)
+	public GameObject InstantiateUnit(Card cardBackEnd, CardPropertyMap cardData)
 	{
 		GameObject unit = Instantiate(unitPrefab, transform);
 		CardUI unitUI = unit.GetComponent<CardUI>();
-		CardUI cardUI = source.GetComponent<CardUI>();
-		unitUI.LoadCard(cardUI.cardData);
-		unitUI.cardBackEnd = cardUI.cardBackEnd;
 
-		playAction = CreatePlayCardAction(cardUI.cardBackEnd as UnitCard);
+		unitUI.LoadCard(cardData);
+		unitUI.cardBackEnd = cardBackEnd;
+
+		return unit;
+	}
+
+	public void OnCardDrop(DragSource source)
+	{
+		CardUI sourceCardUI = source.GetComponent<CardUI>();
+		InstantiateUnit(sourceCardUI.cardBackEnd, sourceCardUI.cardData);
+
+		playAction = CreatePlayCardAction(sourceCardUI.cardBackEnd as UnitCard);
 		hand.AddPlayAction(playAction);
 
 		Destroy(source.gameObject);
