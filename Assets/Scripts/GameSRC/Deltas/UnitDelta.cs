@@ -2,7 +2,6 @@
 using SFB.Game.Content;
 using System.Xml;
 using System;
-using UnityEngine;
 
 namespace SFB.Game {
 	public class UnitDelta : Delta {
@@ -59,7 +58,6 @@ namespace SFB.Game {
 		}
 
 		internal override void Apply() {
-			Debug.Log($"Target {Target}");
 			switch(dmgType) {
 				case DamageType.RANGED:
 					Target.takeRangedDamage(amount);

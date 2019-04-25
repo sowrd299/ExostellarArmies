@@ -4,7 +4,6 @@ using SFB.Game.Management;
 using SFB.Game.Content;
 using System.Xml;
 using System;
-using UnityEngine;
 
 namespace SFB.Game.Content
 {
@@ -193,9 +192,7 @@ namespace SFB.Game.Content
 				this.sideIndex = Int32.Parse(from.Attributes["sideIndex"].Value);
 				this.pos = Int32.Parse(from.Attributes["pos"].Value);
 				int id = Int32.Parse(from.Attributes["unitId"].Value);
-				UnityEngine.Debug.Log($"Add to lane delta give unit id {id}");
 				this.unit = new Unit(sendableCard.Target as UnitCard, id);
-				Debug.Log($"card {sendableCard.Target.ID} / sideindex {sideIndex} / pos {pos} / id {id} / unit {unit} / unit id {unit.id}");
 			}
 
 			public override XmlElement ToXml(XmlDocument doc) {

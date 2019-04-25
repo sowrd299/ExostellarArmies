@@ -85,6 +85,9 @@ namespace SFB.Game{
             return !(a == b);
         }
 
+		public override int GetHashCode() {
+			return base.GetHashCode();
+		}
     }
 
 }

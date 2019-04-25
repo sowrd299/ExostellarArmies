@@ -33,7 +33,9 @@ namespace SFB.Game{
             return false;
         }
 
-
-    }
+		public override int GetHashCode() {
+			return base.GetHashCode();
+		}
+	}
 
 }
