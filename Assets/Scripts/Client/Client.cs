@@ -46,11 +46,11 @@ namespace SFB.Net.Client
 		{
 			foreach (XmlElement element in doc.GetElementsByTagName("delta"))
 			{
-				Delta d = Delta.FromXml(element, loader);
 				if (verbose)
 				{
-					Debug.Log($"Processing delta: '{element.OuterXml}'\nDelta is: {d}");
+					Debug.Log($"Processing delta: '{element.OuterXml}'");
 				}
+				Delta d = Delta.FromXml(element, loader);
 				d.Apply();
 			}
 		}
