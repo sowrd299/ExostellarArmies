@@ -115,9 +115,9 @@ namespace SFB.Net.Server.Matches{
                 // TODO: filter down to only the deltas the player gets to know about
                 // e.g. remove cards drawn by opponent
                 XmlElement e = d.ToXml(msg);
-                msg.DocumentElement.AppendChild(e);
+				msg.DocumentElement.AppendChild(e);
             }
-            socket.SendXml(msg);
+			socket.SendXml(msg);
             state = State.ACTING;
             turnDeltas = new List<Delta>();
         }

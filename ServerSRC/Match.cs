@@ -132,7 +132,7 @@ namespace SFB.Net.Server.Matches{
                         turnDeltas.Add(d);
                         gameManager.ApplyDelta(d);
                     }
-
+					
 					// tower damage
 					foreach(Delta d in gameManager.GetTowerDamageDeltas()) {
 						turnDeltas.Add(d);

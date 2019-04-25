@@ -26,7 +26,7 @@ namespace SFB.Game.Management{
         // the string presentation of the type, for use in making XML's
         protected /*virtual*/ string type{
             get{
-                return this.GetType().ToString();
+				return this.GetType().ToString();
             }
         }
 

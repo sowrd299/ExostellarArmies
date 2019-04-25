@@ -2,6 +2,7 @@
 using SFB.Game.Content;
 using System.Xml;
 using System;
+using UnityEngine;
 
 namespace SFB.Game {
 	public class UnitDelta : Delta {
@@ -25,18 +26,18 @@ namespace SFB.Game {
 			get { return dmgType; }
 		}
 
-		internal UnitDelta(Unit t, int a, DamageType type, Unit s) {
+		public UnitDelta(Unit t, int a, DamageType type, Unit s) {
 			sendableTarget = new SendableTarget<Unit>("target", t);
 			amount = a;
 			dmgType = type;
 			sendableSource = new SendableTarget<Unit>("source", s);
 		}
 
-		internal UnitDelta(XmlElement from, CardLoader cl) : base(from, cl) {
+		public UnitDelta(XmlElement from, CardLoader cl) : base(from, cl) {
 			sendableTarget = new SendableTarget<Unit>("target", from, Unit.idIssuer);
 			sendableSource = new SendableTarget<Unit>("source", from, Unit.idIssuer);
 			amount = Int32.Parse(from.Attributes["amount"].Value);
-			dmgType = StringToDamageType(from.Attributes["type"].Value);
+			dmgType = StringToDamageType(from.Attributes["dmgType"].Value);
 		}
 
 		public override XmlElement ToXml(XmlDocument doc) {
@@ -50,7 +51,7 @@ namespace SFB.Game {
 			amtAttr.Value = ""+amount;
 			r.SetAttributeNode(amtAttr);
 
-			XmlAttribute typeAttr = doc.CreateAttribute("type");
+			XmlAttribute typeAttr = doc.CreateAttribute("dmgType");
 			typeAttr.Value = DamageTypeToString(dmgType);
 			r.SetAttributeNode(typeAttr);
 
@@ -58,6 +59,7 @@ namespace SFB.Game {
 		}
 
 		internal override void Apply() {
+			Debug.Log($"Target {Target}");
 			switch(dmgType) {
 				case DamageType.RANGED:
 					Target.takeRangedDamage(amount);

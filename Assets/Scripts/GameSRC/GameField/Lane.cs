@@ -4,6 +4,7 @@ using SFB.Game.Management;
 using SFB.Game.Content;
 using System.Xml;
 using System;
+using UnityEngine;
 
 namespace SFB.Game.Content
 {
@@ -71,7 +72,7 @@ namespace SFB.Game.Content
 			return element;
 		}
 
-		internal bool contains(Unit unit)
+		public bool contains(Unit unit)
 		{
 			foreach (Unit u in Units)
 				if (unit == u)
@@ -79,12 +80,12 @@ namespace SFB.Game.Content
 			return false;
 		}
 
-		internal void kill(int play, int pos)
+		public void kill(int play, int pos)
 		{
 			Units[play, pos] = null;
 		}
 
-		internal void kill(Unit u)
+		public void kill(Unit u)
 		{
 			for (int play = 0; play < Units.GetLength(0); play++)
 			{
@@ -115,8 +116,12 @@ namespace SFB.Game.Content
 			Units[player, pos] = new Unit(uc);
 		}
 
-		internal void placeFront(UnitCard uc, int p) { place(uc, p, 0); }
-		internal void placeBack(UnitCard uc, int p) { place(uc, p, 1); }
+		private void place(Unit u, int player, int pos) {
+			Units[player, pos] = u;
+		}
+
+		private void placeFront(UnitCard uc, int p) { place(uc, p, 0); }
+		private void placeBack(UnitCard uc, int p) { place(uc, p, 1); }
 
 		public void advance()
 		{
@@ -132,12 +137,12 @@ namespace SFB.Game.Content
 			}
 		}
 
-		internal AddToLaneDelta[] getDeployDeltas(UnitCard card, int play, int pos)
+		public AddToLaneDelta[] getDeployDeltas(UnitCard card, int play, int pos)
 		{
 			return new AddToLaneDelta[] { new AddToLaneDelta(this, card, play, pos) };
 		}
 
-		internal SwapPositionDelta[] getSwapPositionDeltas(int play)
+		public SwapPositionDelta[] getSwapPositionDeltas(int play)
 		{
 			return new SwapPositionDelta[] { new SwapPositionDelta(this, play) };
 		}
@@ -170,13 +175,15 @@ namespace SFB.Game.Content
 		{
 			private int sideIndex;
 			private int pos;
-			
+			private Unit unit; // only id sent; rest handled via card
+
 			public AddToLaneDelta(Lane lane, UnitCard card, int sideIndex, int pos)
 				: base(lane)
 			{
 				this.sendableCard = new SendableTarget<Card>("card", card);
 				this.sideIndex = sideIndex;
 				this.pos = pos;
+				this.unit = new Unit(card);
 			}
 
 			public AddToLaneDelta(XmlElement from, CardLoader loader)
@@ -185,6 +192,10 @@ namespace SFB.Game.Content
 				this.sendableCard = new SendableTarget<Card>("card", from, loader);
 				this.sideIndex = Int32.Parse(from.Attributes["sideIndex"].Value);
 				this.pos = Int32.Parse(from.Attributes["pos"].Value);
+				int id = Int32.Parse(from.Attributes["unitId"].Value);
+				UnityEngine.Debug.Log($"Add to lane delta give unit id {id}");
+				this.unit = new Unit(sendableCard.Target as UnitCard, id);
+				Debug.Log($"card {sendableCard.Target.ID} / sideindex {sideIndex} / pos {pos} / id {id} / unit {unit} / unit id {unit.id}");
 			}
 
 			public override XmlElement ToXml(XmlDocument doc) {
@@ -200,6 +211,10 @@ namespace SFB.Game.Content
 				posAttr.Value = "" + pos;
 				r.SetAttributeNode(posAttr);
 
+				XmlAttribute unitIdAttr = doc.CreateAttribute("unitId");
+				unitIdAttr.Value = unit.id;
+				r.SetAttributeNode(unitIdAttr);
+
 				return r;
 			}
 
@@ -211,17 +226,17 @@ namespace SFB.Game.Content
 
 			internal override void Apply()
 			{
-				if ((target as Lane).isOccupied(this.sideIndex, this.pos))
+				if (target.isOccupied(this.sideIndex, this.pos))
 					throw new IllegalDeltaException("The lane and position you wish to put that Unit is already occupied");
-				(target as Lane).place(this.sendableCard.Target as UnitCard, this.sideIndex, this.pos);
+				target.place(unit, this.sideIndex, this.pos);
 			}
 
 			internal override void Revert()
 			{
-				if (!(target as Lane).isOccupied(this.sideIndex, this.pos))
+				if (!target.isOccupied(this.sideIndex, this.pos))
 					throw new IllegalDeltaException("The lane and position you wish to remove that Unit from is already empty");
 
-				(target as Lane).remove(this.sideIndex, this.pos);
+				target.remove(this.sideIndex, this.pos);
 			}
 		}
 

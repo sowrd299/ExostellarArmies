@@ -7,12 +7,12 @@ using System;
 namespace SFB.Game.Management {
 	public class PlayUnitCardAction : PlayerAction {
 
-		SendableTarget<Card> cardTarget;
+		private SendableTarget<Card> cardTarget;
 		public UnitCard card{
 			get{ return cardTarget.Target as UnitCard; }
 		}
 
-		SendableTarget<Lane> laneTarget;
+		private SendableTarget<Lane> laneTarget;
 		private Lane lane{
 			get{ return laneTarget.Target; }
 		}

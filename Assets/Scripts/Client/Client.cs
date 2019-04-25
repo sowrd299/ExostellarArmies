@@ -84,18 +84,23 @@ namespace SFB.Net.Client
 			Socket socket = new Socket(AddressFamily.InterNetwork,
 					SocketType.Stream,
 					ProtocolType.Tcp);
-			socket.Connect(HostName, Port);
-			Debug.Log("Connected!");
-			socketManager = new SocketManager(socket, "</file>");
 
-			//setup game objects
-			cardLoader = new CardLoader();
+			try {
+				socket.Connect(HostName, Port);
+				Debug.Log("Connected!");
+				socketManager = new SocketManager(socket, "</file>");
 
-			// wait for match to be made
-			phase = ClientPhase.WAIT_MATCH_START;
-			socketManager.Send("<file type='joinMatch'><deck id='carthStarter'/></file>");
-			Debug.Log("Sent joinMatch request...");
-			Debug.Log("Waiting for match to be made...");
+				//setup game objects
+				cardLoader = new CardLoader();
+
+				// wait for match to be made
+				phase = ClientPhase.WAIT_MATCH_START;
+				socketManager.Send("<file type='joinMatch'><deck id='carthStarter'/></file>");
+				Debug.Log("Sent joinMatch request...");
+				Debug.Log("Waiting for match to be made...");
+			} catch(SocketException e) {
+				Debug.Log("Socket Connection Failed.");
+			}
 		}
 
 		private void InitializeMatch(XmlDocument document)

@@ -6,7 +6,7 @@ using System;
 namespace SFB.Game{
 
     // a class to represent a unit in play
-    class Unit : IIDed {
+    public class Unit : IIDed {
 
         // while all the ID code is repeated, can't use a common ancestor class
         // if we want to have seporate instance of IdIssuer for different things that need id's
@@ -48,18 +48,29 @@ namespace SFB.Game{
         }
 
         public Unit(UnitCard card) {
-            this.card = card;
-            this.id = idIssuer.IssueId(this);
+			this.id = idIssuer.IssueId(this);
+			constructor(card);
+		}
+
+		public Unit(UnitCard card, int id) {
+			this.id = ""+id;
+			idIssuer.RegisterId(this.id, this);
+			constructor(card);
+		}
+
+		public void constructor(UnitCard card) {
+			this.card = card;
 			this.rangedAttack = card.RangedAttack;
 			this.meleeAttack = card.MeleeAttack;
 			this.healthPoints = card.HealthPoints;
 			this.abilities = new AbilityList();
-//			Debug.Log("R"+card.RangedAttack+"M"+card.MeleeAttack+"HP"+card.HealthPoints);
-//			Debug.Log(card.Abilities);
+			//			Debug.Log("R"+card.RangedAttack+"M"+card.MeleeAttack+"HP"+card.HealthPoints);
+			//			Debug.Log(card.Abilities);
 			//foreach(Ability a in card.Abilities)
 			//	this.abilities.Add(a);
 			this.firstDeploy = true;
-        }
+			UnityEngine.Debug.Log($"unit created with id {id}");
+		}
 		
 		public Delta[] getRangedDamagingDeltas(Lane l, int oppPlay) {
 			return getDamagingDeltas(l, oppPlay, UnitDelta.DamageType.RANGED);
