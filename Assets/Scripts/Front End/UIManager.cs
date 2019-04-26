@@ -9,9 +9,9 @@ using SFB.Game.Management;
 using SFB.Game.Content;
 using SFB.Net.Client;
 
-public class Manager : MonoBehaviour
+public class UIManager : MonoBehaviour
 {
-	public static Manager instance => Driver.instance.manager;
+	public static UIManager instance => Driver.instance.manager;
 
 	private static Player[] players => Driver.instance.gameManager.Players;
 	private static GameManager gameManager => Driver.instance.gameManager;
@@ -38,8 +38,8 @@ public class Manager : MonoBehaviour
 
 	public Button mainButton;
 	public Text mainButtonText;
-	[SerializeField]
-	private Text handCapacity;
+
+	public Element hpElement;
 	private bool foundMatch = false;
 
 	private List<int> lane1Damages = new List<int>();
@@ -110,7 +110,6 @@ public class Manager : MonoBehaviour
 	private void FixedUpdate()
 	{
 		currentState.startActions();
-		handCapacity.text = "Hand capacity\n" + myHandManager.GetCardCount() + "/3";
 		// resourseText.text = "Resources: " + Driver.instance?.gameManager?.Players[Client.instance.sideIndex]?.Mana?.Count.ToString();
 		// dropCostSumText.text = "DropCostSum: " + Driver.instance?.dropCostSum.ToString();
 
@@ -317,7 +316,7 @@ public class Manager : MonoBehaviour
 			{
 				CardUI c = enemyUnitHolders[i].transform.GetChild(0).GetComponent<CardUI>();
 				int hp;
-				int.TryParse(c.propertyDisplays[6].text.text, out hp);
+				int.TryParse(c.GetProperty(hpElement).text.text, out hp);
 				if (hp <= 0)
 					Destroy(enemyUnitHolders[i].transform.GetChild(0).gameObject);
 			}
@@ -328,7 +327,7 @@ public class Manager : MonoBehaviour
 			{
 				CardUI c2 = myUnitHolders[i].transform.GetChild(0).GetComponent<CardUI>();
 				int hp;
-				int.TryParse(c2.propertyDisplays[6].text.text, out hp);
+				int.TryParse(c2.GetProperty(hpElement).text.text, out hp);
 				if (hp <= 0)
 					Destroy(myUnitHolders[i].transform.GetChild(0).gameObject);
 			}

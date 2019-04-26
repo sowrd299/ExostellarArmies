@@ -122,7 +122,7 @@ public class HandManager : MonoBehaviour
 		cardObject.transform.position = cardObject.transform.parent.position;
 
 		Destroy(source.gameObject);
-		Manager.instance.ValidateDropCost();
+		UIManager.instance.ValidateDropCost();
 	}
 
 	public int GetCardCount()

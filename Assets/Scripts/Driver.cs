@@ -20,7 +20,7 @@ public class Driver : MonoBehaviour {
     [SerializeField]
     private Element towerElem;
 
-    public Manager manager;
+    public UIManager manager;
 	
     public int dropCostSum = 0;
 

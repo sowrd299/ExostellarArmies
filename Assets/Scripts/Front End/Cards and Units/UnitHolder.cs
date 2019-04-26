@@ -47,7 +47,7 @@ public class UnitHolder : MonoBehaviour
 		hand.AddPlayAction(playAction);
 
 		Destroy(source.gameObject);
-		Manager.instance.ValidateDropCost();
+		UIManager.instance.ValidateDropCost();
 	}
 
 	public void OnUnitDrop(DragSource source)
