@@ -30,8 +30,9 @@ namespace SFB.Game.Content
 			get { return towers; }
 		}
 
-		//index a in Units[a,b] corresponds to player index in master array
-		//b corresponds to 0 front, 1 back
+		// Units[a, b]
+		// Index a corresponds to player index
+		// Index b corresponds to 0 front, 1 back
 		internal Unit[,] Units { get; private set; }
 
 		public Lane()
