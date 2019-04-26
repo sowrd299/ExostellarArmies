@@ -288,6 +288,38 @@ public class UIManager : MonoBehaviour
 			}
 		}
 	}
+
+	private Transform FindUnitHolderAt(int sideIndex, int laneIndex, int positionIndex)
+	{
+		Debug.Log($"Looking for unit holder at side {sideIndex} lane {laneIndex} position {positionIndex}");
+		GameObject[] sideUnitHolders = sideIndex == Client.instance.sideIndex ? myUnitHolders : enemyUnitHolders;
+
+		UnitHolder unitHolder = sideUnitHolders
+			.Select(holder => holder.GetComponent<UnitHolder>())
+			.First(holder => holder.laneIndex == laneIndex && holder.positionIndex == positionIndex);
+		
+		return unitHolder.transform;
+	}
+
+	public CardUI FindUnitAt(int sideIndex, int laneIndex, int positionIndex)
+	{
+		Transform unitHolder = FindUnitHolderAt(sideIndex, laneIndex, positionIndex);
+		
+		GameObject unitObject = unitHolder.transform.GetChild(0).gameObject;
+
+		return unitObject.GetComponent<CardUI>();
+	}
+
+	public void RemoveUnitAt(int sideIndex, int laneIndex, int positionIndex)
+	{
+		Transform unitHolder = FindUnitHolderAt(sideIndex, laneIndex, positionIndex);
+
+		foreach (Transform child in unitHolder)
+		{
+			Destroy(child);
+		}
+	}
+
 	public void flipCards()
 	{
 		for (int i = 0; i < enemyUnitHolders.Length; i++)
@@ -352,41 +384,6 @@ public class UIManager : MonoBehaviour
 					Destroy(myUnitHolders[i].transform.GetChild(0).gameObject);
 			}
 		}
-	}
-
-	//TODO:IMPORVE IMPLEMENTATION
-	public List<CardUI> loadCardUI()
-	{
-		List<CardUI> cu = new List<CardUI>();
-		//Left Lane
-		if (hasCard(myUnitHolders, 0))
-			cu.Add(myUnitHolders[0].transform.GetChild(0).GetComponent<CardUI>());
-		if (hasCard(myUnitHolders, 3))
-			cu.Add(myUnitHolders[3].transform.GetChild(0).GetComponent<CardUI>());
-		if (hasCard(enemyUnitHolders, 0))
-			cu.Add(enemyUnitHolders[0].transform.GetChild(0).GetComponent<CardUI>());
-		if (hasCard(enemyUnitHolders, 3))
-			cu.Add(enemyUnitHolders[3].transform.GetChild(0).GetComponent<CardUI>());
-		//Middle Lane
-		if (hasCard(myUnitHolders, 1))
-			cu.Add(myUnitHolders[1].transform.GetChild(0).GetComponent<CardUI>());
-		if (hasCard(myUnitHolders, 4))
-			cu.Add(myUnitHolders[4].transform.GetChild(0).GetComponent<CardUI>());
-		if (hasCard(enemyUnitHolders, 1))
-			cu.Add(enemyUnitHolders[1].transform.GetChild(0).GetComponent<CardUI>());
-		if (hasCard(enemyUnitHolders, 4))
-			cu.Add(enemyUnitHolders[4].transform.GetChild(0).GetComponent<CardUI>());
-		//RightLane
-		if (hasCard(myUnitHolders, 2))
-			cu.Add(myUnitHolders[2].transform.GetChild(0).GetComponent<CardUI>());
-		if (hasCard(myUnitHolders, 5))
-			cu.Add(myUnitHolders[5].transform.GetChild(0).GetComponent<CardUI>());
-		if (hasCard(enemyUnitHolders, 2))
-			cu.Add(enemyUnitHolders[2].transform.GetChild(0).GetComponent<CardUI>());
-		if (hasCard(enemyUnitHolders, 5))
-			cu.Add(enemyUnitHolders[5].transform.GetChild(0).GetComponent<CardUI>());
-		return cu;
-
 	}
 
 	public List<CardUI> loadCardUIinHand(GameObject g)

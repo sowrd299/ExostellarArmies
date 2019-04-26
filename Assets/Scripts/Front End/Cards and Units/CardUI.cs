@@ -70,19 +70,10 @@ public class CardUI : MonoBehaviour
 		}
 	}
 
-	public void LoadHp(CardPropertyMap card)
+	public void LoadHp(int newHP)
 	{
-		if (card == null)
-			return;
-		for (int i = 0; i < card.properties.Length; i++)
-		{
-			CardProperty cardProperty = card.properties[i];
-			CardUIProperty uiProperty = GetProperty(cardProperty.element);
-			if (cardProperty.element is ElementInt)
-			{
-				uiProperty.text.text = cardProperty.intValue.ToString();
-			}
-		}
+		CardUIProperty uiProperty = GetProperty(hpElement);
+		uiProperty.text.text = newHP.ToString();
 	}
 
 	// Searches until Element type matches

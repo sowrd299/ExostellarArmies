@@ -233,26 +233,6 @@ public class Driver : MonoBehaviour {
         return ans;
     }
 
-	public List<CardPropertyMap> loadNewHP()
-	{
-		List<CardPropertyMap> ans = new List<CardPropertyMap>();
-		foreach (Lane lane in Client.instance.gameManager.Lanes)
-		{
-			foreach (Unit unit in lane.Units)
-			{
-				if (unit == null) continue;
-
-				int hp = unit.HealthPoints;
-				CardProperty hpProp = createHpCardProperty(hp);
-				CardProperty[] listOfProperties = new CardProperty[1];
-				listOfProperties[0] = hpProp;
-				CardPropertyMap cardFront = new CardPropertyMap(listOfProperties);
-				ans.Add(cardFront);
-			}
-		}
-		return ans;
-	}
-
     public void updateTowerUI()
     {
         List<TowerData> t = loadTowerFrontEnd();
@@ -268,14 +248,28 @@ public class Driver : MonoBehaviour {
 		manager.ApplyEnemyUnits();
 		manager.LockUnitsOnField();
 
-        List<CardPropertyMap> c = loadNewHP();
-        List<CardUI> cu = manager.loadCardUI();
-		Debug.Log($"CardProperties length {c.Count.ToString()}; CardUIs length {cu.Count.ToString()}");
-        for (int i = 0; i < c.Count; i++)
-        {
-            cu[i].LoadHp(c[i]);
-        }
-        manager.cleanup();
+		for (int sideIndex = 0; sideIndex < gameManager.Players.Length; sideIndex++)
+		{
+			for (int laneIndex = 0; laneIndex < gameManager.Lanes.Length; laneIndex++)
+			{
+				Lane lane = gameManager.Lanes[laneIndex];
+
+				for (int positionIndex = 0; positionIndex < lane.Units.GetLength(1); positionIndex++)
+				{
+					Unit unit = lane.Units[sideIndex, positionIndex];
+					
+					if (unit != null && unit.HealthPoints > 0)
+					{
+						CardUI unitUI = manager.FindUnitAt(sideIndex, laneIndex, positionIndex);
+						unitUI.LoadHp(unit.HealthPoints);
+					}
+					else
+					{
+						manager.RemoveUnitAt(sideIndex, laneIndex, positionIndex);
+					}
+				}
+			}
+		}
     }
 
 
