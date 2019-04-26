@@ -266,8 +266,8 @@ public class Driver : MonoBehaviour {
     public void updateCardsOntable()
     {
 		manager.ApplyEnemyUnits();
+		manager.LockUnitsOnField();
 
-		Debug.Log($"There are {Client.instance.gameManager.Lanes.Select<Lane, int>(lane => lane.Units.Cast<Unit>().Where(unit => unit != null).Count()).Sum()} units total");
         List<CardPropertyMap> c = loadNewHP();
         List<CardUI> cu = manager.loadCardUI();
 		Debug.Log($"CardProperties length {c.Count.ToString()}; CardUIs length {cu.Count.ToString()}");

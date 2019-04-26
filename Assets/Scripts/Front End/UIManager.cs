@@ -110,8 +110,6 @@ public class UIManager : MonoBehaviour
 	private void FixedUpdate()
 	{
 		currentState.startActions();
-		// resourseText.text = "Resources: " + Driver.instance?.gameManager?.Players[Client.instance.sideIndex]?.Mana?.Count.ToString();
-		// dropCostSumText.text = "DropCostSum: " + Driver.instance?.dropCostSum.ToString();
 
 		if (!Client.instance.initialized && !foundMatch)
 		{
@@ -174,6 +172,8 @@ public class UIManager : MonoBehaviour
 				Client.instance.SendPlanningPhaseActions(actions);
 				mainButtonText.text = "WAITING FOR OPPONENT";
 				mainButton.GetComponent<Image>().color = new Color(153, 204, 255);
+
+				LockUnitsOnField();
 			}
 			else
 			{
@@ -268,6 +268,26 @@ public class UIManager : MonoBehaviour
 		}
 	}
 
+	public void LockUnitsOnField()
+	{
+		foreach (GameObject unitHolder in myUnitHolders)
+		{
+			if (unitHolder.transform.childCount > 0)
+			{
+				GameObject unitObject = unitHolder.transform.GetChild(0).gameObject;
+				unitObject.GetComponent<DragSource>().enabled = false;
+			}
+		}
+
+		foreach (GameObject unitHolder in enemyUnitHolders)
+		{
+			if (unitHolder.transform.childCount > 0)
+			{
+				GameObject unitObject = unitHolder.transform.GetChild(0).gameObject;
+				unitObject.GetComponent<DragSource>().enabled = false;
+			}
+		}
+	}
 	public void flipCards()
 	{
 		for (int i = 0; i < enemyUnitHolders.Length; i++)
