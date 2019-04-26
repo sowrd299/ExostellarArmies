@@ -273,7 +273,7 @@ public class Driver : MonoBehaviour {
 		Debug.Log($"CardProperties length {c.Count.ToString()}; CardUIs length {cu.Count.ToString()}");
         for (int i = 0; i < c.Count; i++)
         {
-            cu[i].loadHp(c[i]);
+            cu[i].LoadHp(c[i]);
         }
         manager.cleanup();
     }

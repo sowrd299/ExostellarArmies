@@ -11,7 +11,6 @@ using SFB.Net.Client;
 
 public class CardUI : MonoBehaviour
 {
-	//public Card cardBackEnd;
 	public CardPropertyMap cardData;
 	public CardUIProperty[] propertyDisplays;
 	public Element hpElement;
@@ -71,7 +70,7 @@ public class CardUI : MonoBehaviour
 		}
 	}
 
-	public void loadHp(CardPropertyMap card)
+	public void LoadHp(CardPropertyMap card)
 	{
 		if (card == null)
 			return;
@@ -81,13 +80,12 @@ public class CardUI : MonoBehaviour
 			CardUIProperty uiProperty = GetProperty(cardProperty.element);
 			if (cardProperty.element is ElementInt)
 			{
-				//Debug.Log(p.GetType());
 				uiProperty.text.text = cardProperty.intValue.ToString();
 			}
 		}
 	}
 
-	//searches untill Element type matches
+	// Searches until Element type matches
 	public CardUIProperty GetProperty(Element e)
 	{
 		return propertyDisplayMap.TryGetValue(e, out CardUIProperty result) ? result : null;
