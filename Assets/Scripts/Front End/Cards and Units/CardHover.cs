@@ -36,6 +36,8 @@ public class CardHover : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
 			cardGraphic.CrossFadeAlpha(0, 0, true);
 			cardGraphic.CrossFadeAlpha(1, fadeDuration, true);
 		}
+
+		hoverObject.GetComponent<CardHover>().enabled = false;
 	}
 
 	public void OnPointerExit(PointerEventData eventData)
