@@ -13,7 +13,6 @@ namespace SFB.Game.Management {
 				for(int play = 0; play < 2; play++)
 					for(int pos = 0; pos < 2; pos++)
 						if(l.isOccupied(play, pos)) {
-							//Debug.Log("R" + play + " " + pos);
 							Delta[] combatDeltas = l.Units[play, pos].getRangedDamagingDeltas(l, System.Math.Abs(play - 1));
 							foreach(Delta d in combatDeltas) {
 								if(d.GetType() == typeof(TowerDelta)) {
@@ -40,7 +39,6 @@ namespace SFB.Game.Management {
 				for(int play = 0; play < 2; play++)
 					for(int pos = 0; pos < 2; pos++)
 						if(l.isOccupied(play, pos)) {
-							//Debug.Log("R" + play + " " + pos);
 							Delta[] combatDeltas = l.Units[play, pos].getMeleeDamagingDeltas(l, System.Math.Abs(play - 1));
 							foreach(Delta d in combatDeltas) {
 								if(d.GetType() == typeof(TowerDelta)) {

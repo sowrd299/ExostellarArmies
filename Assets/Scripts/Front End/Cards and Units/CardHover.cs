@@ -31,8 +31,6 @@ public class CardHover : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
 			hoverParentTransform.rect.height / hoverCardTransform.rect.height
 		);
 
-		Debug.Log($"There are {hoverObject.GetComponent<CardHover>().cardGraphics.Length} card graphic objects");
-
 		foreach (Graphic cardGraphic in hoverObject.GetComponent<CardHover>().cardGraphics)
 		{
 			cardGraphic.CrossFadeAlpha(0, 0, true);
