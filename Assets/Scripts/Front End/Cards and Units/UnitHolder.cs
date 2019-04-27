@@ -54,12 +54,16 @@ public class UnitHolder : MonoBehaviour
 
 		Destroy(source.gameObject);
 		UIManager.instance.ValidateDropCost();
+
+		foreach (DropTarget target in GetComponents<DropTarget>())
+		{
+			target.enabled = false;
+		}
 	}
 
 	public void OnUnitDrop(DragSource source)
 	{
 		UnitHolder originalHolder = source.originalParent.GetComponent<UnitHolder>();
-		if (originalHolder == this) return;
 
 		source.transform.SetParent(transform);
 		source.transform.position = transform.position;
@@ -68,5 +72,14 @@ public class UnitHolder : MonoBehaviour
 		originalHolder.playAction = null;
 		playAction = CreatePlayCardAction(source.GetComponent<CardUI>().cardBackEnd as UnitCard);
 		hand.AddPlayAction(playAction);
+
+		foreach (DropTarget target in GetComponents<DropTarget>())
+		{
+			target.enabled = false;
+		}
+		foreach (DropTarget target in originalHolder.GetComponents<DropTarget>())
+		{
+			target.enabled = true;
+		}
 	}
 }

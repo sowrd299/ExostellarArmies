@@ -30,6 +30,8 @@ public class DropTarget : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPo
 		{
 			foreach (DropTarget target in dropTargets[type])
 			{
+				if (!target.enabled) continue;
+
 				target.outline.enabled = true;
 				target.outline.effectColor = target.hintColor;
 			}
@@ -50,6 +52,7 @@ public class DropTarget : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPo
 	private bool CanAccept(GameObject drag, out DragSource source)
 	{
 		source = null;
+		if (!enabled) return false;
 		if (drag == null) return false;
 
 		source = drag.GetComponent<DragSource>();
@@ -91,6 +94,8 @@ public class DropTarget : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPo
 
 	public void OnPointerEnter(PointerEventData eventData)
 	{
+		if (!enabled) return;
+
 		if (CanAccept(eventData.pointerDrag, out DragSource source))
 		{
 			outline.effectColor = hoverColor;
@@ -99,6 +104,8 @@ public class DropTarget : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPo
 
 	public void OnPointerExit(PointerEventData eventData)
 	{
+		if (!enabled) return;
+
 		if (CanAccept(eventData.pointerDrag, out DragSource source))
 		{
 			outline.effectColor = hintColor;
