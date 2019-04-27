@@ -151,7 +151,7 @@ namespace SFB.Net.Client
 				}
 
 				Debug.Log("Received turn start deltas; applying them:");
-				ProcessDeltas(document, cardLoader, true);
+				driver.ProcessTurnStartDeltas(document, cardLoader);
 
 				driver.manager.AfterDrawPhase();
 
@@ -183,9 +183,10 @@ namespace SFB.Net.Client
 				if (receivedDoc == null) return;
 
 				// check for match end
-				/*if(receivedDoc != null && receivedDoc?.Attributes["type"] != null && receivedDoc?.Attributes["type"]?.Value == "matchEnd") {
+				String type = receivedDoc?.DocumentElement?.Attributes["type"]?.Value;
+				if(type == "matchEnd") {
 					// TODO: win/lose
-				}*/
+				}
 
 				// depends on game phase
 				switch (phase)

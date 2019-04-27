@@ -72,7 +72,7 @@ namespace SFB.Game.Management {
 						if(l.isOccupied(play, pos)) {
 							Unit target = l.Units[play, pos];
 							int deal = System.Math.Min(target.HealthPoints, dmgLeft);
-							list.Add(new UnitDelta(target, deal, UnitDelta.DamageType.TOWER, null));
+							list.Add(new UnitDelta(target, deal, Damage.Type.TOWER, null));
 							dmgLeft -= deal;
 						}
 						pos++;

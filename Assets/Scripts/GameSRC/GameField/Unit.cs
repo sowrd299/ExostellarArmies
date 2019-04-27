@@ -64,23 +64,21 @@ namespace SFB.Game{
 			this.meleeAttack = card.MeleeAttack;
 			this.healthPoints = card.HealthPoints;
 			this.abilities = new AbilityList();
-			//			Debug.Log("R"+card.RangedAttack+"M"+card.MeleeAttack+"HP"+card.HealthPoints);
-			//			Debug.Log(card.Abilities);
-			//foreach(Ability a in card.Abilities)
-			//	this.abilities.Add(a);
+			foreach(Ability a in card.Abilities)
+				this.abilities.Add(a);
 			this.firstDeploy = true;
 		}
 		
 		public Delta[] getRangedDamagingDeltas(Lane l, int oppPlay) {
-			return getDamagingDeltas(l, oppPlay, UnitDelta.DamageType.RANGED);
+			return getDamagingDeltas(l, oppPlay, Damage.Type.RANGED);
 		}
 		
 		public Delta[] getMeleeDamagingDeltas(Lane l, int oppPlay) {
-			return getDamagingDeltas(l, oppPlay, UnitDelta.DamageType.MELEE);
+			return getDamagingDeltas(l, oppPlay, Damage.Type.MELEE);
 		}
 
-		private Delta[] getDamagingDeltas(Lane l, int oppPlay, UnitDelta.DamageType type) {
-			int dmgLeft = (type==UnitDelta.DamageType.RANGED ? rangedAttack : meleeAttack);
+		private Delta[] getDamagingDeltas(Lane l, int oppPlay, Damage.Type type) {
+			int dmgLeft = (type==Damage.Type.RANGED ? rangedAttack : meleeAttack);
 			//Debug.Log("INTIAL DAMAGE: " + dmgLeft);
 
 			List<Delta> list = new List<Delta>();
@@ -93,11 +91,11 @@ namespace SFB.Game{
 			while(dmgLeft > 0 && pos < 2) {
 				if(l.isOccupied(oppPlay, pos)) {
 					Unit target = units[oppPlay, pos];
-					int mod = (type == UnitDelta.DamageType.RANGED
+					int mod = (type == Damage.Type.RANGED
 								? getTakeRangedDamageModifier()
-								: (type == UnitDelta.DamageType.MELEE
+								: (type == Damage.Type.MELEE
 									? getTakeMeleeDamageModifier()
-									: (type == UnitDelta.DamageType.TOWER
+									: (type == Damage.Type.TOWER
 										? getTakeTowerDamageModifier()
 										: 0
 										)
@@ -117,7 +115,7 @@ namespace SFB.Game{
 
 			//Debug.Log("DMG AFTER UNITS: " + dmgLeft);
 			if(dmgLeft > 0)
-				list.Add(new TowerDelta(l.Towers[oppPlay], 1 + getTakeTowerDamageModifier()));
+				list.Add(new TowerDelta(l.Towers[oppPlay], 1 + getTakeTowerDamageModifier(), type));
 
 			return list.ToArray();
 		}

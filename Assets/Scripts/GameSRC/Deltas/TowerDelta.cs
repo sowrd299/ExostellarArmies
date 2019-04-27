@@ -12,9 +12,15 @@ namespace SFB.Game {
 			get { return amount; }
 		}
 
-		public TowerDelta(Tower t, int amt) {
+		private Damage.Type dmgType;
+		public Damage.Type DmgType {
+			get { return dmgType; }
+		}
+
+		public TowerDelta(Tower t, int amt, Damage.Type type) {
 			sendableTower = new SendableTarget<Tower>("tower", t);
 			amount = amt;
+			dmgType = type;
 		}
 
 		public TowerDelta(XmlElement from, CardLoader loader)
@@ -22,6 +28,7 @@ namespace SFB.Game {
 		{
 			sendableTower = new SendableTarget<Tower>("tower", from, Tower.idIssuer);
 			amount = Int32.Parse(from.Attributes["amount"].Value);
+			dmgType = Damage.StringToDamageType(from.Attributes["dmgType"].Value);
 		}
 
 		public override XmlElement ToXml(XmlDocument doc) {
@@ -32,6 +39,10 @@ namespace SFB.Game {
 			XmlAttribute amtAttr = doc.CreateAttribute("amount");
 			amtAttr.Value = "" + amount;
 			r.SetAttributeNode(amtAttr);
+
+			XmlAttribute typeAttr = doc.CreateAttribute("dmgType");
+			typeAttr.Value = Damage.DamageTypeToString(dmgType);
+			r.SetAttributeNode(typeAttr);
 
 			return r;
 		}
