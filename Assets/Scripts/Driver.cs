@@ -71,7 +71,7 @@ public class Driver : MonoBehaviour {
 		List<Type> combatPhases = new List<Type>{ typeof(UnitDelta), typeof(TowerDelta) };
 
 		foreach(XmlElement element in doc.GetElementsByTagName("delta")) {
-			Debug.Log($"Processing Turn Start Delta:\n'{element.OuterXml}'");
+			Debug.Log($"Sorting Turn Start Delta:\n'{element.OuterXml}'");
 
 			Delta d = Delta.FromXml(element, loader);
 			
@@ -79,12 +79,13 @@ public class Driver : MonoBehaviour {
 			if(combatPhases.Contains(Type.GetType((element?.Attributes["type"]?.Value))))
 				phaseOfDelta = element?.Attributes["dmgType"]?.Value;
 			else if(phase != "X")
-				phase = "D";
+				phaseOfDelta = "D";
 			
 			
 			if(phase != phaseOfDelta) {
 				// apply all deltas of phase that just ended
 				foreach(Delta dta in deltasOfPhase) {
+					Debug.Log($"Applying Turn Start Delta:\n'{dta}'");
 					dta.Apply();
 					// TODO ui stuff
 				}
@@ -99,6 +100,7 @@ public class Driver : MonoBehaviour {
 
 		// apply deltas of last phase
 		foreach(Delta dta in deltasOfPhase) {
+			Debug.Log($"Applying Turn Start Delta:\n'{dta}'");
 			dta.Apply();
 		}
 	}
