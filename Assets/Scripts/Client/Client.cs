@@ -132,7 +132,7 @@ namespace SFB.Net.Client
 		private void ProcessTurnStart(XmlDocument document)
 		{
 			String type = document?.DocumentElement?.Attributes["type"]?.Value;
-			Debug.Log("received type: " + type);
+			Debug.Log("Received document type: " + type);
 			if (type == "turnStart")
 			{
 				Debug.Log("Planning Phase Begun");
