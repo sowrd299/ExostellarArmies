@@ -26,6 +26,7 @@ public class CardHover : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
 
 		RectTransform hoverParentTransform = hoverParent.GetComponent<RectTransform>();
 		RectTransform hoverCardTransform = hoverObject.GetComponent<RectTransform>();
+		hoverCardTransform.position = hoverParentTransform.position;
 		hoverCardTransform.localScale = Vector3.one * Mathf.Min(
 			hoverParentTransform.rect.width / hoverCardTransform.rect.width,
 			hoverParentTransform.rect.height / hoverCardTransform.rect.height
