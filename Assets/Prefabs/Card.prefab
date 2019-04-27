@@ -1833,6 +1833,7 @@ GameObject:
   - component: {fileID: 35534340}
   - component: {fileID: 6466006315576767046}
   - component: {fileID: 8137118844585591908}
+  - component: {fileID: 4539137240831883539}
   m_Layer: 5
   m_Name: Card
   m_TagString: MyCards
@@ -1964,6 +1965,21 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6374767821707340389}
   m_CullTransparentMesh: 0
+--- !u!114 &4539137240831883539
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6374767821707340389}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 106ed1405d6fd104fa0aca5930af5dff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cardPrefab: {fileID: 6374767821707340389}
+  fadeDuration: 0.1
+  hoverParent: {fileID: 0}
 --- !u!1 &6795833052985177640
 GameObject:
   m_ObjectHideFlags: 0

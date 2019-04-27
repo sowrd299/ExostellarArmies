@@ -76,6 +76,11 @@ public class CardUI : MonoBehaviour
 		uiProperty.text.text = newHP.ToString();
 	}
 
+	public int GetHP()
+	{
+		return int.Parse(GetProperty(hpElement).text.text);
+	}
+
 	// Searches until Element type matches
 	public CardUIProperty GetProperty(Element e)
 	{

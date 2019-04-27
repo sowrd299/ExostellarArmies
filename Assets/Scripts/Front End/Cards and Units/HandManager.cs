@@ -14,6 +14,7 @@ public class HandManager : MonoBehaviour
 	public GameObject cardPrefab;
 
 	public Button mainButton;
+	public GameObject hoverParent;
 
 	[Header("Draw Animation")]
 	public Transform drawOrigin;
@@ -107,6 +108,12 @@ public class HandManager : MonoBehaviour
 		CardUI cardUI = cardObject.GetComponent<CardUI>();
 		cardUI.cardBackEnd = cardBackEnd;
 		cardUI.LoadCard(new CardPropertyMap(Driver.instance.createCardProperties(cardBackEnd)));
+
+		CardHover cardHover = cardObject.GetComponent<CardHover>();
+		if (cardHover != null)
+		{
+			cardHover.hoverParent = hoverParent;
+		}
 
 		return cardObject;
 	}

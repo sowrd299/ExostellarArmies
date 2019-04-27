@@ -8,13 +8,16 @@ using SFB.Net.Client;
 
 public class UnitHolder : MonoBehaviour
 {
+	[Header("Indices")]
 	public int laneIndex;
 	public int positionIndex;
 
+	[Header("Object references")]
 	public GameObject unitPrefab;
-
 	public HandManager hand;
+	public GameObject hoverParent;
 
+	[HideInInspector]
 	public PlayUnitCardAction playAction;
 
 	private PlayUnitCardAction CreatePlayCardAction(UnitCard card)
@@ -30,10 +33,13 @@ public class UnitHolder : MonoBehaviour
 	public GameObject InstantiateUnit(Card cardBackEnd, CardPropertyMap cardData)
 	{
 		GameObject unit = Instantiate(unitPrefab, transform);
-		CardUI unitUI = unit.GetComponent<CardUI>();
 
+		CardUI unitUI = unit.GetComponent<CardUI>();
 		unitUI.LoadCard(cardData);
 		unitUI.cardBackEnd = cardBackEnd;
+
+		CardHover cardHover = unit.GetComponent<CardHover>();
+		cardHover.hoverParent = hoverParent;
 
 		return unit;
 	}
