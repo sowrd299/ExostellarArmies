@@ -316,7 +316,7 @@ public class UIManager : MonoBehaviour
 
 		foreach (Transform child in unitHolder)
 		{
-			Destroy(child);
+			Destroy(child.gameObject);
 		}
 	}
 
