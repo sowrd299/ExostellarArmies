@@ -128,6 +128,11 @@ public class HandManager : MonoBehaviour
 		GameObject cardObject = CreateCardDisplay(source.GetComponent<CardUI>().cardBackEnd);
 		cardObject.transform.position = cardObject.transform.parent.position;
 
+		foreach (DropTarget target in holder.GetComponents<DropTarget>())
+		{
+			target.enabled = true;
+		}
+
 		Destroy(source.gameObject);
 		UIManager.instance.ValidateDropCost();
 	}

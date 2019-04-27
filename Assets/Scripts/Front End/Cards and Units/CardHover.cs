@@ -26,6 +26,7 @@ public class CardHover : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
 
 		RectTransform hoverParentTransform = hoverParent.GetComponent<RectTransform>();
 		RectTransform hoverCardTransform = hoverObject.GetComponent<RectTransform>();
+		hoverCardTransform.position = hoverParentTransform.position;
 		hoverCardTransform.localScale = Vector3.one * Mathf.Min(
 			hoverParentTransform.rect.width / hoverCardTransform.rect.width,
 			hoverParentTransform.rect.height / hoverCardTransform.rect.height
@@ -36,6 +37,8 @@ public class CardHover : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
 			cardGraphic.CrossFadeAlpha(0, 0, true);
 			cardGraphic.CrossFadeAlpha(1, fadeDuration, true);
 		}
+
+		hoverObject.GetComponent<CardHover>().enabled = false;
 	}
 
 	public void OnPointerExit(PointerEventData eventData)

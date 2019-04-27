@@ -285,41 +285,6 @@ public class Driver : MonoBehaviour {
     void Update() {
 		Client.instance.Update();
 	}
-
-	public void printField() {
-		printField(unit => ""+unit.HealthPoints);
-	}
-
-	internal void printField(Func<Unit, string> func) {
-		int[][] loop = {
-			new int[2] { 1, 1 },
-			new int[2] { 1, 0 },
-			new int[2] { 0, 0 },
-			new int[2] { 0, 1 },
-		};
-        string a = "T:";
-        foreach (Lane lane in Client.instance.gameManager.Lanes)
-        {
-            a += (lane.Towers[1] != null ? ""+lane.Towers[1].HP : "X") + " ";
-        }
-        Debug.Log(a);
-
-        foreach (int[] play_pos in loop) {
-			string s = "";
-			foreach(Lane l in Client.instance.gameManager.Lanes) {
-				Unit u = l.Units[play_pos[0], play_pos[1]];
-				s += (u!=null ? func(u) : "X") + " ";
-			}
-			Debug.Log(s);
-		}
-
-        string b = "T:";
-        foreach (Lane lane in Client.instance.gameManager.Lanes)
-        {
-            b += (lane.Towers[Client.instance.sideIndex] != null ? "" + lane.Towers[Client.instance.sideIndex].HP : "X") + " ";
-        }
-        Debug.Log(b);
-    }
 }
 
 public enum Phase {

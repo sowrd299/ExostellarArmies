@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.Events;
 
 public class DragSource : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
@@ -12,6 +13,9 @@ public class DragSource : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
 	[Header("Animation Config")]
 	public float returnTime;
 	public AnimationCurve returnCurve;
+
+	[Header("Events")]
+	public UnityEvent onBeginDrag;
 
 	[HideInInspector]
 	public bool dropSuccess;
@@ -38,6 +42,8 @@ public class DragSource : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
 		canvasGroup.blocksRaycasts = false;
 
 		DropTarget.ShowDropHints(type);
+
+		onBeginDrag.Invoke();
 	}
 
 	public void OnDrag(PointerEventData eventData)
