@@ -111,15 +111,18 @@ namespace SFB.Net.Server.Matches{
                     turnDeltas.Add(d);
                     gameManager.ApplyDelta(d);
                 }
-                gameManager.cleanUp();
-                // if no more deployment phases, do the rest of this turn into the start of the next
-                if(gameManager.DeployPhasesOver()){
+				foreach(Delta d in gameManager.GetCleanUpDeltas()) {
+					turnDeltas.Add(d);
+					gameManager.ApplyDelta(d);
+				}
+				// if no more deployment phases, do the rest of this turn into the start of the next
+				if(gameManager.DeployPhasesOver()){
                     // ranged combat
                     foreach(Delta d in gameManager.GetRangedCombatDeltas()){
                         turnDeltas.Add(d);
                         gameManager.ApplyDelta(d);
                     }
-                    foreach(Delta d in gameManager.cleanUp()){
+                    foreach(Delta d in gameManager.GetCleanUpDeltas()){
                         turnDeltas.Add(d);
                         gameManager.ApplyDelta(d);
                     }
@@ -128,7 +131,7 @@ namespace SFB.Net.Server.Matches{
                         turnDeltas.Add(d);
                         gameManager.ApplyDelta(d);
                     }
-                    foreach(Delta d in gameManager.cleanUp()){
+                    foreach(Delta d in gameManager.GetCleanUpDeltas()){
                         turnDeltas.Add(d);
                         gameManager.ApplyDelta(d);
                     }
@@ -138,7 +141,7 @@ namespace SFB.Net.Server.Matches{
 						turnDeltas.Add(d);
 						gameManager.ApplyDelta(d);
 					}
-					foreach(Delta d in gameManager.cleanUp()) {
+					foreach(Delta d in gameManager.GetCleanUpDeltas()) {
 						turnDeltas.Add(d);
 						gameManager.ApplyDelta(d);
 					}

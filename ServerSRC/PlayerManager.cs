@@ -49,10 +49,6 @@ namespace SFB.Net.Server.Matches{
         // the client's player
         private Player player;
 
-        public string Name{
-            get{ return player.Name; }
-        }
-
         // returns whether or not the players has locked in their current turn
         public bool TurnLockedIn{
             get{
