@@ -149,7 +149,7 @@ public class UIManager : MonoBehaviour
 
 	public void ValidateDropCost()
 	{
-		if (myPlayer.Mana.CanAfford(myHandManager.deploymentCost))
+		if (myPlayer.ManaPool.CanAfford(myHandManager.deploymentCost))
 		{
 			mainButton.interactable = true;
 			mainButtonText.text = "LOCK IN PLANS";
@@ -165,7 +165,7 @@ public class UIManager : MonoBehaviour
 	{
 		if (mainButtonText.text.Equals("LOCK IN PLANS"))
 		{
-			if (myPlayer.Mana.CanAfford(myHandManager.deploymentCost))
+			if (myPlayer.ManaPool.CanAfford(myHandManager.deploymentCost))
 			{
 				PlayUnitCardAction[] actions = myHandManager.ExportActions();
 

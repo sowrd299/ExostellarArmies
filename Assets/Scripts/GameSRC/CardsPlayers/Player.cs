@@ -7,131 +7,117 @@ using System.Collections.Generic;
 namespace SFB.Game{
 
     // a class to represent a player in a match
-    public class Player {
-		private int lives;
-		internal int Lives {
-			get { return lives; }
+    public class Player
+	{
+		public const int HAND_SIZE = 3; // CONST HAND SIZE IMPLEMENTED HERE
+
+		public Deck Deck { get; private set; }
+		public Hand Hand { get; private set; }
+
+		public ResourcePool LivesPool { get; private set; }
+		public int Lives {
+			get { return LivesPool.Count; }
 		}
 
-        // the player's deck is stored here
-        private Deck deck;
-        internal Deck Deck{
-            get { return deck; }
-        }
-
-		private Hand hand;
-		internal Hand Hand {
-			get { return hand; }
-		}
-
-		private int handSize;
-		internal int HandSize {
-			get { return handSize; }
-		}
-
-		private string name;
-		internal string Name {
-			get { return name; }
-		}
-
-		private ResourcePool mana;
-		public ResourcePool Mana {
-			get { return mana; }
+		public ResourcePool ManaPool { get; private set; }
+		public int Mana {
+			get { return ManaPool.Count; }
 		}
 
 		// how many deployment phases the player gets
-		public ResourcePool deployPhases;
-		public int DeployPhases{
-			get{ return deployPhases.Count; }
+		public ResourcePool DeployPhasesPool { get; private set; }
+		public int DeployPhases {
+			get{ return DeployPhasesPool.Count; }
 		}
 
-		private List<Card> discard;
-		internal List<Card> Discard {
-			get { return discard; }
-		}
+		public List<Card> Discard { get; private set; }
 
-        // optionally takes ids to be used instead of generating new ones
-		internal Player(string name, DeckList d, XmlElement ids = null){
-			
+		// optionally takes ids to be used instead of generating new ones
+		public Player(DeckList d, XmlElement ids = null)
+		{
             //if given id's, manage them
-            string deckId = ""; //if this is passed in, will still generate ID
-            string handId = ""; //if this is passed in, will still generate ID
+            string deckId = ""; 
+            string handId = "";
 			string manaId = "";
 			string depId = "";
-            if(ids != null){
-                deckId = ids.Attributes["deck"].Value;
-                handId = ids.Attributes["hand"].Value;
-                manaId= ids.Attributes["mana"].Value;
-                depId= ids.Attributes["dep"].Value;
-            }
+			string livesId = "";
+
+			//if this is passed in, will still generate ID
+			if(ids != null)
+			{
+				deckId = ids.Attributes["deck"].Value;
+				handId = ids.Attributes["hand"].Value;
+				manaId = ids.Attributes["mana"].Value;
+				depId = ids.Attributes["dep"].Value;
+				livesId = ids.Attributes["dep"].Value;
+			}
+
 			//deck
-			this.deck = new Deck(deckId);
-            deck.LoadCards(d);
-			deck.Shuffle();
+			this.Deck = new Deck(deckId);
+            Deck.LoadCards(d);
+			Deck.Shuffle();
+
             //hand
-			this.hand = new Hand(handId);
-			this.handSize = 3; // CONST HAND SIZE IMPLEMENTED HERE
+			this.Hand = new Hand(handId);
+
             //misc
-			this.name = name;
-			this.discard = new List<Card>();
-			this.lives = 4; // CONST LIVES IMPLEMENETED HERE
-			this.mana = new ResourcePool(12, manaId); // CONST MAX RESOURCES IMPLEMENTED HERE
-			this.deployPhases = new ResourcePool(2, depId);
+			this.Discard = new List<Card>();
+			this.LivesPool = new ResourcePool(12, livesId); // CONST LIVES IMPLEMENETED HERE
+			this.ManaPool = new ResourcePool(12, manaId); // CONST MAX RESOURCES IMPLEMENTED HERE
+			this.DeployPhasesPool = new ResourcePool(2, depId);
 		}
-
-		public void takeDamage() {
-			lives--;
-		}
-
  
-		public Delta[] GetDrawDeltas() {
+		public Delta[] GetDrawDeltas()
+		{
 			List<Delta> l = new List<Delta>();
-			Deck.RemoveFromDeckDelta[] rDeltas = this.deck.GetDrawDeltas(count: this.handSize - this.hand.Count);
+			RemoveFromDeckDelta[] rDeltas = this.Deck.GetDrawDeltas(count: HAND_SIZE - this.Hand.Count);
 			foreach(Delta d in rDeltas)
 				l.Add(d);
-			foreach(Delta d in this.hand.GetDrawDeltas(rDeltas))
+			foreach(Delta d in this.Hand.GetDrawDeltas(rDeltas))
 				l.Add(d);
 
 			return l.ToArray();
 		}
 
-		public Delta[] GetManaDeltas() {
-			return mana.GetAddDeltas(6 - lives);
+		public Delta[] GetManaDeltas()
+		{
+			return ManaPool.GetAddDeltas(6 - Lives);
 		}
 
 		// get the deltas for when this tower goes down
-		public Delta[] GetDeployPhaseDeltas(){
-			return deployPhases.GetAddDeltas(1);
-		}
-
-		public void AddDeployPhase(){
-			deployPhases.Add(1);
+		public Delta[] GetDeployPhaseDeltas()
+		{
+			return DeployPhasesPool.GetAddDeltas(1);
 		}
 
 		// get the deltas for after have used a deploy phase
 		// NOTE: I'm not actually sure this is what we want to here, or just want to skip deltas for this
-		public Delta[] GetPostDeployPhaseDeltas(){
-			return deployPhases.GetAddDeltas(-1);
+		public Delta[] GetPostDeployPhaseDeltas()
+		{
+			return DeployPhasesPool.GetAddDeltas(-1);
 		}
 
         // returns if the player owns the given deck
-        internal bool Owns(Deck deck){
-            return deck == this.deck;
+        internal bool Owns(Deck deck)
+		{
+            return deck == this.Deck;
         }
 
 		// returns if the player owns the given hand
-		internal bool Owns(Hand hand) {
-			return hand == this.hand;
+		internal bool Owns(Hand hand)
+		{
+			return hand == this.Hand;
 		}
 
 		// returns an XML representation of all of the player's objects ID's,
 		// to sync them between client/server
-		public XmlElement GetPlayerIDs(XmlDocument doc){
+		public XmlElement GetPlayerIDs(XmlDocument doc)
+		{
             XmlElement e = doc.CreateElement("playerIds");
 			// setup the ids to add
 			// make arrays so can just itterate them
-			IIDed[] elements = new IIDed[]{deck, hand, mana, deployPhases};
-			string[] elementNames = new string[]{"deck", "hand", "mana", "dep"};
+			IIDed[] elements = new IIDed[]{Deck, Hand, ManaPool, DeployPhasesPool, LivesPool };
+			string[] elementNames = new string[]{"deck", "hand", "mana", "dep", "lives"};
 			// add all the ids
 			for(int i = 0; i < elements.Length; i++){
 				XmlAttribute idAttr = doc.CreateAttribute(elementNames[i]);
@@ -141,10 +127,5 @@ namespace SFB.Game{
             // return
             return e;
         }
-
-		public override string ToString() {
-			return name + ": " + deployPhases.Count + "DPs, " + Mana.Count + " Mana";
-		}
 	}
-
 }

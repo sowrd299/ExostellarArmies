@@ -48,13 +48,13 @@ namespace SFB.Game.Management {
 		internal override bool IsLegalAction(Player p) {
 			// TODO: testing
         	bool r = p.Hand.Contains(card) &&
-					!lane.isOccupied(sideIndex, pos) &&
-					p.Mana.CanAfford(card.DeployCost);
+					!lane.IsOccupied(sideIndex, pos) &&
+					p.ManaPool.CanAfford(card.DeployCost);
 			if(!r){
 				Console.WriteLine("Checking legal action: {0}, {1}, {2}",
 						p.Hand.Contains(card) ? "Have card" : "Don't have card",
-						!lane.isOccupied(sideIndex, pos) ? "Space is free" : "Space isn't free",
-						p.Mana.CanAfford(card.DeployCost) ? "Can afford" : "Can't afford");
+						!lane.IsOccupied(sideIndex, pos) ? "Space is free" : "Space isn't free",
+						p.ManaPool.CanAfford(card.DeployCost) ? "Can afford" : "Can't afford");
 			}
 			return r;
 		}
@@ -62,8 +62,8 @@ namespace SFB.Game.Management {
 		internal override Delta[] GetDeltas(Player p) {
 			return new Delta[] {
 				p.Hand.GetRemoveDelta(card)[0],
-				p.Mana.GetSubtractDeltas(card.DeployCost)[0],
-				lane.getDeployDeltas(card, sideIndex, pos)[0]
+				p.ManaPool.GetSubtractDeltas(card.DeployCost)[0],
+				lane.GetDeployDeltas(card, sideIndex, pos)[0]
 			};
 		}
 	}

@@ -7,24 +7,18 @@ namespace SFB.Game.Content
 	{
 		public const string TAG_NAME = "tower";
 
-		public static IdIssuer<Tower> idIssuer = new IdIssuer<Tower>();
-
-		private int maxHP;
-		private int hp;
-		public int HP
-		{
-			get { return hp; }
+		private static IdIssuer<Tower> idIssuer = new IdIssuer<Tower>();
+		public static IdIssuer<Tower> IdIssuer {
+			get { return idIssuer; }
 		}
 
-		private int baseDamage;
-		private int damage;
-		public int Damage
-		{
-			get { return damage; }
-			set { damage = value; }
-		}
+		public int MaxHP { get; private set; }
+		public int HP { get; private set; }
 
-		readonly public string id;
+		private const int BASE_DAMAGE = 1;
+		public int Damage { get; set; }
+
+		readonly private string id;
 		public string ID
 		{
 			get { return id; }
@@ -32,20 +26,18 @@ namespace SFB.Game.Content
 
 		public Tower()
 		{
-			maxHP = 2;
-			hp = maxHP;
-			baseDamage = 1;
-			damage = baseDamage;
+			MaxHP = 2;
+			HP = MaxHP;
+			Damage = BASE_DAMAGE;
 
 			id = idIssuer.IssueId(this);
 		}
 
 		public Tower(XmlElement from)
 		{
-			maxHP = 2;
-			hp = maxHP;
-			baseDamage = 1;
-			damage = baseDamage;
+			MaxHP = 2;
+			HP = MaxHP;
+			Damage = BASE_DAMAGE;
 
 			id = from.Attributes["id"].Value;
 			idIssuer.RegisterId(id, this);
@@ -62,29 +54,39 @@ namespace SFB.Game.Content
 		}
 		public void TakeDamage(int amount)
 		{
-			hp -= amount;
+			HP -= amount;
 		}
 
 		public void UndoTakeDamage(int amount)
 		{
-			hp += amount;
+			HP += amount;
 		}
 
 		public void Revive()
 		{
-			if (hp <= 0)
+			if (HP <= 0)
 			{
-				hp = ++maxHP;
+				HP = ++MaxHP;
 			}
 			else
 			{
-				//exception?
+				throw new System.Exception("Tried to revive tower when HP wasn't 0.");
 			}
 		}
 
 		public void ResetDamage()
 		{
-			damage = baseDamage;
+			Damage = BASE_DAMAGE;
+		}
+
+		public TowerDamageDelta[] GetDamageDeltas(int amt, Damage.Type dmgType)
+		{
+			return new TowerDamageDelta[] { new TowerDamageDelta(this, amt, dmgType) };
+		}
+
+		public TowerReviveDelta[] GetReviveDeltas()
+		{
+			return new TowerReviveDelta[] { new TowerReviveDelta(this) };
 		}
 	}
 }
