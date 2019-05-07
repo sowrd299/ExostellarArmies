@@ -35,7 +35,7 @@ namespace SFB.Net.Server.Matches{
             players = new PlayerManager[clients.Length];
             for(int i = 0; i < clients.Length; i++){
                 players[i] = new PlayerManager(clients[i],
-                        gameManager.Players[i], gameManager,
+                        i, gameManager,
                         CheckEndTurn, EndMatch);
             }
         }
@@ -106,7 +106,7 @@ namespace SFB.Net.Server.Matches{
                 // calculate the outcome of the deploy phase
                 // use a list to collect the deltas, to send them later
                 List<Delta> turnDeltas = new List<Delta>(); 
-                // cleanup the deploy phase
+                
                 foreach(Delta d in gameManager.GetEndDeployDeltas()){
                     turnDeltas.Add(d);
                     gameManager.ApplyDelta(d);

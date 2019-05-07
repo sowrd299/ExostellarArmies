@@ -1,13 +1,21 @@
-﻿using System.Collections;
+﻿using SFB.Game.Management;
+using SFB.Game.Content;
 using System.Collections.Generic;
 
 namespace SFB.Game
 {
-    public class Siege : Ability {
-		public Siege(int n) : base(n) { }
+	public class Siege : Ability
+	{
+		public Siege(int amount)
+			: base(amount)
+		{}
 
-		public override int dealTowerDamageModifier() {
-			return Num;
+		public override void ApplyTo(Unit u)
+		{
+			void SiegeInner(ref int amt) {
+				amt += Amount;
+			}
+			u.ModifyTowerDamage += SiegeInner;
 		}
 	}
 }

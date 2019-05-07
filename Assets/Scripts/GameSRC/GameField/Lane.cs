@@ -91,7 +91,7 @@ namespace SFB.Game.Content
 					}
 				}
 			}
-			//error?
+			throw new System.Exception("Tried to kill a unit that isn't in this lane.");
 		}
 
 		public bool IsOccupied(int side, int pos)
@@ -99,12 +99,12 @@ namespace SFB.Game.Content
 			return Units[side, pos] != null;
 		}
 
-		private void Place(UnitCard uc, int side, int pos)
+		public void Place(UnitCard uc, int side, int pos)
 		{
 			Units[side, pos] = new Unit(uc);
 		}
 
-		private void Place(Unit u, int side, int pos)
+		public void Place(Unit u, int side, int pos)
 		{
 			Units[side, pos] = u;
 		}
@@ -127,163 +127,9 @@ namespace SFB.Game.Content
 			return new RemoveFromLaneDelta[] { new RemoveFromLaneDelta(this, side, pos) };
 		}
 
-		public SwapPositionDelta[] GetSwapPositionDeltas(int side)
+		public InLaneSwapDelta[] GetInLaneSwapDeltas(int side)
 		{
-			return new SwapPositionDelta[] { new SwapPositionDelta(this, side) };
-		}
-
-
-		public class SwapPositionDelta : TargetedDelta<Lane>
-		{
-			private int SideIndex;
-
-			public SwapPositionDelta(Lane l, int s)
-				: base(l)
-			{
-				SideIndex = s;
-			}
-
-			public SwapPositionDelta(XmlElement from, CardLoader loader)
-				: base(from, Lane.IdIssuer, loader)
-			{
-				this.SideIndex = Int32.Parse(from.Attributes["sideIndex"].Value);
-			}
-
-			internal override void Apply()
-			{
-				Unit u = Target.Units[SideIndex, 0];
-				Target.Units[SideIndex, 0] = Target.Units[SideIndex, 1];
-				Target.Units[SideIndex, 1] = u;
-			}
-
-			public override XmlElement ToXml(XmlDocument doc)
-			{
-				XmlElement r = base.ToXml(doc);
-
-				XmlAttribute sideIndexAttr = doc.CreateAttribute("sideIndex");
-				sideIndexAttr.Value = "" + SideIndex;
-				r.SetAttributeNode(sideIndexAttr);
-
-				return r;
-			}
-
-			internal override void Revert() { Apply(); }
-		}
-
-		public class RemoveFromLaneDelta : TargetedDelta<Lane>
-		{
-			private int SideIndex;
-			private int Position;
-
-			public RemoveFromLaneDelta(Lane lane, int sideIndex, int pos)
-				: base(lane)
-			{
-				this.SideIndex = sideIndex;
-				this.Position = pos;
-			}
-
-			public RemoveFromLaneDelta(XmlElement from, CardLoader loader)
-				: base(from, Lane.IdIssuer, loader)
-			{
-				this.SideIndex = Int32.Parse(from.Attributes["sideIndex"].Value);
-				this.Position = Int32.Parse(from.Attributes["position"].Value);
-			}
-
-			public override XmlElement ToXml(XmlDocument doc)
-			{
-				XmlElement r = base.ToXml(doc);
-
-				XmlAttribute sideIndexAttr = doc.CreateAttribute("sideIndex");
-				sideIndexAttr.Value = "" + SideIndex;
-				r.SetAttributeNode(sideIndexAttr);
-
-				XmlAttribute posAttr = doc.CreateAttribute("position");
-				posAttr.Value = "" + Position;
-				r.SetAttributeNode(posAttr);
-
-				return r;
-			}
-
-			public override bool VisibleTo(Player p) {
-				return true;
-			}
-
-			internal override void Apply() {
-				if(!Target.IsOccupied(this.SideIndex, this.Position))
-					throw new IllegalDeltaException("Tried to remove a Unit from an empty lane/side/position.");
-				Target.Kill(this.SideIndex, this.Position);
-			}
-
-			internal override void Revert() {
-				throw new IllegalDeltaException("The lane and position you wish to remove that Unit from is already empty");
-			}
-		}
-
-		public class AddToLaneDelta : TargetedDelta<Lane>
-		{
-			private int SideIndex;
-			private int Position;
-			private Unit Unit; // only id sent; rest handled via card
-
-			public AddToLaneDelta(Lane lane, UnitCard card, int sideIndex, int pos)
-				: base(lane)
-			{
-				this.SendableCard = new SendableTarget<Card>("card", card);
-				this.SideIndex = sideIndex;
-				this.Position = pos;
-				this.Unit = new Unit(card);
-			}
-
-			public AddToLaneDelta(XmlElement from, CardLoader loader)
-				: base(from, Lane.IdIssuer, loader)
-			{
-				this.SendableCard = new SendableTarget<Card>("card", from, loader);
-				this.SideIndex = Int32.Parse(from.Attributes["sideIndex"].Value);
-				this.Position = Int32.Parse(from.Attributes["position"].Value);
-				this.Unit = new Unit(SendableCard.Target as UnitCard, Int32.Parse(from.Attributes["unitId"].Value));
-			}
-
-			public override XmlElement ToXml(XmlDocument doc)
-			{
-				XmlElement r = base.ToXml(doc);
-
-				r.SetAttributeNode(SendableCard.ToXml(doc));
-
-				XmlAttribute sideIndexAttr = doc.CreateAttribute("sideIndex");
-				sideIndexAttr.Value = ""+SideIndex;
-				r.SetAttributeNode(sideIndexAttr);
-
-				XmlAttribute posAttr = doc.CreateAttribute("position");
-				posAttr.Value = "" + Position;
-				r.SetAttributeNode(posAttr);
-
-				XmlAttribute unitIdAttr = doc.CreateAttribute("unitId");
-				unitIdAttr.Value = Unit.id;
-				r.SetAttributeNode(unitIdAttr);
-
-				return r;
-			}
-
-
-			public override bool VisibleTo(Player p)
-			{
-				return true;
-			}
-
-			internal override void Apply()
-			{
-				if (Target.IsOccupied(this.SideIndex, this.Position))
-					throw new IllegalDeltaException("The lane and position you wish to put that Unit is already occupied");
-				Target.Place(Unit, this.SideIndex, this.Position);
-			}
-
-			internal override void Revert()
-			{
-				if (!Target.IsOccupied(this.SideIndex, this.Position))
-					throw new IllegalDeltaException("The lane and position you wish to remove that Unit from is already empty");
-
-				Target.Kill(this.SideIndex, this.Position);
-			}
+			return new InLaneSwapDelta[] { new InLaneSwapDelta(this, side) };
 		}
 	}
 }

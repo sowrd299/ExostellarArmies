@@ -169,7 +169,7 @@ namespace SFB.Game.Management{
 			foreach(Lane lane in lanes) {
 				for(int side = 0; side < lane.Units.GetLength(0); side++)
 					if(lane.NeedFillFront(side))
-						deltas.AddRange(lane.GetSwapPositionDeltas(side));
+						deltas.AddRange(lane.GetInLaneSwapDeltas(side));
 			}
 
 			// activate deploy affects

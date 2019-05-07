@@ -4,8 +4,8 @@ using SFB.Game.Management;
 using System.Xml;
 using System.Collections.Generic;
 
-namespace SFB.Game{
-
+namespace SFB.Game
+{
     // a class to represent a player in a match
     public class Player
 	{
@@ -13,6 +13,7 @@ namespace SFB.Game{
 
 		public Deck Deck { get; private set; }
 		public Hand Hand { get; private set; }
+		public Discard Discard { get; private set; }
 
 		public ResourcePool LivesPool { get; private set; }
 		public int Lives {
@@ -30,14 +31,13 @@ namespace SFB.Game{
 			get{ return DeployPhasesPool.Count; }
 		}
 
-		public List<Card> Discard { get; private set; }
-
 		// optionally takes ids to be used instead of generating new ones
 		public Player(DeckList d, XmlElement ids = null)
 		{
             //if given id's, manage them
             string deckId = ""; 
             string handId = "";
+			string discardId = "";
 			string manaId = "";
 			string depId = "";
 			string livesId = "";
@@ -49,7 +49,7 @@ namespace SFB.Game{
 				handId = ids.Attributes["hand"].Value;
 				manaId = ids.Attributes["mana"].Value;
 				depId = ids.Attributes["dep"].Value;
-				livesId = ids.Attributes["dep"].Value;
+				livesId = ids.Attributes["lives"].Value;
 			}
 
 			//deck
@@ -61,9 +61,10 @@ namespace SFB.Game{
 			this.Hand = new Hand(handId);
 
             //misc
-			this.Discard = new List<Card>();
-			this.LivesPool = new ResourcePool(12, livesId); // CONST LIVES IMPLEMENETED HERE
-			this.ManaPool = new ResourcePool(12, manaId); // CONST MAX RESOURCES IMPLEMENTED HERE
+			this.Discard = new Discard(discardId);
+			this.LivesPool = new ResourcePool(4, livesId);
+			LivesPool.Add(4);
+			this.ManaPool = new ResourcePool(12, manaId); // CONST MAX MANA IMPLEMENTED HERE
 			this.DeployPhasesPool = new ResourcePool(2, depId);
 		}
  
@@ -116,8 +117,8 @@ namespace SFB.Game{
             XmlElement e = doc.CreateElement("playerIds");
 			// setup the ids to add
 			// make arrays so can just itterate them
-			IIDed[] elements = new IIDed[]{Deck, Hand, ManaPool, DeployPhasesPool, LivesPool };
-			string[] elementNames = new string[]{"deck", "hand", "mana", "dep", "lives"};
+			IIDed[] elements = new IIDed[]{Deck, Hand, Discard, ManaPool, DeployPhasesPool, LivesPool };
+			string[] elementNames = new string[]{"deck", "hand", "discard", "mana", "dep", "lives"};
 			// add all the ids
 			for(int i = 0; i < elements.Length; i++){
 				XmlAttribute idAttr = doc.CreateAttribute(elementNames[i]);

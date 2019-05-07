@@ -1,11 +1,21 @@
-﻿using System.Collections;
+﻿using SFB.Game.Management;
+using SFB.Game.Content;
 using System.Collections.Generic;
-using SFB.Game.Management;
 
 namespace SFB.Game
 {
-    public class Spore : Ability {
-		public Spore(int n) : base(n) { }
-		public override Delta[] onDeath(int play, int pos, Player[] players) { return players[play].Mana.GetAddDeltas(Num); }
+	public class Spore : Ability
+	{
+		public Spore(int amount)
+			: base(amount)
+		{}
+
+		public override void ApplyTo(Unit u)
+		{
+			void SporeInner(List<Delta> deltas, int side, int pos, int lane, Lane[] lanes, Player[] players) {
+				deltas.AddRange(players[side].ManaPool.GetAddDeltas(Amount));
+			}
+			u.AddDeathDeltas += SporeInner;
+		}
 	}
 }
