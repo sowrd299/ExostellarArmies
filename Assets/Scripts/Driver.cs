@@ -171,7 +171,7 @@ public class Driver : MonoBehaviour
 
 	private bool IsCombatDelta(Delta delta)
 	{
-		return delta is UnitDelta || delta is TowerDelta;
+		return delta is UnitDamageDelta || delta is TowerDamageDelta;
 	}
 
 	private void ProcessDeployDeltas(List<Delta> deployDeltas)
@@ -227,7 +227,6 @@ public class Driver : MonoBehaviour
 
 	private void AfterEachCombatPhase()
 	{
-		gameManager.cleanUp();
 		uiManager.RenderUnits();
 		uiManager.RenderTowers();
 	}
