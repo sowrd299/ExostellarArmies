@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1dc332c574fbd044bb9bf3f4b12a96d9, type: 3}
+  m_Name: Faction Registry
+  m_EditorClassIdentifier: 
+  factions:
+  - faction: 1
+    cardBackground: {fileID: 21300000, guid: 5440b001f7dc34248925618d95151a61, type: 3}
+    unitFrame: {fileID: 21300000, guid: 2faa722ea247b0e4c811cae30332d67b, type: 3}
+    towerFrame: {fileID: 21300000, guid: fc06755551c0549bc920d09dc7c2324c, type: 3}
+  - faction: 2
+    cardBackground: {fileID: 21300000, guid: 8d27a90dee9d94d3184eaf29fd01b26d, type: 3}
+    unitFrame: {fileID: 21300000, guid: 351563619bc636146a0bf12c64e24764, type: 3}
+    towerFrame: {fileID: 21300000, guid: 8145c763e7fe74d72afcd25b6eff2499, type: 3}
+  - faction: 3
+    cardBackground: {fileID: 21300000, guid: 096b924e61b1446518fd12319cc15ddf, type: 3}
+    unitFrame: {fileID: 21300000, guid: 2faa722ea247b0e4c811cae30332d67b, type: 3}
+    towerFrame: {fileID: 21300000, guid: fc06755551c0549bc920d09dc7c2324c, type: 3}
+  - faction: 0
+    cardBackground: {fileID: 21300000, guid: 5440b001f7dc34248925618d95151a61, type: 3}
+    unitFrame: {fileID: 21300000, guid: 2861ec45f63ebe54a8c911e6857c486c, type: 3}
+    towerFrame: {fileID: 21300000, guid: db02d145a28bf45bdb3d139864b39694, type: 3}

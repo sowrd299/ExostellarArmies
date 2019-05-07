@@ -407,7 +407,6 @@ GameObject:
   - component: {fileID: 1897389538}
   - component: {fileID: 1897389540}
   - component: {fileID: 1897389539}
-  - component: {fileID: 1914386789}
   m_Layer: 5
   m_Name: Raycast Target
   m_TagString: Untagged
@@ -471,18 +470,6 @@ MonoBehaviour:
   m_FillClockwise: 1
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
---- !u!114 &1914386789
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1897389537}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5dbacc026ac8b47e4b44f73eb58b2ead, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &2012688603
 GameObject:
   m_ObjectHideFlags: 0
@@ -845,7 +832,6 @@ GameObject:
   m_Component:
   - component: {fileID: 2209705394146145393}
   - component: {fileID: 2209705394146145395}
-  - component: {fileID: 378426677}
   m_Layer: 5
   m_Name: CardArt
   m_TagString: Untagged
@@ -885,35 +871,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2209705394146145392}
   m_CullTransparentMesh: 0
---- !u!114 &378426677
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2209705394146145392}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -765806418, guid: f70555f144d8491a825f0804e09c671c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 0}
-  m_RaycastTarget: 1
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-    m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
-      Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
-  m_Type: 1
-  m_PreserveAspect: 0
-  m_FillCenter: 1
-  m_FillMethod: 4
-  m_FillAmount: 1
-  m_FillClockwise: 1
-  m_FillOrigin: 0
-  m_UseSpriteMesh: 0
 --- !u!1 &2209705394267908977
 GameObject:
   m_ObjectHideFlags: 0
@@ -1829,11 +1786,11 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 9035102387948941746}
-  - component: {fileID: 839784430}
   - component: {fileID: 35534340}
   - component: {fileID: 6466006315576767046}
   - component: {fileID: 8137118844585591908}
   - component: {fileID: 4539137240831883539}
+  - component: {fileID: 2030632731591005529}
   m_Layer: 5
   m_Name: Card
   m_TagString: MyCards
@@ -1862,49 +1819,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 400, y: 600}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &839784430
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6374767821707340389}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c387f31812720441eb0984b8fd4f1491, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  cardData: {fileID: 0}
-  propertyDisplays:
-  - element: {fileID: 11400000, guid: 8b9afe31435644a82a77ce3171e8a4ed, type: 2}
-    text: {fileID: 2209705395013451064}
-    image: {fileID: 0}
-  - element: {fileID: 11400000, guid: c26b2474748cd43bc975fd75c131c766, type: 2}
-    text: {fileID: 2209705395154985839}
-    image: {fileID: 0}
-  - element: {fileID: 11400000, guid: 6255b99563a7c495992811777a675e5d, type: 2}
-    text: {fileID: 2209705393878752952}
-    image: {fileID: 0}
-  - element: {fileID: 11400000, guid: 6da532ebc0c5c427a8b33a00014bc60f, type: 2}
-    text: {fileID: 2209705395253232660}
-    image: {fileID: 0}
-  - element: {fileID: 11400000, guid: e42ab5aaa89294e75a7cb333032c43b7, type: 2}
-    text: {fileID: 0}
-    image: {fileID: 7207093993789769784}
-  - element: {fileID: 11400000, guid: 0833e71fad6ca442daa21b8c64758602, type: 2}
-    text: {fileID: 2209705394794001776}
-    image: {fileID: 0}
-  - element: {fileID: 11400000, guid: 4ee4825dd23a14c91bf8150d4d6139d5, type: 2}
-    text: {fileID: 2209705395035939540}
-    image: {fileID: 0}
-  - element: {fileID: 11400000, guid: 67b425464022a4fd595b0abc942fd251, type: 2}
-    text: {fileID: 2209705394706410014}
-    image: {fileID: 0}
-  - element: {fileID: 11400000, guid: 753be10aa7e2e41eb9296e4a98ad979d, type: 2}
-    text: {fileID: 2209705395291305454}
-    image: {fileID: 0}
-  hpElement: {fileID: 11400000, guid: 4ee4825dd23a14c91bf8150d4d6139d5, type: 2}
-  Old: 0
 --- !u!225 &35534340
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -1996,6 +1910,27 @@ MonoBehaviour:
   cardPrefab: {fileID: 6374767821707340389}
   fadeDuration: 0.1
   hoverParent: {fileID: 0}
+--- !u!114 &2030632731591005529
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6374767821707340389}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e27207e2255632f42a7b5dd5724c66f5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  factions: {fileID: 11400000, guid: 32bead32e63239f4985080a32f07149e, type: 2}
+  background: {fileID: 7207093993789769784}
+  cardName: {fileID: 2209705395013451064}
+  description: {fileID: 2209705395253232660}
+  flavourText: {fileID: 2209705393878752952}
+  cardCost: {fileID: 2209705394794001776}
+  rangedDamage: {fileID: 2209705395291305454}
+  meleeDamage: {fileID: 2209705394706410014}
+  health: {fileID: 2209705395035939540}
 --- !u!1 &6795833052985177640
 GameObject:
   m_ObjectHideFlags: 0

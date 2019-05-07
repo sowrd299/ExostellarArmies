@@ -2,10 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using SFB.Game;
 using SFB.Net.Client;
 
 public class ResourceDisplayController : MonoBehaviour
 {
+	private Player player => Driver.instance.gameManager.Players[Driver.instance.sideIndex];
+
 	public GameObject[] pipContainers;
 
 	public float pulseTime;
@@ -22,11 +25,11 @@ public class ResourceDisplayController : MonoBehaviour
 			}
 		}
 
-		yield return new WaitUntil(() => Client.instance.initialized);
-
 		while (true)
 		{
-			int resourceCount = Driver.instance.gameManager.Players[Client.instance.sideIndex].Mana;
+			yield return new WaitUntil(() => Driver.instance.inGame);
+
+			int resourceCount = player.Mana;
 			int deploymentCost = hand.deploymentCost;
 
 			for (int i = 0; i < Mathf.Min(resourceCount - deploymentCost, pips.Count); i++)
