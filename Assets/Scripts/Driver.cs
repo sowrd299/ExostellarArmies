@@ -68,7 +68,7 @@ public class Driver : MonoBehaviour {
 		//D:		draw
 		List<Delta> deltasOfPhase = new List<Delta>();
 
-		List<Type> combatPhases = new List<Type>{ typeof(UnitDelta), typeof(TowerDelta) };
+		List<Type> combatPhases = new List<Type>{ typeof(UnitDamageDelta), typeof(TowerDamageDelta) };
 
 		foreach(XmlElement element in doc.GetElementsByTagName("delta")) {
 			Debug.Log($"Sorting Turn Start Delta:\n'{element.OuterXml}'");
@@ -212,9 +212,8 @@ public class Driver : MonoBehaviour {
 
     public List<CardPropertyMap> loadFrontEnd(Player p)
     {
-		Debug.Log($"loadFrontEnd for {p.Name}");
         List<CardPropertyMap> ans = new List<CardPropertyMap>();
-        for (int i = 0; i < p.HandSize; i++)
+        for (int i = 0; i < Player.HAND_SIZE; i++)
         {
 			ans.Add(new CardPropertyMap(createCardProperties(p.Hand[i])));
         }

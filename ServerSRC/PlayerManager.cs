@@ -49,9 +49,7 @@ namespace SFB.Net.Server.Matches{
         // the client's player
         private Player player;
 
-        public string Name{
-            get{ return player.Name; }
-        }
+		public string Name { get; private set; }
 
         // returns whether or not the players has locked in their current turn
         public bool TurnLockedIn{
@@ -65,13 +63,14 @@ namespace SFB.Net.Server.Matches{
         // TODO: I am not convinced this should actually take a decklist
         //      that should probably be handled by something that manages game state
         //      not game networking
-        public PlayerManager(SocketManager socket, Player player, GameManager gm, EotCallback eotCallback, DeathCallback deathCallback){
+        public PlayerManager(SocketManager socket, int playerIdx, GameManager gm, EotCallback eotCallback, DeathCallback deathCallback){
             this.socket = socket;
-            this.player = player;
+            this.player = gm.Players[playerIdx];
             this.gameManager = gm;
             this.eotCallback = eotCallback;
             this.deathCallback = deathCallback;
             turnDeltas = new List<Delta>();
+			Name = "Player " + playerIdx;
         }
 
         // to be called at the start of the game

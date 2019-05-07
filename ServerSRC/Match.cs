@@ -35,7 +35,7 @@ namespace SFB.Net.Server.Matches{
             players = new PlayerManager[clients.Length];
             for(int i = 0; i < clients.Length; i++){
                 players[i] = new PlayerManager(clients[i],
-                        gameManager.Players[i], gameManager,
+                        i, gameManager,
                         CheckEndTurn, EndMatch);
             }
         }
@@ -106,20 +106,23 @@ namespace SFB.Net.Server.Matches{
                 // calculate the outcome of the deploy phase
                 // use a list to collect the deltas, to send them later
                 List<Delta> turnDeltas = new List<Delta>(); 
-                // cleanup the deploy phase
+                
                 foreach(Delta d in gameManager.GetEndDeployDeltas()){
                     turnDeltas.Add(d);
                     gameManager.ApplyDelta(d);
                 }
-                gameManager.cleanUp();
-                // if no more deployment phases, do the rest of this turn into the start of the next
-                if(gameManager.DeployPhasesOver()){
+				foreach(Delta d in gameManager.GetCleanUpDeltas()) {
+					turnDeltas.Add(d);
+					gameManager.ApplyDelta(d);
+				}
+				// if no more deployment phases, do the rest of this turn into the start of the next
+				if(gameManager.DeployPhasesOver()){
                     // ranged combat
                     foreach(Delta d in gameManager.GetRangedCombatDeltas()){
                         turnDeltas.Add(d);
                         gameManager.ApplyDelta(d);
                     }
-                    foreach(Delta d in gameManager.cleanUp()){
+                    foreach(Delta d in gameManager.GetCleanUpDeltas()){
                         turnDeltas.Add(d);
                         gameManager.ApplyDelta(d);
                     }
@@ -128,7 +131,7 @@ namespace SFB.Net.Server.Matches{
                         turnDeltas.Add(d);
                         gameManager.ApplyDelta(d);
                     }
-                    foreach(Delta d in gameManager.cleanUp()){
+                    foreach(Delta d in gameManager.GetCleanUpDeltas()){
                         turnDeltas.Add(d);
                         gameManager.ApplyDelta(d);
                     }
@@ -138,7 +141,7 @@ namespace SFB.Net.Server.Matches{
 						turnDeltas.Add(d);
 						gameManager.ApplyDelta(d);
 					}
-					foreach(Delta d in gameManager.cleanUp()) {
+					foreach(Delta d in gameManager.GetCleanUpDeltas()) {
 						turnDeltas.Add(d);
 						gameManager.ApplyDelta(d);
 					}

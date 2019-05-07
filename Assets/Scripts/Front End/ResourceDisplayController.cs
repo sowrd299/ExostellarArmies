@@ -26,7 +26,7 @@ public class ResourceDisplayController : MonoBehaviour
 
 		while (true)
 		{
-			int resourceCount = Driver.instance.gameManager.Players[Client.instance.sideIndex].Mana.Count;
+			int resourceCount = Driver.instance.gameManager.Players[Client.instance.sideIndex].Mana;
 			int deploymentCost = hand.deploymentCost;
 
 			for (int i = 0; i < Mathf.Min(resourceCount - deploymentCost, pips.Count); i++)

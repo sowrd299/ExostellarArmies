@@ -4,7 +4,7 @@ using System.Xml;
 using System;
 
 namespace SFB.Game {
-	public class UnitDelta : Delta {
+	public class UnitDamageDelta : Delta {
 		private SendableTarget<Unit> sendableTarget;
 		internal Unit Target {
 			get { return sendableTarget.Target; }
@@ -25,16 +25,16 @@ namespace SFB.Game {
 			get { return dmgType; }
 		}
 
-		public UnitDelta(Unit t, int a, Damage.Type type, Unit s) {
+		public UnitDamageDelta(Unit t, int a, Damage.Type type, Unit s) {
 			sendableTarget = new SendableTarget<Unit>("target", t);
 			amount = a;
 			dmgType = type;
 			sendableSource = new SendableTarget<Unit>("source", s);
 		}
 
-		public UnitDelta(XmlElement from, CardLoader cl) : base(from, cl) {
-			sendableTarget = new SendableTarget<Unit>("target", from, Unit.idIssuer);
-			sendableSource = new SendableTarget<Unit>("source", from, Unit.idIssuer);
+		public UnitDamageDelta(XmlElement from, CardLoader cl) : base(from, cl) {
+			sendableTarget = new SendableTarget<Unit>("target", from, Unit.IdIssuer);
+			sendableSource = new SendableTarget<Unit>("source", from, Unit.IdIssuer);
 			amount = Int32.Parse(from.Attributes["amount"].Value);
 			dmgType = Damage.StringToDamageType(from.Attributes["dmgType"].Value);
 		}
@@ -59,31 +59,21 @@ namespace SFB.Game {
 
 		internal override void Apply() {
 			switch(dmgType) {
-				case Damage.Type.RANGED:
-					Target.takeRangedDamage(amount);
-					break;
-				case Damage.Type.MELEE:
-					Target.takeMeleeDamage(amount);
-					break;
-				case Damage.Type.TOWER:
-					Target.takeTowerDamage(amount);
-					break;
 				case Damage.Type.HEAL:
-					Target.heal(amount);
+					Target.Heal(amount);
+					break;
+				default:
+					Target.TakeDamage(amount, dmgType);
 					break;
 			}
 		}
 
 		internal override void Revert() {
 			if(dmgType == Damage.Type.HEAL) {
-				Target.takeTowerDamage(amount);
+				Target.TakeDamage(amount, dmgType);
 			} else {
-				int mod = (dmgType == Damage.Type.RANGED
-								? Target.getTakeRangedDamageModifier()
-								: (dmgType == Damage.Type.MELEE
-									? Target.getTakeMeleeDamageModifier()
-									: 0));
-				Target.heal(amount >= mod ? amount - mod : 0);
+				int resistance = Target.GetResistance(dmgType);
+				Target.Heal(amount >= resistance ? amount - resistance : 0);
 			}
 		}
 	}

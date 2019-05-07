@@ -45,7 +45,7 @@ namespace SFB.Net.Server{
             r.AddCard(newCardLoader.GetByID("Cannoneer Drone"),1);
 
             r.AddCard(new UnitCard(2, "Autonomous Range Finder", Faction.CARTH, "Supporting Carthan Deploy: Give this front line +3R this turn.",
-                    "56413", 0, 1, 3, new AbilityList()),2);
+                    "56413", 0, 1, 3, new List<Ability>()),2);
             return r;
         }
 
@@ -80,7 +80,7 @@ namespace SFB.Net.Server{
             switch(id){
                 case "testing":
                         DeckList r = new DeckList();
-                        UnitCard xsMarine = new UnitCard(3, "Exostellar Marine Squade", Faction.CARTH, "", "Bravely into the Darkness", 2, 2, 4, new AbilityList());
+                        UnitCard xsMarine = new UnitCard(3, "Exostellar Marine Squade", Faction.CARTH, "", "Bravely into the Darkness", 2, 2, 4, new List<Ability>());
                         r.AddCard(xsMarine, 20);
                         return r;
                 case "carthStarter":

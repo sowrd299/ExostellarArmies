@@ -145,7 +145,7 @@ namespace SFB.Net.Client
 				}
 
 				// add mana for opponent
-				foreach(Delta d in driver.gameManager.Players[1 - sideIndex].Mana.GetAddDeltas(2)) {
+				foreach(Delta d in driver.gameManager.Players[1 - sideIndex].ManaPool.GetAddDeltas(2)) {
 					d.Apply();
 					Debug.Log("Processing draw delta: " + d.GetType());
 				}
