@@ -170,7 +170,7 @@ public class Driver : MonoBehaviour
 		switch (phaseCodeName)
 		{
 			case "endDeploy":
-				return "End Deploy";
+				return null;
 			case "rangedCombat":
 				return "Ranged Combat Phase";
 			case "meleeCombat":
