@@ -135,7 +135,7 @@ public class Driver : MonoBehaviour
 			.GetElementsByTagName("phase")
 			.OfType<XmlElement>()
 			.ToList();
-		
+
 		foreach (TurnPhase phase in phaseElements.Select(element => new TurnPhase(element, cardLoader)))
 		{
 			if (phase.Deltas.Count == 0) continue;
@@ -163,6 +163,11 @@ public class Driver : MonoBehaviour
 		if (delta is AddToHandDelta)
 		{
 			yield return uiManager.DrawCard((delta as AddToHandDelta).Card);
+		}
+		else if (delta is UnitDamageDelta)
+		{
+			UnitDamageDelta unitDamageDelta = delta as UnitDamageDelta;
+			yield return uiManager.UnitDamage(unitDamageDelta.Source, unitDamageDelta.Target, unitDamageDelta.Amount);
 		}
 		// Some deltas simply can't be animated, while others could potentially indicate an error.
 		else if (!(delta is ResourcePoolDelta || delta is RemoveFromDeckDelta))

@@ -101,7 +101,7 @@ public class UnitHolder : MonoBehaviour
 	{
 		Unit unit = gameManager.Lanes[laneIndex].Units[unitManager.sideIndex, positionIndex];
 
-		if (unit == null || unit.HealthPoints <= 0)
+		if (unit == null)
 		{
 			foreach (Transform child in transform)
 			{

@@ -776,11 +776,51 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   factions: {fileID: 11400000, guid: 32bead32e63239f4985080a32f07149e, type: 2}
+  damageTextPrefab: {fileID: 7258912465508604901, guid: 5829212a43d29854399be5dd4cf8f11e,
+    type: 3}
   background: {fileID: 7207093993789769784}
   unitCost: {fileID: 2209705394794001776}
   rangedDamage: {fileID: 2209705395291305454}
   meleeDamage: {fileID: 2209705394706410014}
   health: {fileID: 2209705395035939540}
+  attackMoveCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.3486238
+    - serializedVersion: 3
+      time: 0.2
+      value: 1
+      inSlope: 26.246622
+      outSlope: -3.1212168
+      tangentMode: 1
+      weightedMode: 1
+      inWeight: 0.17591558
+      outWeight: 0.05740987
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.36849135
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  attackMoveMagnitude: 20
+  attackDuration: 0.3
+  damageShakeMagnitude: 10
+  damageShakeCount: 2
+  damageTextMoveMagnitude: 30
 --- !u!1 &8102693716067178599
 GameObject:
   m_ObjectHideFlags: 0

@@ -60,22 +60,6 @@ public class UIManager : MonoBehaviour
 		phaseText.CrossFadeAlpha(0, 0, false);
 	}
 
-	public Coroutine DrawCard(Card card)
-	{
-		return StartCoroutine(AnimateDrawCard(card));
-	}
-
-	private IEnumerator AnimateDrawCard(Card card)
-	{
-		mainButtonText.text = "DRAWING...";
-		mainButton.interactable = false;
-
-		yield return myHandManager.DrawCard(card);
-
-		mainButtonText.text = "LOCK IN PLANS";
-		mainButton.interactable = true;
-	}
-
 	public Coroutine OpponentDrawCards()
 	{
 		return enemyHandManager.DrawUnknownCards();
@@ -163,5 +147,47 @@ public class UIManager : MonoBehaviour
 		yield return new WaitForSeconds(phaseFadeTime);
 
 		// phaseBackground.gameObject.SetActive(false);
+	}
+
+	// Delta animations
+	public Coroutine DrawCard(Card card)
+	{
+		return StartCoroutine(AnimateDrawCard(card));
+	}
+
+	private IEnumerator AnimateDrawCard(Card card)
+	{
+		mainButtonText.text = "DRAWING...";
+		mainButton.interactable = false;
+
+		yield return myHandManager.DrawCard(card);
+
+		mainButtonText.text = "LOCK IN PLANS";
+		mainButton.interactable = true;
+	}
+
+	public Coroutine UnitDamage(Unit source, Unit target, int damageAmount)
+	{
+		return StartCoroutine(AnimateUnitDamage(source, target, damageAmount));
+	}
+
+	private IEnumerator AnimateUnitDamage(Unit source, Unit target, int damageAmount)
+	{
+		UnitUI sourceUI = FindUnitUI(source);
+		UnitUI targetUI = FindUnitUI(target);
+		bool isMyAttack = gameManager.GetSidePosOf(source)[1] == Driver.instance.sideIndex;
+
+		yield return StartCoroutine(UIUtils.ParallelCoroutine(
+			sourceUI.AttackMove(isMyAttack ? Vector3.up : Vector3.down),
+			targetUI.TakeDamage(damageAmount)
+		));
+	}
+
+	private UnitUI FindUnitUI(Unit unit)
+	{
+		int[] sidePos = gameManager.GetSidePosOf(unit);
+		int laneIndex = sidePos[0], sideIndex = sidePos[1], positionIndex = sidePos[2];
+		UnitManager unitManager = sideIndex == Driver.instance.sideIndex ? myUnitManager : enemyUnitManager;
+		return unitManager.unitHolders[laneIndex, positionIndex].GetComponentInChildren<UnitUI>();
 	}
 }
