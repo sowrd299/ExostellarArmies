@@ -12,6 +12,7 @@ namespace SFB.Game
 
 		public override void ApplyTo(Unit u)
 		{
+			//u.
 			Driver.instance.gameManager.AddBoardUpdateDeltas += RemoveEffect();
 			Driver.instance.gameManager.AddBoardUpdateDeltas += AddEffect();
 		}

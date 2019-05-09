@@ -45,7 +45,7 @@ namespace SFB.Game
 			Constructor(card, gm);
 		}
 
-		public Unit(UnitCard card, int id, GameManager gm) {
+		public Unit(UnitCard card, int id, GameManager gm=null) {
 			this.id = ""+id;
 			IdIssuer.RegisterId(this.id, this);
 			Constructor(card, gm);
@@ -61,7 +61,8 @@ namespace SFB.Game
 
 			foreach(Ability a in card.Abilities) {
 				a.ApplyTo(this);
-				a.ApplyTo(gm);
+				if(gm != null)
+					a.ApplyTo(gm);
 			}
 		}
 		

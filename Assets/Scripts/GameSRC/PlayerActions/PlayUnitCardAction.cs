@@ -59,11 +59,11 @@ namespace SFB.Game.Management {
 			return r;
 		}
 		
-		internal override Delta[] GetDeltas(Player p) {
+		internal override Delta[] GetDeltas(Player p, GameManager gm) {
 			return new Delta[] {
 				p.Hand.GetRemoveDelta(card)[0],
 				p.ManaPool.GetSubtractDeltas(card.DeployCost)[0],
-				lane.GetDeployDeltas(card, sideIndex, pos)[0]
+				lane.GetDeployDeltas(card, sideIndex, pos, gm)[0]
 			};
 		}
 	}

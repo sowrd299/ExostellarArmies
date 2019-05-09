@@ -11,7 +11,7 @@ namespace SFB.Game
 		private int Position;
 		private Unit Unit; // only id sent; rest handled via card
 
-		public AddToLaneDelta(Lane lane, UnitCard card, int sideIndex, int pos)
+		public AddToLaneDelta(Lane lane, UnitCard card, int sideIndex, int pos, GameManager gm)
 			: base(lane)
 		{
 			this.SendableCard = new SendableTarget<Card>("card", card);
