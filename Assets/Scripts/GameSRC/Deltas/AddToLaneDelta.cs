@@ -17,7 +17,7 @@ namespace SFB.Game
 			this.SendableCard = new SendableTarget<Card>("card", card);
 			this.SideIndex = sideIndex;
 			this.Position = pos;
-			this.Unit = new Unit(card);
+			this.Unit = new Unit(card, gm);
 		}
 
 		public AddToLaneDelta(XmlElement from, CardLoader loader)

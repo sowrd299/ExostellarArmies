@@ -14,9 +14,9 @@ namespace SFB.Game
 		// unit basic attributes
 		public UnitCard Card { get; private set; } // the card the unit is an instance of
 
-		public int RangedAttack { get; private set; }
-		public int MeleeAttack { get; private set; }
-		public int HealthPoints { get; private set; }
+		public int RangedAttack { get; set; } // make these call gamemanger modify event
+		public int MeleeAttack { get; set; }
+		public int HealthPoints { get; set; }
 
 		public bool FirstDeploy { get; private set; }
 		
@@ -40,18 +40,18 @@ namespace SFB.Game
             get{ return id; }
         }
 
-        public Unit(UnitCard card) {
+        public Unit(UnitCard card, GameManager gm) {
 			this.id = IdIssuer.IssueId(this);
-			Constructor(card);
+			Constructor(card, gm);
 		}
 
-		public Unit(UnitCard card, int id) {
+		public Unit(UnitCard card, int id, GameManager gm) {
 			this.id = ""+id;
 			IdIssuer.RegisterId(this.id, this);
-			Constructor(card);
+			Constructor(card, gm);
 		}
 
-		private void Constructor(UnitCard card) {
+		private void Constructor(UnitCard card, GameManager gm) {
 			this.Card = card;
 			this.RangedAttack = card.RangedAttack;
 			this.MeleeAttack = card.MeleeAttack;
@@ -59,8 +59,10 @@ namespace SFB.Game
 			
 			this.FirstDeploy = true;
 
-			foreach(Ability a in card.Abilities)
+			foreach(Ability a in card.Abilities) {
 				a.ApplyTo(this);
+				a.ApplyTo(gm);
+			}
 		}
 		
 		public Delta[] GetRangedDamagingDeltas(Lane l, int oppPlay) {
