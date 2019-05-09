@@ -67,11 +67,12 @@ public class Driver : MonoBehaviour
 		{
 			Task<XmlDocument> turnStart = client.ReceiveDocument();
 			yield return new WaitUntil(() => turnStart.IsCompleted);
+			uiManager.BeforeTurnStart();
 			yield return StartCoroutine(ProcessTurnStart(turnStart.Result));
 
 			if (gameManager.Players[sideIndex].DeployPhases > 0)
 			{
-				yield return uiManager.WaitForMainButtonClick();
+				yield return uiManager.WaitForLockIn();
 				client.SendPlayerActions(uiManager.myHandManager.ExportActions());
 				uiManager.WaitForOpponent();
 				Task<XmlDocument> confirmAction = client.ReceiveDocument();
@@ -134,7 +135,7 @@ public class Driver : MonoBehaviour
 			.GetElementsByTagName("phase")
 			.OfType<XmlElement>()
 			.ToList();
-
+		
 		foreach (TurnPhase phase in phaseElements.Select(element => new TurnPhase(element, cardLoader)))
 		{
 			if (phase.Deltas.Count == 0) continue;

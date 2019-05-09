@@ -95,8 +95,11 @@ public class UIManager : MonoBehaviour
 		}
 	}
 
-	public IEnumerator WaitForMainButtonClick()
+	public IEnumerator WaitForLockIn()
 	{
+		mainButtonText.text = "LOCK IN PLANS";
+		mainButton.interactable = true;
+
 		bool clicked = false;
 		UnityAction listener = null;
 		listener = () =>
@@ -113,7 +116,12 @@ public class UIManager : MonoBehaviour
 		LockUnits();
 
 		mainButtonText.text = "WAITING FOR OPPONENT";
-		mainButton.GetComponent<Image>().color = new Color(153, 204, 255);
+		mainButton.interactable = false;
+	}
+
+	public void BeforeTurnStart()
+	{
+		mainButtonText.text = "PROCESSING TURN EVENTS";
 	}
 
 	public void RenderUnits()
