@@ -49,9 +49,6 @@ public class UIManager : MonoBehaviour
 	{
 		mainButton.interactable = true;
 
-		myHandManager.TrackHand(players[Driver.instance.sideIndex].Hand);
-		enemyHandManager.TrackHand(players[1 - Driver.instance.sideIndex].Hand);
-
 		myUnitManager.sideIndex = myIndex;
 		enemyUnitManager.sideIndex = enemyIndex;
 
@@ -63,23 +60,25 @@ public class UIManager : MonoBehaviour
 		phaseText.CrossFadeAlpha(0, 0, false);
 	}
 
-	public Coroutine DrawPhase()
+	public Coroutine DrawCard(Card card)
 	{
-		return StartCoroutine(AnimateDrawPhase());
+		return StartCoroutine(AnimateDrawCard(card));
 	}
 
-	private IEnumerator AnimateDrawPhase()
+	private IEnumerator AnimateDrawCard(Card card)
 	{
 		mainButtonText.text = "DRAWING...";
 		mainButton.interactable = false;
 
-		Coroutine myDraw = myHandManager.DrawCards();
-		Coroutine enemyDraw = enemyHandManager.DrawUnknownCards();
-		yield return myDraw;
-		yield return enemyDraw;
+		yield return myHandManager.DrawCard(card);
 
 		mainButtonText.text = "LOCK IN PLANS";
 		mainButton.interactable = true;
+	}
+
+	public Coroutine OpponentDrawCards()
+	{
+		return enemyHandManager.DrawUnknownCards();
 	}
 
 	public void ValidateDropCost()

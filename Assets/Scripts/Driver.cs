@@ -148,6 +148,12 @@ public class Driver : MonoBehaviour
 				delta.Apply();
 				yield return StartCoroutine(AnimateDelta(delta));
 			}
+
+			// Special case for draw phase. I don't really like this, but I don't see a way around it.
+			if (phase.Name == "startDeploy")
+			{
+				yield return uiManager.OpponentDrawCards();
+			}
 		}
 	}
 
@@ -155,9 +161,10 @@ public class Driver : MonoBehaviour
 	{
 		if (delta is AddToHandDelta)
 		{
-			yield return uiManager.DrawPhase();
+			yield return uiManager.DrawCard((delta as AddToHandDelta).Card);
 		}
-		else
+		// Some deltas simply can't be animated, while others could potentially indicate an error.
+		else if (!(delta is ResourcePoolDelta || delta is RemoveFromDeckDelta))
 		{
 			Debug.LogWarning($"Failed to animate delta of type {delta.GetType().Name}");
 		}
