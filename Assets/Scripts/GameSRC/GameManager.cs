@@ -30,9 +30,7 @@ namespace SFB.Game.Management{
         // an array of all the players
         // MUST BE IN THE SAME ORDER AS THEIR DECKLISTS/IDS WERE PROVIDED
         public Player[] Players{
-            get{
-                return players;
-            }
+            get{ return players; }
         }
 
         private Lane[] lanes;
@@ -50,7 +48,9 @@ namespace SFB.Game.Management{
         }
 		*/
 
-		internal int[] GetSidePosOf(Unit u) {
+		public event Ability.AddDelta AddBoardUpdateDeltas;
+
+		public int[] GetLaneSidePosOf(Unit u) {
 			for(int l = 0; l < lanes.Length; l++)
 				for(int side = 0; side < 2; side++)
 					for(int pos = 0; pos < 2; pos++)
@@ -165,13 +165,6 @@ namespace SFB.Game.Management{
                 }
             }
 
-			// fill front if empty
-			foreach(Lane lane in lanes) {
-				for(int side = 0; side < lane.Units.GetLength(0); side++)
-					if(lane.NeedFillFront(side))
-						deltas.AddRange(lane.GetInLaneSwapDeltas(side));
-			}
-
 			// activate deploy affects
 			for(int l = 0; l < lanes.Length; l++) {
 				Lane lane = lanes[l];
@@ -221,6 +214,13 @@ namespace SFB.Game.Management{
 							deltas.AddRange(u.OnDeath(side, pos, l, lanes, players));
 						}
 					}
+			}
+
+			// fill front if empty
+			foreach(Lane lane in lanes) {
+				for(int side = 0; side < lane.Units.GetLength(0); side++)
+					if(lane.NeedFillFront(side))
+						deltas.AddRange(lane.GetInLaneSwapDeltas(side));
 			}
 
 			// clean towers -> player lives

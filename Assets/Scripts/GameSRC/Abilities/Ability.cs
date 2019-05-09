@@ -15,10 +15,12 @@ namespace SFB.Game
 		
 		public int Amount { get; private set; }
 
-		public Ability(int amount) {
+		public Ability(int amount)
+		{
 			Amount = amount;
 		}
 
 		public abstract void ApplyTo(Unit u);
+		public abstract void ApplyTo(GameManager gm);
 	}
 }

@@ -8,7 +8,7 @@ namespace SFB.Game
 	{
 		public Absorb()
 			: base(-1)
-		{}
+		{ }
 
 		public override void ApplyTo(Unit u)
 		{
@@ -17,5 +17,8 @@ namespace SFB.Game
 			}
 			u.ModifyDamageLeft += AbsorbInner;
 		}
+
+		public override void ApplyTo(GameManager gm)
+		{ }
 	}
 }
