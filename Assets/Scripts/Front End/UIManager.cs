@@ -22,7 +22,7 @@ public class UIManager : MonoBehaviour
 	private static int enemyIndex => 1 - Driver.instance.sideIndex;
 	private static Player myPlayer => gameManager.Players[myIndex];
 
-
+	[Header("Object References")]
 	public HandManager myHandManager;
 	public HandManager enemyHandManager;
 
@@ -32,9 +32,18 @@ public class UIManager : MonoBehaviour
 	public TowerManager myTowerManager;
 	public TowerManager enemyTowerManager;
 
+	[Header("UI References")]
 	public Button mainButton;
 	public Text mainButtonText;
 
+	public Image phaseBackground;
+	public Text phaseText;
+
+	[Header("Animation Config")]
+	[Range(0, 1)]
+	public float maxPhaseOverlayOpacity;
+	public float phaseFadeTime;
+	public float phaseDisplayTime;
 
 	public void InitializeUI()
 	{
@@ -49,6 +58,9 @@ public class UIManager : MonoBehaviour
 		myTowerManager.sideIndex = myIndex;
 		enemyTowerManager.sideIndex = enemyIndex;
 		RenderTowers();
+
+		phaseBackground.CrossFadeAlpha(0, 0, false);
+		phaseText.CrossFadeAlpha(0, 0, false);
 	}
 
 	public Coroutine DrawPhase()
@@ -88,7 +100,8 @@ public class UIManager : MonoBehaviour
 	{
 		bool clicked = false;
 		UnityAction listener = null;
-		listener = () => {
+		listener = () =>
+		{
 			clicked = true;
 			mainButton.onClick.RemoveListener(listener);
 		};
@@ -120,5 +133,28 @@ public class UIManager : MonoBehaviour
 	{
 		myUnitManager.LockUnits();
 		enemyUnitManager.LockUnits();
+	}
+
+	public Coroutine ShowPhaseName(string phaseName)
+	{
+		return StartCoroutine(AnimateShowPhaseName(phaseName));
+	}
+
+	private IEnumerator AnimateShowPhaseName(string phaseName)
+	{
+		phaseText.text = phaseName;
+		// phaseBackground.gameObject.SetActive(true);
+
+		phaseBackground.CrossFadeAlpha(maxPhaseOverlayOpacity, phaseFadeTime, false);
+		phaseText.CrossFadeAlpha(1, phaseFadeTime, false);
+		yield return new WaitForSeconds(phaseFadeTime);
+
+		yield return new WaitForSeconds(phaseDisplayTime);
+
+		phaseBackground.CrossFadeAlpha(0, phaseFadeTime, false);
+		phaseText.CrossFadeAlpha(0, phaseFadeTime, false);
+		yield return new WaitForSeconds(phaseFadeTime);
+
+		// phaseBackground.gameObject.SetActive(false);
 	}
 }

@@ -43,9 +43,9 @@ public class Driver : MonoBehaviour
 		DontDestroyOnLoad(gameObject);
 	}
 
-	private List<XmlElement> GetDeltaElements(XmlDocument document)
+	private List<XmlElement> GetDeltaElements(XmlElement element)
 	{
-		return document
+		return element
 			.GetElementsByTagName("delta")
 			.OfType<XmlElement>()
 			.ToList();
@@ -67,7 +67,7 @@ public class Driver : MonoBehaviour
 		{
 			Task<XmlDocument> turnStart = client.ReceiveDocument();
 			yield return new WaitUntil(() => turnStart.IsCompleted);
-			ProcessTurnStart(turnStart.Result);
+			yield return StartCoroutine(ProcessTurnStart(turnStart.Result));
 
 			if (gameManager.Players[sideIndex].DeployPhases > 0)
 			{
@@ -106,7 +106,7 @@ public class Driver : MonoBehaviour
 			throw new Exception($"Received unexpected response type {type} when waiting for actionDeltas!");
 		}
 
-		List<XmlElement> elements = GetDeltaElements(document);
+		List<XmlElement> elements = GetDeltaElements(document.DocumentElement);
 
 		Debug.Log($"Processing {elements.Count} action deltas");
 
@@ -120,7 +120,7 @@ public class Driver : MonoBehaviour
 		uiManager.LockUnits();
 	}
 
-	private void ProcessTurnStart(XmlDocument document)
+	private IEnumerator ProcessTurnStart(XmlDocument document)
 	{
 		string type = document.DocumentElement.GetAttribute("type");
 
@@ -129,106 +129,69 @@ public class Driver : MonoBehaviour
 			throw new Exception($"Received unexpected response type {type} when waiting for turnStart!");
 		}
 
-		List<XmlElement> elements = GetDeltaElements(document);
-		List<Tuple<XmlElement, Delta>> parsedDeltas = elements
-					.Select(element => new Tuple<XmlElement, Delta>(element, Delta.FromXml(element, cardLoader)))
-					.ToList();
-
-		// X:		misc deploy phase stuff
-		// R, M, T:	ranged, melee, tower
-		// D:		draw
-		List<Delta> deployDeltas = Enumerable.TakeWhile<Tuple<XmlElement, Delta>>(parsedDeltas
-, (Func<Tuple<XmlElement, Delta>, bool>)((Tuple<XmlElement, Delta> pair) => (bool)!IsCombatDelta((Delta)pair.Item2)))
-			.Select((Tuple<XmlElement, Delta> pair) => pair.Item2)
-			.ToList();
-		List<Tuple<XmlElement, Delta>> combatDeltas = Enumerable.Where<Tuple<XmlElement, Delta>>(parsedDeltas
-, (Func<Tuple<XmlElement, Delta>, bool>)((Tuple<XmlElement, Delta> pair) => (bool)IsCombatDelta((Delta)pair.Item2)))
-			.ToList();
-		List<Delta> rangedCombatDeltas = combatDeltas
-			.Where((Tuple<XmlElement, Delta> pair) => pair.Item1.GetAttribute("dmgType") == "R")
-			.Select((Tuple<XmlElement, Delta> pair) => pair.Item2)
-			.ToList();
-		List<Delta> meleeCombatDeltas = combatDeltas
-			.Where((Tuple<XmlElement, Delta> pair) => pair.Item1.GetAttribute("dmgType") == "M")
-			.Select((Tuple<XmlElement, Delta> pair) => pair.Item2)
-			.ToList();
-		List<Delta> towerCombatDeltas = combatDeltas
-			.Where((Tuple<XmlElement, Delta> pair) => pair.Item1.GetAttribute("dmgType") == "T")
-			.Select((Tuple<XmlElement, Delta> pair) => pair.Item2)
-			.ToList();
-		List<Delta> drawDeltas = Enumerable.SkipWhile<Tuple<XmlElement, Delta>>(parsedDeltas
-, (Func<Tuple<XmlElement, Delta>, bool>)((Tuple<XmlElement, Delta> pair) => (bool)!IsCombatDelta((Delta)pair.Item2)))
-			.SkipWhile((Tuple<XmlElement, Delta> pair) => IsCombatDelta(pair.Item2))
-			.Select((Tuple<XmlElement, Delta> pair) => pair.Item2)
+		List<XmlElement> phaseElements = document
+			.DocumentElement
+			.GetElementsByTagName("phase")
+			.OfType<XmlElement>()
 			.ToList();
 
-		ProcessDeployDeltas(deployDeltas);
-		ProcessRangedCombatDeltas(rangedCombatDeltas);
-		ProcessMeleeCombatDeltas(meleeCombatDeltas);
-		ProcessTowerCombatDeltas(towerCombatDeltas);
-		StartCoroutine(ProcessDrawDeltas(drawDeltas));
-	}
-
-	private bool IsCombatDelta(Delta delta)
-	{
-		return delta is UnitTakeDamageDelta || delta is TowerDamageDelta;
-	}
-
-	private void ProcessDeployDeltas(List<Delta> deployDeltas)
-	{
-		Debug.Log($"Processing {deployDeltas.Count} deploy deltas.");
-		foreach (Delta delta in deployDeltas)
+		foreach (TurnPhase phase in phaseElements.Select(element => new TurnPhase(element, cardLoader)))
 		{
-			delta.Apply();
+			if (phase.Deltas.Count == 0) continue;
+
+			string phaseDisplayName = GetPhaseName(phase.Name);
+			if (phaseDisplayName != null) yield return uiManager.ShowPhaseName(phaseDisplayName);
+
+			Debug.Log($"Processing {phase.Deltas.Count} deltas of phase {phase.Name}");
+			foreach (Delta delta in phase.Deltas)
+			{
+				delta.Apply();
+				yield return StartCoroutine(AnimateDelta(delta));
+			}
 		}
-		uiManager.RenderUnits();
-		uiManager.LockUnits();
 	}
 
-	private void ProcessRangedCombatDeltas(List<Delta> rangedCombatDeltas)
+	private IEnumerator AnimateDelta(Delta delta)
 	{
-		Debug.Log($"Processing {rangedCombatDeltas.Count} ranged combat deltas.");
-		foreach (Delta delta in rangedCombatDeltas)
+		if (delta is AddToHandDelta)
 		{
-			delta.Apply();
+			yield return uiManager.DrawPhase();
 		}
-		AfterEachCombatPhase();
-	}
-
-	private void ProcessMeleeCombatDeltas(List<Delta> meleeCombatDeltas)
-	{
-		Debug.Log($"Processing {meleeCombatDeltas.Count} melee combat deltas.");
-		foreach (Delta delta in meleeCombatDeltas)
+		else
 		{
-			delta.Apply();
+			Debug.LogWarning($"Failed to animate delta of type {delta.GetType().Name}");
 		}
-		AfterEachCombatPhase();
-	}
-
-	private void ProcessTowerCombatDeltas(List<Delta> towerCombatDeltas)
-	{
-		Debug.Log($"Processing {towerCombatDeltas.Count} tower combat deltas.");
-		foreach (Delta delta in towerCombatDeltas)
-		{
-			delta.Apply();
-		}
-		AfterEachCombatPhase();
-	}
-
-	private IEnumerator ProcessDrawDeltas(List<Delta> drawDeltas)
-	{
-		Debug.Log($"Processing {drawDeltas.Count} draw deltas.");
-		foreach (Delta delta in drawDeltas)
-		{
-			delta.Apply();
-		}
-		yield return uiManager.DrawPhase();
-	}
-
-	private void AfterEachCombatPhase()
-	{
-		uiManager.RenderUnits();
 		uiManager.RenderTowers();
+		uiManager.RenderUnits();
+	}
+
+	private string GetPhaseName(string phaseCodeName)
+	{
+		switch (phaseCodeName)
+		{
+			case "endDeploy":
+				return "End Deploy";
+			case "rangedCombat":
+				return "Ranged Combat Phase";
+			case "meleeCombat":
+				return "Melee Combat Phase";
+			case "towerCombat":
+				return "Tower Combat Phase";
+			case "startPhase":
+				return null; // Not sure what this does?
+			case "startDeploy":
+				return "Turn Start";
+			default:
+				if (phaseCodeName.StartsWith("player"))
+				{
+					return "Opponent Actions";
+				}
+				else
+				{
+					Debug.LogWarning($"Unknown phase name {phaseCodeName}");
+					return "???";
+				}
+		}
 	}
 }
 
