@@ -45,6 +45,14 @@ public class UIManager : MonoBehaviour
 	public float phaseFadeTime;
 	public float phaseDisplayTime;
 
+	public static IEnumerator ParallelCoroutine(params Coroutine[] coroutines)
+	{
+		foreach (Coroutine coroutine in coroutines)
+		{
+			yield return coroutine;
+		}
+	}
+
 	public void InitializeUI()
 	{
 		mainButton.interactable = true;
@@ -177,7 +185,7 @@ public class UIManager : MonoBehaviour
 		UnitUI targetUI = FindUnitUI(target);
 		bool isMyAttack = gameManager.GetSidePosOf(source)[1] == Driver.instance.sideIndex;
 
-		yield return StartCoroutine(UIUtils.ParallelCoroutine(
+		yield return StartCoroutine(ParallelCoroutine(
 			sourceUI.AttackMove(isMyAttack ? Vector3.up : Vector3.down),
 			targetUI.TakeDamage(damageAmount)
 		));

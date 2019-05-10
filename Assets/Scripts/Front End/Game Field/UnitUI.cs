@@ -80,6 +80,8 @@ public class UnitUI : MonoBehaviour, IHasCard
 		damageText.text = $"-{amount}";
 		damageText.CrossFadeAlpha(0.1f, damageTextDuration, false);
 
+		RenderUnit();
+
 		Vector3 startPostion = transform.position;
 		Vector3 endPosition = startPostion + Vector3.up * damageTextMoveMagnitude;
 
