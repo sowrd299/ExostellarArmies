@@ -31,9 +31,8 @@ public class UnitUI : MonoBehaviour, IHasCard
 	public AnimationCurve attackMoveCurve;
 	public float attackMoveMagnitude;
 	public float attackDuration;
-	public float damageShakeMagnitude;
-	public float damageShakeCount;
 	public float damageTextMoveMagnitude;
+	public float damageTextDuration;
 
 	private void Start()
 	{
@@ -76,27 +75,22 @@ public class UnitUI : MonoBehaviour, IHasCard
 
 	private IEnumerator AnimateTakeDamage(int amount)
 	{
-		Vector3 takeDamageMove = Vector2.right * damageShakeMagnitude;
-		float angularSpeed = 2 * Mathf.PI * damageShakeCount / attackDuration;
+		GameObject damageTextObject = Instantiate(damageTextPrefab, transform.parent);
+		Text damageText = damageTextObject.GetComponent<Text>();
+		damageText.text = $"-{amount}";
+		damageText.CrossFadeAlpha(0.1f, damageTextDuration, false);
 
-		GameObject damageText = Instantiate(damageTextPrefab, transform.parent);
-		damageText.GetComponent<Text>().text = $"-{amount}";
-
-		Vector3 originalPosition = transform.position;
-		damageText.transform.position = originalPosition;
-		Vector3 damageTextEndPosition = originalPosition + Vector3.up * damageTextMoveMagnitude;
+		Vector3 startPostion = transform.position;
+		Vector3 endPosition = startPostion + Vector3.up * damageTextMoveMagnitude;
 
 		float startTime = Time.time;
-		while (Time.time - startTime < attackDuration)
+		while (Time.time - startTime < damageTextDuration)
 		{
 			float deltaTime = Time.time - startTime;
-			transform.position = originalPosition
-				+ takeDamageMove * Mathf.Sin(angularSpeed * deltaTime);
-			damageText.transform.position = Vector3.Lerp(originalPosition, damageTextEndPosition, deltaTime / attackDuration);
+			damageTextObject.transform.position = Vector3.Lerp(startPostion, endPosition, deltaTime / damageTextDuration);
 			yield return null;
 		}
 
-		transform.position = originalPosition;
-		Destroy(damageText);
+		Destroy(damageTextObject);
 	}
 }

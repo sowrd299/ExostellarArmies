@@ -818,9 +818,8 @@ MonoBehaviour:
     m_RotationOrder: 4
   attackMoveMagnitude: 20
   attackDuration: 0.3
-  damageShakeMagnitude: 10
-  damageShakeCount: 2
   damageTextMoveMagnitude: 30
+  damageTextDuration: 1
 --- !u!1 &8102693716067178599
 GameObject:
   m_ObjectHideFlags: 0
