@@ -17,5 +17,8 @@ namespace SFB.Game
 			}
 			u.ModifyDamageLeft += AbsorbInner;
 		}
+
+		public override void ApplyTo(GameManager gm)
+		{ }
 	}
 }
