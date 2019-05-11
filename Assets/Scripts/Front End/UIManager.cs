@@ -22,6 +22,24 @@ public class UIManager : MonoBehaviour
 	private static int enemyIndex => 1 - Driver.instance.sideIndex;
 	private static Player myPlayer => gameManager.Players[myIndex];
 
+	private HandManager[] handManagers => (
+		myIndex == 0
+		? new HandManager[] { myHandManager, enemyHandManager }
+		: new HandManager[] { enemyHandManager, myHandManager }
+	);
+
+	private UnitManager[] unitManagers => (
+		myIndex == 0
+		? new UnitManager[] { myUnitManager, enemyUnitManager }
+		: new UnitManager[] { enemyUnitManager, myUnitManager }
+	);
+
+	private TowerManager[] towerManagers => (
+		myIndex == 0
+		? new TowerManager[] { myTowerManager, enemyTowerManager }
+		: new TowerManager[] { enemyTowerManager, myTowerManager }
+	);
+
 	[Header("Object References")]
 	public HandManager myHandManager;
 	public HandManager enemyHandManager;
@@ -180,10 +198,9 @@ public class UIManager : MonoBehaviour
 	{
 		UnitUI sourceUI = FindUnitUI(source);
 		UnitUI targetUI = FindUnitUI(target);
-		bool isMyAttack = gameManager.GetSidePosOf(source)[1] == Driver.instance.sideIndex;
 
 		return StartCoroutine(ParallelCoroutine(
-			sourceUI.AttackMove(isMyAttack ? Vector3.up : Vector3.down),
+			sourceUI.AttackMove(AttackDirection(gameManager.GetSidePosOf(source)[1])),
 			damageTextManager.DamageTextPopup(targetUI.transform.position, $"-{damageAmount}")
 		));
 	}
@@ -191,7 +208,7 @@ public class UIManager : MonoBehaviour
 	private UnitUI FindUnitUI(Unit unit)
 	{
 		(int laneIndex, int sideIndex, int positionIndex) = GetPositionIdentifier(unit);
-		UnitManager unitManager = sideIndex == Driver.instance.sideIndex ? myUnitManager : enemyUnitManager;
+		UnitManager unitManager = unitManagers[sideIndex];
 		return unitManager.unitHolders[laneIndex, positionIndex].GetComponentInChildren<UnitUI>();
 	}
 
@@ -201,10 +218,15 @@ public class UIManager : MonoBehaviour
 		return (sidePos[0], sidePos[1], sidePos[2]);
 	}
 
+	private Vector3 AttackDirection(int sideIndex)
+	{
+		return sideIndex == myIndex ? Vector3.up : Vector3.down;
+	}
+
 	public Coroutine UnitTowerDamage(Tower tower, int damageAmount)
 	{
 		(int laneIndex, int sideIndex) = GetPositionIdentifier(tower);
-		TowerUI targetUI = (sideIndex == Driver.instance.sideIndex ? myTowerManager : enemyTowerManager).towerUIs[laneIndex];
+		TowerUI targetUI = towerManagers[sideIndex].towerUIs[laneIndex];
 		UnitUI[] attackers = new UnitUI[] {
 			FindUnitUI(gameManager.Lanes[laneIndex].Units[1-sideIndex, 0]),
 			FindUnitUI(gameManager.Lanes[laneIndex].Units[1-sideIndex, 1])
@@ -216,7 +238,7 @@ public class UIManager : MonoBehaviour
 			$"-{damageAmount}"
 		));
 		coroutines.AddRange(
-			attackers.Select(attacker => attacker.AttackMove(sideIndex == Driver.instance.sideIndex ? Vector3.down : Vector3.up))
+			attackers.Select(attacker => attacker.AttackMove(AttackDirection(1 - sideIndex)))
 		);
 
 		return StartCoroutine(ParallelCoroutine(coroutines.ToArray()));
