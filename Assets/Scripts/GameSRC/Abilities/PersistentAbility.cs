@@ -11,12 +11,12 @@ namespace SFB.Game
 		{ }
 
 		public override void ApplyTo(Unit source, GameState initialGameState) {
-			initialGameState.AddBoardUpdateDeltas += RemoveEffects;
+			initialGameState.AddBoardUpdateDeltas += RemoveEffects(source);
 			initialGameState.AddBoardUpdateDeltas += AddEffects(source);
 
 			void RemovePersistentFromGM(List<Delta> deltas, GameStateLocation gameStateLoc)
 			{
-				gameStateLoc.GameState.AddBoardUpdateDeltas -= RemoveEffects;
+				gameStateLoc.GameState.AddBoardUpdateDeltas -= RemoveEffects(source);
 				gameStateLoc.GameState.AddBoardUpdateDeltas -= AddEffects(source);
 			}
 			source.AddDeathDeltas += RemovePersistentFromGM;

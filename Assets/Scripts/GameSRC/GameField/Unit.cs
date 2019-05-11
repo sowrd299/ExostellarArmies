@@ -14,14 +14,14 @@ namespace SFB.Game
 		// unit basic attributes
 		public UnitCard Card { get; private set; } // the card the unit is an instance of
 
-		public Ability.ModifyInt RangedAtkMod { get; set; }
+		public event Ability.ModifyInt RangedAtkMod;
 		public int RangedAttack { get {
 				int a = Card.RangedAttack;
 				RangedAtkMod?.Invoke(ref a);
 				return a;
 		}}
 
-		public Ability.ModifyInt MeleeAtkMod { get; set; }
+		public event Ability.ModifyInt MeleeAtkMod;
 		public int MeleeAttack {
 			get {
 				int a = Card.MeleeAttack;
@@ -67,8 +67,6 @@ namespace SFB.Game
 
 		private void Constructor(UnitCard card, GameState gameState) {
 			this.Card = card;
-			RangedAtkMod = 0;
-			MeleeAtkMod = 0;
 			this.HealthPoints = card.HealthPoints;
 			
 			this.FirstDeploy = true;
