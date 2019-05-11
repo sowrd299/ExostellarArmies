@@ -73,6 +73,24 @@ namespace SFB.Game.Content
 			return false;
 		}
 
+		public Tuple<int, int> GetSidePosOf(Unit unit)	
+		{
+			for(int side = 0; side < 2; side++)
+				for(int pos = 0; pos < 2; pos++)
+					if(Units[side, pos] == unit)
+						return new Tuple<int, int>(side, pos);
+			return null;
+		}
+
+		public static Tuple<int, int, int> GetLaneSidePosOf(Unit unit, Lane[] lanes) {
+			for(int lane = 0; lane < lanes.Length; lane++) {
+				Tuple<int, int> sidePos = lanes[lane].GetSidePosOf(unit);
+				if(sidePos != null)
+					return new Tuple<int, int, int>(lane, sidePos.Item1, sidePos.Item2);
+			}
+			return null;
+		}
+
 		public void Kill(int side, int pos)
 		{
 			Units[side, pos] = null;
