@@ -67,32 +67,4 @@ public class UnitUI : MonoBehaviour, IHasCard
 
 		transform.position = originalPosition;
 	}
-
-	public Coroutine TakeDamage(int amount)
-	{
-		return StartCoroutine(AnimateTakeDamage(amount));
-	}
-
-	private IEnumerator AnimateTakeDamage(int amount)
-	{
-		GameObject damageTextObject = Instantiate(damageTextPrefab, transform.parent);
-		Text damageText = damageTextObject.GetComponent<Text>();
-		damageText.text = $"-{amount}";
-		damageText.CrossFadeAlpha(0.1f, damageTextDuration, false);
-
-		RenderUnit();
-
-		Vector3 startPostion = transform.position;
-		Vector3 endPosition = startPostion + Vector3.up * damageTextMoveMagnitude;
-
-		float startTime = Time.time;
-		while (Time.time - startTime < damageTextDuration)
-		{
-			float deltaTime = Time.time - startTime;
-			damageTextObject.transform.position = Vector3.Lerp(startPostion, endPosition, deltaTime / damageTextDuration);
-			yield return null;
-		}
-
-		Destroy(damageTextObject);
-	}
 }

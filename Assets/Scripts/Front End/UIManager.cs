@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -178,16 +178,11 @@ public class UIManager : MonoBehaviour
 
 	public Coroutine UnitDamage(Unit source, Unit target, int damageAmount)
 	{
-		return StartCoroutine(AnimateUnitDamage(source, target, damageAmount));
-	}
-
-	private IEnumerator AnimateUnitDamage(Unit source, Unit target, int damageAmount)
-	{
 		UnitUI sourceUI = FindUnitUI(source);
 		UnitUI targetUI = FindUnitUI(target);
 		bool isMyAttack = gameManager.GetSidePosOf(source)[1] == Driver.instance.sideIndex;
 
-		yield return StartCoroutine(ParallelCoroutine(
+		return StartCoroutine(ParallelCoroutine(
 			sourceUI.AttackMove(isMyAttack ? Vector3.up : Vector3.down),
 			damageTextManager.DamageTextPopup(targetUI.transform.position, $"-{damageAmount}")
 		));
@@ -195,11 +190,17 @@ public class UIManager : MonoBehaviour
 
 	private UnitUI FindUnitUI(Unit unit)
 	{
-		int[] sidePos = gameManager.GetSidePosOf(unit);
-		int laneIndex = sidePos[0], sideIndex = sidePos[1], positionIndex = sidePos[2];
+		(int laneIndex, int sideIndex, int positionIndex) = GetPositionIdentifier(unit);
 		UnitManager unitManager = sideIndex == Driver.instance.sideIndex ? myUnitManager : enemyUnitManager;
 		return unitManager.unitHolders[laneIndex, positionIndex].GetComponentInChildren<UnitUI>();
 	}
+
+	private (int, int, int) GetPositionIdentifier(Unit unit)
+	{
+		int[] sidePos = gameManager.GetSidePosOf(unit);
+		return (sidePos[0], sidePos[1], sidePos[2]);
+	}
+
 	public Coroutine UnitTowerDamage(Tower tower, int damageAmount)
 	{
 		(int laneIndex, int sideIndex) = GetPositionIdentifier(tower);
