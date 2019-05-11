@@ -49,24 +49,24 @@ namespace SFB.Game{
             count -= x;
         }
 
-        public Delta[] GetAddDeltas(int x){
+        public Management.Delta[] GetAddDeltas(int x){
             int xp = x; // x prime
             if(xp + count > max){ // do not go above max
                 xp = max - count;
             }else if(count + xp < 0){ // do not go bellow 0
                 xp = - count;
             }
-            return new Delta[]{new ResourcePoolDelta(xp, this)};
+            return new Management.Delta[]{new ResourcePoolDelta(xp, this)};
         }
 
-		public Delta[] GetSubtractDeltas(int x) {
+		public Management.Delta[] GetSubtractDeltas(int x) {
 			int xp = -x; // x prime
 			if(xp + count > max) { // do not go above max
 				xp = max - count;
 			} else if(count + xp < 0) { // do not go bellow 0
 				xp = -count;
 			}
-			return new Delta[] { new ResourcePoolDelta(xp, this) };
+			return new Management.Delta[] { new ResourcePoolDelta(xp, this) };
 		}
     }
 
