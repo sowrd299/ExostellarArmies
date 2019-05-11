@@ -1,4 +1,4 @@
-﻿using SFB.Game;
+using SFB.Game;
 using SFB.Game.Content;
 using SFB.Game.Management;
 using SFB.Net.Client;
@@ -168,6 +168,12 @@ public class Driver : MonoBehaviour
 		{
 			UnitDamageDelta unitDamageDelta = delta as UnitDamageDelta;
 			yield return uiManager.UnitDamage(unitDamageDelta.Source, unitDamageDelta.Target, unitDamageDelta.Amount);
+		}
+		}
+		else if (delta is TowerDamageDelta)
+		{
+			TowerDamageDelta towerDamageDelta = delta as TowerDamageDelta;
+			yield return uiManager.UnitTowerDamage(towerDamageDelta.Target, towerDamageDelta.Amount);
 		}
 		// Some deltas simply can't be animated, while others could potentially indicate an error.
 		else if (!(delta is ResourcePoolDelta || delta is RemoveFromDeckDelta))

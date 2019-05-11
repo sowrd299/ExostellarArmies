@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,6 +31,8 @@ public class UIManager : MonoBehaviour
 
 	public TowerManager myTowerManager;
 	public TowerManager enemyTowerManager;
+
+	public DamageTextManager damageTextManager;
 
 	[Header("UI References")]
 	public Button mainButton;
@@ -187,7 +189,7 @@ public class UIManager : MonoBehaviour
 
 		yield return StartCoroutine(ParallelCoroutine(
 			sourceUI.AttackMove(isMyAttack ? Vector3.up : Vector3.down),
-			targetUI.TakeDamage(damageAmount)
+			damageTextManager.DamageTextPopup(targetUI.transform.position, $"-{damageAmount}")
 		));
 	}
 
@@ -197,5 +199,41 @@ public class UIManager : MonoBehaviour
 		int laneIndex = sidePos[0], sideIndex = sidePos[1], positionIndex = sidePos[2];
 		UnitManager unitManager = sideIndex == Driver.instance.sideIndex ? myUnitManager : enemyUnitManager;
 		return unitManager.unitHolders[laneIndex, positionIndex].GetComponentInChildren<UnitUI>();
+	}
+	public Coroutine UnitTowerDamage(Tower tower, int damageAmount)
+	{
+		(int laneIndex, int sideIndex) = GetPositionIdentifier(tower);
+		TowerUI targetUI = (sideIndex == Driver.instance.sideIndex ? myTowerManager : enemyTowerManager).towerUIs[laneIndex];
+		UnitUI[] attackers = new UnitUI[] {
+			FindUnitUI(gameManager.Lanes[laneIndex].Units[1-sideIndex, 0]),
+			FindUnitUI(gameManager.Lanes[laneIndex].Units[1-sideIndex, 1])
+		}.Where(unitUI => unitUI != null).ToArray();
+
+		List<Coroutine> coroutines = new List<Coroutine>();
+		coroutines.Add(damageTextManager.DamageTextPopup(
+			targetUI.GetComponent<RectTransform>().rect.center,
+			$"-{damageAmount}"
+		));
+		coroutines.AddRange(
+			attackers.Select(attacker => attacker.AttackMove(sideIndex == Driver.instance.sideIndex ? Vector3.down : Vector3.up))
+		);
+
+		return StartCoroutine(ParallelCoroutine(coroutines.ToArray()));
+	}
+
+	private (int, int) GetPositionIdentifier(Tower tower)
+	{
+		for (int laneIndex = 0; laneIndex < 3; laneIndex++)
+		{
+			for (int sideIndex = 0; sideIndex < 2; sideIndex++)
+			{
+				if (gameManager.Lanes[laneIndex].Towers[sideIndex].ID == tower.ID)
+				{
+					return (laneIndex, sideIndex);
+				}
+			}
+		}
+
+		return (-1, -1);
 	}
 }
