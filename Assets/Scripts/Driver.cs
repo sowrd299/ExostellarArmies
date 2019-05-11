@@ -1,4 +1,4 @@
-using SFB.Game;
+﻿using SFB.Game;
 using SFB.Game.Content;
 using SFB.Game.Management;
 using SFB.Net.Client;
@@ -167,8 +167,19 @@ public class Driver : MonoBehaviour
 		else if (delta is UnitDamageDelta)
 		{
 			UnitDamageDelta unitDamageDelta = delta as UnitDamageDelta;
-			yield return uiManager.UnitDamage(unitDamageDelta.Source, unitDamageDelta.Target, unitDamageDelta.Amount);
-		}
+
+			if (unitDamageDelta.DmgType == Damage.Type.TOWER)
+			{
+
+			}
+			else if (unitDamageDelta.DmgType == Damage.Type.HEAL)
+			{
+				// TODO: Implement 
+			}
+			else
+			{
+				yield return uiManager.UnitDamage(unitDamageDelta.Source, unitDamageDelta.Target, unitDamageDelta.Amount);
+			}
 		}
 		else if (delta is TowerDamageDelta)
 		{
