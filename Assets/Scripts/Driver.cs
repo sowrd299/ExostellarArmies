@@ -160,6 +160,9 @@ public class Driver : MonoBehaviour
 
 	private IEnumerator AnimateDelta(Delta delta)
 	{
+		uiManager.RenderTowers();
+		uiManager.RenderUnits();
+		
 		if (delta is AddToHandDelta)
 		{
 			yield return uiManager.DrawCard((delta as AddToHandDelta).Card);
@@ -191,8 +194,6 @@ public class Driver : MonoBehaviour
 		{
 			Debug.LogWarning($"Failed to animate delta of type {delta.GetType().Name}");
 		}
-		uiManager.RenderTowers();
-		uiManager.RenderUnits();
 	}
 
 	private string GetPhaseName(string phaseCodeName)

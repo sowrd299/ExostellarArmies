@@ -234,7 +234,7 @@ public class UIManager : MonoBehaviour
 
 		List<Coroutine> coroutines = new List<Coroutine>();
 		coroutines.Add(damageTextManager.DamageTextPopup(
-			targetUI.GetComponent<RectTransform>().rect.center,
+			targetUI.transform.position,
 			$"-{damageAmount}"
 		));
 		coroutines.AddRange(
