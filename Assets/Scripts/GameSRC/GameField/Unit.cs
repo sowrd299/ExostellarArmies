@@ -14,9 +14,23 @@ namespace SFB.Game
 		// unit basic attributes
 		public UnitCard Card { get; private set; } // the card the unit is an instance of
 
-		public int RangedAttack { get; set; } // make these call gamemanger modify event
-		public int MeleeAttack { get; set; }
-		public int HealthPoints { get; set; }
+		public Ability.ModifyInt RangedAtkMod { get; set; }
+		public int RangedAttack { get {
+				int a = Card.RangedAttack;
+				RangedAtkMod?.Invoke(ref a);
+				return a;
+		}}
+
+		public Ability.ModifyInt MeleeAtkMod { get; set; }
+		public int MeleeAttack {
+			get {
+				int a = Card.MeleeAttack;
+				MeleeAtkMod?.Invoke(ref a);
+				return a;
+			}
+		}
+
+		public int HealthPoints { get; private set; }
 
 		public bool FirstDeploy { get; private set; }
 		
@@ -40,38 +54,27 @@ namespace SFB.Game
             get{ return id; }
         }
 
-        public Unit(UnitCard card, GameManager gm) {
+        public Unit(UnitCard card, GameState gameState) {
 			this.id = IdIssuer.IssueId(this);
-			Constructor(card, gm);
+			Constructor(card, gameState);
 		}
 
-		public Unit(UnitCard card, int id, GameManager gm=null) {
+		public Unit(UnitCard card, int id, GameState gameState) {
 			this.id = ""+id;
 			IdIssuer.RegisterId(this.id, this);
-			Constructor(card, gm);
+			Constructor(card, gameState);
 		}
 
-		private void Constructor(UnitCard card, GameManager gm) {
+		private void Constructor(UnitCard card, GameState gameState) {
 			this.Card = card;
-			this.RangedAttack = card.RangedAttack;
-			this.MeleeAttack = card.MeleeAttack;
+			RangedAtkMod = 0;
+			MeleeAtkMod = 0;
 			this.HealthPoints = card.HealthPoints;
 			
 			this.FirstDeploy = true;
 
-			foreach(Ability a in card.Abilities) {
-				a.ApplyTo(this);
-				if(gm != null)
-					a.ApplyTo(gm);
-			}
-		}
-		
-		public Delta[] GetRangedDamagingDeltas(Lane l, int oppPlay) {
-			return GetDamagingDeltas(l, oppPlay, Damage.Type.RANGED);
-		}
-		
-		public Delta[] GetMeleeDamagingDeltas(Lane l, int oppPlay) {
-			return GetDamagingDeltas(l, oppPlay, Damage.Type.MELEE);
+			foreach(Ability a in card.Abilities)
+				a.ApplyTo(this, gameState);
 		}
 		
 		public Delta[] GetDamagingDeltas(Lane l, int oppSide, Damage.Type dmgType) {
@@ -89,7 +92,7 @@ namespace SFB.Game
 					int resistance = target.GetResistance(dmgType);
 					int deal = System.Math.Min(target.HealthPoints+resistance, dmgLeft);
 
-					deltas.Add(new UnitDamageDelta(target, deal, dmgType, this));
+					deltas.Add(new UnitTakeDamageDelta(target, deal, dmgType, this));
 					dmgLeft = dmgLeft - deal;
 					target.ModifyDamageLeft?.Invoke(ref dmgLeft);
 				}
@@ -130,21 +133,21 @@ namespace SFB.Game
 			HealthPoints += amt;
 		}
 
-		public Delta[] OnEachDeployPhase(int side, int pos, int lane, Lane[] lanes, Player[] players) {
+		public Delta[] OnEachDeployPhase(int lane, int side, int pos, GameState gameState) {
 			List<Delta> deltas = new List<Delta>();
 			
-			AddRecurringDeployDeltas?.Invoke(deltas, side, pos, lane, lanes, players);
+			AddRecurringDeployDeltas?.Invoke(deltas, gameState.WithLocation(lane, pos, side));
 
 			if(this.FirstDeploy) {
-				AddInitialDeployDeltas?.Invoke(deltas, side, pos, lane, lanes, players);
+				AddInitialDeployDeltas?.Invoke(deltas, gameState.WithLocation(lane, side, pos));
 				this.FirstDeploy = false;
 			}
 			return deltas.ToArray();
 		}
 
-		public Delta[] OnDeath(int side, int pos, int lane, Lane[] lanes, Player[] players) {
+		public Delta[] OnDeath(int lane, int side, int pos, GameState gameState) {
 			List<Delta> deltas = new List<Delta>();
-			AddDeathDeltas?.Invoke(deltas, side, pos, lane, lanes, players);
+			AddDeathDeltas?.Invoke(deltas, gameState.WithLocation(lane, side, pos));
 			return deltas.ToArray();
 		}
 	}

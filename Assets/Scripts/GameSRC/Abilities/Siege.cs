@@ -10,15 +10,12 @@ namespace SFB.Game
 			: base(amount)
 		{}
 
-		public override void ApplyTo(Unit u)
+		public override void ApplyTo(Unit u, GameState initialGameState)
 		{
 			void SiegeInner(ref int amt) {
 				amt += Amount;
 			}
 			u.ModifyTowerDamage += SiegeInner;
 		}
-
-		public override void ApplyTo(GameManager gm)
-		{ }
 	}
 }

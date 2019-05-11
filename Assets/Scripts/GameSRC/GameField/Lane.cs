@@ -99,9 +99,9 @@ namespace SFB.Game.Content
 			return Units[side, pos] != null;
 		}
 
-		public void Place(UnitCard uc, int side, int pos, GameManager gm)
+		public void Place(UnitCard uc, int side, int pos, GameState gameState)
 		{
-			Units[side, pos] = new Unit(uc, gm);
+			Units[side, pos] = new Unit(uc, gameState);
 		}
 
 		public void Place(Unit u, int side, int pos)
@@ -114,9 +114,11 @@ namespace SFB.Game.Content
 		}
 
 
-		public AddToLaneDelta[] GetDeployDeltas(UnitCard card, int side, int pos, GameManager gm)
+		public Delta[] GetDeployDeltas(UnitCard card, int side, int pos, GameState gameState)
 		{
-			return new AddToLaneDelta[] { new AddToLaneDelta(this, card, side, pos, gm) };
+			List<Delta> deltas = new List<Delta>() { new AddToLaneDelta(this, card, side, pos, gameState) };
+			gameState.UseAddBoardUpdateDeltas(deltas);
+			return deltas.ToArray();
 		}
 
 		public RemoveFromLaneDelta[] GetDeathDeltas(int side, int pos)

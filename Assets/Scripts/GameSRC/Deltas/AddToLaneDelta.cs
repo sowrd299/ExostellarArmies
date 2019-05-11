@@ -11,13 +11,13 @@ namespace SFB.Game
 		private int Position;
 		private Unit Unit; // only id sent; rest handled via card
 
-		public AddToLaneDelta(Lane lane, UnitCard card, int sideIndex, int pos, GameManager gm)
+		public AddToLaneDelta(Lane lane, UnitCard card, int sideIndex, int pos, GameState gameState)
 			: base(lane)
 		{
 			this.SendableCard = new SendableTarget<Card>("card", card);
 			this.SideIndex = sideIndex;
 			this.Position = pos;
-			this.Unit = new Unit(card, gm);
+			this.Unit = new Unit(card, gameState);
 		}
 
 		public AddToLaneDelta(XmlElement from, CardLoader loader)
@@ -26,7 +26,7 @@ namespace SFB.Game
 			this.SendableCard = new SendableTarget<Card>("card", from, loader);
 			this.SideIndex = Int32.Parse(from.Attributes["sideIndex"].Value);
 			this.Position = Int32.Parse(from.Attributes["position"].Value);
-			this.Unit = new Unit(SendableCard.Target as UnitCard, Int32.Parse(from.Attributes["unitId"].Value));
+			this.Unit = new Unit(SendableCard.Target as UnitCard, Int32.Parse(from.Attributes["unitId"].Value), null);
 		}
 
 		public override XmlElement ToXml(XmlDocument doc)

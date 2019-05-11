@@ -32,7 +32,7 @@ namespace SFB.Game.Management{
 
         // returns the changes to the current gamestate the changes would enact
         // takes the player doing the action
-        internal abstract Delta[] GetDeltas(Player p, GameManager gm);
+        internal abstract Delta[] GetDeltas(Player p, GameState gameState);
 
     }
 }

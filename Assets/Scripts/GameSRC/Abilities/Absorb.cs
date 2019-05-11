@@ -10,15 +10,12 @@ namespace SFB.Game
 			: base(-1)
 		{ }
 
-		public override void ApplyTo(Unit u)
+		public override void ApplyTo(Unit u, GameState initialGameState)
 		{
 			void AbsorbInner(ref int amt) {
 				amt = 0;
 			}
 			u.ModifyDamageLeft += AbsorbInner;
 		}
-
-		public override void ApplyTo(GameManager gm)
-		{ }
 	}
 }

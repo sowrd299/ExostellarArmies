@@ -10,15 +10,12 @@ namespace SFB.Game
 			: base(amount)
 		{}
 
-		public override void ApplyTo(Unit u)
+		public override void ApplyTo(Unit u, GameState initialGameState)
 		{
-			void SporeInner(List<Delta> deltas, int side, int pos, int lane, Lane[] lanes, Player[] players) {
-				deltas.AddRange(players[side].ManaPool.GetAddDeltas(Amount));
+			void SporeInner(List<Delta> deltas, GameStateLocation gameStateLoc) {
+				deltas.AddRange(gameStateLoc.SubjectPlayer.ManaPool.GetAddDeltas(Amount));
 			}
 			u.AddDeathDeltas += SporeInner;
 		}
-
-		public override void ApplyTo(GameManager gm)
-		{ }
 	}
 }

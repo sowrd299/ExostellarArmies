@@ -10,12 +10,10 @@ namespace SFB.Game
 			: base(amount)
 		{}
 
-		public override void ApplyTo(Unit u)
+		public override void ApplyTo(Unit u, GameState initialGameState)
 		{
 			AddResistType(u);
 		}
-		public override void ApplyTo(GameManager gm)
-		{ }
 
 		protected void ShieldInner(ref int amt) {
 			amt += Amount;

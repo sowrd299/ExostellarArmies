@@ -5,7 +5,7 @@ using System;
 
 namespace SFB.Game
 {
-	public class ResourcePoolDelta : Delta {
+	public class ResourcePoolDelta : Management.Delta {
 
 		private int amount;
 		private SendableTarget<ResourcePool> rp;

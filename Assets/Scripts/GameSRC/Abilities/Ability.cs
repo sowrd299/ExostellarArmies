@@ -6,10 +6,7 @@ namespace SFB.Game
 {
 	public abstract class Ability
 	{
-		public delegate void AddDelta(
-			List<Delta> deltas, int side, int pos, int lane,
-			Lane[] lanes, Player[] players
-		);
+		public delegate void AddDelta(List<Delta> deltas, GameStateLocation gameStateLocation);
 		public delegate void FilterTargets(Unit[] targets);
 		public delegate void ModifyInt(ref int amt);
 		
@@ -20,7 +17,7 @@ namespace SFB.Game
 			Amount = amount;
 		}
 
-		public abstract void ApplyTo(Unit u);
-		public abstract void ApplyTo(GameManager gm);
+		// gm may be null
+		public abstract void ApplyTo(Unit u, GameState initialGameState);
 	}
 }

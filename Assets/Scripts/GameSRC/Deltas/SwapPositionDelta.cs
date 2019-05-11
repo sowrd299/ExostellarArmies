@@ -5,7 +5,7 @@ using System;
 
 namespace SFB.Game
 {
-	public class SwapPositionDelta : Delta
+	public class SwapPositionDelta : Management.Delta
 	{
 		private SendableTarget<Lane> SendableLane1;
 		private int SideIndex1, Position1;
