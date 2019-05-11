@@ -17,8 +17,5 @@ namespace SFB.Game
 			}
 			u.AddDeathDeltas += SporeInner;
 		}
-
-		public override void ApplyTo(GameManager gm)
-		{ }
 	}
 }

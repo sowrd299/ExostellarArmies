@@ -17,8 +17,5 @@ namespace SFB.Game
 			}
 			u.ModifyTowerDamage += SiegeInner;
 		}
-
-		public override void ApplyTo(GameManager gm)
-		{ }
 	}
 }

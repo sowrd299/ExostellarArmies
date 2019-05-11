@@ -14,8 +14,6 @@ namespace SFB.Game
 		{
 			AddResistType(u);
 		}
-		public override void ApplyTo(GameManager gm)
-		{ }
 
 		protected void ShieldInner(ref int amt) {
 			amt += Amount;
