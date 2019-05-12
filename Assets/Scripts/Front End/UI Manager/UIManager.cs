@@ -161,7 +161,6 @@ public partial class UIManager : MonoBehaviour
 	private IEnumerator AnimateShowPhaseName(string phaseName)
 	{
 		phaseText.text = phaseName;
-		// phaseBackground.gameObject.SetActive(true);
 
 		phaseBackground.CrossFadeAlpha(maxPhaseOverlayOpacity, phaseFadeTime, false);
 		phaseText.CrossFadeAlpha(1, phaseFadeTime, false);
@@ -172,7 +171,5 @@ public partial class UIManager : MonoBehaviour
 		phaseBackground.CrossFadeAlpha(0, phaseFadeTime, false);
 		phaseText.CrossFadeAlpha(0, phaseFadeTime, false);
 		yield return new WaitForSeconds(phaseFadeTime);
-
-		// phaseBackground.gameObject.SetActive(false);
 	}
 }

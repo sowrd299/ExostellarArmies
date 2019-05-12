@@ -45,16 +45,16 @@ public partial class UIManager : MonoBehaviour
 			FindUnitUI(gameManager.Lanes[laneIndex].Units[1-sideIndex, 1])
 		}.Where(unitUI => unitUI != null).ToArray();
 
-		List<Func<Coroutine>> coroutines = new List<Func<Coroutine>>();
-		coroutines.Add(() => damageTextManager.DamageTextPopup(
+		List<Func<Coroutine>> callbacks = new List<Func<Coroutine>>();
+		callbacks.Add(() => damageTextManager.DamageTextPopup(
 			targetUI.transform.position,
 			$"-{damageAmount}"
 		));
-		coroutines.AddRange(
+		callbacks.AddRange(
 			attackers.Select<UnitUI, Func<Coroutine>>(attacker => () => attacker.AttackMove(AttackDirection(1 - sideIndex)))
 		);
 
 		targetUI.RenderTower();
-		return StartCoroutine(ParallelCoroutine(coroutines.ToArray()));
+		return StartCoroutine(ParallelCoroutine(callbacks.ToArray()));
 	}
 }
