@@ -205,5 +205,32 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   laneIndex: 0
+  attackPrefab: {fileID: 5035452710554874880, guid: 8d6749a9c6b5d264a8b637ba0e452fcb,
+    type: 3}
   manager: {fileID: 0}
   health: {fileID: 9011030224706621739}
+  attackMoveCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 2.4601355
+      outSlope: 2.4601355
+      tangentMode: 0
+      weightedMode: 2
+      inWeight: 0
+      outWeight: 0.17599067
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0.40408605
+      outSlope: 0.40408605
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.6013986
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  attackDuration: 1

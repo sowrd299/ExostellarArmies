@@ -175,7 +175,7 @@ public class Driver : MonoBehaviour
 
 			if (unitDamageDelta.DmgType == Damage.Type.TOWER)
 			{
-
+				yield return uiManager.TowerUnitDamage(unitDamageDelta.Target, unitDamageDelta.Amount);
 			}
 			else if (unitDamageDelta.DmgType == Damage.Type.HEAL)
 			{

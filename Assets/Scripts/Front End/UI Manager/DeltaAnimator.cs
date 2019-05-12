@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -56,5 +56,18 @@ public partial class UIManager : MonoBehaviour
 
 		targetUI.RenderTower();
 		return StartCoroutine(ParallelCoroutine(callbacks.ToArray()));
+	}
+
+	public Coroutine TowerUnitDamage(Unit target, int damageAmount)
+	{
+		(int laneIndex, int sideIndex, int positionIndex) = GetPositionIdentifier(target);
+		TowerUI sourceUI = towerManagers[1 - sideIndex].towerUIs[laneIndex];
+		UnitUI targetUI = FindUnitUI(target);
+
+		return StartCoroutine(SerialCoroutine(
+			() => sourceUI.Attack(targetUI.transform.position),
+			() => { targetUI.RenderUnit(); return null; },
+			() => damageTextManager.DamageTextPopup(targetUI.transform.position, $"-{damageAmount}")
+		));
 	}
 }
