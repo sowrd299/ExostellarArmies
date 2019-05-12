@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +10,7 @@ public partial class UIManager : MonoBehaviour
 {
 	public static IEnumerator ParallelCoroutine(params Func<Coroutine>[] callbacks)
 	{
-		IEnumerable<Coroutine> coroutines = callbacks.Select(callback => callback());
+		Coroutine[] coroutines = callbacks.Select(callback => callback()).ToArray();
 
 		foreach (Coroutine coroutine in coroutines)
 		{
