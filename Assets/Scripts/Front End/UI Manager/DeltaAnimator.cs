@@ -1,4 +1,5 @@
-﻿using System.Collections;
+using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -30,8 +31,8 @@ public partial class UIManager : MonoBehaviour
 		targetUI.RenderUnit();
 
 		return StartCoroutine(ParallelCoroutine(
-			sourceUI.AttackMove(AttackDirection(gameManager.GetSidePosOf(source)[1])),
-			damageTextManager.DamageTextPopup(targetUI.transform.position, $"-{damageAmount}")
+			() => sourceUI.AttackMove(AttackDirection(gameManager.GetSidePosOf(source)[1])),
+			() => damageTextManager.DamageTextPopup(targetUI.transform.position, $"-{damageAmount}")
 		));
 	}
 
@@ -44,13 +45,13 @@ public partial class UIManager : MonoBehaviour
 			FindUnitUI(gameManager.Lanes[laneIndex].Units[1-sideIndex, 1])
 		}.Where(unitUI => unitUI != null).ToArray();
 
-		List<Coroutine> coroutines = new List<Coroutine>();
-		coroutines.Add(damageTextManager.DamageTextPopup(
+		List<Func<Coroutine>> coroutines = new List<Func<Coroutine>>();
+		coroutines.Add(() => damageTextManager.DamageTextPopup(
 			targetUI.transform.position,
 			$"-{damageAmount}"
 		));
 		coroutines.AddRange(
-			attackers.Select(attacker => attacker.AttackMove(AttackDirection(1 - sideIndex)))
+			attackers.Select<UnitUI, Func<Coroutine>>(attacker => () => attacker.AttackMove(AttackDirection(1 - sideIndex)))
 		);
 
 		targetUI.RenderTower();

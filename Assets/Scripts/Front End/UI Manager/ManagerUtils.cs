@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using SFB.Game;
@@ -6,11 +7,11 @@ using SFB.Game.Content;
 
 public partial class UIManager : MonoBehaviour
 {
-	public static IEnumerator ParallelCoroutine(params Coroutine[] coroutines)
+	public static IEnumerator ParallelCoroutine(params Func<Coroutine>[] coroutines)
 	{
-		foreach (Coroutine coroutine in coroutines)
+		foreach (Func<Coroutine> coroutine in coroutines)
 		{
-			yield return coroutine;
+			yield return coroutine();
 		}
 	}
 
