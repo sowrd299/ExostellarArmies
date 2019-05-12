@@ -1,8 +1,4 @@
-﻿using SFB.Game;
-using SFB.Game.Content;
-using SFB.Game.Management;
-using SFB.Net.Client;
-using System;
+﻿using System;
 using System.Xml;
 using System.Collections;
 using System.Collections.Generic;
@@ -10,6 +6,10 @@ using System.Threading.Tasks;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.Serialization;
+using SFB.Game;
+using SFB.Game.Content;
+using SFB.Game.Management;
+using SFB.Net.Client;
 
 public class Driver : MonoBehaviour
 {
@@ -162,9 +162,6 @@ public class Driver : MonoBehaviour
 
 	private IEnumerator AnimateDelta(Delta delta)
 	{
-		uiManager.RenderTowers();
-		uiManager.RenderUnits();
-		
 		if (delta is AddToHandDelta)
 		{
 			yield return uiManager.DrawCard((delta as AddToHandDelta).Card);
@@ -191,11 +188,22 @@ public class Driver : MonoBehaviour
 			TowerDamageDelta towerDamageDelta = delta as TowerDamageDelta;
 			yield return uiManager.UnitTowerDamage(towerDamageDelta.Target, towerDamageDelta.Amount);
 		}
-		// Some deltas simply can't be animated, while others could potentially indicate an error.
-		else if (!(delta is ResourcePoolDelta || delta is RemoveFromDeckDelta))
+		else if (delta is AddToLaneDelta)
 		{
-			Debug.LogWarning($"Failed to animate delta of type {delta.GetType().Name}");
+			AddToLaneDelta addToLaneDelta = delta as AddToLaneDelta;
+			uiManager.SpawnUnit(addToLaneDelta.SideIndex, Array.FindIndex(gameManager.Lanes, lane => lane.ID == addToLaneDelta.Target.ID), addToLaneDelta.Position);
 		}
+		else
+		{
+			// Some deltas simply can't be animated, while others could potentially indicate an error.
+			if (!(delta is RemoveFromDeckDelta))
+			{
+				Debug.LogWarning($"Failed to animate delta of type {delta.GetType().Name}");
+			}
+		}
+
+		uiManager.RenderUnits();
+		uiManager.RenderTowers();
 	}
 
 	private string GetPhaseName(string phaseCodeName)

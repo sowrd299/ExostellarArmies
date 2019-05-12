@@ -7,8 +7,8 @@ namespace SFB.Game
 {
 	public class AddToLaneDelta : TargetedDelta<Lane>
 	{
-		private int SideIndex;
-		private int Position;
+		public int SideIndex { get; private set; }
+		public int Position { get; private set; }
 		private Unit Unit; // only id sent; rest handled via card
 
 		public AddToLaneDelta(Lane lane, UnitCard card, int sideIndex, int pos, GameState gameState)
@@ -36,7 +36,7 @@ namespace SFB.Game
 			r.SetAttributeNode(SendableCard.ToXml(doc));
 
 			XmlAttribute sideIndexAttr = doc.CreateAttribute("sideIndex");
-			sideIndexAttr.Value = ""+SideIndex;
+			sideIndexAttr.Value = "" + SideIndex;
 			r.SetAttributeNode(sideIndexAttr);
 
 			XmlAttribute posAttr = doc.CreateAttribute("position");

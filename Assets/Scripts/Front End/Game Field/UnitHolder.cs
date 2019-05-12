@@ -20,6 +20,9 @@ public class UnitHolder : MonoBehaviour
 	public HandManager handManager;
 	public GameObject hoverParent;
 
+	[Header("Animation Config")]
+	public float spawnDuration;
+
 	[HideInInspector]
 	public PlayUnitCardAction playAction;
 
@@ -125,6 +128,28 @@ public class UnitHolder : MonoBehaviour
 				unitObject.GetComponent<UnitUI>().RenderUnit();
 			}
 		}
+	}
+
+	public Coroutine SpawnUnit()
+	{
+		return StartCoroutine(AnimateSpawnUnit());
+	}
+
+	private IEnumerator AnimateSpawnUnit()
+	{
+		GameObject unitObject = InstantiateUnit(gameManager.Lanes[laneIndex].Units[unitManager.sideIndex, positionIndex]);
+
+		Vector3 endScale = unitObject.transform.localScale;
+		unitObject.transform.localScale = Vector3.zero;
+
+		float startTime = Time.time;
+		while (Time.time - startTime < spawnDuration)
+		{
+			unitObject.transform.localScale = Vector3.Lerp(Vector3.zero, endScale, (Time.time - startTime) / spawnDuration);
+			yield return null;
+		}
+
+		unitObject.transform.localScale = endScale;
 	}
 
 	public void LockUnit()

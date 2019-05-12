@@ -172,3 +172,4 @@ MonoBehaviour:
   unitManager: {fileID: 0}
   handManager: {fileID: 0}
   hoverParent: {fileID: 0}
+  spawnDuration: 0.3

@@ -70,4 +70,9 @@ public partial class UIManager : MonoBehaviour
 			() => damageTextManager.DamageTextPopup(targetUI.transform.position, $"-{damageAmount}")
 		));
 	}
+
+	public Coroutine SpawnUnit(int sideIndex, int laneIndex, int positionIndex)
+	{
+		return unitManagers[sideIndex].unitHolders[laneIndex, positionIndex].SpawnUnit();
+	}
 }
