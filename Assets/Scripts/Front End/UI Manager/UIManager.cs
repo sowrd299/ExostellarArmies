@@ -11,7 +11,7 @@ using SFB.Game.Management;
 using SFB.Game.Content;
 using SFB.Net.Client;
 
-public class UIManager : MonoBehaviour
+public partial class UIManager : MonoBehaviour
 {
 	public static UIManager instance => Driver.instance.uiManager;
 
@@ -65,12 +65,11 @@ public class UIManager : MonoBehaviour
 	public float phaseFadeTime;
 	public float phaseDisplayTime;
 
-	public static IEnumerator ParallelCoroutine(params Coroutine[] coroutines)
+	public void WaitForMatch()
 	{
-		foreach (Coroutine coroutine in coroutines)
-		{
-			yield return coroutine;
-		}
+		phaseBackground.gameObject.SetActive(true);
+		phaseText.gameObject.SetActive(true);
+		phaseText.text = "Waiting For Match";
 	}
 
 	public void InitializeUI()
@@ -175,88 +174,5 @@ public class UIManager : MonoBehaviour
 		yield return new WaitForSeconds(phaseFadeTime);
 
 		// phaseBackground.gameObject.SetActive(false);
-	}
-
-	// Delta animations
-	public Coroutine DrawCard(Card card)
-	{
-		return StartCoroutine(AnimateDrawCard(card));
-	}
-
-	private IEnumerator AnimateDrawCard(Card card)
-	{
-		mainButtonText.text = "DRAWING...";
-		mainButton.interactable = false;
-
-		yield return myHandManager.DrawCard(card);
-
-		mainButtonText.text = "LOCK IN PLANS";
-		mainButton.interactable = true;
-	}
-
-	public Coroutine UnitDamage(Unit source, Unit target, int damageAmount)
-	{
-		UnitUI sourceUI = FindUnitUI(source);
-		UnitUI targetUI = FindUnitUI(target);
-
-		return StartCoroutine(ParallelCoroutine(
-			sourceUI.AttackMove(AttackDirection(gameManager.GetSidePosOf(source)[1])),
-			damageTextManager.DamageTextPopup(targetUI.transform.position, $"-{damageAmount}")
-		));
-	}
-
-	private UnitUI FindUnitUI(Unit unit)
-	{
-		(int laneIndex, int sideIndex, int positionIndex) = GetPositionIdentifier(unit);
-		UnitManager unitManager = unitManagers[sideIndex];
-		return unitManager.unitHolders[laneIndex, positionIndex].GetComponentInChildren<UnitUI>();
-	}
-
-	private (int, int, int) GetPositionIdentifier(Unit unit)
-	{
-		int[] sidePos = gameManager.GetSidePosOf(unit);
-		return (sidePos[0], sidePos[1], sidePos[2]);
-	}
-
-	private Vector3 AttackDirection(int sideIndex)
-	{
-		return sideIndex == myIndex ? Vector3.up : Vector3.down;
-	}
-
-	public Coroutine UnitTowerDamage(Tower tower, int damageAmount)
-	{
-		(int laneIndex, int sideIndex) = GetPositionIdentifier(tower);
-		TowerUI targetUI = towerManagers[sideIndex].towerUIs[laneIndex];
-		UnitUI[] attackers = new UnitUI[] {
-			FindUnitUI(gameManager.Lanes[laneIndex].Units[1-sideIndex, 0]),
-			FindUnitUI(gameManager.Lanes[laneIndex].Units[1-sideIndex, 1])
-		}.Where(unitUI => unitUI != null).ToArray();
-
-		List<Coroutine> coroutines = new List<Coroutine>();
-		coroutines.Add(damageTextManager.DamageTextPopup(
-			targetUI.transform.position,
-			$"-{damageAmount}"
-		));
-		coroutines.AddRange(
-			attackers.Select(attacker => attacker.AttackMove(AttackDirection(1 - sideIndex)))
-		);
-
-		return StartCoroutine(ParallelCoroutine(coroutines.ToArray()));
-	}
-
-	private (int, int) GetPositionIdentifier(Tower tower)
-	{
-		for (int laneIndex = 0; laneIndex < 3; laneIndex++)
-		{
-			for (int sideIndex = 0; sideIndex < 2; sideIndex++)
-			{
-				if (gameManager.Lanes[laneIndex].Towers[sideIndex].ID == tower.ID)
-				{
-					return (laneIndex, sideIndex);
-				}
-			}
-		}
-
-		return (-1, -1);
 	}
 }

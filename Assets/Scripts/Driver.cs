@@ -53,6 +53,8 @@ public class Driver : MonoBehaviour
 
 	private IEnumerator Start()
 	{
+		uiManager.WaitForMatch();
+
 		Task connect = client.Connect();
 		yield return new WaitUntil(() => connect.IsCompleted);
 
