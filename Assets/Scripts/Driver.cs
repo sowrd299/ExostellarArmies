@@ -195,7 +195,8 @@ public class Driver : MonoBehaviour
 		}
 		else if (delta is TowerReviveDelta)
 		{
-			
+			TowerReviveDelta towerReviveDelta = delta as TowerReviveDelta;
+			yield return uiManager.TowerRespawn(towerReviveDelta.Target);
 		}
 		else
 		{

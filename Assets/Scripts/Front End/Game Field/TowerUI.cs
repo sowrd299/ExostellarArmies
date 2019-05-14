@@ -56,4 +56,32 @@ public class TowerUI : MonoBehaviour
 
 		Destroy(attackParticle);
 	}
+
+	public Coroutine Respawn()
+	{
+		return StartCoroutine(AnimateRespawn());
+	}
+
+	private IEnumerator AnimateRespawn()
+	{
+		Vector3 initialScale = transform.localScale;
+
+		yield return UIManager.instance.LerpTime(
+			Vector3.Lerp,
+			initialScale,
+			Vector3.zero,
+			respawnDuration / 2,
+			scale => transform.localScale = scale
+		);
+
+		RenderTower();
+
+		yield return UIManager.instance.LerpTime(
+			Vector3.Lerp,
+			Vector3.zero,
+			initialScale,
+			respawnDuration / 2,
+			scale => transform.localScale = scale
+		);
+	}
 }

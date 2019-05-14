@@ -233,4 +233,5 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  attackDuration: 1
+  attackDuration: 0.4
+  respawnDuration: 0.6

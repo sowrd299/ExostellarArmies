@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -76,8 +76,11 @@ public partial class UIManager : MonoBehaviour
 		));
 	}
 
-	public Coroutine SpawnUnit(int sideIndex, int laneIndex, int positionIndex)
+	public Coroutine TowerRespawn(Tower target)
 	{
-		return unitManagers[sideIndex].unitHolders[laneIndex, positionIndex].SpawnUnit();
+		(int laneIndex, int sideIndex) = GetPositionIdentifier(target);
+		TowerUI targetUI = towerManagers[sideIndex].towerUIs[laneIndex];
+
+		return targetUI.Respawn();
 	}
 }
