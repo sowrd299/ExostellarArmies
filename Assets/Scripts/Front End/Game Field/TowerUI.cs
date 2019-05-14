@@ -24,6 +24,7 @@ public class TowerUI : MonoBehaviour
 	[Header("Animation Config")]
 	public AnimationCurve attackMoveCurve;
 	public float attackDuration;
+	public float respawnDuration;
 
 	private void Start()
 	{
@@ -44,18 +45,14 @@ public class TowerUI : MonoBehaviour
 	{
 		GameObject attackParticle = Instantiate(attackPrefab, transform);
 		Transform attackTransform = attackParticle.transform;
-		Vector3 startPosition = attackTransform.position = transform.position;
 
-		float startTime = Time.time;
-		while (Time.time - startTime < attackDuration)
-		{
-			attackTransform.position = Vector3.Lerp(
-				startPosition,
-				targetPosition,
-				attackMoveCurve.Evaluate((Time.time - startTime) /attackDuration)
-			);
-			yield return null;
-		}
+		yield return UIManager.instance.LerpTime(
+			Vector3.Lerp,
+			transform.position,
+			targetPosition,
+			attackDuration,
+			position => attackTransform.position = position
+		);
 
 		Destroy(attackParticle);
 	}
