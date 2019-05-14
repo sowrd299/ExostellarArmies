@@ -138,18 +138,15 @@ public class UnitHolder : MonoBehaviour
 	private IEnumerator AnimateSpawnUnit()
 	{
 		GameObject unitObject = InstantiateUnit(gameManager.Lanes[laneIndex].Units[unitManager.sideIndex, positionIndex]);
+		Transform unitTransform = unitObject.transform;
 
-		Vector3 endScale = unitObject.transform.localScale;
-		unitObject.transform.localScale = Vector3.zero;
-
-		float startTime = Time.time;
-		while (Time.time - startTime < spawnDuration)
-		{
-			unitObject.transform.localScale = Vector3.Lerp(Vector3.zero, endScale, (Time.time - startTime) / spawnDuration);
-			yield return null;
-		}
-
-		unitObject.transform.localScale = endScale;
+		yield return UIManager.instance.LerpTime(
+			Vector3.Lerp,
+			Vector3.zero,
+			unitTransform.localScale,
+			spawnDuration,
+			scale => unitTransform.localScale = scale
+		);
 	}
 
 	public void LockUnit()

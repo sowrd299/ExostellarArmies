@@ -59,4 +59,27 @@ public partial class UIManager : MonoBehaviour
 
 		return (-1, -1);
 	}
+
+	public Coroutine LerpTime<T>(Func<T, T, float, T> lerp, T initial, T final, float duration, Action<T> setter)
+	{
+		return LerpTime(lerp, initial, final, duration, time => time, setter);
+	}
+
+	public Coroutine LerpTime<T>(Func<T, T, float, T> lerp, T initial, T final, float duration, Func<float, float> evaluate, Action<T> setter)
+	{
+		return StartCoroutine(AnimateLerpTime(lerp, initial, final, duration, evaluate, setter));
+	}
+
+	private IEnumerator AnimateLerpTime<T>(Func<T, T, float, T> lerp, T initial, T final, float duration, Func<float, float> evaluate, Action<T> setter)
+	{
+		setter(initial);
+
+		float startTime = Time.time;
+		while (Time.time - startTime < duration)
+		{
+			setter(lerp(initial, final, evaluate((Time.time - startTime) / duration)));
+			yield return null;
+		}
+		setter(final);
+	}
 }

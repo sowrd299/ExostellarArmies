@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,6 +24,11 @@ public partial class UIManager : MonoBehaviour
 		mainButton.interactable = true;
 	}
 
+	public Coroutine SpawnUnit(int sideIndex, int laneIndex, int positionIndex)
+	{
+		return unitManagers[sideIndex].unitHolders[laneIndex, positionIndex].SpawnUnit();
+	}
+
 	public Coroutine UnitDamage(Unit source, Unit target, int damageAmount)
 	{
 		UnitUI sourceUI = FindUnitUI(source);
@@ -36,9 +41,9 @@ public partial class UIManager : MonoBehaviour
 		));
 	}
 
-	public Coroutine UnitTowerDamage(Tower tower, int damageAmount)
+	public Coroutine UnitTowerDamage(Tower target, int damageAmount)
 	{
-		(int laneIndex, int sideIndex) = GetPositionIdentifier(tower);
+		(int laneIndex, int sideIndex) = GetPositionIdentifier(target);
 		TowerUI targetUI = towerManagers[sideIndex].towerUIs[laneIndex];
 		UnitUI[] attackers = new UnitUI[] {
 			FindUnitUI(gameManager.Lanes[laneIndex].Units[1-sideIndex, 0]),

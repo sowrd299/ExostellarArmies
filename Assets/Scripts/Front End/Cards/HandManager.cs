@@ -39,17 +39,14 @@ public class HandManager : MonoBehaviour
 		Vector3 targetPosition = cardObject.transform.parent.position;
 		cardObject.transform.position = startPosition;
 
-		float startTime = Time.time;
-		while (Time.time - startTime < travelTime)
-		{
-			cardObject.transform.position = Vector3.Lerp(
-				startPosition,
-				targetPosition,
-				travelCurve.Evaluate((Time.time - startTime) / travelTime)
-			);
-			yield return null;
-		}
-		cardObject.transform.position = targetPosition;
+		yield return UIManager.instance.LerpTime(
+			Vector3.Lerp,
+			startPosition,
+			targetPosition,
+			travelTime,
+			travelCurve.Evaluate,
+			position => cardObject.transform.position = position
+		);
 
 		yield return new WaitForSeconds(interval);
 	}

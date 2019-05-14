@@ -55,15 +55,17 @@ public class UnitUI : MonoBehaviour, IHasCard
 
 	private IEnumerator AnimateAttackMove(Vector3 direction)
 	{
+		Vector3 originalPosition = transform.position;
 		Vector3 attackMove = direction * attackMoveMagnitude;
 
-		Vector3 originalPosition = transform.position;
-		float startTime = Time.time;
-		while (Time.time - startTime < attackDuration)
-		{
-			transform.position = originalPosition + attackMove * attackMoveCurve.Evaluate((Time.time - startTime) / attackDuration);
-			yield return null;
-		}
+		yield return UIManager.instance.LerpTime(
+			Vector3.Lerp,
+			transform.position,
+			transform.position+attackMove,
+			attackDuration,
+			attackMoveCurve.Evaluate,
+			position => transform.position = position
+		);
 
 		transform.position = originalPosition;
 	}

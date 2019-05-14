@@ -166,6 +166,11 @@ public class Driver : MonoBehaviour
 		{
 			yield return uiManager.DrawCard((delta as AddToHandDelta).Card);
 		}
+		else if (delta is AddToLaneDelta)
+		{
+			AddToLaneDelta addToLaneDelta = delta as AddToLaneDelta;
+			uiManager.SpawnUnit(addToLaneDelta.SideIndex, Array.FindIndex(gameManager.Lanes, lane => lane.ID == addToLaneDelta.Target.ID), addToLaneDelta.Position);
+		}
 		else if (delta is UnitDamageDelta)
 		{
 			UnitDamageDelta unitDamageDelta = delta as UnitDamageDelta;
@@ -188,10 +193,9 @@ public class Driver : MonoBehaviour
 			TowerDamageDelta towerDamageDelta = delta as TowerDamageDelta;
 			yield return uiManager.UnitTowerDamage(towerDamageDelta.Target, towerDamageDelta.Amount);
 		}
-		else if (delta is AddToLaneDelta)
+		else if (delta is TowerReviveDelta)
 		{
-			AddToLaneDelta addToLaneDelta = delta as AddToLaneDelta;
-			uiManager.SpawnUnit(addToLaneDelta.SideIndex, Array.FindIndex(gameManager.Lanes, lane => lane.ID == addToLaneDelta.Target.ID), addToLaneDelta.Position);
+			
 		}
 		else
 		{
