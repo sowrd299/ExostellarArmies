@@ -36,7 +36,7 @@ public partial class UIManager : MonoBehaviour
 		targetUI.RenderUnit();
 
 		return StartCoroutine(ParallelCoroutine(
-			() => sourceUI.AttackMove(AttackDirection(gameManager.GetSidePosOf(source)[1])),
+			() => sourceUI.AttackMove(AttackDirection(gameManager.GameState.GetLaneSidePosOf(source)[1])),
 			() => damageTextManager.DamageTextPopup(targetUI.transform.position, $"-{damageAmount}")
 		));
 	}

@@ -35,7 +35,7 @@ public partial class UIManager : MonoBehaviour
 
 	private (int, int, int) GetPositionIdentifier(Unit unit)
 	{
-		int[] sidePos = gameManager.GetSidePosOf(unit);
+		int[] sidePos = gameManager.GameState.GetLaneSidePosOf(unit);
 		return (sidePos[0], sidePos[1], sidePos[2]);
 	}
 
