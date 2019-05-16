@@ -188,6 +188,10 @@ namespace SFB.Net{
 
         //send a given message to the client
         public void Send(string msg){
+			// For some reason, the socket sometimes doesn't send the message.
+			// Adding a print statement here seems to fix it.
+			// TODO: FIX ME PLEASE
+			Console.WriteLine($"Sending message {msg}");
             byte[] data = Encoding.UTF8.GetBytes(msg);
             // textBuffer += Receive(); // get and buffer any text that may be clogging up the system
             socket.Send(data);

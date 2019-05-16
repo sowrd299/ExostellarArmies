@@ -11,7 +11,7 @@ using SFB.Game.Management;
 using SFB.Game.Content;
 using SFB.Net.Client;
 
-public class UIManager : MonoBehaviour
+public partial class UIManager : MonoBehaviour
 {
 	public static UIManager instance => Driver.instance.uiManager;
 
@@ -22,7 +22,25 @@ public class UIManager : MonoBehaviour
 	private static int enemyIndex => 1 - Driver.instance.sideIndex;
 	private static Player myPlayer => gameManager.Players[myIndex];
 
+	private HandManager[] handManagers => (
+		myIndex == 0
+		? new HandManager[] { myHandManager, enemyHandManager }
+		: new HandManager[] { enemyHandManager, myHandManager }
+	);
 
+	private UnitManager[] unitManagers => (
+		myIndex == 0
+		? new UnitManager[] { myUnitManager, enemyUnitManager }
+		: new UnitManager[] { enemyUnitManager, myUnitManager }
+	);
+
+	private TowerManager[] towerManagers => (
+		myIndex == 0
+		? new TowerManager[] { myTowerManager, enemyTowerManager }
+		: new TowerManager[] { enemyTowerManager, myTowerManager }
+	);
+
+	[Header("Object References")]
 	public HandManager myHandManager;
 	public HandManager enemyHandManager;
 
@@ -32,16 +50,31 @@ public class UIManager : MonoBehaviour
 	public TowerManager myTowerManager;
 	public TowerManager enemyTowerManager;
 
+	public DamageTextManager damageTextManager;
+
+	[Header("UI References")]
 	public Button mainButton;
 	public Text mainButtonText;
 
+	public Image phaseBackground;
+	public Text phaseText;
+
+	[Header("Animation Config")]
+	[Range(0, 1)]
+	public float maxPhaseOverlayOpacity;
+	public float phaseFadeTime;
+	public float phaseDisplayTime;
+
+	public void WaitForMatch()
+	{
+		phaseBackground.gameObject.SetActive(true);
+		phaseText.gameObject.SetActive(true);
+		phaseText.text = "Waiting For Match";
+	}
 
 	public void InitializeUI()
 	{
 		mainButton.interactable = true;
-
-		myHandManager.TrackHand(players[Driver.instance.sideIndex].Hand);
-		enemyHandManager.TrackHand(players[1 - Driver.instance.sideIndex].Hand);
 
 		myUnitManager.sideIndex = myIndex;
 		enemyUnitManager.sideIndex = enemyIndex;
@@ -49,25 +82,14 @@ public class UIManager : MonoBehaviour
 		myTowerManager.sideIndex = myIndex;
 		enemyTowerManager.sideIndex = enemyIndex;
 		RenderTowers();
+
+		phaseBackground.CrossFadeAlpha(0, 0, false);
+		phaseText.CrossFadeAlpha(0, 0, false);
 	}
 
-	public Coroutine DrawPhase()
+	public Coroutine OpponentDrawCards()
 	{
-		return StartCoroutine(AnimateDrawPhase());
-	}
-
-	private IEnumerator AnimateDrawPhase()
-	{
-		mainButtonText.text = "DRAWING...";
-		mainButton.interactable = false;
-
-		Coroutine myDraw = myHandManager.DrawCards();
-		Coroutine enemyDraw = enemyHandManager.DrawUnknownCards();
-		yield return myDraw;
-		yield return enemyDraw;
-
-		mainButtonText.text = "LOCK IN PLANS";
-		mainButton.interactable = true;
+		return enemyHandManager.DrawUnknownCards();
 	}
 
 	public void ValidateDropCost()
@@ -84,11 +106,15 @@ public class UIManager : MonoBehaviour
 		}
 	}
 
-	public IEnumerator WaitForMainButtonClick()
+	public IEnumerator WaitForLockIn()
 	{
+		mainButtonText.text = "LOCK IN PLANS";
+		mainButton.interactable = true;
+
 		bool clicked = false;
 		UnityAction listener = null;
-		listener = () => {
+		listener = () =>
+		{
 			clicked = true;
 			mainButton.onClick.RemoveListener(listener);
 		};
@@ -101,7 +127,12 @@ public class UIManager : MonoBehaviour
 		LockUnits();
 
 		mainButtonText.text = "WAITING FOR OPPONENT";
-		mainButton.GetComponent<Image>().color = new Color(153, 204, 255);
+		mainButton.interactable = false;
+	}
+
+	public void BeforeTurnStart()
+	{
+		mainButtonText.text = "PROCESSING TURN EVENTS";
 	}
 
 	public void RenderUnits()
@@ -120,5 +151,25 @@ public class UIManager : MonoBehaviour
 	{
 		myUnitManager.LockUnits();
 		enemyUnitManager.LockUnits();
+	}
+
+	public Coroutine ShowPhaseName(string phaseName)
+	{
+		return StartCoroutine(AnimateShowPhaseName(phaseName));
+	}
+
+	private IEnumerator AnimateShowPhaseName(string phaseName)
+	{
+		phaseText.text = phaseName;
+
+		phaseBackground.CrossFadeAlpha(maxPhaseOverlayOpacity, phaseFadeTime, false);
+		phaseText.CrossFadeAlpha(1, phaseFadeTime, false);
+		yield return new WaitForSeconds(phaseFadeTime);
+
+		yield return new WaitForSeconds(phaseDisplayTime);
+
+		phaseBackground.CrossFadeAlpha(0, phaseFadeTime, false);
+		phaseText.CrossFadeAlpha(0, phaseFadeTime, false);
+		yield return new WaitForSeconds(phaseFadeTime);
 	}
 }

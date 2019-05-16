@@ -20,6 +20,9 @@ public class UnitHolder : MonoBehaviour
 	public HandManager handManager;
 	public GameObject hoverParent;
 
+	[Header("Animation Config")]
+	public float spawnDuration;
+
 	[HideInInspector]
 	public PlayUnitCardAction playAction;
 
@@ -101,7 +104,7 @@ public class UnitHolder : MonoBehaviour
 	{
 		Unit unit = gameManager.Lanes[laneIndex].Units[unitManager.sideIndex, positionIndex];
 
-		if (unit == null || unit.HealthPoints <= 0)
+		if (unit == null)
 		{
 			foreach (Transform child in transform)
 			{
@@ -127,6 +130,20 @@ public class UnitHolder : MonoBehaviour
 		}
 	}
 
+	public Coroutine SpawnUnit()
+	{
+		GameObject unitObject = InstantiateUnit(gameManager.Lanes[laneIndex].Units[unitManager.sideIndex, positionIndex]);
+		Transform unitTransform = unitObject.transform;
+
+		return UIManager.instance.LerpTime(
+			Vector3.Lerp,
+			Vector3.zero,
+			unitTransform.localScale,
+			spawnDuration,
+			scale => unitTransform.localScale = scale
+		);
+	}
+
 	public void LockUnit()
 	{
 		Transform transform = base.transform;
@@ -141,5 +158,18 @@ public class UnitHolder : MonoBehaviour
 			Unit unit = gameManager.Lanes[laneIndex].Units[unitManager.sideIndex, positionIndex];
 			childObject.GetComponent<UnitUI>().unit = unit;
 		}
+	}
+
+	public Coroutine RemoveUnit()
+	{
+		Transform child = transform.GetChild(0);
+
+		return UIManager.instance.LerpTime(
+			Vector3.Lerp,
+			child.localScale,
+			Vector3.zero,
+			spawnDuration,
+			scale => child.localScale = scale
+		);
 	}
 }

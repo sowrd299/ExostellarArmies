@@ -108,14 +108,13 @@ namespace SFB.Net.Server.Matches{
         }
 
         // handle everything that happens at the start of a new turn
-        public void StartTurn(Delta[] deltas){
+        public void StartTurn(TurnPhase[] phases){
             XmlDocument msg = NewEmptyMessage("turnStart");
-            foreach(Delta d in deltas.Where((d) => d.VisibleTo(player))){
-                // TODO: filter down to only the deltas the player gets to know about
-                // e.g. remove cards drawn by opponent
-                XmlElement e = d.ToXml(msg);
-				msg.DocumentElement.AppendChild(e);
-            }
+			foreach (TurnPhase phase in phases)
+			{
+				XmlElement element = phase.ToXml(msg, player);
+				msg.DocumentElement.AppendChild(element);
+			}
 			socket.SendXml(msg);
             state = State.ACTING;
             turnDeltas = new List<Delta>();
