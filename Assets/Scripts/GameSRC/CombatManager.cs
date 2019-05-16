@@ -43,7 +43,7 @@ namespace SFB.Game.Management
 				for(int play = 0; play < 2; play++)
 					for(int pos = 0; pos < 2; pos++)
 						if(l.IsOccupied(play, pos)) {
-							Delta[] combatDeltas = l.Units[play, pos].GetMeleeDamagingDeltas(l, System.Math.Abs(play - 1));
+							Delta[] combatDeltas = l.Units[play, pos].GetDamagingDeltas(l, System.Math.Abs(play - 1), Damage.Type.MELEE);
 							foreach(Delta d in combatDeltas) {
 								if(d.GetType() == typeof(TowerDamageDelta)) {
 									TowerDamageDelta t = d as TowerDamageDelta;
@@ -75,7 +75,7 @@ namespace SFB.Game.Management
 						if(l.IsOccupied(play, pos)) {
 							Unit target = l.Units[play, pos];
 							int deal = System.Math.Min(target.HealthPoints, dmgLeft);
-							list.Add(new UnitDamageDelta(target, deal, Damage.Type.TOWER, null));
+							list.Add(new UnitTakeDamageDelta(target, deal, Damage.Type.TOWER, null));
 							dmgLeft -= deal;
 						}
 						pos++;

@@ -7,11 +7,12 @@ namespace SFB.Game{
 		public int RangedAttack { get; private set; }
 		public int MeleeAttack { get; private set; }
 		public int HealthPoints { get; private set; }
+
 		public List<Ability> Abilities { get; private set; }
 
-		// abilities
+		public string UnitType { get; private set; }
 
-		public UnitCard(int cost, string name, Faction faction, string mainText, string flavorText,
+		public UnitCard(int cost, string name, Faction faction, string unitType, string mainText, string flavorText,
 			int rangedAttack, int meleeAttack, int healthPoints, List<Ability> abList=null
 		)
 			: base(cost, name, faction, mainText, flavorText)
@@ -19,7 +20,8 @@ namespace SFB.Game{
 			RangedAttack = rangedAttack;
 			MeleeAttack = meleeAttack;
             HealthPoints = healthPoints;
-			Abilities = (abList == null ? new List<Ability>() : abList);
+			Abilities = abList ?? new List<Ability>();
+			UnitType = unitType;
         }
 
     }

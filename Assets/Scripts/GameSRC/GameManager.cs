@@ -13,35 +13,21 @@ namespace SFB.Game.Management{
     public class GameManager
 	{
         // GAME PLAY CONSTANTS
-        // the number of lanes in the game;
-        public const int NUM_LANES = 3;
 
         // THE GAMESTATE
         public bool Over {
             get{ // technically shouldn't do o(n) in a field, but it's a very small n
-                foreach(Player p in players)
+                foreach(Player p in GameState.Players)
                     if(p.Lives == 0)
                         return true;
                 return false;
             }
         }
 
-        private Player[] players;
-        // an array of all the players
-        // MUST BE IN THE SAME ORDER AS THEIR DECKLISTS/IDS WERE PROVIDED
-        public Player[] Players{
-            get{
-                return players;
-            }
-        }
+        public GameState GameState { get; private set; }
+		public Player[] Players { get { return GameState.Players; } }
+		public Lane[] Lanes { get { return GameState.Lanes; } }
 
-        private Lane[] lanes;
-        // an array of all the lanes
-        public Lane[] Lanes{
-            get{
-                return lanes;
-            }
-        }
 		/*
         // WHERE ALL PENDING PENDING INPUT REQUESTS GO
         private List<InputRequest> pendingInputRequests;
@@ -50,14 +36,7 @@ namespace SFB.Game.Management{
         }
 		*/
 
-		internal int[] GetSidePosOf(Unit u) {
-			for(int l = 0; l < lanes.Length; l++)
-				for(int side = 0; side < 2; side++)
-					for(int pos = 0; pos < 2; pos++)
-						if(lanes[l].Units[side, pos] == u)
-							return new int[] { l, side, pos };
-			return null;
-		}
+		
 
         // when hidden list is null, will init players with "hidden decks" of unkown cards
         //      functionality intended for clients
@@ -66,29 +45,7 @@ namespace SFB.Game.Management{
         // when both are null, will start a game with no players
         // MUST KEEP THE INDEXES OF THE OBJECTS GIVEN TO IT
         public GameManager(DeckList[] deckLists = null, XmlElement[] serializedPlayers = null, XmlElement[] serializedLanes = null){
-            // setup players
-            int numPlayers = deckLists != null ? deckLists.Length : (serializedPlayers != null ? serializedPlayers.Length : 0);
-            players = new Player[numPlayers];
-            for(int i = 0; i < numPlayers; i++){
-                DeckList hiddenList =  new DeckList();
-                hiddenList.AddCard(new UnknownCard(), 20); // TODO: support decks of different sizes?
-                DeckList list = deckLists != null ? deckLists[i] : hiddenList;
-
-				players[i] = new Player(list, serializedPlayers?[i]);
-            }
-            // setup lanes
-            if(serializedLanes == null){ // ...from scratch
-                lanes = new Lane[NUM_LANES];
-                for(int i = 0; i < NUM_LANES; i++){
-                    lanes[i] = new Lane();
-                }
-            }else{ // ...with pre-determined ids
-                lanes = new Lane[serializedLanes.Length];
-                for(int i = 0; i < serializedLanes.Length; i++){
-                    int j = Int32.Parse(serializedLanes[i].Attributes["index"].Value);
-                    lanes[j] = new Lane(serializedLanes[i]);
-                }
-            }
+			GameState = new GameState(deckLists, serializedPlayers, serializedLanes);
         }
 
         public void ApplyDelta(Delta d){
@@ -112,7 +69,7 @@ namespace SFB.Game.Management{
 		// add deploy phases
         public Delta[] GetStartTurnDeltas(){
             List<Delta> deltas = new List<Delta>();
-            foreach(Player p in players){
+            foreach(Player p in GameState.Players){
                 foreach(Delta d in p.GetDeployPhaseDeltas()){
                     deltas.Add(d);
                 }
@@ -123,7 +80,7 @@ namespace SFB.Game.Management{
         // get Deltas for the start of each deploy phase
         public Delta[] GetStartDeployDeltas(){
 			List<Delta> deltas = new List<Delta>();
-			foreach(Player p in players) {
+			foreach(Player p in GameState.Players) {
 				foreach(Delta d in p.GetDrawDeltas()) {
 					deltas.Add(d);
 				}
@@ -133,15 +90,15 @@ namespace SFB.Game.Management{
 		}
 
 		public Delta[] GetRangedCombatDeltas() {
-			return CombatManager.GetRangedDeltas(lanes);
+			return CombatManager.GetRangedDeltas(GameState.Lanes);
 		}
 
 		public Delta[] GetMeleeCombatDeltas() {
-			return CombatManager.GetMeleeDeltas(lanes);
+			return CombatManager.GetMeleeDeltas(GameState.Lanes);
 		}
 
 		public Delta[] GetTowerDamageDeltas() {
-			return CombatManager.GetTowerDeltas(lanes);
+			return CombatManager.GetTowerDeltas(GameState.Lanes);
 		}
 
 
@@ -150,7 +107,7 @@ namespace SFB.Game.Management{
             // and old dummy implementation:
             // return new Delta[]{new Deck.RemoveFromDeckDelta(player.Deck, null, 0)}; // this implementation intrinsically throws errors
             // real implementation:
-            return a.GetDeltas(player);
+            return a.GetDeltas(player, this.GameState);
         }
 		
         // Get deltas for after a deployment phase ends
@@ -159,27 +116,20 @@ namespace SFB.Game.Management{
 		{
 			// decrease each player's # of deploy phases
             List<Delta> deltas = new List<Delta>();
-            foreach(Player p in players){
+            foreach(Player p in GameState.Players) {
                 foreach(Delta d in p.GetPostDeployPhaseDeltas()){
                     deltas.Add(d);
                 }
             }
 
-			// fill front if empty
-			foreach(Lane lane in lanes) {
-				for(int side = 0; side < lane.Units.GetLength(0); side++)
-					if(lane.NeedFillFront(side))
-						deltas.AddRange(lane.GetInLaneSwapDeltas(side));
-			}
-
 			// activate deploy affects
-			for(int l = 0; l < lanes.Length; l++) {
-				Lane lane = lanes[l];
+			for(int l = 0; l < GameState.Lanes.Length; l++) {
+				Lane lane = GameState.Lanes[l];
 				
 				for(int side = 0; side < lane.Units.GetLength(0); side++) // sideIndex
 					for(int pos = 0; pos < lane.Units.GetLength(1); pos++) // front/back row
 						if(lane.Units[side, pos] != null) // do not call on empty spaces
-							deltas.AddRange(lane.Units[side, pos].OnEachDeployPhase(side, pos, l, lanes, players));
+							deltas.AddRange(lane.Units[side, pos].OnEachDeployPhase(l, side, pos, GameState));
 			}
 
             return deltas.ToArray();
@@ -191,7 +141,7 @@ namespace SFB.Game.Management{
         public bool DeployPhasesOver()
 		{
             bool r = true;
-            foreach(Player p in players){
+            foreach(Player p in GameState.Players) {
                 r &= p.DeployPhases <= 0;
             }
             return r;
@@ -202,7 +152,7 @@ namespace SFB.Game.Management{
 		// returns and XML representation of the ID of the lane in each index
 		public XmlElement[] GetLaneIDs(XmlDocument doc)
 		{
-			return lanes.Select((lane, index) => lane.ToXml(doc, index)).ToArray();
+			return GameState.Lanes.Select((lane, index) => lane.ToXml(doc, index)).ToArray();
 		}
 
 		// to be called after every phase
@@ -211,29 +161,40 @@ namespace SFB.Game.Management{
 			List<Delta> deltas = new List<Delta>();
 
 			// clean units
-			for(int l = 0; l < lanes.Length; l++) {
-				Lane lane = lanes[l];
+			for(int l = 0; l < GameState.Lanes.Length; l++) {
+				Lane lane = GameState.Lanes[l];
 				for(int side = 0; side < lane.Units.GetLength(0); side++)
 					for(int pos = 0; pos < lane.Units.GetLength(1); pos++) {
 						Unit u = lane.Units[side, pos];
 						if(u != null && u.HealthPoints <= 0) {
+							deltas.AddRange(u.OnDeath(l, side, pos, GameState));
 							deltas.AddRange(lane.GetDeathDeltas(side, pos));
-							deltas.AddRange(u.OnDeath(side, pos, l, lanes, players));
+							// TODO add to discard
 						}
 					}
 			}
 
+			// fill front if empty
+			foreach(Lane lane in GameState.Lanes) {
+				for(int side = 0; side < lane.Units.GetLength(0); side++)
+					if(lane.NeedFillFront(side))
+						deltas.AddRange(lane.GetInLaneSwapDeltas(side));
+			}
+
+			GameState.UseAddBoardUpdateDeltas(deltas);
+
 			// clean towers -> player lives
-			for(int l = 0; l < lanes.Length; l++) {
-				Lane lane = lanes[l];
+			for(int l = 0; l < GameState.Lanes.Length; l++) {
+				Lane lane = GameState.Lanes[l];
 				for(int i = 0; i < lane.Towers.Length; i++) {
 					if(lane.Towers[i].HP <= 0) {
-						deltas.AddRange(players[i].LivesPool.GetSubtractDeltas(1));
+						deltas.AddRange(GameState.Players[i].LivesPool.GetSubtractDeltas(1));
 						deltas.AddRange(lane.Towers[i].GetReviveDeltas());
-						deltas.AddRange(players[i].DeployPhasesPool.GetAddDeltas(1));
+						deltas.AddRange(GameState.Players[i].DeployPhasesPool.GetAddDeltas(1));
 					}
 				}
 			}
+
 			return deltas.ToArray();
 		}
     }

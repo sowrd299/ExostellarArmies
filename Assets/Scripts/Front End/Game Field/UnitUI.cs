@@ -12,7 +12,7 @@ public class UnitUI : MonoBehaviour, IHasCard
 	private Unit _unit;
 	public Unit unit
 	{
-		get { return _unit ?? (_unit = new Unit(cardData)); }
+		get { return _unit ?? (_unit = new Unit(cardData, Driver.instance.gameManager.GameState)); }
 		set { _unit = value; }
 	}
 

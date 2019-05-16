@@ -56,7 +56,7 @@ public class Driver : MonoBehaviour
 		Task connect = client.Connect();
 		yield return new WaitUntil(() => connect.IsCompleted);
 
-		Task joinMatch = client.JoinMatch();
+		Task joinMatch = client.JoinMatch(deckId: "TEST Undergrowth Smasher");
 		yield return new WaitUntil(() => joinMatch.IsCompleted);
 
 		Task<XmlDocument> matchStart = client.ReceiveDocument();
@@ -137,29 +137,29 @@ public class Driver : MonoBehaviour
 		// X:		misc deploy phase stuff
 		// R, M, T:	ranged, melee, tower
 		// D:		draw
-		List<Delta> deployDeltas = parsedDeltas
-			.TakeWhile(pair => !IsCombatDelta(pair.Item2))
-			.Select(pair => pair.Item2)
+		List<Delta> deployDeltas = Enumerable.TakeWhile<Tuple<XmlElement, Delta>>(parsedDeltas
+, (Func<Tuple<XmlElement, Delta>, bool>)((Tuple<XmlElement, Delta> pair) => (bool)!IsCombatDelta((Delta)pair.Item2)))
+			.Select((Tuple<XmlElement, Delta> pair) => pair.Item2)
 			.ToList();
-		List<Tuple<XmlElement, Delta>> combatDeltas = parsedDeltas
-			.Where(pair => IsCombatDelta(pair.Item2))
+		List<Tuple<XmlElement, Delta>> combatDeltas = Enumerable.Where<Tuple<XmlElement, Delta>>(parsedDeltas
+, (Func<Tuple<XmlElement, Delta>, bool>)((Tuple<XmlElement, Delta> pair) => (bool)IsCombatDelta((Delta)pair.Item2)))
 			.ToList();
 		List<Delta> rangedCombatDeltas = combatDeltas
-			.Where(pair => pair.Item1.GetAttribute("dmgType") == "R")
-			.Select(pair => pair.Item2)
+			.Where((Tuple<XmlElement, Delta> pair) => pair.Item1.GetAttribute("dmgType") == "R")
+			.Select((Tuple<XmlElement, Delta> pair) => pair.Item2)
 			.ToList();
 		List<Delta> meleeCombatDeltas = combatDeltas
-			.Where(pair => pair.Item1.GetAttribute("dmgType") == "M")
-			.Select(pair => pair.Item2)
+			.Where((Tuple<XmlElement, Delta> pair) => pair.Item1.GetAttribute("dmgType") == "M")
+			.Select((Tuple<XmlElement, Delta> pair) => pair.Item2)
 			.ToList();
 		List<Delta> towerCombatDeltas = combatDeltas
-			.Where(pair => pair.Item1.GetAttribute("dmgType") == "T")
-			.Select(pair => pair.Item2)
+			.Where((Tuple<XmlElement, Delta> pair) => pair.Item1.GetAttribute("dmgType") == "T")
+			.Select((Tuple<XmlElement, Delta> pair) => pair.Item2)
 			.ToList();
-		List<Delta> drawDeltas = parsedDeltas
-			.SkipWhile(pair => !IsCombatDelta(pair.Item2))
-			.SkipWhile(pair => IsCombatDelta(pair.Item2))
-			.Select(pair => pair.Item2)
+		List<Delta> drawDeltas = Enumerable.SkipWhile<Tuple<XmlElement, Delta>>(parsedDeltas
+, (Func<Tuple<XmlElement, Delta>, bool>)((Tuple<XmlElement, Delta> pair) => (bool)!IsCombatDelta((Delta)pair.Item2)))
+			.SkipWhile((Tuple<XmlElement, Delta> pair) => IsCombatDelta(pair.Item2))
+			.Select((Tuple<XmlElement, Delta> pair) => pair.Item2)
 			.ToList();
 
 		ProcessDeployDeltas(deployDeltas);
@@ -171,7 +171,7 @@ public class Driver : MonoBehaviour
 
 	private bool IsCombatDelta(Delta delta)
 	{
-		return delta is UnitDamageDelta || delta is TowerDamageDelta;
+		return delta is UnitTakeDamageDelta || delta is TowerDamageDelta;
 	}
 
 	private void ProcessDeployDeltas(List<Delta> deployDeltas)

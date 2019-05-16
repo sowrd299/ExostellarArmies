@@ -73,6 +73,24 @@ namespace SFB.Game.Content
 			return false;
 		}
 
+		public Tuple<int, int> GetSidePosOf(Unit unit)	
+		{
+			for(int side = 0; side < 2; side++)
+				for(int pos = 0; pos < 2; pos++)
+					if(Units[side, pos] == unit)
+						return new Tuple<int, int>(side, pos);
+			return null;
+		}
+
+		public static Tuple<int, int, int> GetLaneSidePosOf(Unit unit, Lane[] lanes) {
+			for(int lane = 0; lane < lanes.Length; lane++) {
+				Tuple<int, int> sidePos = lanes[lane].GetSidePosOf(unit);
+				if(sidePos != null)
+					return new Tuple<int, int, int>(lane, sidePos.Item1, sidePos.Item2);
+			}
+			return null;
+		}
+
 		public void Kill(int side, int pos)
 		{
 			Units[side, pos] = null;
@@ -99,9 +117,9 @@ namespace SFB.Game.Content
 			return Units[side, pos] != null;
 		}
 
-		public void Place(UnitCard uc, int side, int pos)
+		public void Place(UnitCard uc, int side, int pos, GameState gameState)
 		{
-			Units[side, pos] = new Unit(uc);
+			Units[side, pos] = new Unit(uc, gameState);
 		}
 
 		public void Place(Unit u, int side, int pos)
@@ -109,17 +127,16 @@ namespace SFB.Game.Content
 			Units[side, pos] = u;
 		}
 
-		private void PlaceFront(UnitCard uc, int p) { Place(uc, p, 0); }
-		private void PlaceBack(UnitCard uc, int p) { Place(uc, p, 1); }
-
 		public bool NeedFillFront(int side) {
 			return Units[side, 0] == null && Units[side, 1] != null;
 		}
 
 
-		public AddToLaneDelta[] GetDeployDeltas(UnitCard card, int side, int pos)
+		public Delta[] GetDeployDeltas(UnitCard card, int side, int pos, GameState gameState)
 		{
-			return new AddToLaneDelta[] { new AddToLaneDelta(this, card, side, pos) };
+			List<Delta> deltas = new List<Delta>() { new AddToLaneDelta(this, card, side, pos, gameState) };
+			gameState.UseAddBoardUpdateDeltas(deltas);
+			return deltas.ToArray();
 		}
 
 		public RemoveFromLaneDelta[] GetDeathDeltas(int side, int pos)

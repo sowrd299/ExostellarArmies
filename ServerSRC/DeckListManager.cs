@@ -44,8 +44,7 @@ namespace SFB.Net.Server{
             
             r.AddCard(newCardLoader.GetByID("Cannoneer Drone"),1);
 
-            r.AddCard(new UnitCard(2, "Autonomous Range Finder", Faction.CARTH, "Supporting Carthan Deploy: Give this front line +3R this turn.",
-                    "56413", 0, 1, 3, new List<Ability>()),2);
+            r.AddCard(newCardLoader.GetByID("Autonomous Range Finder"), 2);
             return r;
         }
 
@@ -77,22 +76,26 @@ namespace SFB.Net.Server{
         public DeckList LoadFromID(string id){
             //TESTING IMPLEMENTATION
             Console.WriteLine("Loading deck: {0}...", id);
-            switch(id){
-                case "testing":
-                        DeckList r = new DeckList();
-                        UnitCard xsMarine = new UnitCard(3, "Exostellar Marine Squade", Faction.CARTH, "", "Bravely into the Darkness", 2, 2, 4, new List<Ability>());
-                        r.AddCard(xsMarine, 20);
-                        return r;
-                case "carthStarter":
-                        return CarthStarter();
-                case "myxoriStarter":
-                        return MyxoriStarter();
-                default:
-                        return new DeckList();
-            }
+			if(id.StartsWith("TEST ")) {
+				DeckList d = new DeckList();
+				d.AddCard(newCardLoader.GetByID(id.Substring(5)), 8);
+				d.AddCard(newCardLoader.GetByID("Resist Token"), 6);
+				d.AddCard(newCardLoader.GetByID("Mana Token"), 6);
+				Console.WriteLine("ok");
+				return d;
+			} else {
+				switch(id) {
+					case "carthStarter":
+						return CarthStarter();
+					case "myxoriStarter":
+						return MyxoriStarter();
+					case "testing":
+					default:
+						DeckList d = new DeckList();
+						d.AddCard(newCardLoader.GetByID("Resist Token"), 20);
+						return d;
+				}
+			}
         }
-
-
     }
-
 }
