@@ -31,10 +31,11 @@ namespace SFB.Game
 		}
 
 		public int HealthPoints { get; private set; }
-
 		public bool FirstDeploy { get; private set; }
-		
-		// combat abilities
+
+		public List<Ability> Abilities { get; private set; }
+
+		// combat ability events
 		public event Ability.FilterTargets FilterTargets;
 
 		public event Ability.ModifyInt ModifyRangedResistance;
@@ -44,7 +45,7 @@ namespace SFB.Game
 		public event Ability.ModifyInt ModifyDamageLeft;
 		public event Ability.ModifyInt ModifyTowerDamage;
 
-		// triggered abilities
+		// triggered ability events
 		public event Ability.AddDelta AddInitialDeployDeltas;
 		public event Ability.AddDelta AddRecurringDeployDeltas;
 		public event Ability.AddDelta AddDeathDeltas;
@@ -71,8 +72,12 @@ namespace SFB.Game
 			
 			this.FirstDeploy = true;
 
-			foreach(Ability a in card.Abilities)
+			this.Abilities = new List<Ability>();
+
+			foreach(Ability a in card.Abilities) {
+				this.Abilities.Add(a);
 				a.ApplyTo(this, gameState);
+			}
 		}
 		
 		public Delta[] GetDamagingDeltas(Lane l, int oppSide, Damage.Type dmgType) {

@@ -1,0 +1,29 @@
+using SFB.Game.Management;
+using System.Collections.Generic;
+
+namespace SFB.Game
+{
+	// *EFFECT*
+
+	public class *NAME* : Ability
+	{
+		public *NAME*() : base(-1) { }
+
+		protected override void ApplyEffects(Unit u, GameState initialGameState)
+		{
+			// += *NAME*Inner;
+		}
+
+		protected override void RemoveEffects(Unit u, GameState initialGameState)
+		{
+			// -= *NAME*Inner;
+		}
+
+		public void *NAME*Inner(List<Delta> deltas, GameStateLocation gameStateLocation)
+		public void *NAME*Inner(Unit[] targets)
+		public void *NAME*Inner(ref int amt)
+		{
+			// TODO: *EFFECT*
+		}
+	}
+}

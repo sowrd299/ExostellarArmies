@@ -169,6 +169,7 @@ namespace SFB.Game.Management{
 						if(u != null && u.HealthPoints <= 0) {
 							deltas.AddRange(u.OnDeath(l, side, pos, GameState));
 							deltas.AddRange(lane.GetDeathDeltas(side, pos));
+							// TODO add to discard
 						}
 					}
 			}

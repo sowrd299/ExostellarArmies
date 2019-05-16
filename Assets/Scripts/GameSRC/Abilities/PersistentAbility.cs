@@ -6,23 +6,41 @@ namespace SFB.Game
 {
 	public abstract class PersistentFieldAbility : Ability
 	{
-		public PersistentFieldAbility()
-			: base(-1)
-		{ }
+		private AddDelta removeEffects;
+		private AddDelta addEffects;
 
-		public override void ApplyTo(Unit source, GameState initialGameState) {
-			initialGameState.AddBoardUpdateDeltas += RemoveEffects(source);
-			initialGameState.AddBoardUpdateDeltas += AddEffects(source);
+		public PersistentFieldAbility() : base(-1)
+		{
+			removeEffects = null;
+			addEffects = null;
+		}
 
-			void RemovePersistentFromGM(List<Delta> deltas, GameStateLocation gameStateLoc)
-			{
-				gameStateLoc.GameState.AddBoardUpdateDeltas -= RemoveEffects(source);
-				gameStateLoc.GameState.AddBoardUpdateDeltas -= AddEffects(source);
-			}
+		protected override void ApplyEffects(Unit source, GameState gameState) {
+			removeEffects = RemoveEffects(source);
+			addEffects = AddEffects(source);
+
+			gameState.AddBoardUpdateDeltas += removeEffects;
+			gameState.AddBoardUpdateDeltas += addEffects;
+
 			source.AddDeathDeltas += RemovePersistentFromGM;
 		}
-		
-		private Ability.AddDelta AddEffects(Unit source)
+
+		protected override void RemoveEffects(Unit source, GameState gameState)
+		{
+			AddDelta removeEffects = RemoveEffects(source);
+			AddDelta addEffects = AddEffects(source);
+
+			gameState.AddBoardUpdateDeltas -= removeEffects;
+			gameState.AddBoardUpdateDeltas -= addEffects;
+
+			void RemovePersistentFromGM(List<Delta> deltas, GameStateLocation gameStateLoc) {
+				gameStateLoc.GameState.AddBoardUpdateDeltas -= removeEffects;
+				gameStateLoc.GameState.AddBoardUpdateDeltas -= addEffects;
+			}
+			source.AddDeathDeltas -= RemovePersistentFromGM;
+		}
+
+		private AddDelta AddEffects(Unit source)
 		{
 			void InnerAddEffects(List<Delta> deltas, GameStateLocation gameStateLoc) {
 				Lane[] lanes = gameStateLoc.Lanes;
@@ -37,7 +55,7 @@ namespace SFB.Game
 			return InnerAddEffects;
 		}
 
-		private Ability.AddDelta RemoveEffects(Unit source)
+		private AddDelta RemoveEffects(Unit source)
 		{
 			void InnerRemoveEffects(List<Delta> deltas, GameStateLocation gameStateLoc) {
 				Lane[] lanes = gameStateLoc.Lanes;
@@ -49,6 +67,11 @@ namespace SFB.Game
 				}
 			}
 			return InnerRemoveEffects;
+		}
+
+		private void RemovePersistentFromGM(List<Delta> deltas, GameStateLocation gameStateLoc) {
+			gameStateLoc.GameState.AddBoardUpdateDeltas -= removeEffects;
+			gameStateLoc.GameState.AddBoardUpdateDeltas -= addEffects;
 		}
 
 		protected abstract Delta[] GetAddDeltas(int lane, int side, int pos, Lane[] lanes, Unit source);

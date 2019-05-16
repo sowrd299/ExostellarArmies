@@ -48,7 +48,7 @@ namespace SFB.Game {
 					Target.RangedAtkMod += (ref int a) => { a += Amount; };
 					break;
 				default:
-					throw new IllegalDeltaException($"Invalid UnitDamageAmountDelta for type \"{DmgType}\"");
+					throw new IllegalDeltaException($"Invalid UnitDamageAmountDelta for dmgtype \"{DmgType}\"");
 			}
 		}
 	}
