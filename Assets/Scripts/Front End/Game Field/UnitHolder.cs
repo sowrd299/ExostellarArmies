@@ -132,15 +132,10 @@ public class UnitHolder : MonoBehaviour
 
 	public Coroutine SpawnUnit()
 	{
-		return StartCoroutine(AnimateSpawnUnit());
-	}
-
-	private IEnumerator AnimateSpawnUnit()
-	{
 		GameObject unitObject = InstantiateUnit(gameManager.Lanes[laneIndex].Units[unitManager.sideIndex, positionIndex]);
 		Transform unitTransform = unitObject.transform;
 
-		yield return UIManager.instance.LerpTime(
+		return UIManager.instance.LerpTime(
 			Vector3.Lerp,
 			Vector3.zero,
 			unitTransform.localScale,
@@ -163,5 +158,18 @@ public class UnitHolder : MonoBehaviour
 			Unit unit = gameManager.Lanes[laneIndex].Units[unitManager.sideIndex, positionIndex];
 			childObject.GetComponent<UnitUI>().unit = unit;
 		}
+	}
+
+	public Coroutine RemoveUnit()
+	{
+		Transform child = transform.GetChild(0);
+
+		return UIManager.instance.LerpTime(
+			Vector3.Lerp,
+			child.localScale,
+			Vector3.zero,
+			spawnDuration,
+			scale => child.localScale = scale
+		);
 	}
 }

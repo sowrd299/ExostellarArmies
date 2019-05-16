@@ -185,8 +185,21 @@ public class Driver : MonoBehaviour
 			}
 			else
 			{
-				yield return uiManager.UnitDamage(unitDamageDelta.Source, unitDamageDelta.Target, unitDamageDelta.Amount);
+				yield return uiManager.UnitDamage(
+					unitDamageDelta.Source,
+					unitDamageDelta.Target,
+					unitDamageDelta.Amount
+				);
 			}
+		}
+		else if (delta is RemoveFromLaneDelta)
+		{
+			RemoveFromLaneDelta removeDelta = delta as RemoveFromLaneDelta;
+			yield return uiManager.RemoveUnit(
+				Array.FindIndex(gameManager.Lanes, lane => lane.ID == removeDelta.Target.ID),
+				removeDelta.SideIndex,
+				removeDelta.Position
+			);
 		}
 		else if (delta is TowerDamageDelta)
 		{

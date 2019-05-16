@@ -80,6 +80,7 @@ public partial class UIManager : MonoBehaviour
 			setter(lerp(initial, final, evaluate((Time.time - startTime) / duration)));
 			yield return null;
 		}
+		
 		setter(final);
 	}
 }

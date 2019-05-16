@@ -76,6 +76,12 @@ public partial class UIManager : MonoBehaviour
 		));
 	}
 
+	public Coroutine RemoveUnit(int laneIndex, int sideIndex, int positionIndex)
+	{
+		UnitHolder holder = unitManagers[sideIndex].unitHolders[laneIndex, positionIndex];
+		return holder.RemoveUnit();
+	}
+
 	public Coroutine TowerRespawn(Tower target)
 	{
 		(int laneIndex, int sideIndex) = GetPositionIdentifier(target);
