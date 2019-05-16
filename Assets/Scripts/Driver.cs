@@ -56,7 +56,7 @@ public class Driver : MonoBehaviour
 		Task connect = client.Connect();
 		yield return new WaitUntil(() => connect.IsCompleted);
 
-		Task joinMatch = client.JoinMatch();
+		Task joinMatch = client.JoinMatch(deckId: "TEST Undergrowth Smasher");
 		yield return new WaitUntil(() => joinMatch.IsCompleted);
 
 		Task<XmlDocument> matchStart = client.ReceiveDocument();
@@ -112,7 +112,7 @@ public class Driver : MonoBehaviour
 
 		foreach (XmlElement element in elements)
 		{
-			SFB.Game.Management.Delta delta = SFB.Game.Management.Delta.FromXml(element, cardLoader);
+			Delta delta = Delta.FromXml(element, cardLoader);
 			delta.Apply();
 		}
 
@@ -137,29 +137,29 @@ public class Driver : MonoBehaviour
 		// X:		misc deploy phase stuff
 		// R, M, T:	ranged, melee, tower
 		// D:		draw
-		List<SFB.Game.Management.Delta> deployDeltas = Enumerable.TakeWhile<Tuple<XmlElement, SFB.Game.Management.Delta>>(parsedDeltas
-, (Func<Tuple<XmlElement, SFB.Game.Management.Delta>, bool>)((Tuple<XmlElement, SFB.Game.Management.Delta> pair) => (bool)!IsCombatDelta((SFB.Game.Management.Delta)pair.Item2)))
-			.Select((Tuple<XmlElement, SFB.Game.Management.Delta> pair) => pair.Item2)
+		List<Delta> deployDeltas = Enumerable.TakeWhile<Tuple<XmlElement, Delta>>(parsedDeltas
+, (Func<Tuple<XmlElement, Delta>, bool>)((Tuple<XmlElement, Delta> pair) => (bool)!IsCombatDelta((Delta)pair.Item2)))
+			.Select((Tuple<XmlElement, Delta> pair) => pair.Item2)
 			.ToList();
-		List<Tuple<XmlElement, SFB.Game.Management.Delta>> combatDeltas = Enumerable.Where<Tuple<XmlElement, SFB.Game.Management.Delta>>(parsedDeltas
-, (Func<Tuple<XmlElement, SFB.Game.Management.Delta>, bool>)((Tuple<XmlElement, SFB.Game.Management.Delta> pair) => (bool)IsCombatDelta((SFB.Game.Management.Delta)pair.Item2)))
+		List<Tuple<XmlElement, Delta>> combatDeltas = Enumerable.Where<Tuple<XmlElement, Delta>>(parsedDeltas
+, (Func<Tuple<XmlElement, Delta>, bool>)((Tuple<XmlElement, Delta> pair) => (bool)IsCombatDelta((Delta)pair.Item2)))
 			.ToList();
-		List<SFB.Game.Management.Delta> rangedCombatDeltas = combatDeltas
-			.Where((Tuple<XmlElement, SFB.Game.Management.Delta> pair) => pair.Item1.GetAttribute("dmgType") == "R")
-			.Select((Tuple<XmlElement, SFB.Game.Management.Delta> pair) => pair.Item2)
+		List<Delta> rangedCombatDeltas = combatDeltas
+			.Where((Tuple<XmlElement, Delta> pair) => pair.Item1.GetAttribute("dmgType") == "R")
+			.Select((Tuple<XmlElement, Delta> pair) => pair.Item2)
 			.ToList();
-		List<SFB.Game.Management.Delta> meleeCombatDeltas = combatDeltas
-			.Where((Tuple<XmlElement, SFB.Game.Management.Delta> pair) => pair.Item1.GetAttribute("dmgType") == "M")
-			.Select((Tuple<XmlElement, SFB.Game.Management.Delta> pair) => pair.Item2)
+		List<Delta> meleeCombatDeltas = combatDeltas
+			.Where((Tuple<XmlElement, Delta> pair) => pair.Item1.GetAttribute("dmgType") == "M")
+			.Select((Tuple<XmlElement, Delta> pair) => pair.Item2)
 			.ToList();
-		List<SFB.Game.Management.Delta> towerCombatDeltas = combatDeltas
-			.Where((Tuple<XmlElement, SFB.Game.Management.Delta> pair) => pair.Item1.GetAttribute("dmgType") == "T")
-			.Select((Tuple<XmlElement, SFB.Game.Management.Delta> pair) => pair.Item2)
+		List<Delta> towerCombatDeltas = combatDeltas
+			.Where((Tuple<XmlElement, Delta> pair) => pair.Item1.GetAttribute("dmgType") == "T")
+			.Select((Tuple<XmlElement, Delta> pair) => pair.Item2)
 			.ToList();
-		List<SFB.Game.Management.Delta> drawDeltas = Enumerable.SkipWhile<Tuple<XmlElement, SFB.Game.Management.Delta>>(parsedDeltas
-, (Func<Tuple<XmlElement, SFB.Game.Management.Delta>, bool>)((Tuple<XmlElement, SFB.Game.Management.Delta> pair) => (bool)!IsCombatDelta((SFB.Game.Management.Delta)pair.Item2)))
-			.SkipWhile((Tuple<XmlElement, SFB.Game.Management.Delta> pair) => IsCombatDelta(pair.Item2))
-			.Select((Tuple<XmlElement, SFB.Game.Management.Delta> pair) => pair.Item2)
+		List<Delta> drawDeltas = Enumerable.SkipWhile<Tuple<XmlElement, Delta>>(parsedDeltas
+, (Func<Tuple<XmlElement, Delta>, bool>)((Tuple<XmlElement, Delta> pair) => (bool)!IsCombatDelta((Delta)pair.Item2)))
+			.SkipWhile((Tuple<XmlElement, Delta> pair) => IsCombatDelta(pair.Item2))
+			.Select((Tuple<XmlElement, Delta> pair) => pair.Item2)
 			.ToList();
 
 		ProcessDeployDeltas(deployDeltas);
@@ -169,15 +169,15 @@ public class Driver : MonoBehaviour
 		StartCoroutine(ProcessDrawDeltas(drawDeltas));
 	}
 
-	private bool IsCombatDelta(SFB.Game.Management.Delta delta)
+	private bool IsCombatDelta(Delta delta)
 	{
 		return delta is UnitTakeDamageDelta || delta is TowerDamageDelta;
 	}
 
-	private void ProcessDeployDeltas(List<SFB.Game.Management.Delta> deployDeltas)
+	private void ProcessDeployDeltas(List<Delta> deployDeltas)
 	{
 		Debug.Log($"Processing {deployDeltas.Count} deploy deltas.");
-		foreach (SFB.Game.Management.Delta delta in deployDeltas)
+		foreach (Delta delta in deployDeltas)
 		{
 			delta.Apply();
 		}
@@ -185,40 +185,40 @@ public class Driver : MonoBehaviour
 		uiManager.LockUnits();
 	}
 
-	private void ProcessRangedCombatDeltas(List<SFB.Game.Management.Delta> rangedCombatDeltas)
+	private void ProcessRangedCombatDeltas(List<Delta> rangedCombatDeltas)
 	{
 		Debug.Log($"Processing {rangedCombatDeltas.Count} ranged combat deltas.");
-		foreach (SFB.Game.Management.Delta delta in rangedCombatDeltas)
+		foreach (Delta delta in rangedCombatDeltas)
 		{
 			delta.Apply();
 		}
 		AfterEachCombatPhase();
 	}
 
-	private void ProcessMeleeCombatDeltas(List<SFB.Game.Management.Delta> meleeCombatDeltas)
+	private void ProcessMeleeCombatDeltas(List<Delta> meleeCombatDeltas)
 	{
 		Debug.Log($"Processing {meleeCombatDeltas.Count} melee combat deltas.");
-		foreach (SFB.Game.Management.Delta delta in meleeCombatDeltas)
+		foreach (Delta delta in meleeCombatDeltas)
 		{
 			delta.Apply();
 		}
 		AfterEachCombatPhase();
 	}
 
-	private void ProcessTowerCombatDeltas(List<SFB.Game.Management.Delta> towerCombatDeltas)
+	private void ProcessTowerCombatDeltas(List<Delta> towerCombatDeltas)
 	{
 		Debug.Log($"Processing {towerCombatDeltas.Count} tower combat deltas.");
-		foreach (SFB.Game.Management.Delta delta in towerCombatDeltas)
+		foreach (Delta delta in towerCombatDeltas)
 		{
 			delta.Apply();
 		}
 		AfterEachCombatPhase();
 	}
 
-	private IEnumerator ProcessDrawDeltas(List<SFB.Game.Management.Delta> drawDeltas)
+	private IEnumerator ProcessDrawDeltas(List<Delta> drawDeltas)
 	{
 		Debug.Log($"Processing {drawDeltas.Count} draw deltas.");
-		foreach (SFB.Game.Management.Delta delta in drawDeltas)
+		foreach (Delta delta in drawDeltas)
 		{
 			delta.Apply();
 		}

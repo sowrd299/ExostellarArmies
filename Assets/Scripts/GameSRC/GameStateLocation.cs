@@ -16,6 +16,30 @@ namespace SFB.Game.Management
 		public Lane SubjectLane { get { return Lanes[Lane]; } }
 		public Unit SubjectUnit { get { return SubjectLane.Units[Side, Pos]; } }
 
+		// returns null if already in front
+		public Unit FrontUnit { get {
+				return (Pos == 0 ? null : SubjectLane.Units[Side, 0]);
+		} }
+		// returns null if already in back
+		public Unit BackUnit {
+			get {
+				return (Pos == 1 ? null : SubjectLane.Units[Side, 1]);
+			}
+		}
+
+		// returns null if nonexistent
+		public Lane LeftLane {
+			get {
+				return (Lane==0 ? null : Lanes[Lane-1]);
+			}
+		}
+		// returns null if nonexistent
+		public Lane RightLane {
+			get {
+				return (Lane == 2 ? null : Lanes[Lane + 1]);
+			}
+		}
+
 		public GameStateLocation(GameState gameState, int lane, int side, int pos)
 		{
 			GameState = gameState;

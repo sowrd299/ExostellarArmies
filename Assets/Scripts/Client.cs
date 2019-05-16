@@ -65,9 +65,9 @@ namespace SFB.Net.Client
 			socketManager = new SocketManager(socket, "</file>");
 		}
 
-		public async Task JoinMatch()
+		public async Task JoinMatch(string deckId = "testing")
 		{
-			await Task.Run(() => socketManager.Send("<file type='joinMatch'><deck id='carthStarter'/></file>"));
+			await Task.Run(() => socketManager.Send("<file type='joinMatch'><deck id='" + deckId + "'/></file>"));
 		}
 
 		public async Task<XmlDocument> ReceiveDocument()
