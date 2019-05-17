@@ -58,6 +58,10 @@ namespace SFB.Net.Client
 					await Task.Delay(TimeSpan.FromMilliseconds(retryInterval));
 					retryInterval *= 2;
 				}
+				catch (TaskCanceledException)
+				{
+					return false;
+				}
 				catch (Exception exception)
 				{
 					Debug.LogError($"Unexpected error when trying to connect to {host}:{port}\n{exception}");
