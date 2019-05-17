@@ -26,8 +26,7 @@ public class Driver : MonoBehaviour
 	public int sideIndex { get; private set; }
 	public bool inGame => gameManager != null;
 
-	[Header("Object References")]
-	public UIManager uiManager;
+	public UIManager uiManager => UIManager.instance;
 
 	private void Awake()
 	{

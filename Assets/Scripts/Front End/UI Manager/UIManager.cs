@@ -13,7 +13,7 @@ using SFB.Net.Client;
 
 public partial class UIManager : MonoBehaviour
 {
-	public static UIManager instance => Driver.instance.uiManager;
+	public static UIManager instance;
 
 	// Convenience accessors
 	private static Player[] players => Driver.instance.gameManager.Players;
@@ -64,6 +64,18 @@ public partial class UIManager : MonoBehaviour
 	public float maxPhaseOverlayOpacity;
 	public float phaseFadeTime;
 	public float phaseDisplayTime;
+
+	public void Awake()
+	{
+		if (instance == null)
+		{
+			instance = this;
+		}
+		else if (instance != this)
+		{
+			Destroy(gameObject);
+		}
+	}
 
 	public void WaitForMatch()
 	{
