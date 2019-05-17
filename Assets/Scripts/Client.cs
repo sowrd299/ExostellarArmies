@@ -26,7 +26,11 @@ namespace SFB.Net.Client
 		private Client()
 		{ }
 
-		public async Task<bool> Connect(string host, int port, int retryInterval = 100, int maxAttempts = -1)
+		public async Task<bool> Connect(
+			string host, int port,
+			int retryInterval = 100, int maxAttempts = -1,
+			CancellationToken cancelToken = default(CancellationToken)
+		)
 		{
 			Socket socket = new Socket(
 				AddressFamily.InterNetwork,
@@ -36,14 +40,19 @@ namespace SFB.Net.Client
 
 			for (int attempts = 0; Application.isPlaying && (maxAttempts < 0 || attempts < maxAttempts); attempts++)
 			{
+				if (cancelToken.IsCancellationRequested)
+				{
+					return false;
+				}
+
 				try
 				{
-					await Task.Run(() => socket.Connect(host, port));
+					await Task.Run(() => socket.Connect(host, port), cancelToken);
 					Debug.Log($"Connected to {host}:{port}");
 					socketManager = new SocketManager(socket, "</file>");
 					return true;
 				}
-				catch (SocketException e)
+				catch (SocketException)
 				{
 					Debug.LogWarning($"Failed to connect to {host}:{port}; retrying in {retryInterval / 1000f}s");
 					await Task.Delay(TimeSpan.FromMilliseconds(retryInterval));
