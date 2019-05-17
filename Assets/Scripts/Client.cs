@@ -28,16 +28,10 @@ namespace SFB.Net.Client
 
 		public async Task<bool> Connect(
 			string host, int port,
-			int retryInterval = 100, int maxAttempts = -1,
+			int timeout = 100, int retryInterval = 100, int maxAttempts = -1,
 			CancellationToken cancelToken = default(CancellationToken)
 		)
 		{
-			Socket socket = new Socket(
-				AddressFamily.InterNetwork,
-				SocketType.Stream,
-				ProtocolType.Tcp
-			);
-
 			for (int attempts = 0; Application.isPlaying && (maxAttempts < 0 || attempts < maxAttempts); attempts++)
 			{
 				if (cancelToken.IsCancellationRequested)
@@ -47,10 +41,33 @@ namespace SFB.Net.Client
 
 				try
 				{
-					await Task.Run(() => socket.Connect(host, port), cancelToken);
+					Socket socket = new Socket(
+						AddressFamily.InterNetwork,
+						SocketType.Stream,
+						ProtocolType.Tcp
+					);
+
+					IAsyncResult result = socket.BeginConnect(host, port, null, null);
+					bool success = result.AsyncWaitHandle.WaitOne(timeout);
+
+					if (success)
+					{
+						socket.EndConnect(result);
+					}
+					else
+					{
+						socket.Close();
+						throw new SocketException();
+					}
+
 					Debug.Log($"Connected to {host}:{port}");
-					socketManager = new SocketManager(socket, "</file>");
-					return true;
+					
+					lock (socketManager)
+					{
+						cancelToken.ThrowIfCancellationRequested();
+						socketManager = new SocketManager(socket, "</file>");
+						return true;
+					}
 				}
 				catch (SocketException)
 				{
