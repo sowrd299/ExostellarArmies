@@ -68,4 +68,9 @@ public class HoverCardOverlay : MonoBehaviour, IPointerEnterHandler, IPointerExi
 			Destroy(hoverObject, fadeDuration);
 		}
 	}
+
+	private void OnDestroy()
+	{
+		RemoveHover();
+	}
 }
