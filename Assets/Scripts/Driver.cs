@@ -54,7 +54,9 @@ public class Driver : MonoBehaviour
 	{
 		uiManager.WaitForMatch();
 
-		Task connect = client.Connect();
+		string host = Resources.Load<TextAsset>("hostaddr").text.Trim();
+		int port = 4011;
+		Task connect = client.Connect(host, port);
 		yield return new WaitUntil(() => connect.IsCompleted);
 
 		Task joinMatch = client.JoinMatch(deckId: "TEST Undergrowth Smasher");

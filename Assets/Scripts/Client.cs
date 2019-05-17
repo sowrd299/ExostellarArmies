@@ -26,7 +26,7 @@ namespace SFB.Net.Client
 		private Client()
 		{ }
 
-		public async Task Connect(int retryInterval = 100)
+		public async Task<bool> Connect(string host, int port, int retryInterval = 100, int maxAttempts = -1)
 		{
 			Socket socket = new Socket(
 				AddressFamily.InterNetwork,
@@ -34,15 +34,14 @@ namespace SFB.Net.Client
 				ProtocolType.Tcp
 			);
 
-			while (Application.isPlaying)
+			for (int attempts = 0; Application.isPlaying && (maxAttempts < 0 || attempts < maxAttempts); attempts++)
 			{
-				string host = Resources.Load<TextAsset>("hostaddr").text.Trim();
-				int port = 4011;
 				try
 				{
 					await Task.Run(() => socket.Connect(host, port));
 					Debug.Log($"Connected to {host}:{port}");
-					break;
+					socketManager = new SocketManager(socket, "</file>");
+					return true;
 				}
 				catch (SocketException e)
 				{
@@ -58,7 +57,7 @@ namespace SFB.Net.Client
 				}
 			}
 
-			socketManager = new SocketManager(socket, "</file>");
+			return false;
 		}
 
 		public async Task JoinMatch(string deckId = "testing")
