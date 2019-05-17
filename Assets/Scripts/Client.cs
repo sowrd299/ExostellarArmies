@@ -22,6 +22,7 @@ namespace SFB.Net.Client
 		public static Client instance => _instance ?? (_instance = new Client());
 
 		private SocketManager socketManager;
+		private object socketLock = new object();
 
 		private Client()
 		{ }
@@ -61,8 +62,8 @@ namespace SFB.Net.Client
 					}
 
 					Debug.Log($"Connected to {host}:{port}");
-					
-					lock (socketManager)
+
+					lock (socketLock)
 					{
 						cancelToken.ThrowIfCancellationRequested();
 						socketManager = new SocketManager(socket, "</file>");
