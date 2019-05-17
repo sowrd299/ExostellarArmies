@@ -21,10 +21,6 @@ namespace SFB.Net.Client
 		private static Client _instance = null;
 		public static Client instance => _instance ?? (_instance = new Client());
 
-		public bool initialized => gameManager != null;
-
-		public GameManager gameManager { get; private set; }
-
 		private SocketManager socketManager;
 
 		private Client()
