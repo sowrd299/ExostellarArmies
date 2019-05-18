@@ -6,6 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 using YamlDotNet.RepresentationModel;
 using SFB.Net.Client;
 
@@ -24,6 +25,8 @@ public class MainMenuController : MonoBehaviour
 
 	public string ipKey;
 	public string deckKey;
+
+	public string gameScene;
 
 	private Coroutine currentTransition;
 	private Client client => Client.instance;
@@ -182,6 +185,22 @@ public class MainMenuController : MonoBehaviour
 	public void OnSelectDeck(int deckIndex)
 	{
 		PlayerPrefs.SetString(deckKey, deckIds[deckIndex]);
+	}
+
+	public void JoinGame()
+	{
+		StartCoroutine(AnimateJoinGame());
+	}
+
+	private IEnumerator AnimateJoinGame()
+	{
+		float startTime = Time.time;
+		while (Time.time - startTime < transitionTime / 2)
+		{
+			currentCanvas.alpha = 1 - (Time.time - startTime) / (transitionTime / 2);
+			yield return null;
+		}
+		SceneManager.LoadScene(gameScene);
 	}
 
 	public void Quit()

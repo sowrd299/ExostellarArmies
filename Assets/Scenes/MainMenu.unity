@@ -566,7 +566,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &288660563
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1170,6 +1170,7 @@ MonoBehaviour:
   defaultPort: 4011
   ipKey: LastIP
   deckKey: LastDeck
+  gameScene: DesktopCombatScene
 --- !u!1 &535731843
 GameObject:
   m_ObjectHideFlags: 0
@@ -2268,7 +2269,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1468883262
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2490,7 +2491,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgument
       value: 
-      objectReference: {fileID: 288660567}
+      objectReference: {fileID: 0}
     - target: {fileID: 3268373348713515424, guid: 6b9bb6b6db35aa549b359d75c5954305,
         type: 3}
       propertyPath: m_SpriteState.m_HighlightedSprite
@@ -2513,6 +2514,21 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Interactable
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3268373348713515424, guid: 6b9bb6b6db35aa549b359d75c5954305,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: JoinGame
+      objectReference: {fileID: 0}
+    - target: {fileID: 3268373348713515424, guid: 6b9bb6b6db35aa549b359d75c5954305,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3268373348713515424, guid: 6b9bb6b6db35aa549b359d75c5954305,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
     - target: {fileID: 3268373348067642053, guid: 6b9bb6b6db35aa549b359d75c5954305,
         type: 3}
