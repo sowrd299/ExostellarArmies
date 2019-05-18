@@ -13,6 +13,7 @@ public class MainMenuController : MonoBehaviour
 {
 	[Header("UI References")]
 	public CanvasGroup currentCanvas;
+	public InputField ipInput;
 	public Text ipInputHelper;
 	public Dropdown selectDeck;
 	public Button joinMatch;
@@ -33,6 +34,10 @@ public class MainMenuController : MonoBehaviour
 
 	private void Start()
 	{
+		string defaultIP = PlayerPrefs.GetString(ipKey, "");
+		ipInput.text = defaultIP;
+		OnIPEnter(defaultIP);
+
 		TextAsset[] deckFiles = Resources.LoadAll<TextAsset>("Decks");
 		selectDeck.options.Clear();
 		deckIds = new List<string>();
@@ -107,6 +112,7 @@ public class MainMenuController : MonoBehaviour
 
 	public void OnIPEnter(string ip)
 	{
+		PlayerPrefs.SetString(ipKey, ip);
 		if (ip == "") return;
 		StartCoroutine(AnimateOnIPEnter(ip));
 	}
