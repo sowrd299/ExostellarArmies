@@ -36,6 +36,7 @@ public class MainMenuController : MonoBehaviour
 		TextAsset[] deckFiles = Resources.LoadAll<TextAsset>("Decks");
 		selectDeck.options.Clear();
 		deckIds = new List<string>();
+
 		foreach (TextAsset deckFile in deckFiles)
 		{
 			StringReader reader = new StringReader(deckFile.text);
@@ -43,9 +44,16 @@ public class MainMenuController : MonoBehaviour
 			deckYaml.Load(reader);
 
 			YamlMappingNode rootNode = deckYaml.Documents[0].RootNode as YamlMappingNode;
-			deckIds.Add(rootNode.Children[new YamlScalarNode("id")].ToString());
-			selectDeck.options.Add(new Dropdown.OptionData(rootNode.Children[new YamlScalarNode("name")].ToString()));
+			string deckId = rootNode.Children[new YamlScalarNode("id")].ToString();
+			string deckName = rootNode.Children[new YamlScalarNode("name")].ToString();
+
+			deckIds.Add(deckId);
+			selectDeck.options.Add(new Dropdown.OptionData(deckName));
 		}
+
+		string currentDeck = PlayerPrefs.GetString(deckKey, deckIds[0]);
+		selectDeck.value = deckIds.IndexOf(currentDeck);
+		selectDeck.RefreshShownValue();
 	}
 
 	public void TransitionTo(CanvasGroup newCanvas)
@@ -163,6 +171,11 @@ public class MainMenuController : MonoBehaviour
 			ipInputHelper.color = Color.red;
 			joinMatch.interactable = false;
 		}
+	}
+
+	public void OnSelectDeck(int deckIndex)
+	{
+		PlayerPrefs.SetString(deckKey, deckIds[deckIndex]);
 	}
 
 	public void Quit()
