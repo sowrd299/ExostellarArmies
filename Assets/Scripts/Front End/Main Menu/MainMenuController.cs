@@ -76,13 +76,13 @@ public class MainMenuController : MonoBehaviour
 		joinMatch.interactable = false;
 	}
 
-	public void OnIPInput(string ip)
+	public void OnIPEnter(string ip)
 	{
 		if (ip == "") return;
-		StartCoroutine(AnimateOnIPInput(ip));
+		StartCoroutine(AnimateOnIPEnter(ip));
 	}
 
-	private IEnumerator AnimateOnIPInput(string ip)
+	private IEnumerator AnimateOnIPEnter(string ip)
 	{
 		string host;
 		int port;
