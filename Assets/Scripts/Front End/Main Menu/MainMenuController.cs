@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
+using YamlDotNet.RepresentationModel;
 using SFB.Net.Client;
 
 public class MainMenuController : MonoBehaviour
@@ -12,6 +14,7 @@ public class MainMenuController : MonoBehaviour
 	[Header("UI References")]
 	public CanvasGroup currentCanvas;
 	public Text ipInputHelper;
+	public Dropdown selectDeck;
 	public Button joinMatch;
 
 	[Header("Config")]
@@ -26,6 +29,24 @@ public class MainMenuController : MonoBehaviour
 	private CancellationTokenSource cancelConnect;
 	private object cancelConnectLock = new object();
 	private bool connected;
+	private List<string> deckIds;
+
+	private void Start()
+	{
+		TextAsset[] deckFiles = Resources.LoadAll<TextAsset>("Decks");
+		selectDeck.options.Clear();
+		deckIds = new List<string>();
+		foreach (TextAsset deckFile in deckFiles)
+		{
+			StringReader reader = new StringReader(deckFile.text);
+			YamlStream deckYaml = new YamlStream();
+			deckYaml.Load(reader);
+
+			YamlMappingNode rootNode = deckYaml.Documents[0].RootNode as YamlMappingNode;
+			deckIds.Add(rootNode.Children[new YamlScalarNode("id")].ToString());
+			selectDeck.options.Add(new Dropdown.OptionData(rootNode.Children[new YamlScalarNode("name")].ToString()));
+		}
+	}
 
 	public void TransitionTo(CanvasGroup newCanvas)
 	{

@@ -1163,6 +1163,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   currentCanvas: {fileID: 288660567}
   ipInputHelper: {fileID: 101395970}
+  selectDeck: {fileID: 900568747}
   joinMatch: {fileID: 1512902565}
   transitionTime: 0.5
   defaultPort: 4011
