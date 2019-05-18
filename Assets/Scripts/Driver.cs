@@ -13,6 +13,8 @@ using SFB.Net.Client;
 
 public class Driver : MonoBehaviour
 {
+	public string deckKey;
+
 	public static Driver instance = null;
 
 	// Private references and convenience getters
@@ -26,8 +28,7 @@ public class Driver : MonoBehaviour
 	public int sideIndex { get; private set; }
 	public bool inGame => gameManager != null;
 
-	[Header("Object References")]
-	public UIManager uiManager;
+	public UIManager uiManager => UIManager.instance;
 
 	private void Awake()
 	{
@@ -55,10 +56,7 @@ public class Driver : MonoBehaviour
 	{
 		uiManager.WaitForMatch();
 
-		Task connect = client.Connect();
-		yield return new WaitUntil(() => connect.IsCompleted);
-
-		Task joinMatch = client.JoinMatch(deckId: "TEST Undergrowth Smasher");
+		Task joinMatch = client.JoinMatch(PlayerPrefs.GetString(deckKey));
 		yield return new WaitUntil(() => joinMatch.IsCompleted);
 
 		Task<XmlDocument> matchStart = client.ReceiveDocument();

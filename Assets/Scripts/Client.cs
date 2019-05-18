@@ -21,38 +21,64 @@ namespace SFB.Net.Client
 		private static Client _instance = null;
 		public static Client instance => _instance ?? (_instance = new Client());
 
-		public bool initialized => gameManager != null;
-
-		public GameManager gameManager { get; private set; }
-
 		private SocketManager socketManager;
+		private object socketLock = new object();
 
 		private Client()
 		{ }
 
-		public async Task Connect(int retryInterval = 100)
+		public async Task<bool> Connect(
+			string host, int port,
+			int timeout = 100, int retryInterval = 100, int maxAttempts = -1,
+			CancellationToken cancelToken = default(CancellationToken)
+		)
 		{
-			Socket socket = new Socket(
-				AddressFamily.InterNetwork,
-				SocketType.Stream,
-				ProtocolType.Tcp
-			);
-
-			while (Application.isPlaying)
+			for (int attempts = 0; Application.isPlaying && (maxAttempts < 0 || attempts < maxAttempts); attempts++)
 			{
-				string host = Resources.Load<TextAsset>("hostaddr").text.Trim();
-				int port = 4011;
+				if (cancelToken.IsCancellationRequested)
+				{
+					return false;
+				}
+
 				try
 				{
-					await Task.Run(() => socket.Connect(host, port));
+					Socket socket = new Socket(
+						AddressFamily.InterNetwork,
+						SocketType.Stream,
+						ProtocolType.Tcp
+					);
+
+					IAsyncResult result = socket.BeginConnect(host, port, null, null);
+					bool success = result.AsyncWaitHandle.WaitOne(timeout);
+
+					if (success)
+					{
+						socket.EndConnect(result);
+					}
+					else
+					{
+						socket.Close();
+						throw new SocketException();
+					}
+
 					Debug.Log($"Connected to {host}:{port}");
-					break;
+
+					lock (socketLock)
+					{
+						cancelToken.ThrowIfCancellationRequested();
+						socketManager = new SocketManager(socket, "</file>");
+						return true;
+					}
 				}
-				catch (SocketException e)
+				catch (SocketException)
 				{
 					Debug.LogWarning($"Failed to connect to {host}:{port}; retrying in {retryInterval / 1000f}s");
 					await Task.Delay(TimeSpan.FromMilliseconds(retryInterval));
 					retryInterval *= 2;
+				}
+				catch (TaskCanceledException)
+				{
+					return false;
 				}
 				catch (Exception exception)
 				{
@@ -62,7 +88,7 @@ namespace SFB.Net.Client
 				}
 			}
 
-			socketManager = new SocketManager(socket, "</file>");
+			return false;
 		}
 
 		public async Task JoinMatch(string deckId = "testing")

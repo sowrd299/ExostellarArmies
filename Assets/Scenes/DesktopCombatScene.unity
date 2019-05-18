@@ -3159,7 +3159,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 46be69a3f7a591649bf728bd562468a4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  uiManager: {fileID: 703788047}
+  deckKey: LastDeck
 --- !u!4 &1221505657
 Transform:
   m_ObjectHideFlags: 0

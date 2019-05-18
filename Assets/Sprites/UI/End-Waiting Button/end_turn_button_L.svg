@@ -21,7 +21,7 @@
    sodipodi:docname="end_turn_button_L.svg">
   <defs
      id="defs2">
-    <linearGradient
+    <radialGradient
        inkscape:collect="always"
        id="linearGradient6140">
       <stop
@@ -32,7 +32,7 @@
          style="stop-color:#362644;stop-opacity:1"
          offset="1"
          id="stop6138" />
-    </linearGradient>
+    </radialGradient>
     <linearGradient
        inkscape:collect="always"
        id="linearGradient2371">
@@ -45,7 +45,7 @@
          offset="1"
          id="stop2369" />
     </linearGradient>
-    <linearGradient
+    <radialGradient
        id="linearGradient940"
        inkscape:collect="always">
       <stop
@@ -56,8 +56,8 @@
          id="stop938"
          offset="1"
          style="stop-color:#000035;stop-opacity:0.97014928" />
-    </linearGradient>
-    <linearGradient
+    </radialGradient>
+    <radialGradient
        id="linearGradient934"
        inkscape:collect="always">
       <stop
@@ -68,8 +68,8 @@
          id="stop932"
          offset="1"
          style="stop-color:#ff0000;stop-opacity:1" />
-    </linearGradient>
-    <linearGradient
+    </radialGradient>
+    <radialGradient
        inkscape:collect="always"
        id="linearGradient920">
       <stop
@@ -80,8 +80,8 @@
          style="stop-color:#ff0000;stop-opacity:1"
          offset="1"
          id="stop918" />
-    </linearGradient>
-    <linearGradient
+    </radialGradient>
+    <radialGradient
        id="linearGradient890"
        inkscape:collect="always">
       <stop
@@ -92,7 +92,7 @@
          id="stop888"
          offset="1"
          style="stop-color:#362644;stop-opacity:1" />
-    </linearGradient>
+    </radialGradient>
     <linearGradient
        id="linearGradient4166"
        osb:paint="solid">
@@ -117,7 +117,7 @@
          offset="0"
          id="stop3112" />
     </linearGradient>
-    <linearGradient
+    <radialGradient
        inkscape:collect="always"
        id="linearGradient3080">
       <stop
@@ -128,7 +128,7 @@
          style="stop-color:#362644;stop-opacity:1"
          offset="1"
          id="stop3078" />
-    </linearGradient>
+    </radialGradient>
     <linearGradient
        id="linearGradient2794"
        osb:paint="solid">
@@ -185,7 +185,7 @@
          offset="0"
          id="stop6344" />
     </linearGradient>
-    <linearGradient
+    <radialGradient
        inkscape:collect="always"
        id="linearGradient4647">
       <stop
@@ -196,7 +196,7 @@
          style="stop-color:#000000;stop-opacity:0;"
          offset="1"
          id="stop4645" />
-    </linearGradient>
+    </radialGradient>
     <radialGradient
        inkscape:collect="always"
        xlink:href="#linearGradient4647"
