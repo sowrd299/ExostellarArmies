@@ -5659,6 +5659,7 @@ MonoBehaviour:
   rangedDamage: {fileID: 2209705395291305454}
   meleeDamage: {fileID: 2209705394706410014}
   health: {fileID: 2209705395035939540}
+  healParticles: {fileID: 6694079178139548948}
   attackMoveCurve:
     serializedVersion: 2
     m_Curve:
