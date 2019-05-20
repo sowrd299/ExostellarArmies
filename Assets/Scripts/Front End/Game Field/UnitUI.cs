@@ -21,6 +21,7 @@ public class UnitUI : MonoBehaviour, IHasCard
 	public GameObject damageTextPrefab;
 
 	[Header("UI References")]
+	public SVGImage frame;
 	public SVGImage background;
 	public Text unitCost;
 	public Text rangedDamage;
@@ -41,7 +42,8 @@ public class UnitUI : MonoBehaviour, IHasCard
 
 	public void RenderUnit()
 	{
-		background.sprite = factions[unit.Card.Faction].unitFrame;
+		frame.sprite = factions[unit.Card.Faction].unitFrame;
+		background.sprite = factions[unit.Card.Faction].cardBackground;
 		unitCost.text = unit.Card.DeployCost.ToString();
 		rangedDamage.text = unit.RangedAttack.ToString();
 		meleeDamage.text = unit.MeleeAttack.ToString();
