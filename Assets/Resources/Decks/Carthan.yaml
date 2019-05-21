@@ -1,2 +1,33 @@
 id: carthStarter
 name: Carthan Starter
+cards:
+  - id: Exostellar Marine Squad
+    count: 2
+  - id: Commercial Shipper
+    count: 1
+  - id: Commercial Coms Relay
+    count: 1
+  - id: Adv. Infantry Support System
+    count: 2
+  - id: Paladin-Class XS Marines
+    count: 1
+  - id: Adv. Supply Drone
+    count: 2
+  - id: XS Field Technician
+    count: 1
+  - id: Lt. Mgr. Tul Yorves
+    count: 1
+  - id: Exostellar Snipers
+    count: 2
+  - id: Cmdr. Yos Lorth
+    count: 1
+  - id: Ancillary Medical Officer
+    count: 1
+  - id: Battle-Line Trauma Medic
+    count: 1
+  - id: Emergency Med Drop
+    count: 1
+  - id: Cannoneer Drone
+    count: 1
+  - id: Autonomous Range Finder
+    count: 2
