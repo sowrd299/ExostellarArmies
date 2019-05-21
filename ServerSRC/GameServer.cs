@@ -39,12 +39,6 @@ namespace SFB.Net.Server{
 			clientSockets = new HashSet<SocketManager>();
 			removedSockets = new HashSet<SocketManager>();
 			matchMaker = new MatchMaker();
-
-			string path = Path.Combine("Assets", "Resources", "hostaddr.txt");
-			using (StreamWriter writer = File.CreateText(path))
-			{
-				writer.WriteLine(ipAddr.ToString());
-			}
 		}
 
         //to be called once per mainloop
