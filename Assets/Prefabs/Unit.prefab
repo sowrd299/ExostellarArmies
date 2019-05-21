@@ -5693,7 +5693,7 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  attackMoveMagnitude: 20
+  attackMoveMagnitude: 0.5
   attackDuration: 0.3
   damageTextMoveMagnitude: 30
   damageTextDuration: 1
