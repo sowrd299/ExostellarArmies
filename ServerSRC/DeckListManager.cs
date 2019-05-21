@@ -36,6 +36,7 @@ namespace SFB.Net.Server
 
 				YamlMappingNode root = yaml.Documents[0].RootNode as YamlMappingNode;
 				string deckId = root.Children[new YamlScalarNode("id")].ToString();
+				string deckName = root.Children[new YamlScalarNode("name")].ToString();
 
 				DeckList deck = new DeckList();
 				YamlSequenceNode cardSequence = root.Children[new YamlScalarNode("cards")] as YamlSequenceNode;
@@ -48,7 +49,8 @@ namespace SFB.Net.Server
 				}
 
 				decks.Add(deckId, deck);
-				Console.WriteLine($"Loaded deck {deckId} ({deck.GetCards().Select(deck.GetCopiesOf).Sum()} cards).");
+				int deckCardCount = deck.GetCards().Select(deck.GetCopiesOf).Sum();
+				Console.WriteLine($"Loaded deck {deckName} ({deckCardCount} cards).");
 			}
 		}
 
