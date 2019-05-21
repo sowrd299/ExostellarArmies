@@ -21,11 +21,10 @@ namespace SFB.Game
 		
 		public void XSFieldTechnicianInner(List<Delta> deltas, GameStateLocation gameStateLocation)
 		{
-			Unit front = gameStateLocation.FrontUnit;
-			if(gameStateLocation.Pos == 1 && front != null && front.Card.UnitType.Contains("Drone")) {
+			if(gameStateLocation.IsSupporting(new string[] {"Drone"})) {
 				deltas.AddRange(new List<Delta> {
 					new RemoveFromLaneDelta(gameStateLocation.SubjectLane, gameStateLocation.Side, 0),
-					new AddToHandDelta(gameStateLocation.SubjectPlayer.Hand, front.Card)
+					new AddToHandDelta(gameStateLocation.SubjectPlayer.Hand, gameStateLocation.FrontUnit.Card)
 				});
 			}
 		}

@@ -8,14 +8,17 @@ namespace SFB.Game
 	{
 		private AddDelta removeEffects;
 		private AddDelta addEffects;
+		private List<Unit> appliedTo;
 
 		public PersistentFieldAbility() : base(-1)
 		{
 			removeEffects = null;
 			addEffects = null;
+			appliedTo = new List<Unit>();
 		}
 
-		protected override void ApplyEffects(Unit source, GameState gameState) {
+		protected override void ApplyEffects(Unit source, GameState gameState)
+		{
 			removeEffects = RemoveEffects(source);
 			addEffects = AddEffects(source);
 
@@ -27,16 +30,9 @@ namespace SFB.Game
 
 		protected override void RemoveEffects(Unit source, GameState gameState)
 		{
-			AddDelta removeEffects = RemoveEffects(source);
-			AddDelta addEffects = AddEffects(source);
-
 			gameState.AddBoardUpdateDeltas -= removeEffects;
 			gameState.AddBoardUpdateDeltas -= addEffects;
-
-			void RemovePersistentFromGM(List<Delta> deltas, GameStateLocation gameStateLoc) {
-				gameStateLoc.GameState.AddBoardUpdateDeltas -= removeEffects;
-				gameStateLoc.GameState.AddBoardUpdateDeltas -= addEffects;
-			}
+			
 			source.AddDeathDeltas -= RemovePersistentFromGM;
 		}
 
@@ -47,8 +43,10 @@ namespace SFB.Game
 				for(int lane = 0; lane < lanes.Length; lane++) {
 					for(int side = 0; side < 2; side++)
 						for(int pos = 0; pos < 2; pos++)
-							if(lanes[lane].Units[side, pos] != null && ApplyTo(lane, side, pos, lanes, source))
+							if(lanes[lane].Units[side, pos] != null && ApplyTo(lane, side, pos, lanes, source)) {
 								deltas.AddRange(GetAddDeltas(lane, side, pos, lanes, source));
+								appliedTo.Add(lanes[lane].Units[side, pos]);
+							}
 				}
 			}
 
@@ -58,13 +56,8 @@ namespace SFB.Game
 		private AddDelta RemoveEffects(Unit source)
 		{
 			void InnerRemoveEffects(List<Delta> deltas, GameStateLocation gameStateLoc) {
-				Lane[] lanes = gameStateLoc.Lanes;
-				for(int lane = 0; lane < lanes.Length; lane++) {
-					for(int side = 0; side < 2; side++)
-						for(int pos = 0; pos < 2; pos++)
-							if(lanes[lane].Units[side, pos] != null)
-								deltas.AddRange(GetRemoveDeltas(lane, side, pos, lanes, source));
-				}
+				foreach(Unit u in appliedTo)
+					deltas.AddRange(GetRemoveDeltas(u, source));
 			}
 			return InnerRemoveEffects;
 		}
@@ -75,7 +68,7 @@ namespace SFB.Game
 		}
 
 		protected abstract Delta[] GetAddDeltas(int lane, int side, int pos, Lane[] lanes, Unit source);
-		protected abstract Delta[] GetRemoveDeltas(int lane, int side, int pos, Lane[] lanes, Unit source);
+		protected abstract Delta[] GetRemoveDeltas(Unit target, Unit source);
 		protected abstract bool ApplyTo(int lane, int side, int pos, Lane[] lanes, Unit source);
 	}
 }

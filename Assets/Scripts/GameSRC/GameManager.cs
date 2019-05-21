@@ -131,6 +131,7 @@ namespace SFB.Game.Management{
 						if(lane.Units[side, pos] != null) // do not call on empty spaces
 							deltas.AddRange(lane.Units[side, pos].OnEachDeployPhase(l, side, pos, GameState));
 			}
+			GameState.UseAddRecurringDeployDeltas(deltas);
 
             return deltas.ToArray();
         }
@@ -169,10 +170,11 @@ namespace SFB.Game.Management{
 						if(u != null && u.HealthPoints <= 0) {
 							deltas.AddRange(u.OnDeath(l, side, pos, GameState));
 							deltas.AddRange(lane.GetDeathDeltas(side, pos));
-							// TODO add to discard
+							deltas.AddRange(Players[side].Discard.GetDiscardDeltas(new Card[] {u.Card}));
 						}
 					}
 			}
+			GameState.UseAddDeathDeltas(deltas);
 
 			// fill front if empty
 			foreach(Lane lane in GameState.Lanes) {
