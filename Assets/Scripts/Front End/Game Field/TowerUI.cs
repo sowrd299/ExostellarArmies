@@ -12,11 +12,19 @@ public class TowerUI : MonoBehaviour
 	[Header("Data")]
 	public int laneIndex;
 
+	[Header("Asset References")]
+	public GameObject attackPrefab;
+
 	[Header("Object References")]
 	public TowerManager manager;
 
 	[Header("UI References")]
 	public Text health;
+
+	[Header("Animation Config")]
+	public AnimationCurve attackMoveCurve;
+	public float attackDuration;
+	public float respawnDuration;
 
 	private void Start()
 	{
@@ -26,5 +34,54 @@ public class TowerUI : MonoBehaviour
 	public void RenderTower()
 	{
 		health.text = tower.HP.ToString();
+	}
+
+	public Coroutine Attack(Vector3 targetPosition)
+	{
+		return StartCoroutine(AnimateAttack(targetPosition));
+	}
+
+	private IEnumerator AnimateAttack(Vector3 targetPosition)
+	{
+		GameObject attackParticle = Instantiate(attackPrefab, transform);
+		Transform attackTransform = attackParticle.transform;
+
+		yield return UIManager.instance.LerpTime(
+			Vector3.Lerp,
+			transform.position,
+			targetPosition,
+			attackDuration,
+			position => attackTransform.position = position
+		);
+
+		Destroy(attackParticle);
+	}
+
+	public Coroutine Respawn()
+	{
+		return StartCoroutine(AnimateRespawn());
+	}
+
+	private IEnumerator AnimateRespawn()
+	{
+		Vector3 initialScale = transform.localScale;
+
+		yield return UIManager.instance.LerpTime(
+			Vector3.Lerp,
+			initialScale,
+			Vector3.zero,
+			respawnDuration / 2,
+			scale => transform.localScale = scale
+		);
+
+		RenderTower();
+
+		yield return UIManager.instance.LerpTime(
+			Vector3.Lerp,
+			Vector3.zero,
+			initialScale,
+			respawnDuration / 2,
+			scale => transform.localScale = scale
+		);
 	}
 }

@@ -7,8 +7,8 @@ namespace SFB.Game
 {
 	public class RemoveFromLaneDelta : TargetedDelta<Lane>
 	{
-		private int SideIndex;
-		private int Position;
+		public int SideIndex { get; private set; }
+		public int Position { get; private set; }
 
 		public RemoveFromLaneDelta(Lane lane, int sideIndex, int pos)
 			: base(lane)

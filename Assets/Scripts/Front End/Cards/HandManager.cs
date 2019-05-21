@@ -21,39 +21,17 @@ public class HandManager : MonoBehaviour
 	public AnimationCurve travelCurve;
 	public float interval;
 
-	private Hand hand;
-	private Queue<IEnumerator> drawAnimationQueue = new Queue<IEnumerator>();
-
 	private HashSet<PlayUnitCardAction> playActions = new HashSet<PlayUnitCardAction>();
 
 	public int deploymentCost => playActions.Sum(action => action.card.DeployCost);
 
 
-	private void OnEnable()
+	public Coroutine DrawCard(Card card)
 	{
-		if (hand != null)
-		{
-			hand.afterInsert += OnInsertCard;
-		}
+		return StartCoroutine(AnimateDrawCard(card));
 	}
 
-	public void TrackHand(Hand hand)
-	{
-		if (this.hand != null)
-		{
-			throw new System.Exception($"HandManager already tracking a hand (id: {this.hand.ID}), cannot track another hand (id: {hand.ID})");
-		}
-
-		this.hand = hand;
-		OnEnable();
-	}
-
-	private void OnInsertCard(int index, Card newCard)
-	{
-		drawAnimationQueue.Enqueue(AnimateMoveToHand(newCard));
-	}
-
-	private IEnumerator AnimateMoveToHand(Card newCard)
+	private IEnumerator AnimateDrawCard(Card newCard)
 	{
 		GameObject cardObject = CreateCardDisplay(newCard);
 
@@ -61,51 +39,31 @@ public class HandManager : MonoBehaviour
 		Vector3 targetPosition = cardObject.transform.parent.position;
 		cardObject.transform.position = startPosition;
 
-		float startTime = Time.time;
-		while (Time.time - startTime < travelTime)
-		{
-			cardObject.transform.position = Vector3.Lerp(
-				startPosition,
-				targetPosition,
-				travelCurve.Evaluate((Time.time - startTime) / travelTime)
-			);
-			yield return null;
-		}
-		cardObject.transform.position = targetPosition;
+		yield return UIManager.instance.LerpTime(
+			Vector3.Lerp,
+			startPosition,
+			targetPosition,
+			travelTime,
+			travelCurve.Evaluate,
+			position => cardObject.transform.position = position
+		);
 
 		yield return new WaitForSeconds(interval);
 	}
 
-	public Coroutine DrawCards()
+	public Coroutine DrawUnknownCards()
 	{
-		return StartCoroutine(AnimateDrawCards());
+		return StartCoroutine(AnimateDrawUnknownCards());
 	}
 
-	public Coroutine DrawUnknownCards()
+	private IEnumerator AnimateDrawUnknownCards()
 	{
 		foreach (Transform child in transform)
 		{
 			if (child.childCount == 0)
 			{
-				drawAnimationQueue.Enqueue(AnimateMoveToHand(new UnknownCard()));
+				yield return StartCoroutine(AnimateDrawCard(new UnknownCard()));
 			}
-		}
-		return StartCoroutine(AnimateDrawCards());
-	}
-
-	private IEnumerator AnimateDrawCards()
-	{
-		while (drawAnimationQueue.Count > 0)
-		{
-			yield return StartCoroutine(drawAnimationQueue.Dequeue());
-		}
-	}
-
-	private void OnDisable()
-	{
-		if (hand != null)
-		{
-			hand.afterInsert -= OnInsertCard;
 		}
 	}
 

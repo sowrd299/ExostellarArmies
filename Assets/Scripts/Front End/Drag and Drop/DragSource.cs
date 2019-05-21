@@ -66,20 +66,15 @@ public class DragSource : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
 
 	private IEnumerator ReturnToSender()
 	{
-		float startTime = Time.time;
-		Vector3 startPosition = transform.position;
+		yield return UIManager.instance.LerpTime(
+			Vector3.Lerp,
+			transform.position,
+			originalPosition,
+			returnTime,
+			returnCurve.Evaluate,
+			position => transform.position = position
+		);
 
-		while (Time.time - startTime < returnTime)
-		{
-			transform.position = Vector3.Lerp(
-				startPosition,
-				originalPosition,
-				returnCurve.Evaluate((Time.time - startTime) / returnTime)
-			);
-			yield return null;
-		}
-
-		transform.position = originalPosition;
 		transform.SetParent(originalParent);
 	}
 }

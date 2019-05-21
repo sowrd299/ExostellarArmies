@@ -101,82 +101,98 @@ namespace SFB.Net.Server.Matches{
         // as multiple turns, with many phases skipped
         public void EndTurn(){
             bool gameOver;
-            List<Delta>[] turnDeltaLists = new List<Delta>[players.Length];
+            List<TurnPhase>[] turnPhaseLists = new List<TurnPhase>[players.Length];
             lock(gameManager){
                 // calculate the outcome of the deploy phase
                 // use a list to collect the deltas, to send them later
-                List<Delta> turnDeltas = new List<Delta>(); 
+                List<TurnPhase> turnPhases = new List<TurnPhase>(); 
                 
+				TurnPhase endDeploy = new TurnPhase("endDeploy");
                 foreach(Delta d in gameManager.GetEndDeployDeltas()){
-                    turnDeltas.Add(d);
+                    endDeploy.Deltas.Add(d);
                     gameManager.ApplyDelta(d);
                 }
 				foreach(Delta d in gameManager.GetCleanUpDeltas()) {
-					turnDeltas.Add(d);
+					endDeploy.Deltas.Add(d);
 					gameManager.ApplyDelta(d);
 				}
+				turnPhases.Add(endDeploy);
+
 				// if no more deployment phases, do the rest of this turn into the start of the next
 				if(gameManager.DeployPhasesOver()){
                     // ranged combat
+					TurnPhase rangedCombat = new TurnPhase("rangedCombat");
                     foreach(Delta d in gameManager.GetRangedCombatDeltas()){
-                        turnDeltas.Add(d);
+                        rangedCombat.Deltas.Add(d);
                         gameManager.ApplyDelta(d);
                     }
                     foreach(Delta d in gameManager.GetCleanUpDeltas()){
-                        turnDeltas.Add(d);
+                        rangedCombat.Deltas.Add(d);
                         gameManager.ApplyDelta(d);
                     }
+					turnPhases.Add(rangedCombat);
+
                     // melee combat
+					TurnPhase meleeCombat = new TurnPhase("meleeCombat");
                     foreach(Delta d in gameManager.GetMeleeCombatDeltas()){
-                        turnDeltas.Add(d);
+                        meleeCombat.Deltas.Add(d);
                         gameManager.ApplyDelta(d);
                     }
                     foreach(Delta d in gameManager.GetCleanUpDeltas()){
-                        turnDeltas.Add(d);
+                        meleeCombat.Deltas.Add(d);
                         gameManager.ApplyDelta(d);
                     }
+					turnPhases.Add(meleeCombat);
 					
 					// tower damage
+					TurnPhase towerCombat = new TurnPhase("towerCombat");
 					foreach(Delta d in gameManager.GetTowerDamageDeltas()) {
-						turnDeltas.Add(d);
+						towerCombat.Deltas.Add(d);
 						gameManager.ApplyDelta(d);
 					}
 					foreach(Delta d in gameManager.GetCleanUpDeltas()) {
-						turnDeltas.Add(d);
+						towerCombat.Deltas.Add(d);
 						gameManager.ApplyDelta(d);
 					}
+					turnPhases.Add(towerCombat);
 
 					// start of the next turn
+					TurnPhase startTurn = new TurnPhase("startPhase");
 					foreach(Delta d in gameManager.GetStartTurnDeltas()){
-                        turnDeltas.Add(d);
+                        startTurn.Deltas.Add(d);
                         gameManager.ApplyDelta(d);
                     }
+					turnPhases.Add(startTurn);
                 }
+
                 // get the start of the next deploy phase
+				TurnPhase startDeploy = new TurnPhase("startDeploy");
                 foreach(Delta d in gameManager.GetStartDeployDeltas()){
-                    turnDeltas.Add(d);
+                    startDeploy.Deltas.Add(d);
                     gameManager.ApplyDelta(d);
                 }
+				turnPhases.Add(startDeploy);
+				
                 // figure out which deltas everyone needs
                 for(int i = 0; i < players.Length; i++){ // for each player...
-                    turnDeltaLists[i] = new List<Delta>();
+                    turnPhaseLists[i] = new List<TurnPhase>();
                     for(int j = (i+1)%players.Length; j != i; j = (j+1)%players.Length){ // for each other player...
+						TurnPhase playerPhase = new TurnPhase($"player{j}");
                         foreach(Delta d in players[j].TurnDeltas){ // share turn deltas...
-                            turnDeltaLists[i].Add(d);
+                            playerPhase.Deltas.Add(d);
                         }
+						turnPhaseLists[i].Add(playerPhase);
                     }
                     // add in the shared deltas
-                    foreach(Delta d in turnDeltas){
-                        turnDeltaLists[i].Add(d);
-                    }
+                    turnPhaseLists[i].AddRange(turnPhases);
                 }
                 gameOver = gameManager.Over; // do this now while we have the lock
             }
             // share the deltas and restart turns
             for(int i = 0; i < players.Length; i++){
                 Console.WriteLine("Giving {0} {1} enemy deltas; they produced {2} deltas this turn.",
-                        players[i].Name, turnDeltaLists[i].Count, players[i].TurnDeltas.Length);
-                players[i].StartTurn(turnDeltaLists[i].ToArray());
+                        players[i].Name, turnPhaseLists[i].Count, players[i].TurnDeltas.Length);
+                players[i].StartTurn(turnPhaseLists[i].ToArray());
             }
             if(gameOver){
                 EndMatch();

@@ -1,8 +1,4 @@
-﻿using SFB.Game;
-using SFB.Game.Content;
-using SFB.Game.Management;
-using SFB.Net.Client;
-using System;
+﻿using System;
 using System.Xml;
 using System.Collections;
 using System.Collections.Generic;
@@ -10,9 +6,15 @@ using System.Threading.Tasks;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.Serialization;
+using SFB.Game;
+using SFB.Game.Content;
+using SFB.Game.Management;
+using SFB.Net.Client;
 
 public class Driver : MonoBehaviour
 {
+	public string deckKey;
+
 	public static Driver instance = null;
 
 	// Private references and convenience getters
@@ -26,8 +28,7 @@ public class Driver : MonoBehaviour
 	public int sideIndex { get; private set; }
 	public bool inGame => gameManager != null;
 
-	[Header("Object References")]
-	public UIManager uiManager;
+	public UIManager uiManager => UIManager.instance;
 
 	private void Awake()
 	{
@@ -43,9 +44,9 @@ public class Driver : MonoBehaviour
 		DontDestroyOnLoad(gameObject);
 	}
 
-	private List<XmlElement> GetDeltaElements(XmlDocument document)
+	private List<XmlElement> GetDeltaElements(XmlElement element)
 	{
-		return document
+		return element
 			.GetElementsByTagName("delta")
 			.OfType<XmlElement>()
 			.ToList();
@@ -53,10 +54,9 @@ public class Driver : MonoBehaviour
 
 	private IEnumerator Start()
 	{
-		Task connect = client.Connect();
-		yield return new WaitUntil(() => connect.IsCompleted);
+		uiManager.WaitForMatch();
 
-		Task joinMatch = client.JoinMatch(deckId: "TEST Undergrowth Smasher");
+		Task joinMatch = client.JoinMatch(PlayerPrefs.GetString(deckKey));
 		yield return new WaitUntil(() => joinMatch.IsCompleted);
 
 		Task<XmlDocument> matchStart = client.ReceiveDocument();
@@ -67,11 +67,12 @@ public class Driver : MonoBehaviour
 		{
 			Task<XmlDocument> turnStart = client.ReceiveDocument();
 			yield return new WaitUntil(() => turnStart.IsCompleted);
-			ProcessTurnStart(turnStart.Result);
+			uiManager.BeforeTurnStart();
+			yield return StartCoroutine(ProcessTurnStart(turnStart.Result));
 
 			if (gameManager.Players[sideIndex].DeployPhases > 0)
 			{
-				yield return uiManager.WaitForMainButtonClick();
+				yield return uiManager.WaitForLockIn();
 				client.SendPlayerActions(uiManager.myHandManager.ExportActions());
 				uiManager.WaitForOpponent();
 				Task<XmlDocument> confirmAction = client.ReceiveDocument();
@@ -106,7 +107,7 @@ public class Driver : MonoBehaviour
 			throw new Exception($"Received unexpected response type {type} when waiting for actionDeltas!");
 		}
 
-		List<XmlElement> elements = GetDeltaElements(document);
+		List<XmlElement> elements = GetDeltaElements(document.DocumentElement);
 
 		Debug.Log($"Processing {elements.Count} action deltas");
 
@@ -120,7 +121,7 @@ public class Driver : MonoBehaviour
 		uiManager.LockUnits();
 	}
 
-	private void ProcessTurnStart(XmlDocument document)
+	private IEnumerator ProcessTurnStart(XmlDocument document)
 	{
 		string type = document.DocumentElement.GetAttribute("type");
 
@@ -129,106 +130,125 @@ public class Driver : MonoBehaviour
 			throw new Exception($"Received unexpected response type {type} when waiting for turnStart!");
 		}
 
-		List<XmlElement> elements = GetDeltaElements(document);
-		List<Tuple<XmlElement, Delta>> parsedDeltas = elements
-					.Select(element => new Tuple<XmlElement, Delta>(element, Delta.FromXml(element, cardLoader)))
-					.ToList();
-
-		// X:		misc deploy phase stuff
-		// R, M, T:	ranged, melee, tower
-		// D:		draw
-		List<Delta> deployDeltas = Enumerable.TakeWhile<Tuple<XmlElement, Delta>>(parsedDeltas
-, (Func<Tuple<XmlElement, Delta>, bool>)((Tuple<XmlElement, Delta> pair) => (bool)!IsCombatDelta((Delta)pair.Item2)))
-			.Select((Tuple<XmlElement, Delta> pair) => pair.Item2)
-			.ToList();
-		List<Tuple<XmlElement, Delta>> combatDeltas = Enumerable.Where<Tuple<XmlElement, Delta>>(parsedDeltas
-, (Func<Tuple<XmlElement, Delta>, bool>)((Tuple<XmlElement, Delta> pair) => (bool)IsCombatDelta((Delta)pair.Item2)))
-			.ToList();
-		List<Delta> rangedCombatDeltas = combatDeltas
-			.Where((Tuple<XmlElement, Delta> pair) => pair.Item1.GetAttribute("dmgType") == "R")
-			.Select((Tuple<XmlElement, Delta> pair) => pair.Item2)
-			.ToList();
-		List<Delta> meleeCombatDeltas = combatDeltas
-			.Where((Tuple<XmlElement, Delta> pair) => pair.Item1.GetAttribute("dmgType") == "M")
-			.Select((Tuple<XmlElement, Delta> pair) => pair.Item2)
-			.ToList();
-		List<Delta> towerCombatDeltas = combatDeltas
-			.Where((Tuple<XmlElement, Delta> pair) => pair.Item1.GetAttribute("dmgType") == "T")
-			.Select((Tuple<XmlElement, Delta> pair) => pair.Item2)
-			.ToList();
-		List<Delta> drawDeltas = Enumerable.SkipWhile<Tuple<XmlElement, Delta>>(parsedDeltas
-, (Func<Tuple<XmlElement, Delta>, bool>)((Tuple<XmlElement, Delta> pair) => (bool)!IsCombatDelta((Delta)pair.Item2)))
-			.SkipWhile((Tuple<XmlElement, Delta> pair) => IsCombatDelta(pair.Item2))
-			.Select((Tuple<XmlElement, Delta> pair) => pair.Item2)
+		List<XmlElement> phaseElements = document
+			.DocumentElement
+			.GetElementsByTagName("phase")
+			.OfType<XmlElement>()
 			.ToList();
 
-		ProcessDeployDeltas(deployDeltas);
-		ProcessRangedCombatDeltas(rangedCombatDeltas);
-		ProcessMeleeCombatDeltas(meleeCombatDeltas);
-		ProcessTowerCombatDeltas(towerCombatDeltas);
-		StartCoroutine(ProcessDrawDeltas(drawDeltas));
-	}
-
-	private bool IsCombatDelta(Delta delta)
-	{
-		return delta is UnitHealthDelta || delta is TowerDamageDelta;
-	}
-
-	private void ProcessDeployDeltas(List<Delta> deployDeltas)
-	{
-		Debug.Log($"Processing {deployDeltas.Count} deploy deltas.");
-		foreach (Delta delta in deployDeltas)
+		foreach (TurnPhase phase in phaseElements.Select(element => new TurnPhase(element, cardLoader)))
 		{
-			delta.Apply();
+			if (phase.Deltas.Count == 0) continue;
+
+			string phaseDisplayName = GetPhaseName(phase.Name);
+			if (phaseDisplayName != null) yield return uiManager.ShowPhaseName(phaseDisplayName);
+
+			Debug.Log($"Processing {phase.Deltas.Count} deltas of phase {phase.Name}");
+			foreach (Delta delta in phase.Deltas)
+			{
+				delta.Apply();
+				yield return StartCoroutine(AnimateDelta(delta));
+			}
+
+			// Special case for draw phase. I don't really like this, but I don't see a way around it.
+			if (phase.Name == "startDeploy")
+			{
+				yield return uiManager.OpponentDrawCards();
+			}
 		}
-		uiManager.RenderUnits();
-		uiManager.LockUnits();
 	}
 
-	private void ProcessRangedCombatDeltas(List<Delta> rangedCombatDeltas)
+	private IEnumerator AnimateDelta(Delta delta)
 	{
-		Debug.Log($"Processing {rangedCombatDeltas.Count} ranged combat deltas.");
-		foreach (Delta delta in rangedCombatDeltas)
+		if (delta is AddToHandDelta)
 		{
-			delta.Apply();
+			yield return uiManager.DrawCard((delta as AddToHandDelta).Card);
 		}
-		AfterEachCombatPhase();
-	}
-
-	private void ProcessMeleeCombatDeltas(List<Delta> meleeCombatDeltas)
-	{
-		Debug.Log($"Processing {meleeCombatDeltas.Count} melee combat deltas.");
-		foreach (Delta delta in meleeCombatDeltas)
+		else if (delta is AddToLaneDelta)
 		{
-			delta.Apply();
+			AddToLaneDelta addToLaneDelta = delta as AddToLaneDelta;
+			uiManager.SpawnUnit(addToLaneDelta.SideIndex, Array.FindIndex(gameManager.Lanes, lane => lane.ID == addToLaneDelta.Target.ID), addToLaneDelta.Position);
 		}
-		AfterEachCombatPhase();
-	}
-
-	private void ProcessTowerCombatDeltas(List<Delta> towerCombatDeltas)
-	{
-		Debug.Log($"Processing {towerCombatDeltas.Count} tower combat deltas.");
-		foreach (Delta delta in towerCombatDeltas)
+		else if (delta is UnitHealthDelta)
 		{
-			delta.Apply();
-		}
-		AfterEachCombatPhase();
-	}
+			UnitHealthDelta damageDelta = delta as UnitHealthDelta;
 
-	private IEnumerator ProcessDrawDeltas(List<Delta> drawDeltas)
-	{
-		Debug.Log($"Processing {drawDeltas.Count} draw deltas.");
-		foreach (Delta delta in drawDeltas)
+			if (damageDelta.DmgType == Damage.Type.TOWER)
+			{
+				yield return uiManager.TowerUnitDamage(damageDelta.Target, damageDelta.Amount);
+			}
+			else if (damageDelta.DmgType == Damage.Type.HEAL)
+			{
+				// TODO: Implement 
+			}
+			else
+			{
+				yield return uiManager.UnitDamage(
+					damageDelta.Source,
+					damageDelta.Target,
+					damageDelta.Amount
+				);
+			}
+		}
+		else if (delta is RemoveFromLaneDelta)
 		{
-			delta.Apply();
+			RemoveFromLaneDelta removeDelta = delta as RemoveFromLaneDelta;
+			yield return uiManager.RemoveUnit(
+				Array.FindIndex(gameManager.Lanes, lane => lane.ID == removeDelta.Target.ID),
+				removeDelta.SideIndex,
+				removeDelta.Position
+			);
 		}
-		yield return uiManager.DrawPhase();
-	}
+		else if (delta is TowerDamageDelta)
+		{
+			TowerDamageDelta towerDamageDelta = delta as TowerDamageDelta;
+			yield return uiManager.UnitTowerDamage(towerDamageDelta.Target, towerDamageDelta.Amount);
+		}
+		else if (delta is TowerReviveDelta)
+		{
+			TowerReviveDelta towerReviveDelta = delta as TowerReviveDelta;
+			yield return uiManager.TowerRespawn(towerReviveDelta.Target);
+		}
+		else
+		{
+			// Some deltas simply can't be animated, while others could potentially indicate an error.
+			if (!(delta is RemoveFromDeckDelta))
+			{
+				Debug.LogWarning($"Failed to animate delta of type {delta.GetType().Name}");
+			}
+		}
 
-	private void AfterEachCombatPhase()
-	{
 		uiManager.RenderUnits();
 		uiManager.RenderTowers();
+	}
+
+	private string GetPhaseName(string phaseCodeName)
+	{
+		switch (phaseCodeName)
+		{
+			case "endDeploy":
+				return null;
+			case "rangedCombat":
+				return "Ranged Combat Phase";
+			case "meleeCombat":
+				return "Melee Combat Phase";
+			case "towerCombat":
+				return "Tower Combat Phase";
+			case "startPhase":
+				return null; // Not sure what this does?
+			case "startDeploy":
+				return "Turn Start";
+			default:
+				if (phaseCodeName.StartsWith("player"))
+				{
+					return "Opponent Actions";
+				}
+				else
+				{
+					Debug.LogWarning($"Unknown phase name {phaseCodeName}");
+					return null;
+				}
+		}
 	}
 }
 

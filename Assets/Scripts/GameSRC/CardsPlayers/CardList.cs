@@ -13,13 +13,5 @@ namespace SFB.Game
 		{
 			get;
 		}
-
-		public event InsertCardEvent afterInsert;
-
-		public new virtual void Insert(int index, Card item)
-		{
-			base.Insert(index, item);
-			if (afterInsert != null) afterInsert(index, item);
-		}
 	}
 }
