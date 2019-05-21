@@ -76,6 +76,17 @@ public partial class UIManager : MonoBehaviour
 		));
 	}
 
+	public Coroutine UnitHeal(Unit source, Unit target)
+	{
+		UnitUI sourceUI = FindUnitUI(source);
+		UnitUI targetUI = FindUnitUI(target);
+
+		return StartCoroutine(ParallelCoroutine(
+			() => sourceUI.AttackMove((targetUI.transform.position - sourceUI.transform.position).normalized),
+			() => targetUI.HealEffect()
+		));
+	}
+
 	public Coroutine RemoveUnit(int laneIndex, int sideIndex, int positionIndex)
 	{
 		UnitHolder holder = unitManagers[sideIndex].unitHolders[laneIndex, positionIndex];
