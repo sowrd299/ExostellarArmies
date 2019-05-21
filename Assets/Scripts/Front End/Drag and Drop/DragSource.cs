@@ -27,6 +27,9 @@ public class DragSource : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
 	private CanvasGroup _canvasGroup;
 	private CanvasGroup canvasGroup => _canvasGroup == null ? _canvasGroup = GetComponent<CanvasGroup>() : _canvasGroup;
 
+	private Camera _mainCamera;
+	private Camera mainCamera => _mainCamera ?? (_mainCamera = Camera.main);
+
 	private void Start()
 	{
 		dragLayer = GameObject.FindGameObjectWithTag(dragLayerTag).transform;
@@ -37,7 +40,7 @@ public class DragSource : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
 		originalParent = transform.parent;
 		originalPosition = transform.position;
 		transform.SetParent(dragLayer);
-		startPointerPosition = eventData.position;
+		startPointerPosition = mainCamera.ScreenToWorldPoint(eventData.position);
 
 		canvasGroup.blocksRaycasts = false;
 
@@ -48,7 +51,7 @@ public class DragSource : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
 
 	public void OnDrag(PointerEventData eventData)
 	{
-		transform.position = originalPosition + (Vector3)(eventData.position - startPointerPosition);
+		transform.position = originalPosition + mainCamera.ScreenToWorldPoint(eventData.position) - (Vector3)startPointerPosition;
 	}
 
 	public void OnEndDrag(PointerEventData eventData)
