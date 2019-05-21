@@ -171,7 +171,7 @@ public class Driver : MonoBehaviour
 
 	private bool IsCombatDelta(Delta delta)
 	{
-		return delta is UnitTakeDamageDelta || delta is TowerDamageDelta;
+		return delta is UnitHealthDelta || delta is TowerDamageDelta;
 	}
 
 	private void ProcessDeployDeltas(List<Delta> deployDeltas)

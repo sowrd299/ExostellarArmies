@@ -110,6 +110,12 @@ namespace SFB.Game
 			return hand == this.Hand;
 		}
 
+		// returns if the player owns the given discard
+		internal bool Owns(Discard discard)
+		{
+			return discard == this.Discard;
+		}
+
 		// returns an XML representation of all of the player's objects ID's,
 		// to sync them between client/server
 		public XmlElement GetPlayerIDs(XmlDocument doc)

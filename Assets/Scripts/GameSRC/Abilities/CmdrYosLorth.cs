@@ -6,6 +6,8 @@ namespace SFB.Game
 {
 	public class CmdrYosLorth : PersistentFieldAbility
 	{
+		// Unique; Ranged Shield 1; Front Line Persistent: Allied front line Elites have +1 and Ranged Shield +1
+
 		protected override Delta[] GetAddDeltas(int lane, int side, int pos, Lane[] lanes, Unit source)
 		{
 			Unit target = lanes[lane].Units[side, pos];
@@ -16,9 +18,8 @@ namespace SFB.Game
 			};
 		}
 
-		protected override Delta[] GetRemoveDeltas(int lane, int side, int pos, Lane[] lanes, Unit source)
+		protected override Delta[] GetRemoveDeltas(Unit target, Unit source)
 		{
-			Unit target = lanes[lane].Units[side, pos];
 			return new Delta[]
 			{
 				new UnitDamageAmountDelta(target, -1, Damage.Type.MELEE, source),

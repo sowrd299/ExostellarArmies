@@ -8,20 +8,23 @@ namespace SFB.Game
 	public class AutonomousRangeFinder : Ability
 	{
 		private Unit appliedTo;
+		private Unit source;
 
 		public AutonomousRangeFinder() : base(-1) {
 			appliedTo = null;
+			source = null;
 		}
 
-		protected override void ApplyEffects(Unit u, GameState initialGameState)
+		protected override void ApplyEffects(Unit u, GameState gameState)
 		{
 			u.AddInitialDeployDeltas += AutonomousRangeFinderAdd;
-			u.AddRecurringDeployDeltas += AutonomousRangeFinderRemove;
+			gameState.AddRecurringDeployDeltas += AutonomousRangeFinderRemove;
+			source = u;
 		}
 
 		protected override void RemoveEffects(Unit u, GameState initialGameState)
 		{
-			throw new System.Exception("Can't remove this ability - potential bugs");
+			throw new System.Exception("Can't remove this ability");
 		}
 
 		public void AutonomousRangeFinderAdd(List<Delta> deltas, GameStateLocation gameStateLocation)
@@ -36,9 +39,10 @@ namespace SFB.Game
 		public void AutonomousRangeFinderRemove(List<Delta> deltas, GameStateLocation gameStateLocation)
 		{
 			if(appliedTo != null) {
-				deltas.Add(new UnitDamageAmountDelta(appliedTo, -3, Damage.Type.RANGED, gameStateLocation.SubjectUnit));
+				deltas.Add(new UnitDamageAmountDelta(appliedTo, -3, Damage.Type.RANGED, source));
 				appliedTo = null;
 			}
+			gameStateLocation.GameState.AddRecurringDeployDeltas -= AutonomousRangeFinderRemove;
 		}
 	}
 }

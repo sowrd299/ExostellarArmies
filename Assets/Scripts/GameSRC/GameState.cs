@@ -18,9 +18,17 @@ namespace SFB.Game.Management
 		public Lane[] Lanes { get; private set; }
 
 		public event Ability.AddDelta AddBoardUpdateDeltas;
+		public event Ability.AddDelta AddRecurringDeployDeltas;
+		public event Ability.AddDelta AddDeathDeltas;
 
 		public void UseAddBoardUpdateDeltas(List<Delta> deltas) {
-			AddBoardUpdateDeltas?.Invoke(deltas, null);
+			AddBoardUpdateDeltas?.Invoke(deltas, this.WithLocation(-1, -1, -1));
+		}
+		public void UseAddRecurringDeployDeltas(List<Delta> deltas) {
+			AddRecurringDeployDeltas?.Invoke(deltas, this.WithLocation(-1, -1, -1));
+		}
+		public void UseAddDeathDeltas(List<Delta> deltas) {
+			AddDeathDeltas?.Invoke(deltas, this.WithLocation(-1, -1, -1));
 		}
 
 		public GameState(DeckList[] deckLists, XmlElement[] serializedPlayers, XmlElement[] serializedLanes)

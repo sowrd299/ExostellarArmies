@@ -17,9 +17,8 @@ namespace SFB.Game
 			};
 		}
 
-		protected override Delta[] GetRemoveDeltas(int lane, int side, int pos, Lane[] lanes, Unit source)
+		protected override Delta[] GetRemoveDeltas(Unit target, Unit source)
 		{
-			Unit target = lanes[lane].Units[side, pos];
 			return new Delta[]
 			{
 				// TODO *EFFECT*

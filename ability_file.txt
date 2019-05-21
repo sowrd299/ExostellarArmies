@@ -1,4 +1,4 @@
 Line 2: Card Name / Line 3: Types of Abilities (R: Regular, P: Persistent) / Next Lines: Ability Text
-Exostellar Rover Marine
-P
-Front Line: If this has a Back Line, this has +2M, else this has +1R.
+Hover-Shield Projector
+R
+Support Carthan Infantry: Give this Front Line Ranged Shield 3 this turn. (when this is deployed behind Carthan Infantry, activate this ability.

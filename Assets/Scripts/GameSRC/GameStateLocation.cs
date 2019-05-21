@@ -40,6 +40,18 @@ namespace SFB.Game.Management
 			}
 		}
 
+		public bool IsSupporting(string[] types)
+		{
+			Unit front = FrontUnit;
+			if(Pos == 1 && front != null) {
+				foreach(string type in types)
+					if(!front.Card.UnitType.Contains(type))
+						return false;
+				return true;
+			}
+			return false;
+		}
+
 		public GameStateLocation(GameState gameState, int lane, int side, int pos)
 		{
 			GameState = gameState;

@@ -7,9 +7,10 @@ using System.Reflection;
 namespace SFB.Game
 {
 	// Abilities Not Implemented For:
-	/*  Exostellar Tactical Squad
-	 *  Mgr. Lt. Tul Yorves
-	 *  
+	/*   Exostellar Tactical Squad
+	 *   Mgr. Lt. Tul Yorves
+	 *   Commercial Shipper / Commercial Comms Relay
+	 *   Mercenary Phantasm
 	 * 
 	 */
 	public abstract class Ability

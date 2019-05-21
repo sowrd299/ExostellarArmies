@@ -15,11 +15,13 @@ namespace SFB.Game
 		public UnitCard Card { get; private set; } // the card the unit is an instance of
 
 		public event Ability.ModifyInt RangedAtkMod;
-		public int RangedAttack { get {
+		public int RangedAttack {
+			get {
 				int a = Card.RangedAttack;
 				RangedAtkMod?.Invoke(ref a);
 				return a;
-		}}
+			}
+		}
 
 		public event Ability.ModifyInt MeleeAtkMod;
 		public int MeleeAttack {
@@ -95,7 +97,7 @@ namespace SFB.Game
 					int resistance = target.GetResistance(dmgType);
 					int deal = System.Math.Min(target.HealthPoints+resistance, dmgLeft);
 
-					deltas.Add(new UnitTakeDamageDelta(target, deal, dmgType, this));
+					deltas.Add(new UnitHealthDelta(target, deal, dmgType, this));
 					dmgLeft = dmgLeft - deal;
 					target.ModifyDamageLeft?.Invoke(ref dmgLeft);
 				}

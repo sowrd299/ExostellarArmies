@@ -29,6 +29,13 @@ namespace SFB.Game
             }
         }
 
-		// TODO
+		public AddToDiscardDelta[] GetDiscardDeltas(Card[] cards)
+		{
+			AddToDiscardDelta[] deltas = new AddToDiscardDelta[cards.Length];
+			for(int i = 0; i < cards.Length; i++) {
+				deltas[i] = new AddToDiscardDelta(this, cards[i]);
+			}
+			return deltas;
+		}
 	}
 }
