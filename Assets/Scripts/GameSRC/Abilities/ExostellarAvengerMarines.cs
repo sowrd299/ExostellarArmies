@@ -20,7 +20,7 @@ namespace SFB.Game
 		protected override void ApplyEffects(Unit u, GameState initialGameState)
 		{
 			u.AddInitialDeployDeltas += ExostellarAvengerMarinesAdd;
-			u.AddRecurringDeployDeltas += ExostellarAvengerMarinesRemove;
+			initialGameState.AddRecurringDeployDeltas += ExostellarAvengerMarinesRemove;
 		}
 
 		protected override void RemoveEffects(Unit u, GameState initialGameState)
@@ -58,6 +58,7 @@ namespace SFB.Game
 				deltas.Add(new UnitDamageAmountDelta(applied3RTo, -3, Damage.Type.RANGED, applied3RTo));
 				applied3RTo = null;
 			}
+			gameStateLocation.GameState.AddRecurringDeployDeltas -= ExostellarAvengerMarinesRemove;
 		}
 	}
 }

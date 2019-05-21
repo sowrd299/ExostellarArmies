@@ -21,9 +21,8 @@ namespace SFB.Game
 
 		public void AdvSupplyDroneInner(List<Delta> deltas, GameStateLocation gameStateLocation)
 		{
-			Unit front = gameStateLocation.FrontUnit;
-			if(gameStateLocation.Pos == 1 && front != null && front.Card.UnitType.Contains("Carthan")) {
-				deltas.Add(new UnitTakeDamageDelta(front, 2, Damage.Type.HEAL, gameStateLocation.SubjectUnit));
+			if(gameStateLocation.IsSupporting(new string[] { "Carthan" })) {
+				deltas.Add(new UnitHealthDelta(gameStateLocation.FrontUnit, 2, Damage.Type.HEAL, gameStateLocation.SubjectUnit));
 				deltas.AddRange(
 					gameStateLocation.SubjectPlayer.ManaPool.GetAddDeltas(3)
 				);

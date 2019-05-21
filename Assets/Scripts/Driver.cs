@@ -169,9 +169,9 @@ public class Driver : MonoBehaviour
 			AddToLaneDelta addToLaneDelta = delta as AddToLaneDelta;
 			uiManager.SpawnUnit(addToLaneDelta.SideIndex, Array.FindIndex(gameManager.Lanes, lane => lane.ID == addToLaneDelta.Target.ID), addToLaneDelta.Position);
 		}
-		else if (delta is UnitTakeDamageDelta)
+		else if (delta is UnitHealthDelta)
 		{
-			UnitTakeDamageDelta damageDelta = delta as UnitTakeDamageDelta;
+			UnitHealthDelta damageDelta = delta as UnitHealthDelta;
 
 			if (damageDelta.DmgType == Damage.Type.TOWER)
 			{

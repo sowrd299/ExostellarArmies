@@ -18,9 +18,9 @@ namespace SFB.Net.Server{
             DeckList r = new DeckList();
             r.AddCard(newCardLoader.GetByID("Exostellar Marine Squad"), 2);
             
-            r.AddCard(newCardLoader.GetByID("Commercial Shipper"), 1);
+            r.AddCard(newCardLoader.GetByID("Commercial Shipper"), 1); // no system
 
-            r.AddCard(newCardLoader.GetByID("Commercial Coms Relay"),1);
+            r.AddCard(newCardLoader.GetByID("Commercial Coms Relay"),1); // no system
 
             r.AddCard(newCardLoader.GetByID("Adv. Infantry Support System"),2);
 
@@ -30,7 +30,7 @@ namespace SFB.Net.Server{
 
             r.AddCard(newCardLoader.GetByID("XS Field Technician"), 1);
 
-            r.AddCard(newCardLoader.GetByID("Lt. Mgr. Tul Yorves"),1);
+            r.AddCard(newCardLoader.GetByID("Lt. Mgr. Tul Yorves"),1); // no system yet
 
             r.AddCard(newCardLoader.GetByID("Exostellar Snipers"),2);
 
@@ -38,11 +38,11 @@ namespace SFB.Net.Server{
 
             r.AddCard(newCardLoader.GetByID("Ancillary Medical Officer"),1);
 
-            r.AddCard(newCardLoader.GetByID("Battle-Line Trauma Medic"),1);
+            r.AddCard(newCardLoader.GetByID("Battle-Line Trauma Medic"),1); // not yet
             
             r.AddCard(newCardLoader.GetByID("Emergency Med Drop"),1);
             
-            r.AddCard(newCardLoader.GetByID("Cannoneer Drone"),1);
+            r.AddCard(newCardLoader.GetByID("Cannoneer Drone"),1); // not yet
 
             r.AddCard(newCardLoader.GetByID("Autonomous Range Finder"), 2);
             return r;
@@ -53,8 +53,8 @@ namespace SFB.Net.Server{
         {
             DeckList deck = new DeckList();
 
-            deck.AddCard(newCardLoader.GetByID("Mercenary Phantasm"), 1);
-            deck.AddCard(newCardLoader.GetByID("Commercial Shipper"), 1);
+            deck.AddCard(newCardLoader.GetByID("Mercenary Phantasm"), 1); // no system
+            deck.AddCard(newCardLoader.GetByID("Commercial Shipper"), 1); // no system
             deck.AddCard(newCardLoader.GetByID("Adaptive Protopod"), 2);
             deck.AddCard(newCardLoader.GetByID("Screaming Spore Spunner"), 1);
             deck.AddCard(newCardLoader.GetByID("Pod-Cap Yxuu maRroz"), 1);
