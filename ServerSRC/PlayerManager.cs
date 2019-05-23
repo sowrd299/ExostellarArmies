@@ -94,7 +94,13 @@ namespace SFB.Net.Server.Matches{
                 XmlElement element = phase.ToXml(msg, player);
                 msg.DocumentElement.AppendChild(element);
             }
-            Socket.SendXml(msg);
+            // add in input requests
+            foreach (InputRequest req in player.InputRequests){
+                XmlElement element = req.ToXml(msg);
+                msg.DocumentElement.AppendChild(element);
+            }
+            // send
+			socket.SendXml(msg);
             state = State.ACTING;
             turnDeltas = new List<Delta>();
         }

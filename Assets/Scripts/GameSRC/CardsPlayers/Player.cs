@@ -15,6 +15,9 @@ namespace SFB.Game
 		public Hand Hand { get; private set; }
 		public Discard Discard { get; private set; }
 
+		// the input requests the player currently has
+		public List<InputRequest> InputRequests { get; private set; }
+
 		public ResourcePool LivesPool { get; private set; }
 		public int Lives {
 			get { return LivesPool.Count; }
@@ -135,4 +138,15 @@ namespace SFB.Game
             return e;
         }
 	}
+
+
+	// adds in an Input Request for it to deal with
+	public void AddInputRequest(InputRequest i){
+		InputRequests.add(i);
+	}
+
+	public void FinishInputRequest(InputRequest i){
+		InputRequests.remove(i);
+	}
+
 }

@@ -2,6 +2,7 @@ using System.Xml;
 
 namespace SFB.Game.Management{
 
+
     // a class to request input needed from a player
     // usually, this mean a card's ability gives the player a choice
     public abstract class InputRequest<T> : Sendable, IIDed where T : IIDed{
@@ -17,10 +18,9 @@ namespace SFB.Game.Management{
             get{ return id; }
         }
 
-        private Player player; // the player who needs to make the 
-        public Player Player{
-            get{ return player; }
-        }
+        // the player who needs to make the 
+        // this probably can be depricated
+        public Player Player{ get; private set; }
 
         // TODO: add in some conception of what are the legal choices?
 
@@ -34,6 +34,7 @@ namespace SFB.Game.Management{
         public InputRequest(Player player, string id = null){
             chosen = new SendableTarget<T>("chosen", default(T));
             this.player = player;
+            player.AddInputRequest(this);
             // ID it
             if(id != null){
                 this.id = id;
@@ -47,6 +48,7 @@ namespace SFB.Game.Management{
         // CALLING THIS MANUAL WILL CAUSE PROBLEMS FOR ID's
         public InputRequest(Player player, XmlElement e, IdIssuer<T> targetIdIssuer) {
             this.player = player;
+            player.AddInputRequest(this);
             // get the choice, if there is one
             chosen = new SendableTarget<T>("chosen", e, targetIdIssuer);
             // find and register the ID
@@ -68,14 +70,16 @@ namespace SFB.Game.Management{
             string id = e.Attributes["id"].Value;
             InputRequest<T> sharedId = idIssuer.GetByID(id);
             // ...if there is, just migrate data to that one
-            if(sharedId != null && !object.Equals(chosen.Target, default(T))){
-                chosen = new SendableTarget<T>("chosen", e, targetIdIssuer);
-                sharedId.MakeChoice(chosen.Target);
-                return sharedId;
-            }else{
-                object[] args = new object[]{e, p, targetIdIssuer};
-                return SendableFactory<InputRequest<T>>.FromXml(e, args);
+            if(sharedId != null){
+                chosen = new SendableTarget<T>("chosen", e, TargetIdIssuer);
+                if(!object.Equals(chosen.Target, default(T))){
+                    sharedId.MakeChoice(chosen.Target);
+                    return sharedId;
+                }
             }
+            // if that rought failed to return...
+            object[] args = new object[]{e, p, TargetIdIssuer};
+            return SendableFactory<InputRequest<T>>.FromXml(e, args);
         }
         
         // make the choice
@@ -86,6 +90,10 @@ namespace SFB.Game.Management{
         public abstract bool IsLegalChoice(T chosen);
 
         public abstract Delta[] GetDeltas(); // get the deltas after the choice has been made
+
+        public void Finish(){
+            player.FinishInputRequest(this);
+        }
 
     }
 

@@ -109,6 +109,17 @@ namespace SFB.Game.Management{
             // real implementation:
             return a.GetDeltas(player, this.GameState);
         }
+
+
+        // hand an answered input request
+        public Delta[] FinishInputRequest(Player player, InputRequest req){
+            if(!req.Made){ // deal with unfinished req; this honestly should probably just error
+                return new Delta[]{};
+            }
+            Delta[] deltas = req.GetDeltas();
+            req.Finish();
+            return deltas;
+        }
 		
         // Get deltas for after a deployment phase ends
 		// Decrease # of deploy phases, activate deploy effects
