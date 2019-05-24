@@ -20,6 +20,7 @@ namespace SFB.Game.Management{
         public abstract bool Made { get; }
 
         // NOTE: Any request you want handled needs to be assigned to a player. See Player.AssignInputRequest
+        // NOTE: Input requests are currenlty NOT supported for use durring the planning phase
         public InputRequest(string id = null){
             // ID it
             if(id != null){
@@ -44,7 +45,7 @@ namespace SFB.Game.Management{
         // returns the success state of the copy
         protected abstract bool MakeChoiceFrom(XmlElement e);
 
-        public InputRequest FromXml(XmlElement e, Player p){
+        public static InputRequest FromXml(XmlElement e){
             // find in there is already an Input Request with the same ID
             string id = e.Attributes["id"].Value;
             InputRequest sharedId = idIssuer.GetByID(id);
@@ -53,7 +54,7 @@ namespace SFB.Game.Management{
                 return sharedId;
             }
             // if that rought failed to return...
-            object[] args = new object[]{e, p};
+            object[] args = new object[]{e};
             return SendableFactory<InputRequest>.FromXml(e, args);
         }
 

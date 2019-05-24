@@ -69,6 +69,9 @@ namespace SFB.Game
 			LivesPool.Add(4);
 			this.ManaPool = new ResourcePool(12, manaId); // CONST MAX MANA IMPLEMENTED HERE
 			this.DeployPhasesPool = new ResourcePool(2, depId);
+
+			// logistical
+			this.InputRequests = new List<InputRequest>();
 		}
  
 		public Delta[] GetDrawDeltas()
@@ -147,6 +150,13 @@ namespace SFB.Game
 			InputRequests.Add(i);
 		}
 
+		// returns if the player is handling the input request
+		public bool ContainsInputRequest(InputRequest i){
+			return InputRequests.Contains(i);
+		}
+
+		// called after the input request is dealt with
+		// most just clean up/memory management
 		public void FinishInputRequest(InputRequest i){
 			InputRequests.Remove(i);
 		}
