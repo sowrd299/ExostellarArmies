@@ -101,7 +101,12 @@ namespace SFB.Net.Server.Matches{
             }
             // send
 			socket.SendXml(msg);
-            state = State.ACTING;
+            // reset for next turn
+            if(player.InputRequests.Count == 0){
+                // do not resume acting if have outstanding input requests
+                // TODO: this will probably cause problems for other players... oops? but also maybe not B/C deploy phase count?
+                state = State.ACTING;
+            }
             turnDeltas = new List<Delta>();
         }
 
