@@ -117,7 +117,7 @@ namespace SFB.Game.Management{
                 return new Delta[]{};
             }
             Delta[] deltas = req.GetDeltas();
-            req.Finish();
+            player.FinishInputRequest(req);
             return deltas;
         }
 		

@@ -137,16 +137,19 @@ namespace SFB.Game
             // return
             return e;
         }
+
+		// INPUT REQUEST MANAGEMENT
+
+		// adds in an Input Request for it to deal with
+		// NOTE: THIS IS NECESSARY FOR EVERY INPUT REQUEST
+		// And input request not added to a player will not get handled
+		public void AssignInputRequest(InputRequest i){
+			InputRequests.Add(i);
+		}
+
+		public void FinishInputRequest(InputRequest i){
+			InputRequests.Remove(i);
+		}
+
 	}
-
-
-	// adds in an Input Request for it to deal with
-	public void AddInputRequest(InputRequest i){
-		InputRequests.add(i);
-	}
-
-	public void FinishInputRequest(InputRequest i){
-		InputRequests.remove(i);
-	}
-
 }
