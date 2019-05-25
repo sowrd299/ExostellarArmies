@@ -219,8 +219,8 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: "<b>Writing</b>\n\tJames Bates\n\n<b>Art Strike</b>\n\tHenry Nguyen\n\tMatthew
-    Tran\n\tJohn C. (FinkyPingu)\n\tAnthony Cano\n\tKevin Salim\n\n<b>Audio Strike
-    Team</b>\n\tRami Shriem\n\tKristen Campbell"
+    Tran\n\tJohn Claricia\n\tAnthony Cano\n\tKevin Salim\n\n<b>Audio Strike Team</b>\n\tRami
+    Shriem\n\tKristen Campbell"
 --- !u!222 &62236043
 CanvasRenderer:
   m_ObjectHideFlags: 0
