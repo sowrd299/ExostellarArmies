@@ -96,6 +96,8 @@ public partial class UIManager : MonoBehaviour
 		enemyTowerManager.sideIndex = enemyIndex;
 		RenderTowers();
 
+		RenderIndicators();
+
 		phaseBackground.CrossFadeAlpha(0, 0, false);
 		phaseText.CrossFadeAlpha(0, 0, false);
 	}
