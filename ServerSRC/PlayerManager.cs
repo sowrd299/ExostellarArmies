@@ -100,7 +100,7 @@ namespace SFB.Net.Server.Matches{
                 msg.DocumentElement.AppendChild(element);
             }
             // send
-			socket.SendXml(msg);
+			Socket.SendXml(msg);
             // reset for next turn
             if(player.InputRequests.Count == 0){
                 // do not resume acting if have outstanding input requests
@@ -185,7 +185,7 @@ namespace SFB.Net.Server.Matches{
                                     +reqElement.OuterXml+"</msg></file>");
                         }
                     }
-                    socket.SendXml(irResp);
+                    Socket.SendXml(irResp);
                     break;
                 default:
                     base.HandleMessage(msg,from);
