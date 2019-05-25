@@ -1,9 +1,10 @@
 ﻿using System;
-using System.Xml;
 using System.Collections;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Xml;
 using UnityEngine;
 using UnityEngine.Serialization;
 using SFB.Game;
@@ -52,6 +53,14 @@ public class Driver : MonoBehaviour
 			.ToList();
 	}
 
+	private List<XmlElement> GetInputRequestElements(XmlElement element)
+	{
+		return element
+			.GetElementsByTagName("inputRequest")
+			.OfType<XmlElement>()
+			.ToList();
+	}
+
 	private IEnumerator Start()
 	{
 		uiManager.WaitForMatch();
@@ -73,11 +82,14 @@ public class Driver : MonoBehaviour
 			if (gameManager.Players[sideIndex].DeployPhases > 0)
 			{
 				yield return uiManager.WaitForLockIn();
+
 				client.SendPlayerActions(uiManager.myHandManager.ExportActions());
-				uiManager.WaitForOpponent();
 				Task<XmlDocument> confirmAction = client.ReceiveDocument(type => type == "actionDeltas");
 				yield return new WaitUntil(() => confirmAction.IsCompleted);
-				ProcessActionResults(confirmAction.Result);
+				yield return StartCoroutine(ProcessActionResults(confirmAction.Result));
+
+				uiManager.WaitForOpponent();
+				client.LockInTurn();
 			}
 		}
 	}
@@ -98,18 +110,36 @@ public class Driver : MonoBehaviour
 		uiManager.InitializeUI();
 	}
 
-	private void ProcessActionResults(XmlDocument document)
+	private IEnumerator ProcessActionResults(XmlDocument document)
 	{
 		string type = document.DocumentElement.GetAttribute("type");
 
-		List<XmlElement> elements = GetDeltaElements(document.DocumentElement);
+		List<XmlElement> deltaElements = GetDeltaElements(document.DocumentElement);
 
-		Debug.Log($"Processing {elements.Count} action deltas");
+		Debug.Log($"Processing {deltaElements.Count} action deltas");
 
-		foreach (XmlElement element in elements)
+		foreach (XmlElement element in deltaElements)
 		{
 			Delta delta = Delta.FromXml(element, cardLoader);
 			delta.Apply();
+		}
+
+		List<XmlElement> inputRequestElements = GetInputRequestElements(document.DocumentElement);
+
+		if (inputRequestElements.Count > 0)
+		{
+			List<InputRequest> requests = inputRequestElements.Select(InputRequest.FromXml).ToList();
+
+			Debug.Log($"Processing {inputRequestElements.Count} input requests");
+			foreach (InputRequest request in requests)
+			{
+				yield return StartCoroutine(ProcessInputRequest(request));
+			}
+
+			client.SendInputRequestResponse(requests.ToArray());
+			Task<XmlDocument> confirmInput = client.ReceiveDocument();
+			yield return new WaitUntil(() => confirmInput.IsCompleted);
+			yield return StartCoroutine(ProcessActionResults(confirmInput.Result));
 		}
 
 		uiManager.RenderUnits();
@@ -231,6 +261,20 @@ public class Driver : MonoBehaviour
 		uiManager.RenderUnits();
 		uiManager.RenderTowers();
 		uiManager.RenderIndicators();
+	}
+
+	private IEnumerator ProcessInputRequest(InputRequest request)
+	{
+		if (request is InputRequest<Card>)
+		{
+			InputRequest<Card> cardRequest = request as InputRequest<Card>;
+
+			StringBuilder cardIdBuilder = new StringBuilder();
+			yield return SelectCardUI.instance.ChooseCard(gameManager.Players[sideIndex].Hand.ToArray(), cardIdBuilder);
+			string cardId = cardIdBuilder.ToString();
+
+			cardRequest.MakeChoice(cardLoader.GetByID(cardId));
+		}
 	}
 
 	private string GetPhaseName(string phaseCodeName)
