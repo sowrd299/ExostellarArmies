@@ -220,6 +220,7 @@ public class Driver : MonoBehaviour
 
 		uiManager.RenderUnits();
 		uiManager.RenderTowers();
+		uiManager.RenderIndicators();
 	}
 
 	private string GetPhaseName(string phaseCodeName)

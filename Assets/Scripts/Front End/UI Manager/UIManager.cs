@@ -55,6 +55,7 @@ public partial class UIManager : MonoBehaviour
 	[Header("UI References")]
 	public Button mainButton;
 	public Text mainButtonText;
+	public GameObject extraDeploymentIndicator;
 
 	public Image phaseBackground;
 	public Text phaseText;
@@ -157,6 +158,11 @@ public partial class UIManager : MonoBehaviour
 	{
 		myTowerManager.RenderTowers();
 		enemyTowerManager.RenderTowers();
+	}
+
+	public void RenderIndicators()
+	{
+		extraDeploymentIndicator.SetActive(myPlayer.DeployPhases > 1);
 	}
 
 	public void LockUnits()
