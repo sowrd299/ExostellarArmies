@@ -16,7 +16,7 @@ namespace SFB.Net.Server.Matches{
         // most likely getting one passed in from Match, which gets one from the server
         private static CardLoader cardLoader = new CardLoader();
 
-        private enum State{ACTING, WAITING} 
+        private enum State {ACTING, WAITING} 
 
         // the socket to the player's client
         public SocketManager Socket { get; private set; }
@@ -25,35 +25,35 @@ namespace SFB.Net.Server.Matches{
         private State state;
 
         // a private copy of the gameState
-        private GameManager GameManager;
+        private GameManager gameManager;
 
         // the moves taken this turn
         private List<Delta> turnDeltas;
         public Delta[] TurnDeltas => turnDeltas.ToArray();
 
         // to be called at end of turn
-        private Action EotCallback;
+        private Action eotCallback;
 
         // to be called if/when the connection dies
-        private Action DeathCallback;
+        private Action deathCallback;
 
         // the client's player
-        private Player Player;
+        private Player player;
 
 		public string Name { get; private set; }
 
         // returns whether or not the players has locked in their current turn
-        public bool TurnLockedIn => state == State.WAITING || Player.DeployPhases <= 0;
+        public bool TurnLockedIn => state == State.WAITING || player.DeployPhases <= 0;
 
         // TODO: I am not convinced this should actually take a decklist
         //      that should probably be handled by something that manages game state
         //      not game networking
         public PlayerManager(SocketManager socket, int playerIndex, GameManager gm, Action eotCallback, Action deathCallback){
             Socket = socket;
-            Player = gm.Players[playerIndex];
-            GameManager = gm;
-            EotCallback = eotCallback;
-            DeathCallback = deathCallback;
+            player = gm.Players[playerIndex];
+            gameManager = gm;
+            this.eotCallback = eotCallback;
+            this.deathCallback = deathCallback;
             turnDeltas = new List<Delta>();
 			Name = "Player " + playerIndex;
         }
@@ -66,7 +66,7 @@ namespace SFB.Net.Server.Matches{
 			doc.DocumentElement.SetAttribute("sideIndex", sideIndex.ToString());
 
             // and in local player IDs
-            XmlElement friendlyIDs = Player.GetPlayerIDs(doc);
+            XmlElement friendlyIDs = player.GetPlayerIDs(doc);
 			friendlyIDs.SetAttribute("side", "local");
             doc.DocumentElement.AppendChild(friendlyIDs);
 
@@ -84,14 +84,14 @@ namespace SFB.Net.Server.Matches{
             Socket.SendXml(doc);
         }
 
-		public XmlElement GetPlayerIDs(XmlDocument doc) => Player.GetPlayerIDs(doc);
+		public XmlElement GetPlayerIDs(XmlDocument doc) => player.GetPlayerIDs(doc);
 
 		// handle everything that happens at the start of a new turn
 		public void StartTurn(TurnPhase[] phases){
             XmlDocument msg = NewEmptyMessage("turnStart");
 			foreach (TurnPhase phase in phases)
 			{
-				XmlElement element = phase.ToXml(msg, Player);
+				XmlElement element = phase.ToXml(msg, player);
 				msg.DocumentElement.AppendChild(element);
 			}
 			Socket.SendXml(msg);
@@ -119,7 +119,7 @@ namespace SFB.Net.Server.Matches{
 
         // what to do when a socket dies
         protected override void HandleSocketDeath(SocketManager _){
-            DeathCallback();
+            deathCallback();
         }
 
         // TODO: this probably should get broken up into many smaller functions
@@ -133,16 +133,16 @@ namespace SFB.Net.Server.Matches{
                         XmlDocument resp = NewEmptyMessage("actionDeltas");
                         foreach (XmlElement actionElement in msg.GetElementsByTagName("action")){
                             PlayerAction a = PlayerAction.FromXml(actionElement, cardLoader, Lane.IdIssuer);
-                            if(GameManager.IsLegalAction(Player, a)){
-                                Delta[] ds =  GameManager.GetActionDeltas(Player, a);
+                            if(gameManager.IsLegalAction(player, a)){
+                                Delta[] ds =  gameManager.GetActionDeltas(player, a);
                                 // using three different for loops to:
                                 //  1) send message faster
                                 //  2) spend less time in each lock
 
                                 // update the gamestate
-                                lock(GameManager){
+                                lock(gameManager){
                                     foreach(Delta d in ds){
-                                        GameManager.ApplyDelta(d);
+                                        gameManager.ApplyDelta(d);
                                     }
                                 }
                                 // build and send the reponse
@@ -173,7 +173,7 @@ namespace SFB.Net.Server.Matches{
                         // TES
                         Console.WriteLine("Turn locked in...");
                         state = State.WAITING; // after locking in, the player may makthough maybe I should fixe no more actions
-                        EotCallback();
+                        eotCallback();
                     }else{
                         from.Send("<file type='error'><msg>You probably sent 'lockInTurn' multiple times</msg></file>");
                     }
