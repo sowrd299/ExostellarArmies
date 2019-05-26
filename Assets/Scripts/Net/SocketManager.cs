@@ -125,7 +125,7 @@ namespace SFB.Net{
         // recieve a message from the socket asynchronously
         // NOTE: calling a second time will override previous calls
         // TODO: there seem to be some really ugly race-cases with managing only one asyncReceiving at a time
-        public void AsynchReceiveXml(HandleMessage<XmlDocument> handler, HandleDeath deathHandler, int bufferLen = 256){
+        public void AsyncReceiveXml(HandleMessage<XmlDocument> handler, HandleDeath deathHandler, int bufferLen = 256){
             lock(asynchReceivingLock){
                 handleAsynchXmlMessage = handler;
                 handleAsyncDeath = deathHandler;
@@ -170,7 +170,7 @@ namespace SFB.Net{
                     if(!Alive){ // ...may have died ...
                         handleAsyncDeath(this);
                     }else{ // ...may need to continue reading
-                        AsynchReceiveXml(handleAsynchXmlMessage, handleAsyncDeath);
+                        AsyncReceiveXml(handleAsynchXmlMessage, handleAsyncDeath);
                     }
                 }
             }
