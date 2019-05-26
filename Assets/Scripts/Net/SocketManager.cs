@@ -86,9 +86,6 @@ namespace SFB.Net{
         // parses data recieved from a socket
         private string ParseMessage(byte[] bytes, int i){
             string text = Encoding.UTF8.GetString(bytes);
-			#if UNITY_EDITOR
-				UnityEngine.Debug.Log($"Received text\n{text}");
-			#endif
             //handle dead connection
             if(i == 0){
                 Console.WriteLine("Socket Received Empty 'End of Connnection' Packet; Dying");
