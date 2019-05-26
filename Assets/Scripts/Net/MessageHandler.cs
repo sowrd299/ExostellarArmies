@@ -26,12 +26,12 @@ namespace SFB.Net{
                 // TODO: this is a dumb order of ops to care about what is my archetecture
                 StartAsyncReceive(from);
                 // handle the message
-				try{
-                	HandleMessage(msg, from);
-				}catch(Exception e){
-					HandleError(e, from);
+                try{
+                    HandleMessage(msg, from);
+                }catch(Exception e){
+                    HandleError(e, from);
                     Console.WriteLine("...was handling message: {0}", msg.OuterXml);
-				}
+                }
             }
         }
 
@@ -51,7 +51,7 @@ namespace SFB.Net{
                 try{
                     HandleMessage(msg, socket);
                 }catch(Exception e){
-					HandleError(e, socket);
+                    HandleError(e, socket);
                 }
             }else if(!socket.Alive){
                 HandleSocketDeath(socket);
