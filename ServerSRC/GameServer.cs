@@ -82,7 +82,7 @@ namespace SFB.Net.Server{
             }
         }
 
-        protected override void handleSocketDeath(SocketManager socket){
+        protected override void HandleSocketDeath(SocketManager socket){
             lock(clientSockets){
                 clientSockets.Remove(socket);
             }
@@ -95,7 +95,7 @@ namespace SFB.Net.Server{
                     //read messages from clients
                     //handle messages recieved (possibly)
                     //handle socket death
-                    handleSocket(sm);
+                    HandleSocket(sm);
                     //is its own for-loop to deal with weirdness from removing at two different points
                     if(!sm.Alive){
                         removedSockets.Add(sm);
@@ -106,7 +106,7 @@ namespace SFB.Net.Server{
             }
         }
 
-        public override void handleMessage(XmlDocument msg, SocketManager from){
+        public override void HandleMessage(XmlDocument msg, SocketManager from){
             string type = msg.DocumentElement.Attributes["type"].Value;
             //Console.WriteLine("While in 'Main Menu', Recieved message from client of type {0}", type);
             //handle different types of messages
@@ -122,7 +122,7 @@ namespace SFB.Net.Server{
                     //Console.WriteLine("...I guess they are waiting for a while. Okay.");
                     break;
                 default:
-                    base.handleMessage(msg, from);
+                    base.HandleMessage(msg, from);
                     break;
             }
         }

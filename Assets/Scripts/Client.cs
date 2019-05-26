@@ -138,7 +138,7 @@ namespace SFB.Net.Client
 			return xmlBuilder.ToString();
 		}
 
-		protected override void handleSocketDeath(SocketManager sm)
+		protected override void HandleSocketDeath(SocketManager sm)
 		{
 			// TODO: Halp
 		}
