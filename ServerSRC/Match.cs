@@ -1,6 +1,6 @@
+using System;
 using System.Collections.Generic;
 using System.Xml; // it's only used once, and I don't really like that
-using System;
 using SFB.Game.Content;
 using SFB.Game.Management;
 
@@ -71,7 +71,7 @@ namespace SFB.Net.Server.Matches{
         }
 
         // starts the match with asynchronous receiving
-        public void AsynchStart(ReturnCallback rc){
+        public void AsyncStart(ReturnCallback rc){
             Start(rc);
             foreach(PlayerManager pm in players){
                 pm.StartAsyncReceive();

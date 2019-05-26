@@ -62,16 +62,16 @@ namespace SFB.Net.Server{
 
         // accepts new connections asynchronously
         // will continue to accept new connections ad infinitum
-        public void StartAsynchAccept(){
-            ncl.AsynchAccept(endAsynchAccept);
+        public void StartAsyncAccept(){
+            ncl.AsyncAccept(endAsyncAccept);
         }
 
-        private void endAsynchAccept(Socket s){
+        private void endAsyncAccept(Socket s){
             SocketManager sm = AddClient(s);
             StartAsyncReceive(sm);
             // loop accepting
             // TODO: probably should be toggleable
-            StartAsynchAccept();
+            StartAsyncAccept();
         }
 
         // accepts new connections in a synchronous, non-blocking way
@@ -145,7 +145,7 @@ namespace SFB.Net.Server{
             Console.WriteLine("Match making finished...");
             if(newMatch != null){
                 Console.WriteLine("Starting game!");
-                newMatch.AsynchStart(ReturnClients);
+                newMatch.AsyncStart(ReturnClients);
             }
             return newMatch;
         }

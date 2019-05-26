@@ -10,7 +10,7 @@ namespace SFB.Net.Server{
             Console.WriteLine ("Statring Server...");
             //this DOES start the server durring construction
             GameServer gs = new GameServer();
-            gs.StartAsynchAccept();
+            gs.StartAsyncAccept();
             //the old synchronous Main Loop
             /*
             while(true){
