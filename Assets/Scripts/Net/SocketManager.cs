@@ -44,7 +44,8 @@ namespace SFB.Net{
             }
         }
 
-        private string textBuffer; // The stub of the partially received message
+        private StringBuilder textBuffer; // The stub of the partially received message
+		private object textBufferLock;
 
         private bool asyncReceiving; //whether or not we are currently receiving asynchronously
         private object asyncReceivingLock; //a lock for async receiving; doubles as the lock for HandleAsyncXmlMessage
@@ -62,6 +63,8 @@ namespace SFB.Net{
             this.socket = socket;
             this.eof = eof;
             alive = true; // assume the socket is alive until proven otherwise
+			textBuffer = new StringBuilder();
+			textBufferLock = new object();
             asyncReceiving = false;
             asyncReceivingLock = new object();
         }
@@ -100,19 +103,24 @@ namespace SFB.Net{
                 return text;
             }
             //wait for the end of the file
-            textBuffer += text;
+            textBuffer.Append(text);
 			return ExtractMessage();
         }
 
 		private string ExtractMessage()
 		{
-			int eofIndex = textBuffer.IndexOf(eof);
-            if(eofIndex >= 0) { //if we have an eof, return the first file
-                string r = textBuffer.Substring(0, eofIndex + eof.Length); //split from the end of the EOF
-                textBuffer = textBuffer.Substring(eofIndex + eof.Length);
-                return r;
-            }
-            return null;
+			lock (textBufferLock)
+			{
+				string text = textBuffer.ToString();
+				int eofIndex = text.IndexOf(eof);
+				if (eofIndex >= 0)
+				{ //if we have an eof, return the first file
+					string r = text.Substring(0, eofIndex + eof.Length); //split from the end of the EOF
+					textBuffer.Remove(0, eofIndex + eof.Length);
+					return r;
+				}
+				return null;
+			}
 		}
 
         //since every file is going to be an XML doc anyways,
