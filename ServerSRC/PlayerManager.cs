@@ -40,7 +40,7 @@ namespace SFB.Net.Server.Matches{
         // the client's player
         private Player player;
 
-		public string Name { get; private set; }
+        public string Name { get; private set; }
 
         // returns whether or not the players has locked in their current turn
         public bool TurnLockedIn => state == State.WAITING || player.DeployPhases <= 0;
@@ -55,7 +55,7 @@ namespace SFB.Net.Server.Matches{
             this.eotCallback = eotCallback;
             this.deathCallback = deathCallback;
             turnDeltas = new List<Delta>();
-			Name = "Player " + playerIndex;
+            Name = "Player " + playerIndex;
         }
 
         // to be called at the start of the game
@@ -63,17 +63,17 @@ namespace SFB.Net.Server.Matches{
             //TODO: maybe match start should be sent by the match itself?
             XmlDocument doc = NewEmptyMessage("matchStart");
 
-			doc.DocumentElement.SetAttribute("sideIndex", sideIndex.ToString());
+            doc.DocumentElement.SetAttribute("sideIndex", sideIndex.ToString());
 
             // and in local player IDs
             XmlElement friendlyIDs = player.GetPlayerIDs(doc);
-			friendlyIDs.SetAttribute("side", "local");
+            friendlyIDs.SetAttribute("side", "local");
             doc.DocumentElement.AppendChild(friendlyIDs);
 
             // add in the other players
             foreach(XmlElement ids in otherPlayersIDs){
                 XmlElement e = doc.ImportNode(ids, true) as XmlElement;
-				e?.SetAttribute("side", "opponent");
+                e?.SetAttribute("side", "opponent");
                 doc.DocumentElement.AppendChild(e);
             }
             //add the lanes
@@ -84,17 +84,17 @@ namespace SFB.Net.Server.Matches{
             Socket.SendXml(doc);
         }
 
-		public XmlElement GetPlayerIDs(XmlDocument doc) => player.GetPlayerIDs(doc);
+        public XmlElement GetPlayerIDs(XmlDocument doc) => player.GetPlayerIDs(doc);
 
-		// handle everything that happens at the start of a new turn
-		public void StartTurn(TurnPhase[] phases){
+        // handle everything that happens at the start of a new turn
+        public void StartTurn(TurnPhase[] phases){
             XmlDocument msg = NewEmptyMessage("turnStart");
-			foreach (TurnPhase phase in phases)
-			{
-				XmlElement element = phase.ToXml(msg, player);
-				msg.DocumentElement.AppendChild(element);
-			}
-			Socket.SendXml(msg);
+            foreach (TurnPhase phase in phases)
+            {
+                XmlElement element = phase.ToXml(msg, player);
+                msg.DocumentElement.AppendChild(element);
+            }
+            Socket.SendXml(msg);
             state = State.ACTING;
             turnDeltas = new List<Delta>();
         }
