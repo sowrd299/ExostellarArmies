@@ -79,22 +79,18 @@ namespace SFB.Net.Server
 			{
 				// TODO: What's the default deck?
 				switch(id) {
-					case "carthStarter":
-						return CarthStarter();
-					case "myxoriStarter":
-						return MyxoriStarter();
 					case "tokensAtk":
 						DeckList a = new DeckList();
-						a.AddCard(newCardLoader.GetByID("Attack Token 1"), 4);
-						a.AddCard(newCardLoader.GetByID("Attack Token 2"), 4);
-						a.AddCard(newCardLoader.GetByID("Attack Token 3"), 4);
-						a.AddCard(newCardLoader.GetByID("Attack Token 4"), 4);
-						a.AddCard(newCardLoader.GetByID("Attack Token 5"), 4);
+						a.AddCard(cardLoader.GetByID("Attack Token 1"), 4);
+						a.AddCard(cardLoader.GetByID("Attack Token 2"), 4);
+						a.AddCard(cardLoader.GetByID("Attack Token 3"), 4);
+						a.AddCard(cardLoader.GetByID("Attack Token 4"), 4);
+						a.AddCard(cardLoader.GetByID("Attack Token 5"), 4);
 						return a;
 					case "testing":
 					default:
 						DeckList d = new DeckList();
-						d.AddCard(newCardLoader.GetByID("Resist Token"), 20);
+						d.AddCard(cardLoader.GetByID("Resist Token"), 20);
 						return d;
 				}
 			}
