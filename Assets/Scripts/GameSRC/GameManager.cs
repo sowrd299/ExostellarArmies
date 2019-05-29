@@ -215,18 +215,12 @@ namespace SFB.Game.Management{
 					for(int pos = 0; pos < lane.Units.GetLength(1); pos++) {
 						Unit u = lane.Units[side, pos];
 						if(u != null && u.HealthPoints <= 0) {
-<<<<<<< HEAD
 							deltas.AddRange(u.OnDeath(l, side, pos, this, phase));
 							deltas.AddRange(lane.GetDeathDeltas(side, pos, this));
-=======
-							deltas.AddRange(u.OnDeath(l, side, pos, GameState));
-							deltas.AddRange(lane.GetDeathDeltas(side, pos));
->>>>>>> 848fd45ba4c08123af521215118bb743007de2dc
 							deltas.AddRange(Players[side].Discard.GetDiscardDeltas(new Card[] {u.Card}));
 						}
 					}
 			}
-			GameState.UseAddDeathDeltas(deltas);
 
 			// fill front if empty
 			foreach(Lane lane in Lanes) {

@@ -18,7 +18,6 @@ namespace SFB.Game
 	// Abilities that create new deltas (not called from GM):
 	/*   Regrowth: AddToHandDelta
 	 * 
-	 *   Mercenary Phantasm
 	 * 
 	 */
 	public abstract class Ability
