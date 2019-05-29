@@ -179,7 +179,7 @@ public class Driver : MonoBehaviour
 			}
 			else if (damageDelta.DmgType == Damage.Type.HEAL)
 			{
-				// TODO: Implement 
+				yield return uiManager.UnitHeal(damageDelta.Source, damageDelta.Target);
 			}
 			else
 			{
@@ -220,6 +220,7 @@ public class Driver : MonoBehaviour
 
 		uiManager.RenderUnits();
 		uiManager.RenderTowers();
+		uiManager.RenderIndicators();
 	}
 
 	private string GetPhaseName(string phaseCodeName)

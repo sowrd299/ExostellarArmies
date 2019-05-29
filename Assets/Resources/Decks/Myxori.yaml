@@ -1,2 +1,29 @@
 id: myxoriStarter
 name: Myxori Starter
+cards:
+  - id: Mercenary Phantasm
+    count: 1
+  - id: Commercial Shipper
+    count: 1
+  - id: Adaptive Protopod
+    count: 2
+  - id: Screaming Spore Spunner
+    count: 1
+  - id: Pod-Cap Yxuu maRroz
+    count: 1
+  - id: Undergrowth Smasher
+    count: 1
+  - id: Aftergrowth Spunner
+    count: 1
+  - id: Mulch Pod
+    count: 2
+  - id: Fecund Reflex Axon
+    count: 2 # Jack: I only found 1 in the deck?
+  - id: Grafted Fang Spunner
+    count: 2
+  - id: Spore Pod
+    count: 2
+  - id: Horde Caller
+    count: 2
+  - id: Titanous Regrowth Trunk
+    count: 2

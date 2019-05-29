@@ -27,6 +27,7 @@ public class UnitUI : MonoBehaviour, IHasCard
 	public Text rangedDamage;
 	public Text meleeDamage;
 	public Text health;
+	public ParticleSystem healParticles;
 
 	[Header("Animation Config")]
 	public AnimationCurve attackMoveCurve;
@@ -70,5 +71,16 @@ public class UnitUI : MonoBehaviour, IHasCard
 		);
 
 		transform.position = originalPosition;
+	}
+
+	public Coroutine HealEffect()
+	{
+		return StartCoroutine(AnimateHealEffect());
+	}
+
+	private IEnumerator AnimateHealEffect()
+	{
+		healParticles.Play();
+		yield return new WaitUntil(() => healParticles.isStopped);
 	}
 }
