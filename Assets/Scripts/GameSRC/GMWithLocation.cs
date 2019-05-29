@@ -41,7 +41,7 @@ namespace SFB.Game.Management
 				return (Lane == 2 ? null : Lanes[Lane + 1]);
 			}
 		}
-
+		
 		public bool IsSupporting(params string[] types)
 		{
 			Unit front = FrontUnit;
@@ -53,7 +53,7 @@ namespace SFB.Game.Management
 			}
 			return false;
 		}
-
+		
 		public GMWithLocation(GameManager gm, int lane, int side, int pos)
 		{
 			GameManager = gm;

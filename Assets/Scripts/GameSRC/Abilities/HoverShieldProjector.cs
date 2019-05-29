@@ -3,9 +3,10 @@ using System.Collections.Generic;
 
 namespace SFB.Game
 {
-	// Support Carthan Infantry: Give this Front Line Ranged Shield 3 this turn. (when this is deployed behind Carthan Infantry, activate this ability.
+	public class HoverShieldProjector : TemporaryAbility
+	{
+		// Support Carthan Infantry: Give this Front Line Ranged Shield 3 this turn. (when this is deployed behind Carthan Infantry, activate this ability.
 
-	public class HoverShieldProjector : TemporaryAbility {
 		protected override bool ShouldApply(GMWithLocation gmLoc)
 		{
 			Unit front = gmLoc.FrontUnit;

@@ -3,10 +3,10 @@ using System.Collections.Generic;
 
 namespace SFB.Game
 {
-	// Support Carthan: Give this Front Line +3R this turn.
-
 	public class AutonomousRangeFinder : Ability
 	{
+		// Support Carthan: Give this Front Line +3R this turn.
+
 		private Unit appliedTo;
 		private Unit source;
 
@@ -14,7 +14,7 @@ namespace SFB.Game
 			appliedTo = null;
 			source = null;
 		}
-
+		
 		protected override void AddEffectsToEvents(Unit u, GameManager gm)
 		{
 			u.AddInitialDeployDeltas += AutonomousRangeFinderAdd;

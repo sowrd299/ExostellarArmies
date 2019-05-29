@@ -3,10 +3,10 @@ using System.Collections.Generic;
 
 namespace SFB.Game
 {
-	// Support Carthan Infantry: Heal this Front Line 2.
-
 	public class AncillaryMedicalOfficer : Ability
 	{
+		// Support Carthan Infantry: Heal this Front Line 2.
+
 		public AncillaryMedicalOfficer() : base(-1) { }
 
 		protected override void AddEffectsToEvents(Unit u, GameManager gm)

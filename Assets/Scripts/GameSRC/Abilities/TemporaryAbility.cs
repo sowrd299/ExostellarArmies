@@ -10,7 +10,7 @@ namespace SFB.Game
 		public TemporaryAbility() : base(-1) {
 			appliedTo = null;
 		}
-
+		
 		protected override void AddEffectsToEvents(Unit u, GameManager gm)
 		{
 			u.AddInitialDeployDeltas += AddIndividualEffect;
@@ -21,7 +21,7 @@ namespace SFB.Game
 		{
 			throw new System.Exception("Can't remove this ability - potential bugs");
 		}
-
+		
 		public void AddIndividualEffect(List<Delta> deltas, GMWithLocation gmLoc)
 		{
 			if(ShouldApply(gmLoc)) {
@@ -30,7 +30,7 @@ namespace SFB.Game
 			}
 	
 		}
-
+		
 		public void RemoveIndividualEffect(List<Delta> deltas, GMWithLocation gmLoc) {
 			if(appliedTo != null) {
 				deltas.AddRange(EffectRemoveDeltas(appliedTo, gmLoc));

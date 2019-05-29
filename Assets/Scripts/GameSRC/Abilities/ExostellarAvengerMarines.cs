@@ -3,12 +3,12 @@ using System.Collections.Generic;
 
 namespace SFB.Game
 {
-	// Deploy…
-	//   Front Line: This gets Ranged Shield 3 and Melee Shield 3 this turn.
-	//   Support Carthan: This gets +3R this turn.
-
 	public class ExostellarAvengerMarines : Ability
 	{
+		// Deploy…
+		//   Front Line: This gets Ranged Shield 3 and Melee Shield 3 this turn.
+		//   Support Carthan: This gets +3R this turn.
+
 		private Unit appliedShieldTo;
 		private Unit applied3RTo;
 

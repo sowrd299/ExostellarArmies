@@ -1,4 +1,4 @@
-Line 2: Card Name / Line 3: Types of Abilities (R: Regular, T: Temporary, P: Persistent) / Next Lines: Ability Text
+﻿Line 2: Card Name / Line 3: Types of Abilities (R: Regular, T: Temporary, P: Persistent) / Next Lines: Ability Text
 Auxiliary Graft Cap
 P
 Supporting Myxori Persistent…Center: The supported unit gains Absorb. Flank: When the supported Unit dies, Beta Swarm.

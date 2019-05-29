@@ -7,7 +7,7 @@ namespace SFB.Game.Content {
     public class CardLoader : IdIssuer<Card>
 	{ // maybe this doesn't want to be an IdIssuer... sure feels like it does though
         IDictionary<string, Card> m_listOfCards = new Dictionary<string, Card>();
-
+		
 		public void AddUnitCard(string name, int cost, Faction f, string uType, string mText, string flavor, int r, int m, int hp, params Ability[] a) {
 			m_listOfCards.Add(name, new UnitCard(cost, name, f, uType, mText, flavor, r, m, hp, new List<Ability>(a)));
 		}
