@@ -9,20 +9,20 @@ namespace SFB.Game
 	{
 		public AncillaryMedicalOfficer() : base(-1) { }
 
-		protected override void ApplyEffects(Unit u, GameState initialGameState)
+		protected override void AddEffectsToEvents(Unit u, GameManager gm)
 		{
 			u.AddInitialDeployDeltas += AncillaryMedicalOfficerInner;
 		}
 
-		protected override void RemoveEffects(Unit u, GameState initialGameState)
+		protected override void RemoveEffectsFromEvents(Unit u, GameManager gm)
 		{
 			u.AddInitialDeployDeltas -= AncillaryMedicalOfficerInner;
 		}
 
-		public void AncillaryMedicalOfficerInner(List<Delta> deltas, GameStateLocation gameStateLocation)
+		public void AncillaryMedicalOfficerInner(List<Delta> deltas, GMWithLocation gmLoc)
 		{
-			if(gameStateLocation.IsSupporting(new string[] { "Carthan" })) {
-				deltas.Add(new UnitHealthDelta(gameStateLocation.FrontUnit, 2, Damage.Type.HEAL, gameStateLocation.SubjectUnit));
+			if(gmLoc.IsSupporting(new string[] { "Carthan" })) {
+				deltas.Add(new UnitHealthDelta(gmLoc.FrontUnit, 2, Damage.Type.HEAL, gmLoc.SubjectUnit));
 			}
 		}
 	}

@@ -10,29 +10,29 @@ namespace SFB.Game
 	{
 		public PaladinClassExSMarines() : base(-1) { }
 
-		protected override void ApplyEffects(Unit u, GameState initialGameState)
+		protected override void AddEffectsToEvents(Unit u, GameManager gm)
 		{
 			u.AddRecurringDeployDeltas += PaladinClassExSMarinesInner;
 		}
 
-		protected override void RemoveEffects(Unit u, GameState initialGameState)
+		protected override void RemoveEffectsFromEvents(Unit u, GameManager gm)
 		{
 			u.AddRecurringDeployDeltas -= PaladinClassExSMarinesInner;
 		}
 
-		public void PaladinClassExSMarinesInner(List<Delta> deltas, GameStateLocation gameStateLocation)
+		public void PaladinClassExSMarinesInner(List<Delta> deltas, GMWithLocation gmLoc)
 		{
-			if(gameStateLocation.Pos == 0 && gameStateLocation.BackUnit == null) {
-				int lane = gameStateLocation.Lane;
-				int side = gameStateLocation.Side;
+			if(gmLoc.Pos == 0 && gmLoc.BackUnit == null) {
+				int lane = gmLoc.Lane;
+				int side = gmLoc.Side;
 
-				Unit leftLaneFront = gameStateLocation.LeftLane?.Units?[side, 0];
+				Unit leftLaneFront = gmLoc.LeftLane?.Units?[side, 0];
 				if(leftLaneFront != null)
-					deltas.Add(new UnitHealthDelta(leftLaneFront, 1, Damage.Type.HEAL, gameStateLocation.SubjectUnit));
+					deltas.Add(new UnitHealthDelta(leftLaneFront, 1, Damage.Type.HEAL, gmLoc.SubjectUnit));
 
-				Unit rightLaneFront = gameStateLocation.RightLane?.Units?[side, 0];
+				Unit rightLaneFront = gmLoc.RightLane?.Units?[side, 0];
 				if(rightLaneFront != null)
-					deltas.Add(new UnitHealthDelta(rightLaneFront, 1, Damage.Type.HEAL, gameStateLocation.SubjectUnit));
+					deltas.Add(new UnitHealthDelta(rightLaneFront, 1, Damage.Type.HEAL, gmLoc.SubjectUnit));
 			}
 		}
 	}

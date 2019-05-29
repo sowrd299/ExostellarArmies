@@ -17,36 +17,36 @@ namespace SFB.Game
 			applied3RTo = null;
 		}
 
-		protected override void ApplyEffects(Unit u, GameState initialGameState)
+		protected override void AddEffectsToEvents(Unit u, GameManager gm)
 		{
 			u.AddInitialDeployDeltas += ExostellarAvengerMarinesAdd;
-			initialGameState.AddRecurringDeployDeltas += ExostellarAvengerMarinesRemove;
+			gm.AddRecurringDeployDeltas += ExostellarAvengerMarinesRemove;
 		}
 
-		protected override void RemoveEffects(Unit u, GameState initialGameState)
+		protected override void RemoveEffectsFromEvents(Unit u, GameManager gm)
 		{
 			throw new System.Exception("Can't remove this ability - potential bugs");
 		}
 
-		public void ExostellarAvengerMarinesAdd(List<Delta> deltas, GameStateLocation gameStateLocation)
+		public void ExostellarAvengerMarinesAdd(List<Delta> deltas, GMWithLocation gmLoc)
 		{
-			Unit self = gameStateLocation.SubjectUnit;
-			Unit front = gameStateLocation.FrontUnit;
-			if(gameStateLocation.Pos == 0) {
+			Unit self = gmLoc.SubjectUnit;
+			Unit front = gmLoc.FrontUnit;
+			if(gmLoc.Pos == 0) {
 				// Front Line: This gets Ranged Shield 3 and Melee Shield 3 this turn.
 				deltas.AddRange(new Delta[] {
 					new UnitAbilityDelta(self, self, new RangedShield(3), UnitAbilityDelta.DeltaMode.ADD),
 					new UnitAbilityDelta(self, self, new MeleeShield(3), UnitAbilityDelta.DeltaMode.ADD)
 				});
 				appliedShieldTo = self;
-			} else if(gameStateLocation.Pos == 1 && front != null && front.Card.UnitType.Contains("Carthan")) {
+			} else if(gmLoc.Pos == 1 && front != null && front.Card.UnitType.Contains("Carthan")) {
 				// Support Carthan: This gets +3R this turn.
 				deltas.Add(new UnitDamageAmountDelta(self, 3, Damage.Type.RANGED, self));
 				applied3RTo = self;
 			}
 		}
 
-		public void ExostellarAvengerMarinesRemove(List<Delta> deltas, GameStateLocation gameStateLocation) {
+		public void ExostellarAvengerMarinesRemove(List<Delta> deltas, GMWithLocation gmLoc) {
 			if(appliedShieldTo != null) {
 				deltas.AddRange(new Delta[] {
 					new UnitAbilityDelta(appliedShieldTo, appliedShieldTo, new RangedShield(3), UnitAbilityDelta.DeltaMode.REMOVE),
@@ -58,7 +58,7 @@ namespace SFB.Game
 				deltas.Add(new UnitDamageAmountDelta(applied3RTo, -3, Damage.Type.RANGED, applied3RTo));
 				applied3RTo = null;
 			}
-			gameStateLocation.GameState.AddRecurringDeployDeltas -= ExostellarAvengerMarinesRemove;
+			gmLoc.GameManager.AddRecurringDeployDeltas -= ExostellarAvengerMarinesRemove;
 		}
 	}
 }

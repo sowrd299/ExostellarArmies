@@ -6,16 +6,18 @@ namespace SFB.Game
 {
 	public abstract class Shield : Ability
 	{
+		// Prevent <amount> damage of <damage type> type that would be done to this.
+
 		public Shield(int amount)
 			: base(amount)
 		{}
 
-		protected override void ApplyEffects(Unit u, GameState initialGameState)
+		protected override void AddEffectsToEvents(Unit u, GameManager gm)
 		{
 			AddResistType(u);
 		}
 
-		protected override void RemoveEffects(Unit u, GameState initialGameState)
+		protected override void RemoveEffectsFromEvents(Unit u, GameManager gm)
 		{
 			RemoveResistType(u);
 		}

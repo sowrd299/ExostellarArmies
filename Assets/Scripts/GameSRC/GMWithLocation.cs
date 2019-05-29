@@ -2,24 +2,26 @@
 
 namespace SFB.Game.Management
 {
-	public class GameStateLocation
+	public class GMWithLocation
 	{
-		public GameState GameState { get; private set; }
+		public GameManager GameManager { get; private set; }
 		public int Lane { get; private set; }
 		public int Side { get; private set; }
 		public int Pos { get; private set; }
 
-		public Player[] Players { get { return GameState.Players; } }
-		public Lane[] Lanes { get { return GameState.Lanes; } }
+		public Player[] Players { get { return GameManager.Players; } }
+		public Lane[] Lanes { get { return GameManager.Lanes; } }
 
 		public Player SubjectPlayer { get { return Players[Side]; } }
 		public Lane SubjectLane { get { return Lanes[Lane]; } }
 		public Unit SubjectUnit { get { return SubjectLane.Units[Side, Pos]; } }
 
 		// returns null if already in front
-		public Unit FrontUnit { get {
+		public Unit FrontUnit {
+			get {
 				return (Pos == 0 ? null : SubjectLane.Units[Side, 0]);
-		} }
+			}
+		}
 		// returns null if already in back
 		public Unit BackUnit {
 			get {
@@ -40,7 +42,7 @@ namespace SFB.Game.Management
 			}
 		}
 
-		public bool IsSupporting(string[] types)
+		public bool IsSupporting(params string[] types)
 		{
 			Unit front = FrontUnit;
 			if(Pos == 1 && front != null) {
@@ -52,9 +54,9 @@ namespace SFB.Game.Management
 			return false;
 		}
 
-		public GameStateLocation(GameState gameState, int lane, int side, int pos)
+		public GMWithLocation(GameManager gm, int lane, int side, int pos)
 		{
-			GameState = gameState;
+			GameManager = gm;
 			Lane = lane;
 			Side = side;
 			Pos = pos;

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System;
 using System.Xml;
 using System.Reflection;
+using SFB.Game.Content;
 
 namespace SFB.Game
 {
@@ -10,12 +11,22 @@ namespace SFB.Game
 	/*   Exostellar Tactical Squad
 	 *   Mgr. Lt. Tul Yorves
 	 *   Commercial Shipper / Commercial Comms Relay
-	 *   Mercenary Phantasm
+	 *   
+	 *   
+	 */
+
+	// Abilities that create new deltas (not called from GM):
+	/*   Regrowth: AddToHandDelta
+	 * 
 	 * 
 	 */
 	public abstract class Ability
 	{
-		public delegate void AddDelta(List<Delta> deltas, GameStateLocation gameStateLocation);
+		public delegate void AddDelta(List<Delta> deltas, GMWithLocation gmLoc);
+		public delegate void AddDeltaBoardUpdate(List<Delta> deltas, GMWithBoardUpdate gmBoardUpdate);
+		public delegate void AddDeltaPhase(List<Delta> deltas, GMWithLocation gmLoc, Damage.Type? phase);
+		public delegate void AddDeltaUnit(List<Delta> deltas, GMWithLocation gmLoc, Unit u);
+		public delegate void AddDeltaTower(List<Delta> deltas, GMWithLocation gmLoc, Tower tower);
 		public delegate void FilterTargets(Unit[] targets);
 		public delegate void ModifyInt(ref int amt);
 		
@@ -27,16 +38,16 @@ namespace SFB.Game
 		}
 
 		// gamestate may be null
-		public void ApplyTo(Unit u, GameState gameState) {
+		public void ApplyTo(Unit u, GameManager gm) {
 			u.Abilities.Add(this);
-			ApplyEffects(u, gameState);
+			AddEffectsToEvents(u, gm);
 		}
-		public void RemoveFrom(Unit u, GameState gameState) {
+		public void RemoveFrom(Unit u, GameManager gm) {
 			u.Abilities.Remove(this);
-			RemoveEffects(u, gameState);
+			RemoveEffectsFromEvents(u, gm);
 		}
-		protected abstract void ApplyEffects(Unit u, GameState gameState);
-		protected abstract void RemoveEffects(Unit u, GameState gameState);
+		protected abstract void AddEffectsToEvents(Unit u, GameManager gm);
+		protected abstract void RemoveEffectsFromEvents(Unit u, GameManager gm);
 
 		public static Ability FromXml(XmlElement from)
 		{

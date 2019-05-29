@@ -99,7 +99,7 @@ namespace SFB.Net.Client
 		public async Task<XmlDocument> ReceiveDocument()
 		{
 			TaskCompletionSource<XmlDocument> receive = new TaskCompletionSource<XmlDocument>();
-			socketManager.AsynchReceiveXml(
+			socketManager.AsyncReceiveXml(
 				(document, _) => receive.SetResult(document),
 				(_) => Debug.LogError("TODO Implement socket death handling!"),
 				1024

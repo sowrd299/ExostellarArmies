@@ -6,66 +6,73 @@ namespace SFB.Game
 {
 	public abstract class PersistentFieldAbility : Ability
 	{
-		private AddDelta removeEffects;
-		private AddDelta addEffects;
+		private AddDeltaBoardUpdate remove2ndEffects;
+		private AddDeltaBoardUpdate add2ndEffects;
+		private AddDeltaPhase removeThisFromGM;
 		private List<Unit> appliedTo;
 
 		public PersistentFieldAbility() : base(-1)
 		{
-			removeEffects = null;
-			addEffects = null;
+			remove2ndEffects = null;
+			add2ndEffects = null;
+			removeThisFromGM = null;
 			appliedTo = new List<Unit>();
 		}
 
-		protected override void ApplyEffects(Unit source, GameState gameState)
+		protected override void AddEffectsToEvents(Unit source, GameManager gm)
 		{
-			removeEffects = RemoveEffects(source);
-			addEffects = AddEffects(source);
+			remove2ndEffects = Remove2ndEffects(source);
+			add2ndEffects = Add2ndEffects(source);
+			removeThisFromGM = RemoveThisFromGM();
 
-			gameState.AddBoardUpdateDeltas += removeEffects;
-			gameState.AddBoardUpdateDeltas += addEffects;
+			gm.AddBoardUpdateDeltas += remove2ndEffects;
+			gm.AddBoardUpdateDeltas += add2ndEffects;
 
-			source.AddDeathDeltas += RemovePersistentFromGM;
+			source.AddDeathDeltas += removeThisFromGM;
 		}
 
-		protected override void RemoveEffects(Unit source, GameState gameState)
+		protected override void RemoveEffectsFromEvents(Unit source, GameManager gm)
 		{
-			gameState.AddBoardUpdateDeltas -= removeEffects;
-			gameState.AddBoardUpdateDeltas -= addEffects;
-			
-			source.AddDeathDeltas -= RemovePersistentFromGM;
+			throw new System.Exception("cannot remove persistent field ability effect");
 		}
 
-		private AddDelta AddEffects(Unit source)
+		private AddDeltaBoardUpdate Add2ndEffects(Unit source)
 		{
-			void InnerAddEffects(List<Delta> deltas, GameStateLocation gameStateLoc) {
-				Lane[] lanes = gameStateLoc.Lanes;
+			void InnerAdd2ndEffects(List<Delta> deltas, GMWithBoardUpdate gmBoardUpdate) {
+				Lane[] lanes = gmBoardUpdate.Lanes;
 				for(int lane = 0; lane < lanes.Length; lane++) {
-					for(int side = 0; side < 2; side++)
-						for(int pos = 0; pos < 2; pos++)
+					for(int side = 0; side < 2; side++) {
+						for(int pos = 0; pos < 2; pos++) {
 							if(lanes[lane].Units[side, pos] != null && ApplyTo(lane, side, pos, lanes, source)) {
 								deltas.AddRange(GetAddDeltas(lane, side, pos, lanes, source));
 								appliedTo.Add(lanes[lane].Units[side, pos]);
 							}
+						}
+					}
 				}
 			}
 
-			return InnerAddEffects;
+			return InnerAdd2ndEffects;
 		}
 
-		private AddDelta RemoveEffects(Unit source)
+		private AddDeltaBoardUpdate Remove2ndEffects(Unit source)
 		{
-			void InnerRemoveEffects(List<Delta> deltas, GameStateLocation gameStateLoc) {
+			void InnerRemove2ndEffects(List<Delta> deltas, GMWithBoardUpdate gmBoardUpdate) {
 				foreach(Unit u in appliedTo)
 					deltas.AddRange(GetRemoveDeltas(u, source));
 			}
-			return InnerRemoveEffects;
+			return InnerRemove2ndEffects;
 		}
 
-		private void RemovePersistentFromGM(List<Delta> deltas, GameStateLocation gameStateLoc) {
-			gameStateLoc.GameState.AddBoardUpdateDeltas -= removeEffects;
-			gameStateLoc.GameState.AddBoardUpdateDeltas -= addEffects;
+		private AddDeltaPhase RemoveThisFromGM()
+		{
+			void InnerRemoveThisFromGM(List<Delta> deltas, GMWithLocation gmLoc, Damage.Type? phase) {
+				gmLoc.GameManager.AddBoardUpdateDeltas -= remove2ndEffects;
+				gmLoc.GameManager.AddBoardUpdateDeltas -= add2ndEffects;
+			}
+			return InnerRemoveThisFromGM;
 		}
+		
 
 		protected abstract Delta[] GetAddDeltas(int lane, int side, int pos, Lane[] lanes, Unit source);
 		protected abstract Delta[] GetRemoveDeltas(Unit target, Unit source);

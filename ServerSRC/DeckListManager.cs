@@ -9,8 +9,12 @@ using System;
 // at minimum it is not part of the pure abstract gamelogic
 namespace SFB.Net.Server{
     
-    class DeckListManager{
+    public class DeckListManager {
         CardLoader newCardLoader = new CardLoader();
+
+		public DeckListManager() {
+			Console.WriteLine("wow");
+		}
 
 
         // hardcode carthan starter deck
@@ -89,6 +93,14 @@ namespace SFB.Net.Server{
 						return CarthStarter();
 					case "myxoriStarter":
 						return MyxoriStarter();
+					case "tokensAtk":
+						DeckList a = new DeckList();
+						a.AddCard(newCardLoader.GetByID("Attack Token 1"), 4);
+						a.AddCard(newCardLoader.GetByID("Attack Token 2"), 4);
+						a.AddCard(newCardLoader.GetByID("Attack Token 3"), 4);
+						a.AddCard(newCardLoader.GetByID("Attack Token 4"), 4);
+						a.AddCard(newCardLoader.GetByID("Attack Token 5"), 4);
+						return a;
 					case "testing":
 					default:
 						DeckList d = new DeckList();

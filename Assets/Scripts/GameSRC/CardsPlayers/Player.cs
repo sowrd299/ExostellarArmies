@@ -50,6 +50,7 @@ namespace SFB.Game
 				manaId = ids.Attributes["mana"].Value;
 				depId = ids.Attributes["dep"].Value;
 				livesId = ids.Attributes["lives"].Value;
+				discardId = ids.Attributes["discard"].Value;
 			}
 
 			//deck
@@ -68,13 +69,13 @@ namespace SFB.Game
 			this.DeployPhasesPool = new ResourcePool(2, depId);
 		}
  
-		public Delta[] GetDrawDeltas()
+		public Delta[] GetDrawDeltas(GameManager gm)
 		{
 			List<Delta> l = new List<Delta>();
 			RemoveFromDeckDelta[] rDeltas = this.Deck.GetDrawDeltas(count: HAND_SIZE - this.Hand.Count);
 			foreach(Delta d in rDeltas)
 				l.Add(d);
-			foreach(Delta d in this.Hand.GetDrawDeltas(rDeltas))
+			foreach(Delta d in this.Hand.GetDrawDeltas(rDeltas, gm))
 				l.Add(d);
 
 			return l.ToArray();

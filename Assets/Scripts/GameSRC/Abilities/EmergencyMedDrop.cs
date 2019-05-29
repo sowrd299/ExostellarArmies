@@ -9,31 +9,31 @@ namespace SFB.Game
 	{
 		public EmergencyMedDrop() : base(-1) { }
 
-		protected override void ApplyEffects(Unit u, GameState initialGameState)
+		protected override void AddEffectsToEvents(Unit u, GameManager gm)
 		{
 			u.AddInitialDeployDeltas += EmergencyMedDropInner;
 		}
 
-		protected override void RemoveEffects(Unit u, GameState initialGameState)
+		protected override void RemoveEffectsFromEvents(Unit u, GameManager gm)
 		{
 			u.AddInitialDeployDeltas -= EmergencyMedDropInner;
 		}
 
-		public void EmergencyMedDropInner(List<Delta> deltas, GameStateLocation gameStateLocation)
+		public void EmergencyMedDropInner(List<Delta> deltas, GMWithLocation gmLoc)
 		{
-			Unit front = gameStateLocation.FrontUnit;
+			Unit front = gmLoc.FrontUnit;
 			if(front != null) // returns null if already front
-				deltas.Add(new UnitHealthDelta(front, 2, Damage.Type.HEAL, gameStateLocation.SubjectUnit));
+				deltas.Add(new UnitHealthDelta(front, 2, Damage.Type.HEAL, gmLoc.SubjectUnit));
 
-			int side = gameStateLocation.Side;
+			int side = gmLoc.Side;
 
-			Unit left = gameStateLocation.LeftLane?.Units?[side, 0];
+			Unit left = gmLoc.LeftLane?.Units?[side, 0];
 			if(left != null)
-				deltas.Add(new UnitHealthDelta(left, 1, Damage.Type.HEAL, gameStateLocation.SubjectUnit));
+				deltas.Add(new UnitHealthDelta(left, 1, Damage.Type.HEAL, gmLoc.SubjectUnit));
 
-			Unit right = gameStateLocation.RightLane?.Units?[side, 0];
+			Unit right = gmLoc.RightLane?.Units?[side, 0];
 			if(right != null)
-				deltas.Add(new UnitHealthDelta(right, 1, Damage.Type.HEAL, gameStateLocation.SubjectUnit));
+				deltas.Add(new UnitHealthDelta(right, 1, Damage.Type.HEAL, gmLoc.SubjectUnit));
 		}
 	}
 }

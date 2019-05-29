@@ -3,25 +3,25 @@ using System.Collections.Generic;
 
 namespace SFB.Game
 {
-	// Front or Back Line: At the start of your turn, generate an extra resource.
-
 	public class AdvInfantrySupportSystem : Ability
 	{
+		// Front or Back Line: At the start of your turn, generate an extra resource.
+
 		public AdvInfantrySupportSystem() : base(-1) { }
 
-		protected override void ApplyEffects(Unit u, GameState initialGameState)
+		protected override void AddEffectsToEvents(Unit u, GameManager gm)
 		{
 			u.AddRecurringDeployDeltas += AdvInfantrySupportSystemInner;
 		}
 
-		protected override void RemoveEffects(Unit u, GameState initialGameState)
+		protected override void RemoveEffectsFromEvents(Unit u, GameManager gm)
 		{
 			u.AddRecurringDeployDeltas -= AdvInfantrySupportSystemInner;
 		}
 
-		public void AdvInfantrySupportSystemInner(List<Delta> deltas, GameStateLocation gameStateLocation)
+		public void AdvInfantrySupportSystemInner(List<Delta> deltas, GMWithLocation gmLoc)
 		{
-			deltas.AddRange(gameStateLocation.SubjectPlayer.ManaPool.GetAddDeltas(1));
+			deltas.AddRange(gmLoc.SubjectPlayer.ManaPool.GetAddDeltas(1));
 		}
 	}
 }

@@ -6,21 +6,23 @@ namespace SFB.Game
 {
 	public class Spore : Ability
 	{
+		// When this dies, gain <amount> resource(s)
+
 		public Spore(int amount)
 			: base(amount)
 		{}
 
-		protected override void ApplyEffects(Unit u, GameState initialGameState)
+		protected override void AddEffectsToEvents(Unit u, GameManager gm)
 		{
 			u.AddDeathDeltas += SporeInner;
 		}
 
-		protected override void RemoveEffects(Unit u, GameState initialGameState)
+		protected override void RemoveEffectsFromEvents(Unit u, GameManager gm)
 		{
 			u.AddDeathDeltas -= SporeInner;
 		}
 
-		void SporeInner(List<Delta> deltas, GameStateLocation gameStateLoc)
+		void SporeInner(List<Delta> deltas, GMWithLocation gameStateLoc, Damage.Type? phase)
 		{
 			deltas.AddRange(gameStateLoc.SubjectPlayer.ManaPool.GetAddDeltas(Amount));
 		}

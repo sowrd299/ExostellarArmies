@@ -5,7 +5,8 @@ using System.Collections.Generic;
 namespace SFB.Game
 {
     // a class to represent a unit in play
-    public class Unit : IIDed {
+    public class Unit : IIDed
+	{
 		// while all the ID code is repeated, can't use a common ancestor class
 		// if we want to have seporate instance of IdIssuer for different things that need id's
 		private static IdIssuer<Unit> idIssuer = new IdIssuer<Unit>();
@@ -50,25 +51,25 @@ namespace SFB.Game
 		// triggered ability events
 		public event Ability.AddDelta AddInitialDeployDeltas;
 		public event Ability.AddDelta AddRecurringDeployDeltas;
-		public event Ability.AddDelta AddDeathDeltas;
+		public event Ability.AddDeltaPhase AddDeathDeltas;
 
 		readonly public string id;
         public string ID {
             get{ return id; }
         }
 
-        public Unit(UnitCard card, GameState gameState) {
+        public Unit(UnitCard card, GameManager gm) {
 			this.id = IdIssuer.IssueId(this);
-			Constructor(card, gameState);
+			Constructor(card, gm);
 		}
 
-		public Unit(UnitCard card, int id, GameState gameState) {
+		public Unit(UnitCard card, int id, GameManager gm) {
 			this.id = ""+id;
 			IdIssuer.RegisterId(this.id, this);
-			Constructor(card, gameState);
+			Constructor(card, gm);
 		}
 
-		private void Constructor(UnitCard card, GameState gameState) {
+		private void Constructor(UnitCard card, GameManager gm) {
 			this.Card = card;
 			this.HealthPoints = card.HealthPoints;
 			
@@ -78,7 +79,7 @@ namespace SFB.Game
 
 			foreach(Ability a in card.Abilities) {
 				this.Abilities.Add(a);
-				a.ApplyTo(this, gameState);
+				a.ApplyTo(this, gm);
 			}
 		}
 		
@@ -138,21 +139,21 @@ namespace SFB.Game
 			HealthPoints += amt;
 		}
 
-		public Delta[] OnEachDeployPhase(int lane, int side, int pos, GameState gameState) {
+		public Delta[] OnEachDeployPhase(int lane, int side, int pos, GameManager gm) {
 			List<Delta> deltas = new List<Delta>();
 			
-			AddRecurringDeployDeltas?.Invoke(deltas, gameState.WithLocation(lane, pos, side));
+			AddRecurringDeployDeltas?.Invoke(deltas, gm.WithLocation(lane, pos, side));
 
 			if(this.FirstDeploy) {
-				AddInitialDeployDeltas?.Invoke(deltas, gameState.WithLocation(lane, side, pos));
+				AddInitialDeployDeltas?.Invoke(deltas, gm.WithLocation(lane, side, pos));
 				this.FirstDeploy = false;
 			}
 			return deltas.ToArray();
 		}
 
-		public Delta[] OnDeath(int lane, int side, int pos, GameState gameState) {
+		public Delta[] OnDeath(int lane, int side, int pos, GameManager gm, Damage.Type? phase) {
 			List<Delta> deltas = new List<Delta>();
-			AddDeathDeltas?.Invoke(deltas, gameState.WithLocation(lane, side, pos));
+			AddDeathDeltas?.Invoke(deltas, gm.WithLocation(lane, side, pos), phase);
 			return deltas.ToArray();
 		}
 	}

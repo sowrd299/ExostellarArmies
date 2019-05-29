@@ -3,28 +3,28 @@ using System.Collections.Generic;
 
 namespace SFB.Game
 {
-	// Support Carthan: Heal this Front Line 2 and gain 3 Resources.
-
 	public class AdvSupplyDrone : Ability
 	{
+		// Support Carthan: Heal this Front Line 2 and gain 3 Resources.
+
 		public AdvSupplyDrone() : base(-1) { }
 
-		protected override void ApplyEffects(Unit u, GameState initialGameState)
+		protected override void AddEffectsToEvents(Unit u, GameManager gm)
 		{
 			u.AddInitialDeployDeltas += AdvSupplyDroneInner;
 		}
 
-		protected override void RemoveEffects(Unit u, GameState initialGameState)
+		protected override void RemoveEffectsFromEvents(Unit u, GameManager gm)
 		{
 			u.AddInitialDeployDeltas -= AdvSupplyDroneInner;
 		}
 
-		public void AdvSupplyDroneInner(List<Delta> deltas, GameStateLocation gameStateLocation)
+		public void AdvSupplyDroneInner(List<Delta> deltas, GMWithLocation gmLoc)
 		{
-			if(gameStateLocation.IsSupporting(new string[] { "Carthan" })) {
-				deltas.Add(new UnitHealthDelta(gameStateLocation.FrontUnit, 2, Damage.Type.HEAL, gameStateLocation.SubjectUnit));
+			if(gmLoc.IsSupporting("Carthan")) {
+				deltas.Add(new UnitHealthDelta(gmLoc.FrontUnit, 2, Damage.Type.HEAL, gmLoc.SubjectUnit));
 				deltas.AddRange(
-					gameStateLocation.SubjectPlayer.ManaPool.GetAddDeltas(3)
+					gmLoc.SubjectPlayer.ManaPool.GetAddDeltas(3)
 				);
 			}
 		}

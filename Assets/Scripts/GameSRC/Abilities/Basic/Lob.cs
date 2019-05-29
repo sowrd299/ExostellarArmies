@@ -6,16 +6,18 @@ namespace SFB.Game
 {
 	public class Lob : Ability
 	{
+		// In combat, this deals damage to whatever is behind the opposing front line.
+
 		public Lob()
 			: base(-1)
 		{}
 
-		protected override void ApplyEffects(Unit u, GameState initialGameState)
+		protected override void AddEffectsToEvents(Unit u, GameManager gm)
 		{
 			u.FilterTargets += LobInner;
 		}
 
-		protected override void RemoveEffects(Unit u, GameState initialGameState)
+		protected override void RemoveEffectsFromEvents(Unit u, GameManager gm)
 		{
 			u.FilterTargets -= LobInner;
 		}

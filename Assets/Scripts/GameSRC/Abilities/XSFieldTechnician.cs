@@ -9,22 +9,22 @@ namespace SFB.Game
 	{
 		public XSFieldTechnician() : base(-1) { }
 
-		protected override void ApplyEffects(Unit u, GameState initialGameState)
+		protected override void AddEffectsToEvents(Unit u, GameManager gm)
 		{
 			u.AddInitialDeployDeltas += XSFieldTechnicianInner;
 		}
 
-		protected override void RemoveEffects(Unit u, GameState initialGameState)
+		protected override void RemoveEffectsFromEvents(Unit u, GameManager gm)
 		{
 			u.AddInitialDeployDeltas -= XSFieldTechnicianInner;
 		}
 		
-		public void XSFieldTechnicianInner(List<Delta> deltas, GameStateLocation gameStateLocation)
+		public void XSFieldTechnicianInner(List<Delta> deltas, GMWithLocation gmLoc)
 		{
-			if(gameStateLocation.IsSupporting(new string[] {"Drone"})) {
+			if(gmLoc.IsSupporting(new string[] {"Drone"})) {
 				deltas.AddRange(new List<Delta> {
-					new RemoveFromLaneDelta(gameStateLocation.SubjectLane, gameStateLocation.Side, 0),
-					new AddToHandDelta(gameStateLocation.SubjectPlayer.Hand, gameStateLocation.FrontUnit.Card)
+					new RemoveFromLaneDelta(gmLoc.SubjectLane, gmLoc.Side, 0),
+					new AddToHandDelta(gmLoc.SubjectPlayer.Hand, gmLoc.FrontUnit.Card)
 				});
 			}
 		}

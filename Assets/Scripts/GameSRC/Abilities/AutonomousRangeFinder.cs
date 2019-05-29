@@ -15,34 +15,34 @@ namespace SFB.Game
 			source = null;
 		}
 
-		protected override void ApplyEffects(Unit u, GameState gameState)
+		protected override void AddEffectsToEvents(Unit u, GameManager gm)
 		{
 			u.AddInitialDeployDeltas += AutonomousRangeFinderAdd;
-			gameState.AddRecurringDeployDeltas += AutonomousRangeFinderRemove;
+			gm.AddRecurringDeployDeltas += AutonomousRangeFinderRemove;
 			source = u;
 		}
 
-		protected override void RemoveEffects(Unit u, GameState initialGameState)
+		protected override void RemoveEffectsFromEvents(Unit u, GameManager gm)
 		{
 			throw new System.Exception("Can't remove this ability");
 		}
 
-		public void AutonomousRangeFinderAdd(List<Delta> deltas, GameStateLocation gameStateLocation)
+		public void AutonomousRangeFinderAdd(List<Delta> deltas, GMWithLocation gmLoc)
 		{
-			Unit front = gameStateLocation.FrontUnit;
-			if(appliedTo == null && gameStateLocation.Pos == 1 && front != null && front.Card.UnitType.Contains("Carthan")) {
-				deltas.Add(new UnitDamageAmountDelta(front, 3, Damage.Type.RANGED, gameStateLocation.SubjectUnit));
+			Unit front = gmLoc.FrontUnit;
+			if(appliedTo == null && gmLoc.Pos == 1 && front != null && front.Card.UnitType.Contains("Carthan")) {
+				deltas.Add(new UnitDamageAmountDelta(front, 3, Damage.Type.RANGED, gmLoc.SubjectUnit));
 				appliedTo = front;
 			}
 		}
 
-		public void AutonomousRangeFinderRemove(List<Delta> deltas, GameStateLocation gameStateLocation)
+		public void AutonomousRangeFinderRemove(List<Delta> deltas, GMWithLocation gmLoc)
 		{
 			if(appliedTo != null) {
 				deltas.Add(new UnitDamageAmountDelta(appliedTo, -3, Damage.Type.RANGED, source));
 				appliedTo = null;
 			}
-			gameStateLocation.GameState.AddRecurringDeployDeltas -= AutonomousRangeFinderRemove;
+			gmLoc.GameManager.AddRecurringDeployDeltas -= AutonomousRangeFinderRemove;
 		}
 	}
 }

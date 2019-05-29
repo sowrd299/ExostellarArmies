@@ -3,26 +3,26 @@ using System.Collections.Generic;
 
 namespace SFB.Game
 {
-	// Support Carthan Infantry: Give this Front Line Ranged Shield 3 this turn. (when this is deployed behind Carthan Infantry, activate this ability.
+	// Front Line: This gets Ranged Shield 2 this turn.
 
-	public class HoverShieldProjector : TemporaryAbility {
+	public class EXAvengerCustomDrone2 : TemporaryAbility
+	{
 		protected override bool ShouldApply(GMWithLocation gmLoc)
 		{
-			Unit front = gmLoc.FrontUnit;
-			return gmLoc.IsSupporting(new string[] { "Carthan", "Infantry" });
+			return gmLoc.Pos == 0;
 		}
 
 		protected override Unit AppliedTo(GMWithLocation gmLoc)
 		{
-			return gmLoc.FrontUnit;
+			return gmLoc.SubjectUnit;
 		}
 
 		protected override Delta[] EffectAddDeltas(GMWithLocation gmLoc)
 		{
 			return new Delta[] {
-				new UnitAbilityDelta(gmLoc.FrontUnit,
+				new UnitAbilityDelta(gmLoc.SubjectUnit,
 									gmLoc.SubjectUnit,
-									new RangedShield(3),
+									new RangedShield(2),
 									UnitAbilityDelta.DeltaMode.ADD)
 			};
 		}
@@ -32,7 +32,7 @@ namespace SFB.Game
 			return new Delta[] {
 				new UnitAbilityDelta(appliedTo,
 									gmLoc.SubjectUnit,
-									new RangedShield(3),
+									new RangedShield(2),
 									UnitAbilityDelta.DeltaMode.REMOVE)
 			};
 		}

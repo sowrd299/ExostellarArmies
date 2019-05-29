@@ -251,8 +251,3 @@ public class Driver : MonoBehaviour
 		}
 	}
 }
-
-public enum Phase
-{
-	DRAW, PLACEMENT, COMBAT, DONE
-}

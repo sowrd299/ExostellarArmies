@@ -8,7 +8,20 @@ namespace SFB.Game.Content {
 	{ // maybe this doesn't want to be an IdIssuer... sure feels like it does though
         IDictionary<string, Card> m_listOfCards = new Dictionary<string, Card>();
 
+		public void AddUnitCard(string name, int cost, Faction f, string uType, string mText, string flavor, int r, int m, int hp, params Ability[] a) {
+			m_listOfCards.Add(name, new UnitCard(cost, name, f, uType, mText, flavor, r, m, hp, new List<Ability>(a)));
+		}
+
 		public CardLoader() {
+			AddUnitCard("Outergrowth Husk", 0, Faction.MYXOR, "Myxori Infantry Unit",
+				"Absorb (excess damage done to this does not overflow)", "Myxi jha maRtox lOz!",
+				0, 0, 1, new Absorb());
+			AddUnitCard("Scion Infiltrator 3rd Class", 1, Faction.JIRNOR, "Jirnorn Mutant Infantry Unit",
+				"Lob (in combat, this deals damage to whatever is behind the opposing front line)", "Small, Innocuous and Hopeful",
+				1, 1, 1, new Lob());
+			AddUnitCard("Grafted Claw Spunner", 1, Faction.MYXOR, "Myxi Infantry Unit",
+				"Swarm (when you deploy this, if it is behind a Unit that shares a tag with it other than “Unit”, draw a card)", "\"Myxori jha maRtox lOz!\"",
+				0, 2, 2, new Swarm());
 			m_listOfCards.Add("Mercenary Phantasm", new UnitCard(2, "Mercenary Phantasm", Faction.NONE, "", "Deploy: Your opponent reveals a card from their hand", "What do you want to know?", 1, 2, 3));
 			m_listOfCards.Add("Commercial Shipper", new UnitCard(2, "Commercial Shipper", Faction.NONE, "", "Deploy: Draw a card, then put a card from your hand on the bottom of your deck", "Whatever you need, we got", 0, 3, 3));
 			m_listOfCards.Add("Adaptive Protopod", new UnitCard(2, "Adaptive Protopod", Faction.MYXOR, "", "Support Infantry: This front line gains Spore 3 until end of turn.\nSupport Artillery: This gains Siege 1 until end of turn",
@@ -60,12 +73,18 @@ namespace SFB.Game.Content {
                     "Death to Your Enemies", 0, 0, 1, new List<Ability>(new Ability[] { new RangedShield(2), new MeleeShield(2) })));
             m_listOfCards.Add("Autonomous Range Finder", new UnitCard(2, "Autonomous Range Finder", Faction.CARTH, "", "Supporting Carthan Deploy: Give this front line +3R this turn.",
                     "56413", 0, 1, 3, new List<Ability> { new AutonomousRangeFinder() }));
+
 			m_listOfCards.Add("Resist Token", new UnitCard(0, "Resist Token", Faction.NONE, "Token", "Tower Shield 1", "", 0, 0, 10, new List<Ability> { new TowerShield(1) }));
 			m_listOfCards.Add("Mana Token", new UnitCard(0, "Mana Token", Faction.NONE, "Token", "Spore 10", "", 0, 0, 1, new List<Ability> { new Spore(10) }));
+
+			m_listOfCards.Add("Attack Token 1", new UnitCard(0, "Attack Token 1", Faction.NONE, "Token", "", "", 1, 1, 1));
+			m_listOfCards.Add("Attack Token 2", new UnitCard(0, "Attack Token 2", Faction.NONE, "Token", "", "", 2, 2, 1));
+			m_listOfCards.Add("Attack Token 3", new UnitCard(0, "Attack Token 3", Faction.NONE, "Token", "", "", 3, 3, 1));
+			m_listOfCards.Add("Attack Token 4", new UnitCard(0, "Attack Token 4", Faction.NONE, "Token", "", "", 4, 4, 1));
+			m_listOfCards.Add("Attack Token 5", new UnitCard(0, "Attack Token 5", Faction.NONE, "Token", "", "", 5, 5, 1));
 		}
 
         protected override Card handleMiss(string id){
-			// TODO: dummy implmentation
 			if(m_listOfCards.ContainsKey(id))
 				return m_listOfCards[id];
 			else

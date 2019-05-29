@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Xml; // it's only used once, and I don't really like that
 using System;
+using SFB.Game;
 using SFB.Game.Content;
 using SFB.Game.Management;
 
@@ -112,7 +113,7 @@ namespace SFB.Net.Server.Matches{
                     endDeploy.Deltas.Add(d);
                     gameManager.ApplyDelta(d);
                 }
-				foreach(Delta d in gameManager.GetCleanUpDeltas()) {
+				foreach(Delta d in gameManager.GetCleanUpDeltas(null)) {
 					endDeploy.Deltas.Add(d);
 					gameManager.ApplyDelta(d);
 				}
@@ -126,7 +127,7 @@ namespace SFB.Net.Server.Matches{
                         rangedCombat.Deltas.Add(d);
                         gameManager.ApplyDelta(d);
                     }
-                    foreach(Delta d in gameManager.GetCleanUpDeltas()){
+                    foreach(Delta d in gameManager.GetCleanUpDeltas(Damage.Type.RANGED)){
                         rangedCombat.Deltas.Add(d);
                         gameManager.ApplyDelta(d);
                     }
@@ -138,7 +139,7 @@ namespace SFB.Net.Server.Matches{
                         meleeCombat.Deltas.Add(d);
                         gameManager.ApplyDelta(d);
                     }
-                    foreach(Delta d in gameManager.GetCleanUpDeltas()){
+                    foreach(Delta d in gameManager.GetCleanUpDeltas(Damage.Type.MELEE)){
                         meleeCombat.Deltas.Add(d);
                         gameManager.ApplyDelta(d);
                     }
@@ -150,7 +151,7 @@ namespace SFB.Net.Server.Matches{
 						towerCombat.Deltas.Add(d);
 						gameManager.ApplyDelta(d);
 					}
-					foreach(Delta d in gameManager.GetCleanUpDeltas()) {
+					foreach(Delta d in gameManager.GetCleanUpDeltas(Damage.Type.TOWER)) {
 						towerCombat.Deltas.Add(d);
 						gameManager.ApplyDelta(d);
 					}
