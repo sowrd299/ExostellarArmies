@@ -37,7 +37,7 @@ public class TowerUI : MonoBehaviour
 		health.text = tower.HP.ToString();
 		maxHealth.text = tower.MaxHP.ToString();
 
-		health.color = (tower.HP < tower.MaxHP) ? Color.red : Color.white;
+		health.color = (tower.HP < tower.MaxHP) ? Color.red : Color.black;
 	}
 
 	public Coroutine Attack(Vector3 targetPosition)
