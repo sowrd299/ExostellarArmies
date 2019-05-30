@@ -16,7 +16,7 @@ namespace SFB.Net{
     Unhandled Exception:
         System.Net.Sockets.SocketException (0x80004005): Connection reset by peer
         at System.Net.Sockets.Socket.EndReceive (System.IAsyncResult asyncResult) [0x00012] in <5bf358e735be486487282a37cb3bce80>:0 
-        at SFB.Net.SocketManager.endAsynchReceiveXml (System.IAsyncResult ar) [0x0001b] in <4fec1bc975604ce0aca66f4d8c8202c0>:0 
+        at SFB.Net.SocketManager.endAsyncReceiveXml (System.IAsyncResult ar) [0x0001b] in <4fec1bc975604ce0aca66f4d8c8202c0>:0 
         at System.Net.Sockets.SocketAsyncResult+<>c.<Complete>b__27_0 (System.Object state) [0x0000b] in <5bf358e735be486487282a37cb3bce80>:0 
         at System.Threading.QueueUserWorkItemCallback.System.Threading.IThreadPoolWorkItem.ExecuteWorkItem () <0x7f251d219ba0 + 0x0003a> in <04750267503a43e5929c1d1ba19daf3e>:0 
         at System.Threading.ThreadPoolWorkQueue.Dispatch () [0x00074] in <04750267503a43e5929c1d1ba19daf3e>:0 
@@ -44,26 +44,29 @@ namespace SFB.Net{
             }
         }
 
-        private string textBuffer; //the stub of the paritally recieved message
+        private StringBuilder textBuffer; // The stub of the partially received message
+        private object textBufferLock;
 
-        private bool asynchReceiving; //whether or not we are currently receiving asynchronously
-        private object asynchReceivingLock; //a lock for asych receiving; doubles as the lock for handleAsynchXmlMessage
+        private bool asyncReceiving; //whether or not we are currently receiving asynchronously
+        private object asyncReceivingLock; //a lock for async receiving; doubles as the lock for HandleAsyncXmlMessage
 
-        // store the method to be called to handle asynch Xml messages
+        // store the method to be called to handle async Xml messages
         // stored here so can change it more dynamically as states change in other threads
-        private HandleMessage<XmlDocument> handleAsynchXmlMessage;
+        private Action<XmlDocument, SocketManager> HandleAsyncXmlMessage;
 
         // what to do when the socket disconnects
-        private HandleDeath handleAsyncDeath;
+        private Action<SocketManager> HandleAsyncDeath;
 
         //takes the socket to manage
         //optionally takes the End of Message tag to look for
         public SocketManager(Socket socket, string eof = ""){
             this.socket = socket;
             this.eof = eof;
-            alive = true; // assume the socket is allive until proven otherwise
-            asynchReceiving = false;
-            asynchReceivingLock = new object();
+            alive = true; // assume the socket is alive until proven otherwise
+            textBuffer = new StringBuilder();
+            textBufferLock = new object();
+            asyncReceiving = false;
+            asyncReceivingLock = new object();
         }
 
         //read in data from the socket, if there is any
@@ -74,21 +77,21 @@ namespace SFB.Net{
             if(l.Count > 0){
                 byte[] bytes = new byte[bufferSize];
                 int i = l[0].Receive(bytes);
-                return parseMessage(bytes, i);
+                return ParseMessage(bytes, i);
             }
             //if nothing to read, or nothing to return, return null
             return null;
         }
 
         // parses data recieved from a socket
-        private string parseMessage(byte[] bytes, int i){
+        private string ParseMessage(byte[] bytes, int i){
             string text = Encoding.UTF8.GetString(bytes);
             //handle dead connection
             if(i == 0){
                 Console.WriteLine("Socket Received Empty 'End of Connnection' Packet; Dying");
                 // Console.WriteLine("Circumventing death for testing");
                 //* TODO: TESTING do in fact need something here
-                die();
+                Die();
                 //*/
             }
             //handle EOF
@@ -97,17 +100,24 @@ namespace SFB.Net{
                 return text;
             }
             //wait for the end of the file
-            textBuffer += text;
-            int eofIndex = textBuffer.IndexOf(eof); //search for EOF in the entire cached string
-                                            //in case got a second eof in an early read that was never processes
-                                            //also helps if EOF gets broken over the divide
-                                            //scanning for all and breaking on arival has more overhead time
-            if(eofIndex >= 0){ //if we have an eof, return the first file
-                string r = textBuffer.Substring(0, eofIndex + eof.Length); //split from the end of the EOF
-                textBuffer = textBuffer.Substring(eofIndex + eof.Length);
-                return r;
+            textBuffer.Append(text);
+            return ExtractMessage();
+        }
+
+        private string ExtractMessage()
+        {
+            lock (textBufferLock)
+            {
+                string text = textBuffer.ToString();
+                int eofIndex = text.IndexOf(eof);
+                if (eofIndex >= 0)
+                { //if we have an eof, return the first file
+                    string r = text.Substring(0, eofIndex + eof.Length); //split from the end of the EOF
+                    textBuffer.Remove(0, eofIndex + eof.Length);
+                    return r;
+                }
+                return null;
             }
-            return null;
         }
 
         //since every file is going to be an XML doc anyways,
@@ -117,7 +127,7 @@ namespace SFB.Net{
             string text = Receive(microseconds);
             if(text != null){
                 Console.WriteLine("Parsing XML: {0}", text); //TESTING
-                return parseXml(text);
+                return ParseXml(text);
             }
             return null;
         }
@@ -125,16 +135,25 @@ namespace SFB.Net{
         // recieve a message from the socket asynchronously
         // NOTE: calling a second time will override previous calls
         // TODO: there seem to be some really ugly race-cases with managing only one asyncReceiving at a time
-        public void AsynchReceiveXml(HandleMessage<XmlDocument> handler, HandleDeath deathHandler, int bufferLen = 256){
-            lock(asynchReceivingLock){
-                handleAsynchXmlMessage = handler;
-                handleAsyncDeath = deathHandler;
-                if(!asynchReceiving){
+        public void AsyncReceiveXml(Action<XmlDocument, SocketManager> handler, Action<SocketManager> deathHandler, int bufferLen = 256){
+            lock(asyncReceivingLock) {
+                // The message may have already been received in an earlier call, because TCP sometimes bundles the messages together.
+                string existingMessage = ExtractMessage();
+                if (existingMessage != null) {
+                    handler(ParseXml(existingMessage), this);
+                    return;
+                }
+
+                HandleAsyncXmlMessage = handler;
+                HandleAsyncDeath = deathHandler;
+                if(!asyncReceiving){
                     byte[] buffer = new byte[bufferLen];
-                    socket.BeginReceive(buffer, 0, buffer.Length, 0,
-                            new AsyncCallback(endAsynchReceiveXml),
-                            new AsyncState<XmlDocument>{buffer = buffer, handler = handler});
-                    asynchReceiving = true;
+                    socket.BeginReceive(
+                        buffer, 0, buffer.Length, 0,
+                        new AsyncCallback(EndAsyncReceiveXml),
+                        new AsyncState<XmlDocument>{buffer = buffer, handler = handler}
+                    );
+                    asyncReceiving = true;
                 }
                 /* TESTING
                 else{
@@ -144,40 +163,40 @@ namespace SFB.Net{
             }
         }
 
-        private void endAsynchReceiveXml(IAsyncResult ar){
+        private void EndAsyncReceiveXml(IAsyncResult ar){
             Console.WriteLine("Data incoming...");
-            lock(asynchReceivingLock){
+            lock(asyncReceivingLock){
                 // no long have an outstanding async receive
-                asynchReceiving = false;
+                asyncReceiving = false;
                 // reading stuff
-                int i; 
+                int i;
                 try{ // this may error; not really sure why but eh, this works I think
                     i = socket.EndReceive(ar);
                 }catch(SocketException e){
                     Console.WriteLine("Socket died from an error; Alive: {0}; Error: ", alive, e);
-                    die();
-                    handleAsyncDeath(this);
+                    Die();
+                    HandleAsyncDeath(this);
                     return;
                 }
-                AsyncState<XmlDocument> state = (AsyncState<XmlDocument>)ar.AsyncState;
-                string text = parseMessage(state.buffer, i);
+                AsyncState<XmlDocument> state = ar.AsyncState as AsyncState<XmlDocument>;
+                string text = ParseMessage(state.buffer, i);
                 // have a full message, deal with it
                 if(text != null){
-                    XmlDocument msg = parseXml(text);
-                    handleAsynchXmlMessage(msg, this);
+                    XmlDocument msg = ParseXml(text);
+                    HandleAsyncXmlMessage(msg, this);
                 // if do not have a full message...
                 }else{ 
                     if(!Alive){ // ...may have died ...
-                        handleAsyncDeath(this);
+                        HandleAsyncDeath(this);
                     }else{ // ...may need to continue reading
-                        AsynchReceiveXml(handleAsynchXmlMessage, handleAsyncDeath);
+                        AsyncReceiveXml(HandleAsyncXmlMessage, HandleAsyncDeath);
                     }
                 }
             }
         }
 
         // returns an XML document from the given recieved message
-        private XmlDocument parseXml(string text){
+        private XmlDocument ParseXml(string text){
             //filter only valid XML characters; querry from https://stackoverflow.com/questions/8331119/escape-invalid-xml-characters-in-c-sharp
             var validXmlText = text.Where(ch => XmlConvert.IsXmlChar(ch)).ToArray();
             //get and return the XML document
@@ -188,10 +207,6 @@ namespace SFB.Net{
 
         //send a given message to the client
         public void Send(string msg){
-			// For some reason, the socket sometimes doesn't send the message.
-			// Adding a print statement here seems to fix it.
-			// TODO: FIX ME PLEASE
-			Console.WriteLine($"Sending message {msg}");
             byte[] data = Encoding.UTF8.GetBytes(msg);
             // textBuffer += Receive(); // get and buffer any text that may be clogging up the system
             socket.Send(data);
@@ -202,32 +217,29 @@ namespace SFB.Net{
         }
 
         // returns whether or not the socket is still connected 
-        private bool connected(){
+        private bool Connected(){
             bool poll = socket.Poll(1000, SelectMode.SelectRead);
             bool data = (socket.Available == 0);
             return poll && data;
         }
 
         // to be called once the socket disconnects
-        private void die(){
+        private void Die(){
             Console.WriteLine("Socket {0} Dying", socket.RemoteEndPoint); // TESTING
             alive = false;
             socket.Close();
         }
 
-        // make sure everything get's cleaned up
+        // make sure everything gets cleaned up
         ~SocketManager(){
             // some of the most poetic code I have ever written
             if(alive){
                 Console.WriteLine("Socket Manager Deconstructing; Dying");
-                die();
+                Die();
             }
         }
-
-        public delegate void HandleDeath(SocketManager from);
-        public delegate void HandleMessage<T>(T msg, SocketManager from);
         private class AsyncState<T>{
-            public HandleMessage<T> handler; //DEPRICATED
+            public Action<T, SocketManager> handler; //DEPRICATED
             public byte[] buffer;
         }
 

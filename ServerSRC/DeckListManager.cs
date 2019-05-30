@@ -13,74 +13,74 @@ using SFB.Game.Content;
 namespace SFB.Net.Server
 {
 
-	class DeckListManager
-	{
-		private CardLoader cardLoader;
-		private Dictionary<string, DeckList> decks;
+    class DeckListManager
+    {
+        private CardLoader cardLoader;
+        private Dictionary<string, DeckList> decks;
 
-		public DeckListManager()
-		{
-			cardLoader = new CardLoader();
+        public DeckListManager()
+        {
+            cardLoader = new CardLoader();
 
-			decks = new Dictionary<string, DeckList>();
-			LoadDecks();
-		}
+            decks = new Dictionary<string, DeckList>();
+            LoadDecks();
+        }
 
-		private void LoadDecks()
-		{
-			string path = Path.Combine("Assets", "Resources", "Decks");
-			foreach (string fileName in Directory.EnumerateFiles(path, "*.yaml"))
-			{
-				YamlStream yaml = new YamlStream();
-				yaml.Load(File.OpenText(fileName));
+        private void LoadDecks()
+        {
+            string path = Path.Combine("Assets", "Resources", "Decks");
+            foreach (string fileName in Directory.EnumerateFiles(path, "*.yaml"))
+            {
+                YamlStream yaml = new YamlStream();
+                yaml.Load(File.OpenText(fileName));
 
-				YamlMappingNode root = yaml.Documents[0].RootNode as YamlMappingNode;
-				string deckId = root.Children[new YamlScalarNode("id")].ToString();
-				string deckName = root.Children[new YamlScalarNode("name")].ToString();
+                YamlMappingNode root = yaml.Documents[0].RootNode as YamlMappingNode;
+                string deckId = root.Children[new YamlScalarNode("id")].ToString();
+                string deckName = root.Children[new YamlScalarNode("name")].ToString();
 
-				DeckList deck = new DeckList();
-				YamlSequenceNode cardSequence = root.Children[new YamlScalarNode("cards")] as YamlSequenceNode;
-				foreach (YamlMappingNode cardItem in cardSequence)
-				{
-					deck.AddCard(
-						cardLoader.GetByID(cardItem.Children[new YamlScalarNode("id")].ToString()),
-						int.Parse(cardItem.Children[new YamlScalarNode("count")].ToString())
-					);
-				}
+                DeckList deck = new DeckList();
+                YamlSequenceNode cardSequence = root.Children[new YamlScalarNode("cards")] as YamlSequenceNode;
+                foreach (YamlMappingNode cardItem in cardSequence)
+                {
+                    deck.AddCard(
+                        cardLoader.GetByID(cardItem.Children[new YamlScalarNode("id")].ToString()),
+                        int.Parse(cardItem.Children[new YamlScalarNode("count")].ToString())
+                    );
+                }
 
-				decks.Add(deckId, deck);
-				int deckCardCount = deck.GetCards().Select(deck.GetCopiesOf).Sum();
-				Console.WriteLine($"Loaded deck {deckName} ({deckCardCount} cards).");
-			}
-		}
+                decks.Add(deckId, deck);
+                int deckCardCount = deck.GetCards().Select(deck.GetCopiesOf).Sum();
+                Console.WriteLine($"Loaded deck {deckName} ({deckCardCount} cards).");
+            }
+        }
 
-		// return a decklist object of the deck list with the
-		// given ID
-		public DeckList LoadFromID(string id)
-		{
-			Console.WriteLine($"Loading deck: {id}");
-			if (decks.ContainsKey(id))
-			{
-				return decks[id];
-			}
+        // return a decklist object of the deck list with the
+        // given ID
+        public DeckList LoadFromID(string id)
+        {
+            Console.WriteLine($"Loading deck: {id}");
+            if (decks.ContainsKey(id))
+            {
+                return decks[id];
+            }
 
-			//TESTING IMPLEMENTATION
-			if (id.StartsWith("TEST "))
-			{
-				DeckList d = new DeckList();
-				d.AddCard(cardLoader.GetByID(id.Substring(5)), 8);
-				d.AddCard(cardLoader.GetByID("Resist Token"), 6);
-				d.AddCard(cardLoader.GetByID("Mana Token"), 6);
-				Console.WriteLine("Loaded test deck");
-				return d;
-			}
-			else
-			{
-				// TODO: What's the default deck?
-				DeckList d = new DeckList();
-				d.AddCard(cardLoader.GetByID("Resist Token"), 20);
-				return d;
-			}
-		}
-	}
+            //TESTING IMPLEMENTATION
+            if (id.StartsWith("TEST "))
+            {
+                DeckList d = new DeckList();
+                d.AddCard(cardLoader.GetByID(id.Substring(5)), 8);
+                d.AddCard(cardLoader.GetByID("Resist Token"), 6);
+                d.AddCard(cardLoader.GetByID("Mana Token"), 6);
+                Console.WriteLine("Loaded test deck");
+                return d;
+            }
+            else
+            {
+                // TODO: What's the default deck?
+                DeckList d = new DeckList();
+                d.AddCard(cardLoader.GetByID("Resist Token"), 20);
+                return d;
+            }
+        }
+    }
 }
