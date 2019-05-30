@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System;
@@ -90,7 +90,11 @@ public class HandManager : MonoBehaviour
 		CardUI cardUI = cardObject.GetComponent<CardUI>();
 		cardUI.cardData = cardData;
 
-		cardObject.GetComponent<DragSource>().enabled = cardDraggable;
+		DragSource dragSource = cardObject.GetComponent<DragSource>();
+		if (dragSource != null)
+		{
+			dragSource.enabled = cardDraggable;
+		}
 
 		HoverCardOverlay cardHover = cardObject.GetComponent<HoverCardOverlay>();
 		if (cardHover != null)
