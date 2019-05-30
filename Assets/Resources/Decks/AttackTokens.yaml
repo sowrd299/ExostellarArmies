@@ -1,2 +1,15 @@
 id: tokensAtk
 name: Attack Tokens
+cards:
+  - id: Attack Token 1
+    count: 6
+  - id: Attack Token 2
+    count: 4
+  - id: Attack Token 3
+    count: 4
+  - id: Attack Token 4
+    count: 3
+  - id: Attack Token 5
+    count: 2
+  - id: Attack Token 6
+    count: 1

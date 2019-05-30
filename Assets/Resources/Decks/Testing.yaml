@@ -1,2 +1,9 @@
-id: TEST Scion Infiltrator 3rd Class
+id: TEST
 name: Testing
+cards:
+  - id: Scion Infiltrator 3rd Class
+    count: 12
+  - id: Resist Token
+    count: 4
+  - id: Mana Token
+    count: 4

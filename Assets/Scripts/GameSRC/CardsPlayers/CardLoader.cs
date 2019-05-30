@@ -82,6 +82,8 @@ namespace SFB.Game.Content {
 			m_listOfCards.Add("Attack Token 3", new UnitCard(0, "Attack Token 3", Faction.NONE, "Token", "", "", 3, 3, 1));
 			m_listOfCards.Add("Attack Token 4", new UnitCard(0, "Attack Token 4", Faction.NONE, "Token", "", "", 4, 4, 1));
 			m_listOfCards.Add("Attack Token 5", new UnitCard(0, "Attack Token 5", Faction.NONE, "Token", "", "", 5, 5, 1));
+			m_listOfCards.Add("Attack Token 6", new UnitCard(0, "Attack Token 6", Faction.NONE, "Token", "", "", 6, 6, 1));
+			m_listOfCards.Add("Attack Token 10", new UnitCard(0, "Attack Token 10", Faction.NONE, "Token", "", "", 10, 10, 1));
 		}
 
         protected override Card handleMiss(string id){

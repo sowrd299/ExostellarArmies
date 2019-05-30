@@ -38,7 +38,7 @@ namespace SFB.Net.Server
 				YamlMappingNode root = yaml.Documents[0].RootNode as YamlMappingNode;
 				string deckId = root.Children[new YamlScalarNode("id")].ToString();
 				string deckName = root.Children[new YamlScalarNode("name")].ToString();
-
+				
 				DeckList deck = new DeckList();
 				YamlSequenceNode cardSequence = root.Children[new YamlScalarNode("cards")] as YamlSequenceNode;
 				foreach (YamlMappingNode cardItem in cardSequence)

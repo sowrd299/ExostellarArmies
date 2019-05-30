@@ -1,2 +1,5 @@
 id: testing
 name: Defense Tokens
+cards:
+  - id: Resist Token
+    count: 20
