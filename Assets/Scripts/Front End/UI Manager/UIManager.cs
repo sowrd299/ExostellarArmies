@@ -87,7 +87,10 @@ public partial class UIManager : MonoBehaviour
 
 	public void InitializeUI()
 	{
-		mainButton.interactable = true;
+		mainButton.interactable = false;
+
+		myHandManager.SetCardDraggable(false);
+		enemyHandManager.SetCardDraggable(false);
 
 		myUnitManager.sideIndex = myIndex;
 		enemyUnitManager.sideIndex = enemyIndex;
@@ -125,6 +128,7 @@ public partial class UIManager : MonoBehaviour
 	{
 		mainButtonText.text = "LOCK IN PLANS";
 		mainButton.interactable = true;
+		myHandManager.SetCardDraggable(true);
 
 		bool clicked = false;
 		UnityAction listener = null;
@@ -143,6 +147,7 @@ public partial class UIManager : MonoBehaviour
 
 		mainButtonText.text = "WAITING FOR OPPONENT";
 		mainButton.interactable = false;
+		myHandManager.SetCardDraggable(false);
 	}
 
 	public void BeforeTurnStart()

@@ -25,6 +25,8 @@ public class HandManager : MonoBehaviour
 
 	public int deploymentCost => playActions.Sum(action => action.card.DeployCost);
 
+	public bool cardDraggable { get; private set; }
+
 
 	public Coroutine DrawCard(Card card)
 	{
@@ -67,6 +69,19 @@ public class HandManager : MonoBehaviour
 		}
 	}
 
+	public void SetCardDraggable(bool draggable)
+	{
+		cardDraggable = draggable;
+
+		foreach (Transform child in transform)
+		{
+			if (child.childCount > 0)
+			{
+				child.GetChild(0).GetComponent<DragSource>().enabled = draggable;
+			}
+		}
+	}
+
 	private GameObject CreateCardDisplay(Card cardData)
 	{
 		Transform cardHolder = GetNextAvailableCardHolder();
@@ -74,6 +89,8 @@ public class HandManager : MonoBehaviour
 
 		CardUI cardUI = cardObject.GetComponent<CardUI>();
 		cardUI.cardData = cardData;
+
+		cardObject.GetComponent<DragSource>().enabled = cardDraggable;
 
 		HoverCardOverlay cardHover = cardObject.GetComponent<HoverCardOverlay>();
 		if (cardHover != null)

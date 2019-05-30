@@ -15,13 +15,7 @@ public partial class UIManager : MonoBehaviour
 
 	private IEnumerator AnimateDrawCard(Card card)
 	{
-		mainButtonText.text = "DRAWING...";
-		mainButton.interactable = false;
-
 		yield return myHandManager.DrawCard(card);
-
-		mainButtonText.text = "LOCK IN PLANS";
-		mainButton.interactable = true;
 	}
 
 	public Coroutine SpawnUnit(int sideIndex, int laneIndex, int positionIndex)
