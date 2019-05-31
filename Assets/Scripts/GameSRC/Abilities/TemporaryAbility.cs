@@ -7,7 +7,9 @@ namespace SFB.Game
 	{
 		private Unit appliedTo;
 
-		public TemporaryAbility() : base(-1) {
+		public TemporaryAbility()
+			: base(-1)
+		{
 			appliedTo = null;
 		}
 		

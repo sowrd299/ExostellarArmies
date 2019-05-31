@@ -22,7 +22,16 @@ namespace SFB.Game
 		public void AdvSupplyDroneInner(List<Delta> deltas, GMWithLocation gmLoc)
 		{
 			if(gmLoc.IsSupporting("Carthan")) {
-				deltas.Add(new UnitHealthDelta(gmLoc.FrontUnit, 2, Damage.Type.HEAL, gmLoc.SubjectUnit));
+				// heal front line 2
+				deltas.AddRange(
+					UnitHealthDelta.GetHealDeltas(
+						gmLoc.FrontUnit,
+						gmLoc.SubjectUnit,
+						2,
+						gmLoc.GameManager
+					)
+				);
+				// gain 3 mana
 				deltas.AddRange(
 					gmLoc.SubjectPlayer.ManaPool.GetAddDeltas(3)
 				);

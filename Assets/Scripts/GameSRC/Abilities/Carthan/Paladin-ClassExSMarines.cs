@@ -28,11 +28,25 @@ namespace SFB.Game
 
 				Unit leftLaneFront = gmLoc.LeftLane?.Units?[side, 0];
 				if(leftLaneFront != null)
-					deltas.Add(new UnitHealthDelta(leftLaneFront, 1, Damage.Type.HEAL, gmLoc.SubjectUnit));
+					deltas.AddRange(
+						UnitHealthDelta.GetHealDeltas(
+							leftLaneFront,
+							gmLoc.SubjectUnit,
+							1,
+							gmLoc.GameManager
+						)
+					);
 
 				Unit rightLaneFront = gmLoc.RightLane?.Units?[side, 0];
 				if(rightLaneFront != null)
-					deltas.Add(new UnitHealthDelta(rightLaneFront, 1, Damage.Type.HEAL, gmLoc.SubjectUnit));
+					deltas.AddRange(
+						UnitHealthDelta.GetHealDeltas(
+							rightLaneFront,
+							gmLoc.SubjectUnit,
+							1,
+							gmLoc.GameManager
+						)
+					);
 			}
 		}
 	}

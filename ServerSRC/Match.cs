@@ -1,6 +1,6 @@
+using System;
 using System.Collections.Generic;
 using System.Xml; // it's only used once, and I don't really like that
-using System;
 using SFB.Game;
 using SFB.Game.Content;
 using SFB.Game.Management;
@@ -72,7 +72,7 @@ namespace SFB.Net.Server.Matches{
         }
 
         // starts the match with asynchronous receiving
-        public void AsynchStart(ReturnCallback rc){
+        public void AsyncStart(ReturnCallback rc){
             Start(rc);
             foreach(PlayerManager pm in players){
                 pm.StartAsyncReceive();
@@ -108,11 +108,12 @@ namespace SFB.Net.Server.Matches{
                 // use a list to collect the deltas, to send them later
                 List<TurnPhase> turnPhases = new List<TurnPhase>(); 
                 
-				TurnPhase endDeploy = new TurnPhase("endDeploy");
+                TurnPhase endDeploy = new TurnPhase("endDeploy");
                 foreach(Delta d in gameManager.GetEndDeployDeltas()){
                     endDeploy.Deltas.Add(d);
                     gameManager.ApplyDelta(d);
                 }
+
 				foreach(Delta d in gameManager.GetCleanUpDeltas(null)) {
 					endDeploy.Deltas.Add(d);
 					gameManager.ApplyDelta(d);
@@ -122,7 +123,7 @@ namespace SFB.Net.Server.Matches{
 				// if no more deployment phases, do the rest of this turn into the start of the next
 				if(gameManager.DeployPhasesOver()){
                     // ranged combat
-					TurnPhase rangedCombat = new TurnPhase("rangedCombat");
+                    TurnPhase rangedCombat = new TurnPhase("rangedCombat");
                     foreach(Delta d in gameManager.GetRangedCombatDeltas()){
                         rangedCombat.Deltas.Add(d);
                         gameManager.ApplyDelta(d);
@@ -131,10 +132,10 @@ namespace SFB.Net.Server.Matches{
                         rangedCombat.Deltas.Add(d);
                         gameManager.ApplyDelta(d);
                     }
-					turnPhases.Add(rangedCombat);
+                    turnPhases.Add(rangedCombat);
 
                     // melee combat
-					TurnPhase meleeCombat = new TurnPhase("meleeCombat");
+                    TurnPhase meleeCombat = new TurnPhase("meleeCombat");
                     foreach(Delta d in gameManager.GetMeleeCombatDeltas()){
                         meleeCombat.Deltas.Add(d);
                         gameManager.ApplyDelta(d);
@@ -163,26 +164,26 @@ namespace SFB.Net.Server.Matches{
                         startTurn.Deltas.Add(d);
                         gameManager.ApplyDelta(d);
                     }
-					turnPhases.Add(startTurn);
+                    turnPhases.Add(startTurn);
                 }
 
                 // get the start of the next deploy phase
-				TurnPhase startDeploy = new TurnPhase("startDeploy");
+                TurnPhase startDeploy = new TurnPhase("startDeploy");
                 foreach(Delta d in gameManager.GetStartDeployDeltas()){
                     startDeploy.Deltas.Add(d);
                     gameManager.ApplyDelta(d);
                 }
-				turnPhases.Add(startDeploy);
-				
+                turnPhases.Add(startDeploy);
+                
                 // figure out which deltas everyone needs
                 for(int i = 0; i < players.Length; i++){ // for each player...
                     turnPhaseLists[i] = new List<TurnPhase>();
                     for(int j = (i+1)%players.Length; j != i; j = (j+1)%players.Length){ // for each other player...
-						TurnPhase playerPhase = new TurnPhase($"player{j}");
+                        TurnPhase playerPhase = new TurnPhase($"player{j}");
                         foreach(Delta d in players[j].TurnDeltas){ // share turn deltas...
                             playerPhase.Deltas.Add(d);
                         }
-						turnPhaseLists[i].Add(playerPhase);
+                        turnPhaseLists[i].Add(playerPhase);
                     }
                     // add in the shared deltas
                     turnPhaseLists[i].AddRange(turnPhases);

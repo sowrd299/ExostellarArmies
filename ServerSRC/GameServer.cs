@@ -29,17 +29,17 @@ namespace SFB.Net.Server{
         // logic (and socket) managers
         private MatchMaker matchMaker;
 
-		public GameServer()
-		{
-			//get the IP address
-			ipEntry = Dns.GetHostEntry(Dns.GetHostName());
-			ipAddr = ipEntry.AddressList.First(addr => addr.AddressFamily == AddressFamily.InterNetwork);
-			//setup socket managers
-			ncl = new NewClientManager(ipAddr, Port);
-			clientSockets = new HashSet<SocketManager>();
-			removedSockets = new HashSet<SocketManager>();
-			matchMaker = new MatchMaker();
-		}
+        public GameServer()
+        {
+            //get the IP address
+            ipEntry = Dns.GetHostEntry(Dns.GetHostName());
+            ipAddr = ipEntry.AddressList.First(addr => addr.AddressFamily == AddressFamily.InterNetwork);
+            //setup socket managers
+            ncl = new NewClientManager(ipAddr, Port);
+            clientSockets = new HashSet<SocketManager>();
+            removedSockets = new HashSet<SocketManager>();
+            matchMaker = new MatchMaker();
+        }
 
         //to be called once per mainloop
         public void Update(){
@@ -62,16 +62,16 @@ namespace SFB.Net.Server{
 
         // accepts new connections asynchronously
         // will continue to accept new connections ad infinitum
-        public void StartAsynchAccept(){
-            ncl.AsynchAccept(endAsynchAccept);
+        public void StartAsyncAccept(){
+            ncl.AsyncAccept(endAsyncAccept);
         }
 
-        private void endAsynchAccept(Socket s){
+        private void endAsyncAccept(Socket s){
             SocketManager sm = AddClient(s);
             StartAsyncReceive(sm);
             // loop accepting
             // TODO: probably should be toggleable
-            StartAsynchAccept();
+            StartAsyncAccept();
         }
 
         // accepts new connections in a synchronous, non-blocking way
@@ -82,7 +82,7 @@ namespace SFB.Net.Server{
             }
         }
 
-        protected override void handleSocketDeath(SocketManager socket){
+        protected override void HandleSocketDeath(SocketManager socket){
             lock(clientSockets){
                 clientSockets.Remove(socket);
             }
@@ -95,7 +95,7 @@ namespace SFB.Net.Server{
                     //read messages from clients
                     //handle messages recieved (possibly)
                     //handle socket death
-                    handleSocket(sm);
+                    HandleSocket(sm);
                     //is its own for-loop to deal with weirdness from removing at two different points
                     if(!sm.Alive){
                         removedSockets.Add(sm);
@@ -106,7 +106,7 @@ namespace SFB.Net.Server{
             }
         }
 
-        public override void handleMessage(XmlDocument msg, SocketManager from){
+        public override void HandleMessage(XmlDocument msg, SocketManager from){
             string type = msg.DocumentElement.Attributes["type"].Value;
             //Console.WriteLine("While in 'Main Menu', Recieved message from client of type {0}", type);
             //handle different types of messages
@@ -122,7 +122,7 @@ namespace SFB.Net.Server{
                     //Console.WriteLine("...I guess they are waiting for a while. Okay.");
                     break;
                 default:
-                    base.handleMessage(msg, from);
+                    base.HandleMessage(msg, from);
                     break;
             }
         }
@@ -145,7 +145,7 @@ namespace SFB.Net.Server{
             Console.WriteLine("Match making finished...");
             if(newMatch != null){
                 Console.WriteLine("Starting game!");
-                newMatch.AsynchStart(ReturnClients);
+                newMatch.AsyncStart(ReturnClients);
             }
             return newMatch;
         }

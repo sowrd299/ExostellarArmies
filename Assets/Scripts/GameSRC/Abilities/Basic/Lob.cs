@@ -8,9 +8,7 @@ namespace SFB.Game
 	{
 		// In combat, this deals damage to whatever is behind the opposing front line.
 
-		public Lob()
-			: base(-1)
-		{}
+		public Lob() : base(-1) {}
 
 		protected override void AddEffectsToEvents(Unit u, GameManager gm)
 		{

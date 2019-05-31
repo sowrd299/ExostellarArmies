@@ -43,7 +43,12 @@ namespace SFB.Game
 		protected void RushInner(List<Delta> deltas, GMWithBoardUpdate gmBoardUpdate)
 		{
 			if(Unit != Lane.Units[Side ?? -1, RushTo()])
-				deltas.AddRange(gmBoardUpdate.SubjectLane.GetInLaneSwapDeltas(Side ?? -1, gmBoardUpdate.GameManager));
+				deltas.AddRange(gmBoardUpdate.SubjectLane
+											 .GetInLaneSwapDeltas(
+												 Side ?? -1,
+												 gmBoardUpdate.GameManager
+											 )
+				);
 		}
 
 		protected abstract int RushTo();

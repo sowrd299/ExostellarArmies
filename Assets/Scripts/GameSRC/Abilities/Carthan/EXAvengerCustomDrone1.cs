@@ -21,13 +21,21 @@ namespace SFB.Game
 
 		public void EXAvengerCustomDrone1Inner(List<Delta> deltas, GMWithLocation gmLoc)
 		{
-			if(gmLoc.IsSupporting(new string[] { "Carthan", "Infantry" })) {
+			if(gmLoc.IsSupporting("Carthan", "Infantry")) {
 				foreach(Card c in gmLoc.SubjectPlayer.Hand)
 					deltas.AddRange(gmLoc.SubjectPlayer.Hand.GetRemoveDelta(c));
+
 				deltas.Add(new UnitDamageAmountDelta(gmLoc.FrontUnit, 1,
 							Damage.Type.RANGED, gmLoc.SubjectUnit));
-				deltas.Add(new UnitHealthDelta(gmLoc.FrontUnit, gmLoc.SubjectPlayer.Hand.Count,
-							Damage.Type.RANGED, gmLoc.SubjectUnit));
+
+				deltas.AddRange(
+					UnitHealthDelta.GetHealDeltas(
+						gmLoc.FrontUnit,
+						gmLoc.SubjectUnit,
+						gmLoc.SubjectPlayer.Hand.Count,
+						gmLoc.GameManager
+					)
+				);
 			}
 		}
 	}

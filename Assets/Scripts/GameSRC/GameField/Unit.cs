@@ -49,9 +49,9 @@ namespace SFB.Game
 		public event Ability.ModifyInt ModifyTowerDamage;
 
 		// triggered ability events
-		public event Ability.AddDelta AddInitialDeployDeltas;
-		public event Ability.AddDelta AddRecurringDeployDeltas;
-		public event Ability.AddDeltaPhase AddDeathDeltas;
+		public event Ability.AddDeltaGMLoc AddInitialDeployDeltas;
+		public event Ability.AddDeltaGMLoc AddRecurringDeployDeltas;
+		public event Ability.AddDeltaGMLocPhase AddDeathDeltas;
 
 		readonly public string id;
         public string ID {
@@ -63,10 +63,10 @@ namespace SFB.Game
 			Constructor(card, gm);
 		}
 
-		public Unit(UnitCard card, int id, GameManager gm) {
+		public Unit(UnitCard card, int id) {
 			this.id = ""+id;
 			IdIssuer.RegisterId(this.id, this);
-			Constructor(card, gm);
+			Constructor(card, null);
 		}
 
 		private void Constructor(UnitCard card, GameManager gm) {
@@ -83,7 +83,7 @@ namespace SFB.Game
 			}
 		}
 		
-		public Delta[] GetDamagingDeltas(Lane l, int oppSide, Damage.Type dmgType) {
+		public Delta[] GetDamagingDeltas(Lane l, int oppSide, Damage.Type dmgType, GameManager gm) {
 			int dmgLeft = (dmgType==Damage.Type.RANGED ? RangedAttack : MeleeAttack);
 
 			List<Delta> deltas = new List<Delta>();
@@ -98,7 +98,15 @@ namespace SFB.Game
 					int resistance = target.GetResistance(dmgType);
 					int deal = System.Math.Min(target.HealthPoints+resistance, dmgLeft);
 
-					deltas.Add(new UnitHealthDelta(target, deal, dmgType, this));
+					deltas.AddRange(
+						UnitHealthDelta.GetDamageDeltas(
+							target,
+							this,
+							deal,
+							dmgType,
+							gm
+						)
+					);
 					dmgLeft = dmgLeft - deal;
 					target.ModifyDamageLeft?.Invoke(ref dmgLeft);
 				}

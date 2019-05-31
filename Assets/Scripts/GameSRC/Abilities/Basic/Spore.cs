@@ -1,5 +1,4 @@
 ﻿using SFB.Game.Management;
-using SFB.Game.Content;
 using System.Collections.Generic;
 
 namespace SFB.Game
@@ -8,9 +7,7 @@ namespace SFB.Game
 	{
 		// When this dies, gain <amount> resource(s)
 
-		public Spore(int amount)
-			: base(amount)
-		{}
+		public Spore(int amount) : base(amount) {}
 
 		protected override void AddEffectsToEvents(Unit u, GameManager gm)
 		{
@@ -24,7 +21,8 @@ namespace SFB.Game
 
 		void SporeInner(List<Delta> deltas, GMWithLocation gameStateLoc, Damage.Type? phase)
 		{
-			deltas.AddRange(gameStateLoc.SubjectPlayer.ManaPool.GetAddDeltas(Amount));
+			deltas.AddRange(gameStateLoc.SubjectPlayer.ManaPool
+													  .GetAddDeltas(Amount));
 		}
 	}
 }

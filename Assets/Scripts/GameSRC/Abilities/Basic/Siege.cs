@@ -8,9 +8,7 @@ namespace SFB.Game
 	{
 		// After this deals damage to a tower, it deals <amount> extra damage to it.
 
-		public Siege(int amount)
-			: base(amount)
-		{}
+		public Siege(int amount) : base(amount) {}
 
 		protected override void AddEffectsToEvents(Unit u, GameManager gm)
 		{

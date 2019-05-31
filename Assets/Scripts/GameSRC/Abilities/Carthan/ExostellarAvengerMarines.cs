@@ -35,8 +35,8 @@ namespace SFB.Game
 			if(gmLoc.Pos == 0) {
 				// Front Line: This gets Ranged Shield 3 and Melee Shield 3 this turn.
 				deltas.AddRange(new Delta[] {
-					new UnitAbilityDelta(self, self, new RangedShield(3), UnitAbilityDelta.DeltaMode.ADD),
-					new UnitAbilityDelta(self, self, new MeleeShield(3), UnitAbilityDelta.DeltaMode.ADD)
+					new UnitAbilityDelta(self, self, new RangedShield(3), UnitAbilityDelta.DeltaMode.ADD, gmLoc.GameManager),
+					new UnitAbilityDelta(self, self, new MeleeShield(3), UnitAbilityDelta.DeltaMode.ADD, gmLoc.GameManager)
 				});
 				appliedShieldTo = self;
 			} else if(gmLoc.Pos == 1 && front != null && front.Card.UnitType.Contains("Carthan")) {
@@ -49,8 +49,8 @@ namespace SFB.Game
 		public void ExostellarAvengerMarinesRemove(List<Delta> deltas, GMWithLocation gmLoc) {
 			if(appliedShieldTo != null) {
 				deltas.AddRange(new Delta[] {
-					new UnitAbilityDelta(appliedShieldTo, appliedShieldTo, new RangedShield(3), UnitAbilityDelta.DeltaMode.REMOVE),
-					new UnitAbilityDelta(appliedShieldTo, appliedShieldTo, new MeleeShield(3), UnitAbilityDelta.DeltaMode.REMOVE)
+					new UnitAbilityDelta(appliedShieldTo, appliedShieldTo, new RangedShield(3), UnitAbilityDelta.DeltaMode.REMOVE, gmLoc.GameManager),
+					new UnitAbilityDelta(appliedShieldTo, appliedShieldTo, new MeleeShield(3), UnitAbilityDelta.DeltaMode.REMOVE, gmLoc.GameManager)
 				});
 				appliedShieldTo = null;
 			}

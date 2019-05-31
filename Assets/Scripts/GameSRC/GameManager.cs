@@ -30,10 +30,11 @@ namespace SFB.Game.Management{
 		public Lane[] Lanes { get; private set; }
 
 
-		public event Ability.AddDeltaBoardUpdate AddBoardUpdateDeltas;
-		public event Ability.AddDelta AddRecurringDeployDeltas;
-		public event Ability.AddDeltaUnit AddUnitDeathDeltas;
-		public event Ability.AddDeltaTower AddTowerDeathDeltas;
+		public event Ability.AddDeltaGMBoardUpdate AddBoardUpdateDeltas;
+		public event Ability.AddDeltaGMLoc AddRecurringDeployDeltas;
+		public event Ability.AddDeltaGMLocUnit AddUnitDeathDeltas;
+		public event Ability.AddDeltaGMLocTower AddTowerDeathDeltas;
+		public event Ability.AddDeltaGMUnitDelta AddHealDeltas;
 
 
 		public void UseAddBoardUpdateDeltas(List<Delta> deltas, BoardUpdate bu) {
@@ -47,6 +48,9 @@ namespace SFB.Game.Management{
 		}
 		public void UseAddTowerDeathDeltas(List<Delta> deltas, Tower tower) {
 			AddTowerDeathDeltas?.Invoke(deltas, this.WithLocation(-1, -1, -1), tower);
+		}
+		public void UseAddHealDeltas(List<Delta> deltas, UnitDelta ud) {
+			AddHealDeltas?.Invoke(deltas, this, ud);
 		}
 
 		/*
@@ -145,15 +149,12 @@ namespace SFB.Game.Management{
 		}
 
 		public Delta[] GetTowerDamageDeltas() {
-			return CombatManager.GetTowerCombatDeltas(Lanes);
+			return CombatManager.GetTowerCombatDeltas(Lanes, this);
 		}
 
 
 		// returns the outcomes of a player taking a given action
-		public Delta[] GetActionDeltas(Player player, PlayerAction a){
-            // and old dummy implementation:
-            // return new Delta[]{new Deck.RemoveFromDeckDelta(player.Deck, null, 0)}; // this implementation intrinsically throws errors
-            // real implementation:
+		public Delta[] GetActionDeltas(Player player, PlayerAction a) {
             return a.GetDeltas(player, this);
         }
 		

@@ -6,9 +6,7 @@ namespace SFB.Game
 	{
 		// Excess damage done to this does not overflow.
 
-		public Absorb()
-			: base(-1)
-		{ }
+		public Absorb() : base(-1) { }
 
 		protected override void AddEffectsToEvents(Unit u, GameManager gm)
 		{

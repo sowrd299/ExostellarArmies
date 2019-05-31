@@ -8,22 +8,22 @@ namespace SFB.Game
 	{
 		// Unique; Ranged Shield 1; Front Line Persistent: Allied front line Elites have +1 and Ranged Shield +1
 
-		protected override Delta[] GetAddDeltas(int lane, int side, int pos, Lane[] lanes, Unit source)
+		protected override Delta[] GetAddDeltas(int lane, int side, int pos, Lane[] lanes, Unit source, GameManager gm)
 		{
 			Unit target = lanes[lane].Units[side, pos];
 			return new Delta[]
 			{
 				new UnitDamageAmountDelta(target, 1, Damage.Type.MELEE, source),
-				new UnitAbilityDelta(target, source, new RangedShield(1), UnitAbilityDelta.DeltaMode.ADD)
+				new UnitAbilityDelta(target, source, new RangedShield(1), UnitAbilityDelta.DeltaMode.ADD, gm)
 			};
 		}
 
-		protected override Delta[] GetRemoveDeltas(Unit target, Unit source)
+		protected override Delta[] GetRemoveDeltas(Unit target, Unit source, GameManager gm)
 		{
 			return new Delta[]
 			{
 				new UnitDamageAmountDelta(target, -1, Damage.Type.MELEE, source),
-				new UnitAbilityDelta(target, source, new RangedShield(1), UnitAbilityDelta.DeltaMode.REMOVE)
+				new UnitAbilityDelta(target, source, new RangedShield(1), UnitAbilityDelta.DeltaMode.REMOVE, gm)
 			};
 		}
 

@@ -21,8 +21,15 @@ namespace SFB.Game
 
 		public void AncillaryMedicalOfficerInner(List<Delta> deltas, GMWithLocation gmLoc)
 		{
-			if(gmLoc.IsSupporting(new string[] { "Carthan" })) {
-				deltas.Add(new UnitHealthDelta(gmLoc.FrontUnit, 2, Damage.Type.HEAL, gmLoc.SubjectUnit));
+			if(gmLoc.IsSupporting("Carthan")) {
+				deltas.AddRange(
+					UnitHealthDelta.GetHealDeltas(
+						gmLoc.FrontUnit,
+						gmLoc.SubjectUnit,
+						2,
+						gmLoc.GameManager
+					)
+				);
 			}
 		}
 	}

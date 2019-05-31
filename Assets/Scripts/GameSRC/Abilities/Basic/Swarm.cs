@@ -6,7 +6,8 @@ namespace SFB.Game
 {
 	public class Swarm : Ability
 	{
-		// When you deploy this, if it is behind a Unit that shares a tag with it other than "Unit", draw a card.
+		// When you deploy this, if it is behind a Unit that shares a tag with it
+		// other than "Unit", draw a card.
 
 		public Swarm() : base(-1) {}
 
@@ -25,9 +26,16 @@ namespace SFB.Game
 			if(gmLoc.Pos == 1) {
 				foreach(string s in gmLoc.SubjectUnit.Card.UnitType.Split(' ')) {
 					if(s != "Unit" && gmLoc.IsSupporting(s)) {
-						RemoveFromDeckDelta[] rs = gmLoc.SubjectPlayer.Deck.GetDrawDeltas(count: 1);
+						RemoveFromDeckDelta[] rs = gmLoc.SubjectPlayer.Deck
+																	  .GetDrawDeltas(count: 1);
 						deltas.AddRange(rs);
-						deltas.AddRange(gmLoc.SubjectPlayer.Hand.GetDrawDeltas(rs, gmLoc.GameManager));
+						deltas.AddRange(
+							gmLoc.SubjectPlayer.Hand
+											   .GetDrawDeltas(
+												   rs,
+												   gmLoc.GameManager
+											   )
+						);
 						return;
 					}
 				}

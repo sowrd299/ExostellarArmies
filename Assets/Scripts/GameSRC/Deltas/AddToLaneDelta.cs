@@ -26,7 +26,7 @@ namespace SFB.Game
 			this.SendableCard = new SendableTarget<Card>("card", from, loader);
 			this.SideIndex = Int32.Parse(from.Attributes["sideIndex"].Value);
 			this.Position = Int32.Parse(from.Attributes["position"].Value);
-			this.Unit = new Unit(SendableCard.Target as UnitCard, Int32.Parse(from.Attributes["unitId"].Value), null);
+			this.Unit = new Unit(SendableCard.Target as UnitCard, Int32.Parse(from.Attributes["unitId"].Value));
 		}
 
 		public override XmlElement ToXml(XmlDocument doc)

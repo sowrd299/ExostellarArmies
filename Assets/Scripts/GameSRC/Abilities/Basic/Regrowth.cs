@@ -24,11 +24,18 @@ namespace SFB.Game
 			u.AddDeathDeltas -= RegrowthInner;
 		}
 
-		private void RegrowthInner(List<Delta> deltas, GMWithLocation gmLoc, Damage.Type? phase) {
+		private void RegrowthInner(List<Delta> deltas, GMWithLocation gmLoc, Damage.Type? phase)
+		{
 			if(Function(gmLoc, phase))
+			{
 				deltas.AddRange(
-					gmLoc.SubjectPlayer.Hand.GetDrawDeltas(gmLoc.SubjectUnit.Card, gmLoc.GameManager)
+					gmLoc.SubjectPlayer.Hand
+						 .GetDrawDeltas(
+							 gmLoc.SubjectUnit.Card,
+							 gmLoc.GameManager
+						 )
 				);
+			}
 		}
 	}
 }

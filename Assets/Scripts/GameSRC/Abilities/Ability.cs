@@ -22,11 +22,19 @@ namespace SFB.Game
 	 */
 	public abstract class Ability
 	{
-		public delegate void AddDelta(List<Delta> deltas, GMWithLocation gmLoc);
-		public delegate void AddDeltaBoardUpdate(List<Delta> deltas, GMWithBoardUpdate gmBoardUpdate);
-		public delegate void AddDeltaPhase(List<Delta> deltas, GMWithLocation gmLoc, Damage.Type? phase);
-		public delegate void AddDeltaUnit(List<Delta> deltas, GMWithLocation gmLoc, Unit u);
-		public delegate void AddDeltaTower(List<Delta> deltas, GMWithLocation gmLoc, Tower tower);
+		public delegate void AddDeltaGMUnitDelta(
+			List<Delta> deltas, GameManager gm, UnitDelta ud);
+		public delegate void AddDeltaGMBoardUpdate(
+			List<Delta> deltas, GMWithBoardUpdate gmBoardUpdate);
+		public delegate void AddDeltaGMLoc(
+			List<Delta> deltas, GMWithLocation gmLoc);
+		public delegate void AddDeltaGMLocPhase(
+			List<Delta> deltas, GMWithLocation gmLoc, Damage.Type? phase);
+		public delegate void AddDeltaGMLocUnit(
+			List<Delta> deltas, GMWithLocation gmLoc, Unit u);
+		public delegate void AddDeltaGMLocTower(
+			List<Delta> deltas, GMWithLocation gmLoc, Tower tower);
+
 		public delegate void FilterTargets(Unit[] targets);
 		public delegate void ModifyInt(ref int amt);
 		
@@ -36,16 +44,17 @@ namespace SFB.Game
 		{
 			Amount = amount;
 		}
-
-		// gamestate may be null
+		
 		public void ApplyTo(Unit u, GameManager gm) {
 			u.Abilities.Add(this);
 			AddEffectsToEvents(u, gm);
 		}
+
 		public void RemoveFrom(Unit u, GameManager gm) {
 			u.Abilities.Remove(this);
 			RemoveEffectsFromEvents(u, gm);
 		}
+
 		protected abstract void AddEffectsToEvents(Unit u, GameManager gm);
 		protected abstract void RemoveEffectsFromEvents(Unit u, GameManager gm);
 

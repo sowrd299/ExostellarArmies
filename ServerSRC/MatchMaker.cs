@@ -35,7 +35,7 @@ namespace SFB.Net.Server{
             }
         }
 
-        protected override void handleSocketDeath(SocketManager socket){
+        protected override void HandleSocketDeath(SocketManager socket){
             numDeadClients++;
         }
 

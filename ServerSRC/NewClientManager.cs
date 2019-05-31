@@ -15,11 +15,11 @@ namespace SFB.Net.Server{
             //this.addr = addr;
             this.addr = addr;
             this.port = port;
-            setup();
+            Setup();
         }
 
         //setup the socket
-        private void setup(){
+        private void Setup(){
             socket = new Socket(AddressFamily.InterNetwork,
                     SocketType.Stream,
                     ProtocolType.Tcp);
@@ -44,7 +44,7 @@ namespace SFB.Net.Server{
         }
 
         // accept connections asychronously
-        public void AsynchAccept(HandleNewClient handler){
+        public void AsyncAccept(HandleNewClient handler){
             socket.BeginAccept(new AsyncCallback(endAsyncAccept), handler);
         }
 

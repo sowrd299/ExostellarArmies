@@ -8,12 +8,12 @@ namespace SFB.Game
 	public abstract class UnitDelta : Delta
 	{
 		private SendableTarget<Unit> sendableTarget;
-		internal Unit Target {
+		public Unit Target {
 			get { return sendableTarget.Target; }
 		}
 
 		private SendableTarget<Unit> sendableSource;
-		internal Unit Source {
+		public Unit Source {
 			get { return sendableSource.Target; }
 		}
 

@@ -10,7 +10,7 @@ namespace SFB.Game
 
 	public class AuxiliaryGraftCap : PersistentFieldAbility
 	{
-		protected override Delta[] GetAddDeltas(int lane, int side, int pos, Lane[] lanes, Unit source)
+		protected override Delta[] GetAddDeltas(int lane, int side, int pos, Lane[] lanes, Unit source, GameManager gm)
 		{
 			Unit target = lanes[lane].Units[side, pos];
 			return new Delta[]
@@ -19,7 +19,7 @@ namespace SFB.Game
 			};
 		}
 
-		protected override Delta[] GetRemoveDeltas(Unit target, Unit source)
+		protected override Delta[] GetRemoveDeltas(Unit target, Unit source, GameManager gm)
 		{
 			return new Delta[]
 			{

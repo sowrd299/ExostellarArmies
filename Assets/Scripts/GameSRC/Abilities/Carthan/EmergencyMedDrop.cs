@@ -22,18 +22,39 @@ namespace SFB.Game
 		public void EmergencyMedDropInner(List<Delta> deltas, GMWithLocation gmLoc)
 		{
 			Unit front = gmLoc.FrontUnit;
-			if(front != null) // returns null if already front
-				deltas.Add(new UnitHealthDelta(front, 2, Damage.Type.HEAL, gmLoc.SubjectUnit));
+			if(front != null)
+				deltas.AddRange(
+					UnitHealthDelta.GetHealDeltas(
+						front,
+						gmLoc.SubjectUnit,
+						2,
+						gmLoc.GameManager
+					)
+				);
 
 			int side = gmLoc.Side;
 
 			Unit left = gmLoc.LeftLane?.Units?[side, 0];
 			if(left != null)
-				deltas.Add(new UnitHealthDelta(left, 1, Damage.Type.HEAL, gmLoc.SubjectUnit));
+				deltas.AddRange(
+					UnitHealthDelta.GetHealDeltas(
+						left,
+						gmLoc.SubjectUnit,
+						1,
+						gmLoc.GameManager
+					)
+				);
 
 			Unit right = gmLoc.RightLane?.Units?[side, 0];
 			if(right != null)
-				deltas.Add(new UnitHealthDelta(right, 1, Damage.Type.HEAL, gmLoc.SubjectUnit));
+				deltas.AddRange(
+					UnitHealthDelta.GetHealDeltas(
+						right,
+						gmLoc.SubjectUnit,
+						1,
+						gmLoc.GameManager
+					)
+				);
 		}
 	}
 }

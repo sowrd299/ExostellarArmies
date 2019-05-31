@@ -16,7 +16,7 @@ namespace SFB.Game
 			applied2MTo = null;
 		}
 
-		protected override Delta[] GetAddDeltas(int lane, int side, int pos, Lane[] lanes, Unit source)
+		protected override Delta[] GetAddDeltas(int lane, int side, int pos, Lane[] lanes, Unit source, GameManager gm)
 		{
 			Unit target = lanes[lane].Units[side, pos];
 			if(pos == 0) {
@@ -34,7 +34,7 @@ namespace SFB.Game
 			}
 		}
 
-		protected override Delta[] GetRemoveDeltas(Unit target, Unit source)
+		protected override Delta[] GetRemoveDeltas(Unit target, Unit source, GameManager gm)
 		{
 			if(applied1RTo != null) {
 				applied1RTo = null;
