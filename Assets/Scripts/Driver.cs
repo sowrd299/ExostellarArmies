@@ -209,6 +209,18 @@ public class Driver : MonoBehaviour
 			TowerReviveDelta towerReviveDelta = delta as TowerReviveDelta;
 			yield return uiManager.TowerRespawn(towerReviveDelta.Target);
 		}
+		else if (delta is ResourcePoolDelta)
+		{
+			ResourcePoolDelta resourcePoolDelta = delta as ResourcePoolDelta;
+			ResourcePool target = resourcePoolDelta.rp.Target;
+			for (int i = 0; i < gameManager.Players.Length; i++)
+			{
+				if (target == gameManager.Players[i].ManaPool)
+				{
+					yield return uiManager.UpdateResourceDisplay(i);
+				}
+			}
+		}
 		else
 		{
 			// Some deltas simply can't be animated, while others could potentially indicate an error.

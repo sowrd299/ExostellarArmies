@@ -8,7 +8,7 @@ namespace SFB.Game
 	public class ResourcePoolDelta : Management.Delta {
 
 		private int amount;
-		private SendableTarget<ResourcePool> rp;
+		public SendableTarget<ResourcePool> rp { get; private set; }
 
 		public ResourcePoolDelta(int amount, ResourcePool rp) {
 			this.amount = amount;

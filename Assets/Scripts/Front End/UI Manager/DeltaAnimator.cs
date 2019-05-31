@@ -94,4 +94,17 @@ public partial class UIManager : MonoBehaviour
 
 		return targetUI.Respawn();
 	}
+
+	public Coroutine UpdateResourceDisplay(int sideIndex)
+	{
+		return StartCoroutine(AnimateUpdateResourceDisplay(sideIndex));
+	}
+
+	private IEnumerator AnimateUpdateResourceDisplay(int sideIndex)
+	{
+		bool finished = false;
+		resourceManagers[sideIndex].UpdateResourceDisplay(() => finished = true);
+
+		yield return new WaitUntil(() => finished);
+	}
 }

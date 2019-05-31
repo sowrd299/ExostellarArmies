@@ -40,16 +40,29 @@ public partial class UIManager : MonoBehaviour
 		: new TowerManager[] { enemyTowerManager, myTowerManager }
 	);
 
+	private ResourceDisplayController[] resourceManagers => (
+		myIndex == 0
+		? new ResourceDisplayController[] { myResourceManager, enemyResourceManager }
+		: new ResourceDisplayController[] { enemyResourceManager, myResourceManager }
+	);
+
 	[Header("Object References")]
 	public HandManager myHandManager;
 	public HandManager enemyHandManager;
 
+	[Space]
 	public UnitManager myUnitManager;
 	public UnitManager enemyUnitManager;
 
+	[Space]
 	public TowerManager myTowerManager;
 	public TowerManager enemyTowerManager;
 
+	[Space]
+	public ResourceDisplayController myResourceManager;
+	public ResourceDisplayController enemyResourceManager;
+
+	[Space]
 	public DamageTextManager damageTextManager;
 
 	[Header("UI References")]
@@ -98,6 +111,9 @@ public partial class UIManager : MonoBehaviour
 		myTowerManager.sideIndex = myIndex;
 		enemyTowerManager.sideIndex = enemyIndex;
 		RenderTowers();
+
+		myResourceManager.sideIndex = myIndex;
+		enemyResourceManager.sideIndex = enemyIndex;
 
 		RenderIndicators();
 
