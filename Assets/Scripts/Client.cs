@@ -24,8 +24,12 @@ namespace SFB.Net.Client
 		private SocketManager socketManager;
 		private object socketLock = new object();
 
+		private List<XmlDocument> messageBacklog;
+
 		private Client()
-		{ }
+		{
+			messageBacklog = new List<XmlDocument>();
+		}
 
 		public async Task<bool> Connect(
 			string host, int port,
@@ -96,17 +100,39 @@ namespace SFB.Net.Client
 			await Task.Run(() => socketManager.Send("<file type='joinMatch'><deck id='" + deckId + "'/></file>"));
 		}
 
-		public async Task<XmlDocument> ReceiveDocument()
+		public async Task<XmlDocument> ReceiveDocument(Predicate<string> shouldAcceptType)
 		{
-			TaskCompletionSource<XmlDocument> receive = new TaskCompletionSource<XmlDocument>();
-			socketManager.AsyncReceiveXml(
-				(document, _) => receive.SetResult(document),
-				(_) => Debug.LogError("TODO Implement socket death handling!"),
-				1024
-			);
-			await receive.Task;
-			Debug.Log($"Received document:\n{PrettyPrintXml(receive.Task.Result)}");
-			return receive.Task.Result;
+			for (int i = 0; i < messageBacklog.Count; i++)
+			{
+				if (shouldAcceptType(messageBacklog[i].DocumentElement.GetAttribute("type")))
+				{
+					XmlDocument backlogDocument = messageBacklog[i];
+					messageBacklog.RemoveAt(i);
+					return backlogDocument;
+				}
+			}
+
+			while (true)
+			{
+				TaskCompletionSource<XmlDocument> receive = new TaskCompletionSource<XmlDocument>();
+
+				socketManager.AsyncReceiveXml(
+					(document, _) => receive.SetResult(document),
+					(_) => Debug.LogError("TODO Implement socket death handling!"),
+					1024
+				);
+				await receive.Task;
+				Debug.Log($"Received document:\n{PrettyPrintXml(receive.Task.Result)}");
+
+				if (shouldAcceptType(receive.Task.Result.DocumentElement.GetAttribute("type")))
+				{
+					return receive.Task.Result;
+				}
+				else
+				{
+					messageBacklog.Add(receive.Task.Result);
+				}
+			}
 		}
 
 		public void SendPlayerActions(PlayerAction[] actions)

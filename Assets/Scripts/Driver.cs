@@ -59,13 +59,13 @@ public class Driver : MonoBehaviour
 		Task joinMatch = client.JoinMatch(PlayerPrefs.GetString(deckKey));
 		yield return new WaitUntil(() => joinMatch.IsCompleted);
 
-		Task<XmlDocument> matchStart = client.ReceiveDocument();
+		Task<XmlDocument> matchStart = client.ReceiveDocument(type => type == "matchStart");
 		yield return new WaitUntil(() => matchStart.IsCompleted);
 		InitializeGameState(matchStart.Result);
 
 		while (true) // TODO: Detect game end?
 		{
-			Task<XmlDocument> turnStart = client.ReceiveDocument();
+			Task<XmlDocument> turnStart = client.ReceiveDocument(type => type == "turnStart");
 			yield return new WaitUntil(() => turnStart.IsCompleted);
 			uiManager.BeforeTurnStart();
 			yield return StartCoroutine(ProcessTurnStart(turnStart.Result));
@@ -75,7 +75,7 @@ public class Driver : MonoBehaviour
 				yield return uiManager.WaitForLockIn();
 				client.SendPlayerActions(uiManager.myHandManager.ExportActions());
 				uiManager.WaitForOpponent();
-				Task<XmlDocument> confirmAction = client.ReceiveDocument();
+				Task<XmlDocument> confirmAction = client.ReceiveDocument(type => type == "actionDeltas");
 				yield return new WaitUntil(() => confirmAction.IsCompleted);
 				ProcessActionResults(confirmAction.Result);
 			}
@@ -102,11 +102,6 @@ public class Driver : MonoBehaviour
 	{
 		string type = document.DocumentElement.GetAttribute("type");
 
-		if (type != "actionDeltas")
-		{
-			throw new Exception($"Received unexpected response type {type} when waiting for actionDeltas!");
-		}
-
 		List<XmlElement> elements = GetDeltaElements(document.DocumentElement);
 
 		Debug.Log($"Processing {elements.Count} action deltas");
@@ -124,11 +119,6 @@ public class Driver : MonoBehaviour
 	private IEnumerator ProcessTurnStart(XmlDocument document)
 	{
 		string type = document.DocumentElement.GetAttribute("type");
-
-		if (type != "turnStart")
-		{
-			throw new Exception($"Received unexpected response type {type} when waiting for turnStart!");
-		}
 
 		List<XmlElement> phaseElements = document
 			.DocumentElement
