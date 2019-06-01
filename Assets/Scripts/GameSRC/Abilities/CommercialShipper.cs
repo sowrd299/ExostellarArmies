@@ -21,6 +21,7 @@ namespace SFB.Game
 
 		public void InnerCommercialShipper(List<Delta> delta, GMWithLocation gmLoc)
 		{
+			
 			CommercialShipperIR inputRequest = new CommercialShipperIR(
 				gmLoc.SubjectPlayer, gmLoc.GameManager
 			);
