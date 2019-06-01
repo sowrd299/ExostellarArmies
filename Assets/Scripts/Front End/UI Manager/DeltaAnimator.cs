@@ -18,6 +18,11 @@ public partial class UIManager : MonoBehaviour
 		yield return myHandManager.DrawCard(card);
 	}
 
+	public void UpdateDiscardDisplay(int sideIndex)
+	{
+		discardManagers[sideIndex].RenderDiscardCount();
+	}
+
 	public Coroutine SpawnUnit(int sideIndex, int laneIndex, int positionIndex)
 	{
 		return unitManagers[sideIndex].unitHolders[laneIndex, positionIndex].SpawnUnit();

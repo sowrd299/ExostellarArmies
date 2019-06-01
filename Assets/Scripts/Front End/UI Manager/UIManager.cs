@@ -46,6 +46,12 @@ public partial class UIManager : MonoBehaviour
 		: new ResourceDisplayController[] { enemyResourceManager, myResourceManager }
 	);
 
+	private DiscardIndicatorManager[] discardManagers => (
+		myIndex == 0
+		? new DiscardIndicatorManager[] { myDiscard, enemyDiscard }
+		: new DiscardIndicatorManager[] { enemyDiscard, myDiscard }
+	);
+
 	[Header("Object References")]
 	public HandManager myHandManager;
 	public HandManager enemyHandManager;
@@ -61,6 +67,10 @@ public partial class UIManager : MonoBehaviour
 	[Space]
 	public ResourceDisplayController myResourceManager;
 	public ResourceDisplayController enemyResourceManager;
+
+	[Space]
+	public DiscardIndicatorManager myDiscard;
+	public DiscardIndicatorManager enemyDiscard;
 
 	[Space]
 	public DamageTextManager damageTextManager;
@@ -114,6 +124,9 @@ public partial class UIManager : MonoBehaviour
 
 		myResourceManager.sideIndex = myIndex;
 		enemyResourceManager.sideIndex = enemyIndex;
+
+		myDiscard.sideIndex = myIndex;
+		enemyDiscard.sideIndex = enemyIndex;
 
 		RenderIndicators();
 

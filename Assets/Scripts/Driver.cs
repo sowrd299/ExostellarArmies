@@ -154,6 +154,10 @@ public class Driver : MonoBehaviour
 		{
 			yield return uiManager.DrawCard((delta as AddToHandDelta).Card);
 		}
+		else if (delta is AddToDiscardDelta)
+		{
+			
+		}
 		else if (delta is AddToLaneDelta)
 		{
 			AddToLaneDelta addToLaneDelta = delta as AddToLaneDelta;
