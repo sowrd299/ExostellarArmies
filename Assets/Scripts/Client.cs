@@ -137,17 +137,31 @@ namespace SFB.Net.Client
 
 		public void SendPlayerActions(PlayerAction[] actions)
 		{
-			Debug.Log("Sending " + actions.Length + " PlayerActions");
 			XmlDocument doc = NewEmptyMessage("gameAction");
 			foreach (PlayerAction a in actions)
 			{
 				XmlElement e = a.ToXml(doc);
 				doc.DocumentElement.AppendChild(e);
 			}
-			Debug.Log("Sending PlayerActions: " + doc.OuterXml);
+			Debug.Log($"Sending PlayerActions:\n{PrettyPrintXml(doc)}");
 			socketManager.SendXml(doc);
-			socketManager.Send("<file type='lockInTurn'></file>");
+		}
 
+		public void SendInputRequestResponse(InputRequest[] requests)
+		{
+			XmlDocument doc = NewEmptyMessage("inputRequestResponse");
+			foreach (InputRequest request in requests)
+			{
+				XmlElement responseElement = request.ToXml(doc);
+				doc.DocumentElement.AppendChild(responseElement);
+			}
+			Debug.Log($"Sending InputResponse:\n{PrettyPrintXml(doc)}");
+			socketManager.SendXml(doc);
+		}
+
+		public void LockInTurn()
+		{
+			socketManager.Send("<file type='lockInTurn'></file>");
 			Debug.Log("Waiting for turn start...");
 		}
 
