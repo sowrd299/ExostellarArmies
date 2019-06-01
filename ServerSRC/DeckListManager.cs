@@ -10,10 +10,11 @@ using SFB.Game.Content;
 // databases, account information, etc.
 // also the client shouldn't have access to it
 // at minimum it is not part of the pure abstract gamelogic
+
 namespace SFB.Net.Server
 {
 
-    class DeckListManager
+    public class DeckListManager
     {
         private CardLoader cardLoader;
         private Dictionary<string, DeckList> decks;

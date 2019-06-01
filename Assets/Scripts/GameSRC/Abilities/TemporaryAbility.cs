@@ -7,40 +7,43 @@ namespace SFB.Game
 	{
 		private Unit appliedTo;
 
-		public TemporaryAbility() : base(-1) {
+		public TemporaryAbility()
+			: base(-1)
+		{
 			appliedTo = null;
 		}
-
-		protected override void ApplyEffects(Unit u, GameState gameState)
+		
+		protected override void AddEffectsToEvents(Unit u, GameManager gm)
 		{
 			u.AddInitialDeployDeltas += AddIndividualEffect;
-			gameState.AddRecurringDeployDeltas += RemoveIndividualEffect;
+			gm.AddRecurringDeployDeltas += RemoveIndividualEffect;
 		}
 
-		protected override void RemoveEffects(Unit u, GameState initialGameState)
+		protected override void RemoveEffectsFromEvents(Unit u, GameManager gm)
 		{
 			throw new System.Exception("Can't remove this ability - potential bugs");
 		}
-
-		public void AddIndividualEffect(List<Delta> deltas, GameStateLocation gameStateLocation)
+		
+		public void AddIndividualEffect(List<Delta> deltas, GMWithLocation gmLoc)
 		{
-			if(ToApplyTo(gameStateLocation)) {
-				deltas.AddRange(EffectAddDeltas(gameStateLocation));
-				appliedTo = gameStateLocation.SubjectUnit;
+			if(ShouldApply(gmLoc)) {
+				deltas.AddRange(EffectAddDeltas(gmLoc));
+				appliedTo = AppliedTo(gmLoc);
 			}
 	
 		}
-
-		public void RemoveIndividualEffect(List<Delta> deltas, GameStateLocation gameStateLocation) {
+		
+		public void RemoveIndividualEffect(List<Delta> deltas, GMWithLocation gmLoc) {
 			if(appliedTo != null) {
-				deltas.AddRange(EffectRemoveDeltas(appliedTo, gameStateLocation));
+				deltas.AddRange(EffectRemoveDeltas(appliedTo, gmLoc));
 				appliedTo = null;
 			}
-			gameStateLocation.GameState.AddRecurringDeployDeltas -= RemoveIndividualEffect;
+			gmLoc.GameManager.AddRecurringDeployDeltas -= RemoveIndividualEffect;
 		}
 		
-		protected abstract bool ToApplyTo(GameStateLocation gameStateLocation);
-		protected abstract Delta[] EffectAddDeltas(GameStateLocation gameStateLocation);
-		protected abstract Delta[] EffectRemoveDeltas(Unit appliedTo, GameStateLocation gameStateLocation);
+		protected abstract bool ShouldApply(GMWithLocation gmLoc);
+		protected abstract Unit AppliedTo(GMWithLocation gmLoc);
+		protected abstract Delta[] EffectAddDeltas(GMWithLocation gmLoc);
+		protected abstract Delta[] EffectRemoveDeltas(Unit appliedTo, GMWithLocation gmLoc);
 	}
 }

@@ -4,16 +4,16 @@ namespace SFB.Game
 {
 	public class Absorb : Ability
 	{
-		public Absorb()
-			: base(-1)
-		{ }
+		// Excess damage done to this does not overflow.
 
-		protected override void ApplyEffects(Unit u, GameState initialGameState)
+		public Absorb() : base(-1) { }
+
+		protected override void AddEffectsToEvents(Unit u, GameManager gm)
 		{
 			u.ModifyDamageLeft += AbsorbInner;
 		}
 
-		protected override void RemoveEffects(Unit u, GameState initialGameState)
+		protected override void RemoveEffectsFromEvents(Unit u, GameManager gm)
 		{
 			u.ModifyDamageLeft -= AbsorbInner;
 		}

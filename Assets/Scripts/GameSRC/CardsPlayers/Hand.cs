@@ -33,7 +33,7 @@ namespace SFB.Game.Content
 			return s+")";
 		}
 
-		public AddToHandDelta[] GetDrawDeltas(RemoveFromDeckDelta[] rDeltas)
+		public AddToHandDelta[] GetDrawDeltas(RemoveFromDeckDelta[] rDeltas, GameManager gm)
 		{
 			AddToHandDelta[] a = new AddToHandDelta[rDeltas.Length];
 			for(int i = 0; i < a.Length; i++) {
@@ -43,9 +43,14 @@ namespace SFB.Game.Content
 			return a;
 		}
 
-		public RemoveFromHandDelta[] GetRemoveDelta(Card c)
+		public Delta[] GetDrawDeltas(Card c, GameManager gm)
 		{
-			return new RemoveFromHandDelta[] { new RemoveFromHandDelta(this, c, this.IndexOf(c)) };
+			return new Delta[] { new AddToHandDelta(this, c) };
+		}
+
+		public Delta[] GetRemoveDelta(Card c)
+		{
+			return new Delta[] { new RemoveFromHandDelta(this, c, this.IndexOf(c)) };
 		}
 	}
 }

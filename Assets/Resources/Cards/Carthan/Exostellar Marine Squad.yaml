@@ -1,0 +1,9 @@
+name: Exostellar Marine Squad
+cost: 3
+faction: Carthan
+unitType: Carthan Elite Infantry Unit
+mainText: 
+flavorText: '"Boldly into the Night!"'
+rangedDamage: 2
+meleeDamage: 2
+hp: 4

@@ -1,0 +1,11 @@
+name: XS Field Technician
+cost: 3
+faction: Carthan
+unitType: Carthan Elite Engineering Infantry Unit
+mainText: 'Supporting Drone Deploy: Return the supported unit to your hand.'
+flavorText: 'Tuning Blades in the Darkness'
+rangedDamage: 1
+meleeDamage: 2
+hp: 4
+abilities:
+  - XSFieldTechnician

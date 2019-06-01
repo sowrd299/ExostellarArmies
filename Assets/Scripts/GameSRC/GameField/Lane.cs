@@ -91,6 +91,13 @@ namespace SFB.Game.Content
 			return null;
 		}
 
+		public static int GetLaneIndexOf(Lane l, Lane[] lanes) {
+			for(int i = 0; i < lanes.Length; i++)
+				if(lanes[i] == l)
+					return i;
+			throw new System.Exception("Lane not found");
+		}
+
 		public void Kill(int side, int pos)
 		{
 			Units[side, pos] = null;
@@ -117,9 +124,9 @@ namespace SFB.Game.Content
 			return Units[side, pos] != null;
 		}
 
-		public void Place(UnitCard uc, int side, int pos, GameState gameState)
+		public void Place(UnitCard uc, int side, int pos, GameManager gm)
 		{
-			Units[side, pos] = new Unit(uc, gameState);
+			Units[side, pos] = new Unit(uc, gm);
 		}
 
 		public void Place(Unit u, int side, int pos)
@@ -132,21 +139,27 @@ namespace SFB.Game.Content
 		}
 
 
-		public Delta[] GetDeployDeltas(UnitCard card, int side, int pos, GameState gameState)
+		public Delta[] GetDeployDeltas(UnitCard card, int side, int pos, GameManager gm)
 		{
-			List<Delta> deltas = new List<Delta>() { new AddToLaneDelta(this, card, side, pos, gameState) };
-			gameState.UseAddBoardUpdateDeltas(deltas);
+			List<Delta> deltas = new List<Delta>() { new AddToLaneDelta(this, card, side, pos, gm) };
+			gm.UseAddBoardUpdateDeltas(deltas, BoardUpdate.GetAdd(Lane.GetLaneIndexOf(this, gm.Lanes), side, pos));
 			return deltas.ToArray();
 		}
 
-		public RemoveFromLaneDelta[] GetDeathDeltas(int side, int pos)
+		public Delta[] GetDeathDeltas(int side, int pos, GameManager gm)
 		{
-			return new RemoveFromLaneDelta[] { new RemoveFromLaneDelta(this, side, pos) };
+			RemoveFromLaneDelta rmd = new RemoveFromLaneDelta(this, side, pos);
+			List<Delta> deltas = new List<Delta> { rmd };
+			gm.UseAddUnitDeathDeltas(deltas, Units[rmd.SideIndex, rmd.Position]);
+			gm.UseAddBoardUpdateDeltas(deltas, BoardUpdate.GetRemove(Lane.GetLaneIndexOf(this, gm.Lanes), side, pos));
+			return deltas.ToArray();
 		}
 
-		public InLaneSwapDelta[] GetInLaneSwapDeltas(int side)
+		public Delta[] GetInLaneSwapDeltas(int side, GameManager gm)
 		{
-			return new InLaneSwapDelta[] { new InLaneSwapDelta(this, side) };
+			List<Delta> deltas = new List<Delta> { new InLaneSwapDelta(this, side) };
+			gm.UseAddBoardUpdateDeltas(deltas, BoardUpdate.GetSwap(Lane.GetLaneIndexOf(this, gm.Lanes), side));
+			return deltas.ToArray();
 		}
 	}
 }

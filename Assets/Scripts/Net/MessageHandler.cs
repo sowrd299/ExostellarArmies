@@ -9,7 +9,7 @@ namespace SFB.Net{
 
         // begins accepting new messages asynchronously
         // will continue to accept new messages ad infinitum
-        public void StartAsyncReceive(SocketManager socket){
+        public void StartAsyncReceive(SocketManager socket) {
             socket.AsyncReceiveXml(endAsyncReceiveXml, HandleSocketDeath);
         }
 

@@ -75,7 +75,8 @@ namespace SFB.Game.Management{
     public abstract class InputRequest<T> : InputRequest where T : IIDed{
 
         // TODO: add in some conception of what are the legal choices?
-        SendableTarget<T> chosen;  // the choice the player made
+
+        protected SendableTarget<T> chosen;  // the choice the player made
 
         public override bool Made{
             get{ return chosen.Target != null; }
@@ -113,7 +114,6 @@ namespace SFB.Game.Management{
             e.SetAttributeNode(chosen.ToXml(doc));
             return e;
         }
-
         
         // make the choice
         // NOTE: Correctly, this is from InputRequest<T> and not InputRequest

@@ -1,0 +1,35 @@
+using SFB.Game.Management;
+using System.Collections.Generic;
+
+namespace SFB.Game
+{
+	// *EFFECT*
+
+	public class *NAME* : TemporaryAbility {
+		protected override bool ShouldApply(GameStateLocation gameStateLocation)
+		{
+			throw new System.NotImplementedException();
+		}
+
+		protected override Unit AppliedTo(GameStateLocation gameStateLocation)
+		{
+			throw new System.NotImplementedException();
+		}
+
+		protected override Delta[] EffectAddDeltas(GameStateLocation gameStateLocation)
+		{
+			throw new System.NotImplementedException();
+			return new Delta[] {
+				
+			};
+		}
+
+		protected override Delta[] EffectRemoveDeltas(Unit appliedTo, GameStateLocation gameStateLocation)
+		{
+			throw new System.NotImplementedException();
+			return new Delta[] {
+				
+			};
+		}
+	}
+}

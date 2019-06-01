@@ -6,6 +6,17 @@ pers_f = open('persistent_ability_template.txt', 'r')
 persistent_template = pers_f.readlines()
 pers_f.close()
 
+temp_f = open('persistent_ability_template.txt', 'r')
+temporary_template = temp_f.readlines()
+temp_f.close()
+
+file_dict = \
+{\
+'R': regular_template, \
+'P': persistent_template, \
+'T': temporary_template\
+}
+
 def case(real_name):
 	return "".join(real_name.replace('.', '').replace('-', '').split(' '))
 
@@ -22,12 +33,8 @@ def write_file(name, effect, ability_types, i):
 			raise Error()
 	except:
 		with open(file_name, 'w') as wf:
-			if ability_types[i] == 'R':
-				for line in regular_template:
-					wf.write(line.replace("*NAME*", name).replace("*EFFECT*", effect))
-			elif ability_types[i] == 'P':
-				for line in persistent_template:
-					wf.write(line.replace("*NAME*", name).replace("*EFFECT*", effect))	
+			for line in file_dict[ability_types[i]]:
+				wf.write(line.replace("*NAME*", name).replace("*EFFECT*", effect))
 		print("    File Written")
 
 with open('ability_file.txt', 'r') as rf:

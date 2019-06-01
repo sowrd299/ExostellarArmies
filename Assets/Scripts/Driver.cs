@@ -115,7 +115,6 @@ public class Driver : MonoBehaviour
 		List<XmlElement> deltaElements = GetDeltaElements(document.DocumentElement);
 
 		Debug.Log($"Processing {deltaElements.Count} action deltas");
-
 		foreach (XmlElement element in deltaElements)
 		{
 			Delta delta = Delta.FromXml(element, cardLoader);
@@ -303,9 +302,4 @@ public class Driver : MonoBehaviour
 				}
 		}
 	}
-}
-
-public enum Phase
-{
-	DRAW, PLACEMENT, COMBAT, DONE
 }

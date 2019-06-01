@@ -2,14 +2,34 @@
 using SFB.Game.Content;
 using System.Xml;
 using System;
+using System.Collections.Generic;
 
-namespace SFB.Game {
-	public class UnitHealthDelta : UnitDelta {
+namespace SFB.Game
+{
+	public class UnitHealthDelta : UnitDelta
+	{
 		public int Amount { get; private set; }
 
 		public Damage.Type DmgType { get; private set; }
 
-		public UnitHealthDelta(Unit t, int a, Damage.Type type, Unit s)
+		public static Delta[] GetHealDeltas(Unit target, Unit source, int amt, GameManager gm)
+		{
+			List<Delta> deltas = new List<Delta>();
+			UnitDelta ud = new UnitHealthDelta(target, source, amt, Damage.Type.HEAL);
+			gm.UseAddHealDeltas(deltas, ud);
+			return deltas.ToArray();
+		}
+
+		public static Delta[] GetDamageDeltas(Unit target, Unit source, int amt, Damage.Type type, GameManager gm)
+		{
+			// room for interacting with gm (like done above)
+			// for if there was a card that modified damage
+			return new Delta[] {
+				new UnitHealthDelta(target, source, amt, type)
+			};
+		}
+
+		public UnitHealthDelta(Unit t, Unit s, int a, Damage.Type type)
 			: base(t, s)
 		{
 			Amount = a;

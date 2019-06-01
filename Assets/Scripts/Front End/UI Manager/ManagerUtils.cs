@@ -35,8 +35,8 @@ public partial class UIManager : MonoBehaviour
 
 	private (int, int, int) GetPositionIdentifier(Unit unit)
 	{
-		int[] sidePos = gameManager.GameState.GetLaneSidePosOf(unit);
-		return (sidePos[0], sidePos[1], sidePos[2]);
+		Tuple<int, int, int> laneSidePos = Lane.GetLaneSidePosOf(unit, Driver.instance.gameManager.Lanes);
+		return (laneSidePos.Item1, laneSidePos.Item2, laneSidePos.Item3);
 	}
 
 	private Vector3 AttackDirection(int sideIndex)

@@ -1,0 +1,9 @@
+name: Exostellar Snipers
+cost: 3
+faction: Carthan
+unitType: Carthan Elite Ranging Infantry Unit
+mainText: 
+flavorText: '"Illuminate with Muzzle Flare!"'
+rangedDamage: 3
+meleeDamage: 1
+hp: 3

@@ -1,0 +1,11 @@
+name: Autonomous Range Finder
+cost: 2
+faction: Carthan
+unitType: Carthan Ranging Drone Unit
+mainText: 'Support Carthan: Give this Front Line +3R this turn. (when this is deployed behind a Carthan, activate this ability)'
+flavorText: '56413'
+rangedDamage: 0
+meleeDamage: 1
+hp: 3
+abilities:
+  - AutonomousRangeFinder

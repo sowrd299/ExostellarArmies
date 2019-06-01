@@ -43,7 +43,7 @@ namespace SFB.Net{
                 return alive; 
             }
         }
-
+		
         private StringBuilder textBuffer; // The stub of the partially received message
         private object textBufferLock;
 
@@ -63,6 +63,7 @@ namespace SFB.Net{
             this.socket = socket;
             this.eof = eof;
             alive = true; // assume the socket is alive until proven otherwise
+
             textBuffer = new StringBuilder();
             textBufferLock = new object();
             asyncReceiving = false;
@@ -86,6 +87,9 @@ namespace SFB.Net{
         // parses data recieved from a socket
         private string ParseMessage(byte[] bytes, int i){
             string text = Encoding.UTF8.GetString(bytes);
+			#if UNITY_EDITOR
+				UnityEngine.Debug.Log($"Received text\n{text}");
+			#endif
             //handle dead connection
             if(i == 0){
                 Console.WriteLine("Socket Received Empty 'End of Connnection' Packet; Dying");
@@ -137,6 +141,7 @@ namespace SFB.Net{
         // TODO: there seem to be some really ugly race-cases with managing only one asyncReceiving at a time
         public void AsyncReceiveXml(Action<XmlDocument, SocketManager> handler, Action<SocketManager> deathHandler, int bufferLen = 256){
             lock(asyncReceivingLock) {
+
                 // The message may have already been received in an earlier call, because TCP sometimes bundles the messages together.
                 string existingMessage = ExtractMessage();
                 if (existingMessage != null) {

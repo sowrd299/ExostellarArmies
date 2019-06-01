@@ -3,25 +3,28 @@ using SFB.Game.Content;
 using System.Xml;
 using System;
 
-namespace SFB.Game {
+namespace SFB.Game
+{
 	public class UnitAbilityDelta : UnitDelta
 	{
 		public enum DeltaMode { ADD, REMOVE }
 
 		public Ability Ability { get; private set; }
 		public DeltaMode Mode { get; private set; }
+		private GameManager GameManager { get; set; }
 
-		public UnitAbilityDelta(Unit target, Unit source, Ability a, DeltaMode m)
+		public UnitAbilityDelta(Unit target, Unit source, Ability a, DeltaMode m, GameManager gm)
 			: base(target, source)
 		{
 			Ability = a;
 			Mode = m;
+			GameManager = gm;
 		}
 
 		public UnitAbilityDelta(XmlElement from, CardLoader cl)
 			: base(from, cl)
 		{
-			Ability = Ability.FromXml(from);
+			Ability = Ability.FromXmlUnitAbilityDelta(from);
 			Mode = (from.Attributes["mode"].Value == "add" ? DeltaMode.ADD : DeltaMode.REMOVE);
 		}
 
@@ -47,9 +50,9 @@ namespace SFB.Game {
 		protected override void ApplyEffects(Unit u)
 		{
 			if(Mode == DeltaMode.ADD)
-				Ability.ApplyTo(u, null);
+				Ability.ApplyTo(u, GameManager);
 			else
-				Ability.RemoveFrom(u, null);
+				Ability.RemoveFrom(u, GameManager);
 		}
 	}
 }

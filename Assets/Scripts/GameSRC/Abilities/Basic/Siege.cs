@@ -6,16 +6,16 @@ namespace SFB.Game
 {
 	public class Siege : Ability
 	{
-		public Siege(int amount)
-			: base(amount)
-		{}
+		// After this deals damage to a tower, it deals <amount> extra damage to it.
 
-		protected override void ApplyEffects(Unit u, GameState initialGameState)
+		public Siege(int amount) : base(amount) {}
+
+		protected override void AddEffectsToEvents(Unit u, GameManager gm)
 		{
 			u.ModifyTowerDamage += SiegeInner;
 		}
 
-		protected override void RemoveEffects(Unit u, GameState initialGameState)
+		protected override void RemoveEffectsFromEvents(Unit u, GameManager gm)
 		{
 			u.ModifyTowerDamage -= SiegeInner;
 		}

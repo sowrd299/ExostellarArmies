@@ -1,5 +1,4 @@
 ﻿using SFB.Game.Management;
-using SFB.Game.Content;
 using System.Collections.Generic;
 using System;
 
@@ -7,27 +6,36 @@ namespace SFB.Game
 {
 	public class Regrowth : Ability
 	{
-		public Func<GameStateLocation, bool> Function { get; private set; }
+		// When this dies, if <condition applies>, return it to your hand
 
-		public Regrowth(Func<GameStateLocation, bool> fxn)
+		public Func<GMWithLocation, Damage.Type?, bool> Function { get; private set; }
+
+		public Regrowth(Func<GMWithLocation, Damage.Type?, bool> fxn)
 			: base(-1)
 		{
 			Function = fxn;
 		}
 
-		protected override void ApplyEffects(Unit u, GameState initialGameState) {
+		protected override void AddEffectsToEvents(Unit u, GameManager gm) {
 			u.AddDeathDeltas += RegrowthInner;
 		}
 
-		protected override void RemoveEffects(Unit u, GameState initialGameState) {
+		protected override void RemoveEffectsFromEvents(Unit u, GameManager gm) {
 			u.AddDeathDeltas -= RegrowthInner;
 		}
 
-		private void RegrowthInner(List<Delta> deltas, GameStateLocation gameStateLoc) {
-			if(Function(gameStateLoc))
-				deltas.Add(new AddToHandDelta(
-					gameStateLoc.SubjectPlayer.Hand,
-					gameStateLoc.SubjectUnit.Card));
+		private void RegrowthInner(List<Delta> deltas, GMWithLocation gmLoc, Damage.Type? phase)
+		{
+			if(Function(gmLoc, phase))
+			{
+				deltas.AddRange(
+					gmLoc.SubjectPlayer.Hand
+						 .GetDrawDeltas(
+							 gmLoc.SubjectUnit.Card,
+							 gmLoc.GameManager
+						 )
+				);
+			}
 		}
 	}
 }

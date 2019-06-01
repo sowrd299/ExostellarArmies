@@ -13,17 +13,23 @@ namespace SFB.Game{
 		public string UnitType { get; private set; }
 
 		public UnitCard(int cost, string name, Faction faction, string unitType, string mainText, string flavorText,
-			int rangedAttack, int meleeAttack, int healthPoints, List<Ability> abList=null
+			int rangedAttack, int meleeAttack, int healthPoints, params Ability[] abList
 		)
 			: base(cost, name, faction, mainText, flavorText)
         {
 			RangedAttack = rangedAttack;
 			MeleeAttack = meleeAttack;
             HealthPoints = healthPoints;
-			Abilities = abList ?? new List<Ability>();
+			Abilities = new List<Ability>();
+			foreach(Ability a in abList)
+				Abilities.Add(a);
 			UnitType = unitType;
         }
 
-    }
-
+		public override string ToString() {
+			return $"name({Name}) cost({DeployCost}) faction({Faction}) type({UnitType}) " +
+				$"main({MainText}) flavor({FlavorText}) " +
+				$"r({RangedAttack}) m({MeleeAttack}) hp({HealthPoints}) a({Abilities.Count})";
+		}
+	}
 }

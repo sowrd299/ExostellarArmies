@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Xml; // it's only used once, and I don't really like that
+using SFB.Game;
 using SFB.Game.Content;
 using SFB.Game.Management;
 
@@ -112,21 +113,22 @@ namespace SFB.Net.Server.Matches{
                     endDeploy.Deltas.Add(d);
                     gameManager.ApplyDelta(d);
                 }
-                foreach(Delta d in gameManager.GetCleanUpDeltas()) {
-                    endDeploy.Deltas.Add(d);
-                    gameManager.ApplyDelta(d);
-                }
-                turnPhases.Add(endDeploy);
 
-                // if no more deployment phases, do the rest of this turn into the start of the next
-                if(gameManager.DeployPhasesOver()){
+				foreach(Delta d in gameManager.GetCleanUpDeltas(null)) {
+					endDeploy.Deltas.Add(d);
+					gameManager.ApplyDelta(d);
+				}
+				turnPhases.Add(endDeploy);
+
+				// if no more deployment phases, do the rest of this turn into the start of the next
+				if(gameManager.DeployPhasesOver()){
                     // ranged combat
                     TurnPhase rangedCombat = new TurnPhase("rangedCombat");
                     foreach(Delta d in gameManager.GetRangedCombatDeltas()){
                         rangedCombat.Deltas.Add(d);
                         gameManager.ApplyDelta(d);
                     }
-                    foreach(Delta d in gameManager.GetCleanUpDeltas()){
+                    foreach(Delta d in gameManager.GetCleanUpDeltas(Damage.Type.RANGED)){
                         rangedCombat.Deltas.Add(d);
                         gameManager.ApplyDelta(d);
                     }
@@ -138,27 +140,27 @@ namespace SFB.Net.Server.Matches{
                         meleeCombat.Deltas.Add(d);
                         gameManager.ApplyDelta(d);
                     }
-                    foreach(Delta d in gameManager.GetCleanUpDeltas()){
+                    foreach(Delta d in gameManager.GetCleanUpDeltas(Damage.Type.MELEE)){
                         meleeCombat.Deltas.Add(d);
                         gameManager.ApplyDelta(d);
                     }
-                    turnPhases.Add(meleeCombat);
-                    
-                    // tower damage
-                    TurnPhase towerCombat = new TurnPhase("towerCombat");
-                    foreach(Delta d in gameManager.GetTowerDamageDeltas()) {
-                        towerCombat.Deltas.Add(d);
-                        gameManager.ApplyDelta(d);
-                    }
-                    foreach(Delta d in gameManager.GetCleanUpDeltas()) {
-                        towerCombat.Deltas.Add(d);
-                        gameManager.ApplyDelta(d);
-                    }
-                    turnPhases.Add(towerCombat);
+					turnPhases.Add(meleeCombat);
+					
+					// tower damage
+					TurnPhase towerCombat = new TurnPhase("towerCombat");
+					foreach(Delta d in gameManager.GetTowerDamageDeltas()) {
+						towerCombat.Deltas.Add(d);
+						gameManager.ApplyDelta(d);
+					}
+					foreach(Delta d in gameManager.GetCleanUpDeltas(Damage.Type.TOWER)) {
+						towerCombat.Deltas.Add(d);
+						gameManager.ApplyDelta(d);
+					}
+					turnPhases.Add(towerCombat);
 
-                    // start of the next turn
-                    TurnPhase startTurn = new TurnPhase("startPhase");
-                    foreach(Delta d in gameManager.GetStartTurnDeltas()){
+					// start of the next turn
+					TurnPhase startTurn = new TurnPhase("startPhase");
+					foreach(Delta d in gameManager.GetStartTurnDeltas()){
                         startTurn.Deltas.Add(d);
                         gameManager.ApplyDelta(d);
                     }

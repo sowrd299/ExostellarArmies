@@ -59,7 +59,7 @@ namespace SFB.Game.Management {
 			return r;
 		}
 		
-		internal override Delta[] GetDeltas(Player p, GameState gameState) {
+		internal override Delta[] GetDeltas(Player p, GameManager gm) {
 			List<Delta> deltas = new List<Delta>();
 
 			deltas.AddRange(
@@ -69,7 +69,7 @@ namespace SFB.Game.Management {
 				p.ManaPool.GetSubtractDeltas(card.DeployCost)
 			);
 			deltas.AddRange(
-				lane.GetDeployDeltas(card, sideIndex, pos, gameState)
+				lane.GetDeployDeltas(card, sideIndex, pos, gm)
 			);
 
 			return deltas.ToArray();

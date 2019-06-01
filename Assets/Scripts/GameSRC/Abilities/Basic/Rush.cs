@@ -7,24 +7,48 @@ namespace SFB.Game
 {
 	public abstract class Rush : Ability
 	{
+		// After you deploy a Unit <in a specific position>, they switch places.
+
+		private Lane Lane;
+		private Unit Unit;
+		private int? Side;
+
 		public Rush()
 			: base(-1)
-		{}
-
-		protected override void ApplyEffects(Unit u, GameState initialGameState)
 		{
-			u.AddRecurringDeployDeltas += RushInner;
+			Lane = null;
+			Unit = null;
+			Side = null;
 		}
 
-		protected override void RemoveEffects(Unit u, GameState initialGameState) {
-			u.AddRecurringDeployDeltas -= RushInner;
+		protected override void AddEffectsToEvents(Unit u, GameManager gm)
+		{
+			gm.AddBoardUpdateDeltas += RushInner;
+			u.AddDeathDeltas += RemoveBoardUpdate;
+			Tuple<int, int, int> lsp = Lane.GetLaneSidePosOf(u, gm.Lanes);
+			Lane = gm.Lanes[lsp.Item1];
+			Unit = u;
+			Side = lsp.Item2;
 		}
 
-		protected void RushInner(List<Delta> deltas, GameStateLocation gameStateLoc)
+		protected override void RemoveEffectsFromEvents(Unit u, GameManager gm) {
+			gm.AddBoardUpdateDeltas -= RushInner;
+		}
+
+		public void RemoveBoardUpdate(List<Delta> deltas, GMWithLocation gmLoc, Damage.Type? phase)
 		{
-			int side = gameStateLoc.Side;
-			if(gameStateLoc.SubjectUnit != gameStateLoc.SubjectLane.Units[side, RushTo()])
-				deltas.AddRange(gameStateLoc.SubjectLane.GetInLaneSwapDeltas(side));
+			gmLoc.GameManager.AddBoardUpdateDeltas -= RushInner;
+		}
+
+		protected void RushInner(List<Delta> deltas, GMWithBoardUpdate gmBoardUpdate)
+		{
+			if(Unit != Lane.Units[Side ?? -1, RushTo()])
+				deltas.AddRange(gmBoardUpdate.SubjectLane
+											 .GetInLaneSwapDeltas(
+												 Side ?? -1,
+												 gmBoardUpdate.GameManager
+											 )
+				);
 		}
 
 		protected abstract int RushTo();
