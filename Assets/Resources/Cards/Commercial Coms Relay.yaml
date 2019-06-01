@@ -1,0 +1,9 @@
+name: Commercial Coms Relay
+cost: 0
+faction: None?
+unitType: Command Drone Unit
+mainText: 'Deploy: Put a card from your hand beneath the top 4 cards of your deck.'
+flavorText: 'Binding the Starts'
+rangedDamage: 0
+meleeDamage: 1
+hp: 2

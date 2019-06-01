@@ -4,7 +4,7 @@ using System;
 
 namespace SFB.Game
 {
-	public class CmdrYosLorth : PersistentFieldAbility
+	public class CmdrYosLorth : PersistentFieldUnitAbility
 	{
 		// Unique; Ranged Shield 1; Front Line Persistent: Allied front line Elites have +1 and Ranged Shield +1
 

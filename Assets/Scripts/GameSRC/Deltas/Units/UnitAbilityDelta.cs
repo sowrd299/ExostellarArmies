@@ -24,7 +24,7 @@ namespace SFB.Game
 		public UnitAbilityDelta(XmlElement from, CardLoader cl)
 			: base(from, cl)
 		{
-			Ability = Ability.FromXml(from);
+			Ability = Ability.FromXmlUnitAbilityDelta(from);
 			Mode = (from.Attributes["mode"].Value == "add" ? DeltaMode.ADD : DeltaMode.REMOVE);
 		}
 

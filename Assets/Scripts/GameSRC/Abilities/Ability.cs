@@ -58,26 +58,43 @@ namespace SFB.Game
 		protected abstract void AddEffectsToEvents(Unit u, GameManager gm);
 		protected abstract void RemoveEffectsFromEvents(Unit u, GameManager gm);
 
-		public static Ability FromXml(XmlElement from)
+		public static Ability FromXmlUnitAbilityDelta(XmlElement from)
 		{
-			return Ability.FromString(
+			return Ability.FromStringInt(
 				from.Attributes["abilityType"].Value,
 				Int32.Parse(from.Attributes["abilityAmount"].Value)
 			);
 		}
 
-		public static Ability FromString(string str, int amt)
+		public static Ability FromString(string str)
+		{
+			string[] split = str.Split(' ');
+			//Console.WriteLine($"[{split[0]}{(split.Length > 1 ? ", " + split[1] : "")}]");
+			return split.Length == 1
+					? Ability.FromStringInt(split[0], -1)
+					: Ability.FromStringInt(split[0], int.Parse(split[1]));
+		}
+
+		private static Ability FromStringInt(string str, int amt)
 		{
 			Type type = Type.GetType(str);
+			if(type == null)
+				type = Type.GetType("SFB.Game." + str);
+			// sorry couldn't think of a better way
+			// i hope all abilities are in SFB.Game
+			
 			if(type.IsSubclassOf(typeof(Ability))) {
 				if(amt == -1) {
 					ConstructorInfo con = type.GetConstructor(new Type[] { });
+					//Console.WriteLine($"No number, constructor found: {con != null}");
 					return con?.Invoke(new object[] { }) as Ability;
 				} else {
 					ConstructorInfo con = type.GetConstructor(new Type[] { typeof(int) });
+					//Console.WriteLine($"Number, constructor found: {con != null}");
 					return con?.Invoke(new object[] { amt }) as Ability;
 				}
 			} else {
+				//Console.WriteLine("Not subclass");
 				return null;
 			}
 		}

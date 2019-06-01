@@ -4,17 +4,18 @@ using System.Collections.Generic;
 
 namespace SFB.Game
 {
-	public abstract class PersistentFieldAbility : Ability
+	public abstract class PersistentFieldUnitAbility : Ability
 	{
 		private AddDeltaGMBoardUpdate remove2ndaryEffects;
 		private AddDeltaGMBoardUpdate add2ndaryEffects;
 		private AddDeltaGMLocPhase removeThisFromGM;
 		private List<Unit> appliedTo;
 
-		public PersistentFieldAbility() : base(-1)
+		public PersistentFieldUnitAbility() : base(-1)
 		{
 			remove2ndaryEffects = null;
 			add2ndaryEffects = null;
+			removeThisFromGM = null;
 			appliedTo = new List<Unit>();
 		}
 
@@ -58,6 +59,7 @@ namespace SFB.Game
 			void InnerRemoveEffects(List<Delta> deltas, GMWithBoardUpdate gmBoardUpdate) {
 				foreach(Unit u in appliedTo)
 					deltas.AddRange(GetRemoveDeltas(u, source, gm));
+				appliedTo.Clear();
 			}
 			return InnerRemoveEffects;
 		}

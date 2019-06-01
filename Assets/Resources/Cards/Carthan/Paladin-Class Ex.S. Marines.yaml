@@ -1,0 +1,11 @@
+name: Paladin-Class XS Marines
+cost: 4
+faction: Carthan
+unitType: Carthan Elite Medical Infantry Unit
+mainText: 'Front Line Recurring Deploy: If there is not a unit behind this, heal each adjacent allied front line unit 1.'
+flavorText: 'Defense Against the Darkness'
+rangedDamage: 1
+meleeDamage: 3
+hp: 5
+abilities:
+  - PaladinClassExSMarines

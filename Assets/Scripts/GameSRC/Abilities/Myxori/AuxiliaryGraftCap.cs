@@ -8,7 +8,7 @@ namespace SFB.Game
 	//   Center: The supported unit gains Absorb.
 	//   Flank: When the supported Unit dies, Beta Swarm.
 
-	public class AuxiliaryGraftCap : PersistentFieldAbility
+	public class AuxiliaryGraftCap : PersistentFieldUnitAbility
 	{
 		protected override Delta[] GetAddDeltas(int lane, int side, int pos, Lane[] lanes, Unit source, GameManager gm)
 		{

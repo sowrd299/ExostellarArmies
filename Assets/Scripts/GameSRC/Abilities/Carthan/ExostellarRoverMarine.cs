@@ -6,7 +6,7 @@ namespace SFB.Game
 {
 	// Front Line: If this has a Back Line, this has +2M, else this has +1R.
 
-	public class ExostellarRoverMarine : PersistentFieldAbility
+	public class ExostellarRoverMarine : PersistentFieldUnitAbility
 	{
 		private Unit applied1RTo;
 		private Unit applied2MTo;

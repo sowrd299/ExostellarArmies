@@ -3,7 +3,7 @@ using SFB.Game.Management;
 namespace SFB.Game{
 
     // the factions cards might belong to
-    public enum Faction {NONE, CARTH, MYXOR, JIRNOR}
+    public enum Faction {NONE, CARTHAN, MYXORI, JIRNORN}
 
     // the supertype of all cards that might exist in the game
     // this is more for good practice's sake, since all cards ATM (start of project) are Units

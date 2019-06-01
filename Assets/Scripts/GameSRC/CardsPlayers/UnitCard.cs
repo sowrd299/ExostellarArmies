@@ -26,6 +26,10 @@ namespace SFB.Game{
 			UnitType = unitType;
         }
 
-    }
-
+		public override string ToString() {
+			return $"name({Name}) cost({DeployCost}) faction({Faction}) type({UnitType}) " +
+				$"main({MainText}) flavor({FlavorText}) " +
+				$"r({RangedAttack}) m({MeleeAttack}) hp({HealthPoints}) a({Abilities.Count})";
+		}
+	}
 }

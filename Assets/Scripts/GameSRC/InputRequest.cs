@@ -1,6 +1,6 @@
 using System.Xml;
 
-namespace SFB.Game.Management{
+namespace SFB.Game.Management {
 
     // a class to request input needed from a player
     // usually, this mean a card's ability gives the player a choice
@@ -24,15 +24,15 @@ namespace SFB.Game.Management{
 
         // TODO: add in some conception of what are the legal choices?
 
-        SendableTarget<T> chosen;  // the choice the player made
+        public SendableTarget<T> Chosen;  // the choice the player made
 
         // returns whether or not the player has made their choice
         public bool Made{
-            get{ return chosen.Target != null; }
+            get{ return Chosen.Target != null; }
         }
 
         public InputRequest(Player player, string id = null){
-            chosen = new SendableTarget<T>("chosen", default(T));
+            Chosen = new SendableTarget<T>("chosen", default(T));
             this.player = player;
             // ID it
             if(id != null){
@@ -48,7 +48,7 @@ namespace SFB.Game.Management{
         public InputRequest(Player player, XmlElement e, IdIssuer<T> targetIdIssuer) {
             this.player = player;
             // get the choice, if there is one
-            chosen = new SendableTarget<T>("chosen", e, targetIdIssuer);
+            Chosen = new SendableTarget<T>("chosen", e, targetIdIssuer);
             // find and register the ID
             string id = e.Attributes["id"].Value;
             idIssuer.RegisterId(id, this);
@@ -56,7 +56,7 @@ namespace SFB.Game.Management{
 
         public override XmlElement ToXml(XmlDocument doc){
             XmlElement e = base.ToXml(doc);
-            e.SetAttributeNode(chosen.ToXml(doc));
+            e.SetAttributeNode(Chosen.ToXml(doc));
             XmlAttribute a = doc.CreateAttribute("id");
             a.Value = this.id;
             e.SetAttributeNode(a);
@@ -68,9 +68,9 @@ namespace SFB.Game.Management{
             string id = e.Attributes["id"].Value;
             InputRequest<T> sharedId = idIssuer.GetByID(id);
             // ...if there is, just migrate data to that one
-            if(sharedId != null && !object.Equals(chosen.Target, default(T))){
-                chosen = new SendableTarget<T>("chosen", e, targetIdIssuer);
-                sharedId.MakeChoice(chosen.Target);
+            if(sharedId != null && !object.Equals(Chosen.Target, default(T))){
+                Chosen = new SendableTarget<T>("chosen", e, targetIdIssuer);
+                sharedId.MakeChoice(Chosen.Target);
                 return sharedId;
             }else{
                 object[] args = new object[]{e, p, targetIdIssuer};
@@ -80,7 +80,7 @@ namespace SFB.Game.Management{
         
         // make the choice
         public void MakeChoice(T chosen){
-            this.chosen = new SendableTarget<T>("chosen", chosen);
+            this.Chosen = new SendableTarget<T>("chosen", chosen);
         }
 
         public abstract bool IsLegalChoice(T chosen);
