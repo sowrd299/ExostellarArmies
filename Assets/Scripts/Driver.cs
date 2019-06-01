@@ -114,6 +114,10 @@ public class Driver : MonoBehaviour
 
 		uiManager.RenderUnits();
 		uiManager.LockUnits();
+		uiManager.UpdateDiscardDisplay(0);
+		uiManager.UpdateDiscardDisplay(1);
+		uiManager.UpdateResourceDisplay(0);
+		uiManager.UpdateResourceDisplay(1);
 	}
 
 	private IEnumerator ProcessTurnStart(XmlDocument document)
@@ -156,7 +160,7 @@ public class Driver : MonoBehaviour
 		}
 		else if (delta is AddToDiscardDelta)
 		{
-			
+
 		}
 		else if (delta is AddToLaneDelta)
 		{
