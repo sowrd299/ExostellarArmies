@@ -209,7 +209,7 @@ MonoBehaviour:
     m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
     m_FontSize: 14
     m_FontStyle: 0
-    m_BestFit: 0
+    m_BestFit: 1
     m_MinSize: 10
     m_MaxSize: 40
     m_Alignment: 0
@@ -218,9 +218,9 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "<b>Writing</b>\n\tJames Bates\n\n<b>Art Strike</b>\n\tHenry Nguyen\n\tMatthew
-    Tran\n\tJohn Claricia\n\tAnthony Cano\n\tKevin Salim\n\n<b>Audio Strike Team</b>\n\tRami
-    Shriem\n\tKristen Campbell"
+  m_Text: "<b>Art Strike</b>\n\tHenry Nguyen\n\tMatthew Tran\n\tJohn Claricia\n\tAnthony
+    Cano\n\tKevin Salim\n\n<b>Audio Strike Team</b>\n\tRami Shriem\n\tKristen Campbell\n\nAdditional
+    assets from\nhttps://opengameart.org\n\nMade with YamlDotNet"
 --- !u!222 &62236043
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -369,7 +369,7 @@ MonoBehaviour:
     m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
     m_FontSize: 16
     m_FontStyle: 0
-    m_BestFit: 0
+    m_BestFit: 1
     m_MinSize: 1
     m_MaxSize: 40
     m_Alignment: 0
@@ -380,7 +380,7 @@ MonoBehaviour:
     m_LineSpacing: 1
   m_Text: "<b>Design</b>\n\tRyan N. Ward\n\tConall Barrett\n\n<b>Production</b>\n\tKevin
     Truong\n\n<b>Programming</b>\n\tDavit Melkonyan\n\tJoseph Michels\n\tJack Sun\n\n<b>Networking</b>\n\tRyan
-    N. Ward"
+    N. Ward\n\n<b>Writing</b>\n\tJames Bates\n"
 --- !u!222 &166190618
 CanvasRenderer:
   m_ObjectHideFlags: 0
