@@ -112,8 +112,6 @@ public class Driver : MonoBehaviour
 
 	private IEnumerator ProcessActionResults(XmlDocument document)
 	{
-		string type = document.DocumentElement.GetAttribute("type");
-
 		List<XmlElement> deltaElements = GetDeltaElements(document.DocumentElement);
 
 		Debug.Log($"Processing {deltaElements.Count} action deltas");
@@ -137,7 +135,7 @@ public class Driver : MonoBehaviour
 			}
 
 			client.SendInputRequestResponse(requests.ToArray());
-			Task<XmlDocument> confirmInput = client.ReceiveDocument();
+			Task<XmlDocument> confirmInput = client.ReceiveDocument(type => type == "actionDeltas");
 			yield return new WaitUntil(() => confirmInput.IsCompleted);
 			yield return StartCoroutine(ProcessActionResults(confirmInput.Result));
 		}
