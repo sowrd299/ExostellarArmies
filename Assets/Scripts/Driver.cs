@@ -1,9 +1,10 @@
 ﻿using System;
-using System.Xml;
 using System.Collections;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Xml;
 using UnityEngine;
 using UnityEngine.Serialization;
 using SFB.Game;
@@ -52,6 +53,14 @@ public class Driver : MonoBehaviour
 			.ToList();
 	}
 
+	private List<XmlElement> GetInputRequestElements(XmlElement element)
+	{
+		return element
+			.GetElementsByTagName("inputRequest")
+			.OfType<XmlElement>()
+			.ToList();
+	}
+
 	private IEnumerator Start()
 	{
 		uiManager.WaitForMatch();
@@ -59,13 +68,13 @@ public class Driver : MonoBehaviour
 		Task joinMatch = client.JoinMatch(PlayerPrefs.GetString(deckKey));
 		yield return new WaitUntil(() => joinMatch.IsCompleted);
 
-		Task<XmlDocument> matchStart = client.ReceiveDocument();
+		Task<XmlDocument> matchStart = client.ReceiveDocument(type => type == "matchStart");
 		yield return new WaitUntil(() => matchStart.IsCompleted);
 		InitializeGameState(matchStart.Result);
 
 		while (true) // TODO: Detect game end?
 		{
-			Task<XmlDocument> turnStart = client.ReceiveDocument();
+			Task<XmlDocument> turnStart = client.ReceiveDocument(type => type == "turnStart");
 			yield return new WaitUntil(() => turnStart.IsCompleted);
 			uiManager.BeforeTurnStart();
 			yield return StartCoroutine(ProcessTurnStart(turnStart.Result));
@@ -73,11 +82,14 @@ public class Driver : MonoBehaviour
 			if (gameManager.Players[sideIndex].DeployPhases > 0)
 			{
 				yield return uiManager.WaitForLockIn();
+
 				client.SendPlayerActions(uiManager.myHandManager.ExportActions());
-				uiManager.WaitForOpponent();
-				Task<XmlDocument> confirmAction = client.ReceiveDocument();
+				Task<XmlDocument> confirmAction = client.ReceiveDocument(type => type == "actionDeltas");
 				yield return new WaitUntil(() => confirmAction.IsCompleted);
-				ProcessActionResults(confirmAction.Result);
+				yield return StartCoroutine(ProcessActionResults(confirmAction.Result));
+
+				uiManager.WaitForOpponent();
+				client.LockInTurn();
 			}
 		}
 	}
@@ -98,37 +110,47 @@ public class Driver : MonoBehaviour
 		uiManager.InitializeUI();
 	}
 
-	private void ProcessActionResults(XmlDocument document)
+	private IEnumerator ProcessActionResults(XmlDocument document)
 	{
-		string type = document.DocumentElement.GetAttribute("type");
+		List<XmlElement> deltaElements = GetDeltaElements(document.DocumentElement);
 
-		if (type != "actionDeltas")
-		{
-			throw new Exception($"Received unexpected response type {type} when waiting for actionDeltas!");
-		}
+		Debug.Log($"Processing {deltaElements.Count} action deltas");
 
-		List<XmlElement> elements = GetDeltaElements(document.DocumentElement);
-
-		Debug.Log($"Processing {elements.Count} action deltas");
-
-		foreach (XmlElement element in elements)
+		foreach (XmlElement element in deltaElements)
 		{
 			Delta delta = Delta.FromXml(element, cardLoader);
 			delta.Apply();
 		}
 
+		List<XmlElement> inputRequestElements = GetInputRequestElements(document.DocumentElement);
+
+		if (inputRequestElements.Count > 0)
+		{
+			List<InputRequest> requests = inputRequestElements.Select(InputRequest.FromXml).ToList();
+
+			Debug.Log($"Processing {inputRequestElements.Count} input requests");
+			foreach (InputRequest request in requests)
+			{
+				yield return StartCoroutine(ProcessInputRequest(request));
+			}
+
+			client.SendInputRequestResponse(requests.ToArray());
+			Task<XmlDocument> confirmInput = client.ReceiveDocument(type => type == "actionDeltas");
+			yield return new WaitUntil(() => confirmInput.IsCompleted);
+			yield return StartCoroutine(ProcessActionResults(confirmInput.Result));
+		}
+
 		uiManager.RenderUnits();
 		uiManager.LockUnits();
+		uiManager.UpdateDiscardDisplay(0);
+		uiManager.UpdateDiscardDisplay(1);
+		uiManager.UpdateResourceDisplay(0);
+		uiManager.UpdateResourceDisplay(1);
 	}
 
 	private IEnumerator ProcessTurnStart(XmlDocument document)
 	{
 		string type = document.DocumentElement.GetAttribute("type");
-
-		if (type != "turnStart")
-		{
-			throw new Exception($"Received unexpected response type {type} when waiting for turnStart!");
-		}
 
 		List<XmlElement> phaseElements = document
 			.DocumentElement
@@ -163,6 +185,10 @@ public class Driver : MonoBehaviour
 		if (delta is AddToHandDelta)
 		{
 			yield return uiManager.DrawCard((delta as AddToHandDelta).Card);
+		}
+		else if (delta is AddToDiscardDelta)
+		{
+
 		}
 		else if (delta is AddToLaneDelta)
 		{
@@ -209,6 +235,18 @@ public class Driver : MonoBehaviour
 			TowerReviveDelta towerReviveDelta = delta as TowerReviveDelta;
 			yield return uiManager.TowerRespawn(towerReviveDelta.Target);
 		}
+		else if (delta is ResourcePoolDelta)
+		{
+			ResourcePoolDelta resourcePoolDelta = delta as ResourcePoolDelta;
+			ResourcePool target = resourcePoolDelta.rp.Target;
+			for (int i = 0; i < gameManager.Players.Length; i++)
+			{
+				if (target == gameManager.Players[i].ManaPool)
+				{
+					yield return uiManager.UpdateResourceDisplay(i);
+				}
+			}
+		}
 		else
 		{
 			// Some deltas simply can't be animated, while others could potentially indicate an error.
@@ -221,6 +259,20 @@ public class Driver : MonoBehaviour
 		uiManager.RenderUnits();
 		uiManager.RenderTowers();
 		uiManager.RenderIndicators();
+	}
+
+	private IEnumerator ProcessInputRequest(InputRequest request)
+	{
+		if (request is InputRequest<Card>)
+		{
+			InputRequest<Card> cardRequest = request as InputRequest<Card>;
+
+			StringBuilder cardIdBuilder = new StringBuilder();
+			yield return SelectCardUI.instance.ChooseCard(gameManager.Players[sideIndex].Hand.ToArray(), cardIdBuilder);
+			string cardId = cardIdBuilder.ToString();
+
+			cardRequest.MakeChoice(cardLoader.GetByID(cardId));
+		}
 	}
 
 	private string GetPhaseName(string phaseCodeName)

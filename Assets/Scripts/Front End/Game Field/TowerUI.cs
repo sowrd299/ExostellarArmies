@@ -20,6 +20,7 @@ public class TowerUI : MonoBehaviour
 
 	[Header("UI References")]
 	public Text health;
+	public Text maxHealth;
 
 	[Header("Animation Config")]
 	public AnimationCurve attackMoveCurve;
@@ -34,6 +35,9 @@ public class TowerUI : MonoBehaviour
 	public void RenderTower()
 	{
 		health.text = tower.HP.ToString();
+		maxHealth.text = tower.MaxHP.ToString();
+
+		health.color = (tower.HP < tower.MaxHP) ? Color.red : Color.black;
 	}
 
 	public Coroutine Attack(Vector3 targetPosition)

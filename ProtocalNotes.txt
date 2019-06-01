@@ -19,6 +19,7 @@ a "turnStart" message is sent to the client at the start of each turn
     contains delta tags, for what has changed since last turn
         they contain a "type" attribute, for which type of change was made
         they contain a "target" attribute, with the ID of the target game object
+    contains input request tags, for extra (usually effects-related) data that player needs to provide to the server
     the player cannot start the first turn until they have received both a matchStart and turnStart message
 
 a "gameAction" message tells the server about an action the player took
@@ -29,6 +30,9 @@ a "actionDeltas" is sent from the server to the client, and contains the outcome
         each "delta" has a "targetId" attribute, storing the unique id of the object effected
 
 a "lockInTurn" message tells the server the player is done taking actions for that turn
+
+a "inputRequestResponse" message is sent from the client to the server after recieving input request tags
+    they contain input request tags, corresponding to the input request tags being answered
 
 a "matchEnd" message is sent from the server to the client at the end of the match
 

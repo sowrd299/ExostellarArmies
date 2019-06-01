@@ -11,10 +11,5 @@ namespace SFB.Game
 		public AddToDiscardDelta(XmlElement element, CardLoader loader)
 			: base(element, Discard.IdIssuer, loader)
 		{ }
-
-		//TODO: this code can be generalized further
-		public override bool VisibleTo(Player p) {
-			return p.Owns(Target as Discard);
-		}
 	}
 }

@@ -24,8 +24,12 @@ namespace SFB.Net.Client
 		private SocketManager socketManager;
 		private object socketLock = new object();
 
+		private List<XmlDocument> messageBacklog;
+
 		private Client()
-		{ }
+		{
+			messageBacklog = new List<XmlDocument>();
+		}
 
 		public async Task<bool> Connect(
 			string host, int port,
@@ -96,32 +100,68 @@ namespace SFB.Net.Client
 			await Task.Run(() => socketManager.Send("<file type='joinMatch'><deck id='" + deckId + "'/></file>"));
 		}
 
-		public async Task<XmlDocument> ReceiveDocument()
+		public async Task<XmlDocument> ReceiveDocument(Predicate<string> shouldAcceptType)
 		{
-			TaskCompletionSource<XmlDocument> receive = new TaskCompletionSource<XmlDocument>();
-			socketManager.AsyncReceiveXml(
-				(document, _) => receive.SetResult(document),
-				(_) => Debug.LogError("TODO Implement socket death handling!"),
-				1024
-			);
-			await receive.Task;
-			Debug.Log($"Received document:\n{PrettyPrintXml(receive.Task.Result)}");
-			return receive.Task.Result;
+			for (int i = 0; i < messageBacklog.Count; i++)
+			{
+				if (shouldAcceptType(messageBacklog[i].DocumentElement.GetAttribute("type")))
+				{
+					XmlDocument backlogDocument = messageBacklog[i];
+					messageBacklog.RemoveAt(i);
+					return backlogDocument;
+				}
+			}
+
+			while (true)
+			{
+				TaskCompletionSource<XmlDocument> receive = new TaskCompletionSource<XmlDocument>();
+
+				socketManager.AsyncReceiveXml(
+					(document, _) => receive.SetResult(document),
+					(_) => Debug.LogError("TODO Implement socket death handling!"),
+					1024
+				);
+				await receive.Task;
+				Debug.Log($"Received document:\n{PrettyPrintXml(receive.Task.Result)}");
+
+				if (shouldAcceptType(receive.Task.Result.DocumentElement.GetAttribute("type")))
+				{
+					return receive.Task.Result;
+				}
+				else
+				{
+					messageBacklog.Add(receive.Task.Result);
+				}
+			}
 		}
 
 		public void SendPlayerActions(PlayerAction[] actions)
 		{
-			Debug.Log("Sending " + actions.Length + " PlayerActions");
 			XmlDocument doc = NewEmptyMessage("gameAction");
 			foreach (PlayerAction a in actions)
 			{
 				XmlElement e = a.ToXml(doc);
 				doc.DocumentElement.AppendChild(e);
 			}
-			Debug.Log("Sending PlayerActions: " + doc.OuterXml);
+			Debug.Log($"Sending PlayerActions:\n{PrettyPrintXml(doc)}");
 			socketManager.SendXml(doc);
-			socketManager.Send("<file type='lockInTurn'></file>");
+		}
 
+		public void SendInputRequestResponse(InputRequest[] requests)
+		{
+			XmlDocument doc = NewEmptyMessage("inputRequestResponse");
+			foreach (InputRequest request in requests)
+			{
+				XmlElement responseElement = request.ToXml(doc);
+				doc.DocumentElement.AppendChild(responseElement);
+			}
+			Debug.Log($"Sending InputResponse:\n{PrettyPrintXml(doc)}");
+			socketManager.SendXml(doc);
+		}
+
+		public void LockInTurn()
+		{
+			socketManager.Send("<file type='lockInTurn'></file>");
 			Debug.Log("Waiting for turn start...");
 		}
 

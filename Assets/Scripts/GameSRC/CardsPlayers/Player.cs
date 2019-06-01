@@ -15,6 +15,9 @@ namespace SFB.Game
 		public Hand Hand { get; private set; }
 		public Discard Discard { get; private set; }
 
+		// the input requests the player currently has
+		public List<InputRequest> InputRequests { get; private set; }
+
 		public ResourcePool LivesPool { get; private set; }
 		public int Lives {
 			get { return LivesPool.Count; }
@@ -67,6 +70,9 @@ namespace SFB.Game
 			LivesPool.Add(4);
 			this.ManaPool = new ResourcePool(12, manaId); // CONST MAX MANA IMPLEMENTED HERE
 			this.DeployPhasesPool = new ResourcePool(2, depId);
+
+			// logistical
+			this.InputRequests = new List<InputRequest>();
 		}
  
 		public Delta[] GetDrawDeltas(GameManager gm)
@@ -135,5 +141,26 @@ namespace SFB.Game
             // return
             return e;
         }
+
+		// INPUT REQUEST MANAGEMENT
+
+		// adds in an Input Request for it to deal with
+		// NOTE: THIS IS NECESSARY FOR EVERY INPUT REQUEST
+		// And input request not added to a player will not get handled
+		public void AssignInputRequest(InputRequest i){
+			InputRequests.Add(i);
+		}
+
+		// returns if the player is handling the input request
+		public bool ContainsInputRequest(InputRequest i){
+			return InputRequests.Contains(i);
+		}
+
+		// called after the input request is dealt with
+		// most just clean up/memory management
+		public void FinishInputRequest(InputRequest i){
+			InputRequests.Remove(i);
+		}
+
 	}
 }

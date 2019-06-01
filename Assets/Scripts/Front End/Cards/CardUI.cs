@@ -18,6 +18,7 @@ public class CardUI : MonoBehaviour, IHasCard
 	public SVGImage background;
 	public Text cardName;
 	public Text description;
+	public Text unitType;
 	public Text flavourText;
 	public Text cardCost;
 
@@ -36,13 +37,21 @@ public class CardUI : MonoBehaviour, IHasCard
 		background.sprite = factions[cardData.Faction].cardBackground;
 		cardName.text = cardData.Name;
 		description.text = cardData.MainText;
-		flavourText.text = cardData.FlavorText;
 		cardCost.text = cardData.DeployCost.ToString();
+		if (cardData.FlavorText != "")
+		{
+			flavourText.text = cardData.FlavorText;
+		}
+		else
+		{
+			flavourText.transform.parent.gameObject.SetActive(false);
+		}
 
 		if (cardData is UnitCard)
 		{
 			UnitCard unitCardData = cardData as UnitCard;
 
+			unitType.text = unitCardData.UnitType;
 			rangedDamage.text = unitCardData.RangedAttack.ToString();
 			meleeDamage.text = unitCardData.MeleeAttack.ToString();
 			health.text = unitCardData.HealthPoints.ToString();

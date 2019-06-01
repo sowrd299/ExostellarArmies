@@ -15,13 +15,12 @@ public partial class UIManager : MonoBehaviour
 
 	private IEnumerator AnimateDrawCard(Card card)
 	{
-		mainButtonText.text = "DRAWING...";
-		mainButton.interactable = false;
-
 		yield return myHandManager.DrawCard(card);
+	}
 
-		mainButtonText.text = "LOCK IN PLANS";
-		mainButton.interactable = true;
+	public void UpdateDiscardDisplay(int sideIndex)
+	{
+		discardManagers[sideIndex].RenderDiscardCount();
 	}
 
 	public Coroutine SpawnUnit(int sideIndex, int laneIndex, int positionIndex)
@@ -99,5 +98,18 @@ public partial class UIManager : MonoBehaviour
 		TowerUI targetUI = towerManagers[sideIndex].towerUIs[laneIndex];
 
 		return targetUI.Respawn();
+	}
+
+	public Coroutine UpdateResourceDisplay(int sideIndex)
+	{
+		return StartCoroutine(AnimateUpdateResourceDisplay(sideIndex));
+	}
+
+	private IEnumerator AnimateUpdateResourceDisplay(int sideIndex)
+	{
+		bool finished = false;
+		resourceManagers[sideIndex].UpdateResourceDisplay(() => finished = true);
+
+		yield return new WaitUntil(() => finished);
 	}
 }

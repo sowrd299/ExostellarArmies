@@ -40,16 +40,39 @@ public partial class UIManager : MonoBehaviour
 		: new TowerManager[] { enemyTowerManager, myTowerManager }
 	);
 
+	private ResourceDisplayController[] resourceManagers => (
+		myIndex == 0
+		? new ResourceDisplayController[] { myResourceManager, enemyResourceManager }
+		: new ResourceDisplayController[] { enemyResourceManager, myResourceManager }
+	);
+
+	private DiscardIndicatorManager[] discardManagers => (
+		myIndex == 0
+		? new DiscardIndicatorManager[] { myDiscard, enemyDiscard }
+		: new DiscardIndicatorManager[] { enemyDiscard, myDiscard }
+	);
+
 	[Header("Object References")]
 	public HandManager myHandManager;
 	public HandManager enemyHandManager;
 
+	[Space]
 	public UnitManager myUnitManager;
 	public UnitManager enemyUnitManager;
 
+	[Space]
 	public TowerManager myTowerManager;
 	public TowerManager enemyTowerManager;
 
+	[Space]
+	public ResourceDisplayController myResourceManager;
+	public ResourceDisplayController enemyResourceManager;
+
+	[Space]
+	public DiscardIndicatorManager myDiscard;
+	public DiscardIndicatorManager enemyDiscard;
+
+	[Space]
 	public DamageTextManager damageTextManager;
 
 	[Header("UI References")]
@@ -87,7 +110,10 @@ public partial class UIManager : MonoBehaviour
 
 	public void InitializeUI()
 	{
-		mainButton.interactable = true;
+		mainButton.interactable = false;
+
+		myHandManager.SetCardDraggable(false);
+		enemyHandManager.SetCardDraggable(false);
 
 		myUnitManager.sideIndex = myIndex;
 		enemyUnitManager.sideIndex = enemyIndex;
@@ -95,6 +121,12 @@ public partial class UIManager : MonoBehaviour
 		myTowerManager.sideIndex = myIndex;
 		enemyTowerManager.sideIndex = enemyIndex;
 		RenderTowers();
+
+		myResourceManager.sideIndex = myIndex;
+		enemyResourceManager.sideIndex = enemyIndex;
+
+		myDiscard.sideIndex = myIndex;
+		enemyDiscard.sideIndex = enemyIndex;
 
 		RenderIndicators();
 
@@ -125,6 +157,7 @@ public partial class UIManager : MonoBehaviour
 	{
 		mainButtonText.text = "LOCK IN PLANS";
 		mainButton.interactable = true;
+		myHandManager.SetCardDraggable(true);
 
 		bool clicked = false;
 		UnityAction listener = null;
@@ -143,6 +176,7 @@ public partial class UIManager : MonoBehaviour
 
 		mainButtonText.text = "WAITING FOR OPPONENT";
 		mainButton.interactable = false;
+		myHandManager.SetCardDraggable(false);
 	}
 
 	public void BeforeTurnStart()
