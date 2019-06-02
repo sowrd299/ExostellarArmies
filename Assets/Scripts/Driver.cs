@@ -20,8 +20,7 @@ public class Driver : MonoBehaviour
 
 	// Private references and convenience getters
 	private Client client => Client.instance;
-	private CardLoader _cardLoader;
-	private CardLoader cardLoader => _cardLoader ?? (_cardLoader = new CardLoader());
+	public CardLoader cardLoader => CardLoader.instance;
 
 	// Public getters
 	[HideInInspector]

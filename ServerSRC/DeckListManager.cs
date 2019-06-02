@@ -16,13 +16,11 @@ namespace SFB.Net.Server
 
     public class DeckListManager
     {
-        private CardLoader cardLoader;
+        private CardLoader cardLoader => CardLoader.instance;
         private Dictionary<string, DeckList> decks;
 
         public DeckListManager()
         {
-            cardLoader = new CardLoader();
-
             decks = new Dictionary<string, DeckList>();
             LoadDecks();
         }
