@@ -22,7 +22,7 @@ public class CommercialShipperIR : InputRequest<Card>
 
 	protected override bool MakeChoiceFrom(XmlElement e)
 	{
-		return MakeChoiceFrom(e, new CardLoader());
+		return MakeChoiceFrom(e, CardLoader.instance);
 	}
 
 	// put a card from hand on the bottom of your deck

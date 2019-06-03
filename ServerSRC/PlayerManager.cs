@@ -14,7 +14,7 @@ namespace SFB.Net.Server.Matches{
         // TODO: this is a SUPER DUMB way to do this. I'm just lazy and it's week 10.
         // but actually, this will need more meaningfull access to a card loader at some point
         // most likely getting one passed in from Match, which gets one from the server
-        private static CardLoader cardLoader = new CardLoader();
+        private static CardLoader cardLoader => CardLoader.instance;
 
         private enum State {ACTING, WAITING} 
 

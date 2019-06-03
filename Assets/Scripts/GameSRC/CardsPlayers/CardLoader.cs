@@ -1,87 +1,131 @@
 using SFB.Game.Management;
 using System;
-using System.IO;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using YamlDotNet.RepresentationModel;
+#if (UNITY_EDITOR || UNITY_STANDALONE)
+using UnityEngine;
+#endif
 
 namespace SFB.Game.Content
 {
-    public class CardLoader : IdIssuer<Card>
+	public class CardLoader : IdIssuer<Card>
 	{
+		private static CardLoader _instance;
+		private static object instanceLock = new object();
+		public static CardLoader instance
+		{
+			get
+			{
+				lock (instanceLock)
+				{
+					if (_instance == null)
+					{
+						_instance = new CardLoader();
+					}
+				}
+
+				return _instance;
+			}
+		}
+
 		private IDictionary<string, Card> listOfCards;
 		private IDictionary<string, Card> old_listOfCards;
-		
-		public void AddUnitCardOLD(string name, int cost, Faction f, string uType, string mText, string flavor, int r, int m, int hp, params Ability[] a) {
+
+		public void AddUnitCardOLD(string name, int cost, Faction f, string uType, string mText, string flavor, int r, int m, int hp, params Ability[] a)
+		{
 			old_listOfCards.Add(name, new UnitCard(cost, name, f, uType, mText, flavor, r, m, hp, a));
 		}
 
-		public void AddUnitCard(string name, int cost, Faction f, string uType, string mText, string flavor, int r, int m, int hp, params Ability[] a) {
+		public void AddUnitCard(string name, int cost, Faction f, string uType, string mText, string flavor, int r, int m, int hp, params Ability[] a)
+		{
 			UnitCard c = new UnitCard(cost, name, f, uType, mText, flavor, r, m, hp, a);
-			Console.WriteLine(c.ToString());
 			listOfCards.Add(name, c);
 		}
-		public void AddUnitCard(string name, int cost, Faction f, string uType, string mText, string flavor, int r, int m, int hp, List<Ability> a) {
+		public void AddUnitCard(string name, int cost, Faction f, string uType, string mText, string flavor, int r, int m, int hp, List<Ability> a)
+		{
 			UnitCard c = new UnitCard(cost, name, f, uType, mText, flavor, r, m, hp, a.ToArray());
-			Console.WriteLine(c.ToString());
 			listOfCards.Add(name, c);
 		}
 
 		public Faction StringToFaction(string s)
 		{
-			switch(s)
+			switch (s)
 			{
-				case "Carthan":	return Faction.CARTHAN;
-				case "Myxori":	return Faction.MYXORI;
-				case "Jirnorn":	return Faction.JIRNORN;
-				default:		return Faction.NONE;
+				case "Carthan": return Faction.CARTHAN;
+				case "Myxori": return Faction.MYXORI;
+				case "Jirnorn": return Faction.JIRNORN;
+				default: return Faction.NONE;
 			}
 		}
 
-		public CardLoader() {
+		private CardLoader()
+		{
 			listOfCards = new Dictionary<string, Card>();
 			old_listOfCards = new Dictionary<string, Card>();
 
-			Console.WriteLine(typeof(FireSupportDrone));
+			YamlStream[] yamlStreams = LoadYaml();
+			foreach (YamlStream yaml in yamlStreams)
+			{
+				YamlMappingNode root = yaml.Documents[0].RootNode as YamlMappingNode;
 
-			string[] paths = new string[] {
-				Path.Combine("Assets", "Resources", "Cards"),
-				Path.Combine("Assets", "Resources", "Cards", "Carthan"),
-				Path.Combine("Assets", "Resources", "Cards", "Myxori"),
-				Path.Combine("Assets", "Resources", "Cards", "Jirnorn")
-			};
-			foreach(string path in paths) {
-				foreach(string fileName in Directory.EnumerateFiles(path, "*.yaml")) {
-					Console.WriteLine($"~~~\nLoading file {fileName}.");
+				string cardName = root.Children[new YamlScalarNode("name")].ToString();
+				int cost = int.Parse(root.Children[new YamlScalarNode("cost")].ToString());
+				Faction faction = StringToFaction(root.Children[new YamlScalarNode("faction")].ToString());
+				string unitType = root.Children[new YamlScalarNode("unitType")].ToString();
+				string mainText = root.Children[new YamlScalarNode("mainText")].ToString();
+				string flavorText = root.Children[new YamlScalarNode("flavorText")].ToString();
+				int r = int.Parse(root.Children[new YamlScalarNode("rangedDamage")].ToString());
+				int m = int.Parse(root.Children[new YamlScalarNode("meleeDamage")].ToString());
+				int hp = int.Parse(root.Children[new YamlScalarNode("hp")].ToString());
 
-					YamlStream yaml = new YamlStream();
-					yaml.Load(File.OpenText(fileName));
-
-					YamlMappingNode root = yaml.Documents[0].RootNode as YamlMappingNode;
-
-					string cardName = root.Children[new YamlScalarNode("name")].ToString();
-					int cost = int.Parse(root.Children[new YamlScalarNode("cost")].ToString());
-					Faction faction = StringToFaction(root.Children[new YamlScalarNode("faction")].ToString());
-					string unitType = root.Children[new YamlScalarNode("unitType")].ToString();
-					string mainText = root.Children[new YamlScalarNode("mainText")].ToString();
-					string flavorText = root.Children[new YamlScalarNode("flavorText")].ToString();
-					int r = int.Parse(root.Children[new YamlScalarNode("rangedDamage")].ToString());
-					int m = int.Parse(root.Children[new YamlScalarNode("meleeDamage")].ToString());
-					int hp = int.Parse(root.Children[new YamlScalarNode("hp")].ToString());
-
-					if(root.Children.ContainsKey(new YamlScalarNode("abilities"))) {
-						List<Ability> abilities = new List<Ability>();
-						YamlSequenceNode abilitySequence = root.Children[new YamlScalarNode("abilities")] as YamlSequenceNode;
-						foreach(YamlScalarNode abilityNode in abilitySequence) {
-							abilities.Add(Ability.FromString(abilityNode.ToString()));
-						}
+				if (root.Children.ContainsKey(new YamlScalarNode("abilities")))
+				{
+					List<Ability> abilities = new List<Ability>();
+					YamlSequenceNode abilitySequence = root.Children[new YamlScalarNode("abilities")] as YamlSequenceNode;
+					foreach (YamlScalarNode abilityNode in abilitySequence)
+					{
+						abilities.Add(Ability.FromString(abilityNode.ToString()));
 						AddUnitCard(cardName, cost, faction, unitType, mainText, flavorText, r, m, hp, abilities);
-					} else {
-						AddUnitCard(cardName, cost, faction, unitType, mainText, flavorText, r, m, hp);
 					}
+				}
+				else
+				{
+					AddUnitCard(cardName, cost, faction, unitType, mainText, flavorText, r, m, hp);
 				}
 			}
 
+			Console.WriteLine($"Loaded {listOfCards.Count} cards from yaml files.");
 
+			LoadCardsLegacy();
+
+			Console.WriteLine($"Loaded {old_listOfCards.Count} cards via LEGACY loading mechanism.");
+		}
+
+		private YamlStream[] LoadYaml()
+		{
+#if (UNITY_EDITOR || UNITY_STANDALONE)
+			TextAsset[] files = Resources.LoadAll<TextAsset>("Cards");
+			return files.Select(file =>
+			{
+				YamlStream stream = new YamlStream();
+				stream.Load(new StringReader(file.text));
+				return stream;
+			}).ToArray();
+#else
+				string cardsRoot = Path.Combine("Assets", "Resources", "Cards");
+				string[] fileNames = Directory.EnumerateFiles(cardsRoot, "*.yaml", SearchOption.AllDirectories).ToArray();
+				return fileNames.Select(fileName => {
+					YamlStream stream = new YamlStream();
+					stream.Load(File.OpenText(fileName));
+					return stream;
+				}).ToArray();
+#endif
+		}
+
+		private void LoadCardsLegacy()
+		{
 			AddUnitCardOLD("Outergrowth Husk", 0, Faction.MYXORI, "Myxori Infantry Unit",
 				"Absorb (excess damage done to this does not overflow)", "Myxi jha maRtox lOz!",
 				0, 0, 1, new Absorb());
@@ -89,7 +133,7 @@ namespace SFB.Game.Content
 				"Lob (in combat, this deals damage to whatever is behind the opposing front line)", "Small, Innocuous and Hopeful",
 				1, 1, 1, new Lob());
 			AddUnitCardOLD("Grafted Claw Spunner", 1, Faction.MYXORI, "Myxi Infantry Unit",
-				"Swarm (when you deploy this, if it is behind a Unit that shares a tag with it other than “Unit”, draw a card)", "\"Myxori jha maRtox lOz!\"",
+				"Swarm (when you deploy this, if it is behind a Unit that shares a tag with it other than ï¿½Unitï¿½, draw a card)", "\"Myxori jha maRtox lOz!\"",
 				0, 2, 2, new Swarm());
 			old_listOfCards.Add("Mercenary Phantasm", new UnitCard(2, "Mercenary Phantasm", Faction.NONE, "", "Deploy: Your opponent reveals a card from their hand", "What do you want to know?", 1, 2, 3));
 			old_listOfCards.Add("Commercial Shipper", new UnitCard(2, "Commercial Shipper", Faction.NONE, "", "Deploy: Draw a card, then put a card from your hand on the bottom of your deck", "Whatever you need, we got", 0, 3, 3));
@@ -149,6 +193,7 @@ namespace SFB.Game.Content
             //old_listOfCards.Add("Autonomous Range Finder", new UnitCard(2, "Autonomous Range Finder", Faction.CARTHAN, "", "Supporting Carthan Deploy: Give this front line +3R this turn.",
             //        "56413", 0, 1, 3, new AutonomousRangeFinder()));
 
+
 			old_listOfCards.Add("Resist Token", new UnitCard(0, "Resist Token", Faction.NONE, "Token", "Tower Shield 1", "", 0, 0, 10, new TowerShield(1)));
 			old_listOfCards.Add("Mana Token", new UnitCard(0, "Mana Token", Faction.NONE, "Token", "Spore 10", "", 0, 0, 1, new Spore(10)));
 
@@ -161,18 +206,20 @@ namespace SFB.Game.Content
 			old_listOfCards.Add("Attack Token 10", new UnitCard(0, "Attack Token 10", Faction.NONE, "Token", "", "", 10, 10, 1));
 		}
 
-        protected override Card handleMiss(string id) {
-			if(listOfCards.ContainsKey(id))
+		protected override Card handleMiss(string id)
+		{
+			if (listOfCards.ContainsKey(id))
 				return listOfCards[id];
 
-			if(old_listOfCards.ContainsKey(id)) {
+			if (old_listOfCards.ContainsKey(id))
+			{
 				// Console.WriteLine($"Card ({id}) is hardcoded and not yet implemented in a .yaml file");
 				return old_listOfCards[id];
 			}
 
 			throw new System.Exception("Card \"" + id + "\" not found");
-        }
+		}
 
-    }
-    
+	}
+
 }

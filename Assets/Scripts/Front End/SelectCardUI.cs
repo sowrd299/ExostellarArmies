@@ -45,7 +45,7 @@ public class SelectCardUI : MonoBehaviour
 
 	private IEnumerator DEBUG_AnimateChooseCard()
 	{
-		CardLoader cardLoader = new CardLoader();
+		CardLoader cardLoader = Driver.instance.cardLoader;
 		StringBuilder output = new StringBuilder();
 
 		yield return ChooseCard(new[] {
