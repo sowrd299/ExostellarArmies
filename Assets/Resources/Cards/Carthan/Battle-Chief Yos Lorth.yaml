@@ -1,0 +1,11 @@
+name: Battle-Chief Yos Lorth
+cost: 4
+faction: Carthan
+unitType: Elite - Carthan -- Infantry - Commander
+mainText: 'Unique\nYour Elite Units on the front line gain Ranged Shield 1 and +1 M.'
+flavorText: '"Hello! My name is Yos Lorth! You killed enforcer #1905634, my Father! Prepare for to taste the law''s justice!"'
+rangedDamage: 2
+meleeDamage: 1
+hp: 5
+abilities:
+  - BattleChiefYosLorth

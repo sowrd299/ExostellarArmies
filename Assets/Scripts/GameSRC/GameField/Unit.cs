@@ -135,7 +135,7 @@ namespace SFB.Game
 					ModifyTowerResistance?.Invoke(ref resist);
 					return resist;
 				default:
-					throw new System.Exception($"Invalid Damage Type: {dmgType}");
+					return resist;
 			}
 		}
 

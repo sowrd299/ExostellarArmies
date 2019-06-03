@@ -1,0 +1,11 @@
+name: Archon – Brynhilde Class
+cost: 2
+faction: Carthan
+unitType: Carthan -- Medical - Drone
+mainText: 'Fortify Carthan: Heal this Front Line 2 and gain 3 Resources.'
+flavorText: ''
+rangedDamage: 0
+meleeDamage: 1
+hp: 2
+abilities:
+  - ArchonBrynhildeClass

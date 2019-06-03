@@ -1,0 +1,11 @@
+name: Fire Support Drone
+cost: 2
+faction: Carthan
+unitType: Carthan --  Drone
+mainText: 'Fortify Carthan: Give the fortified unit +3R this turn'
+flavorText: '"Ordinance 1.2. Carthan law must be enforced by Carthans. Be glad for that, Jirnorn, or these would be all you''d see."-Lars, 3rd Sphere Irregular Marksman'
+rangedDamage: 0
+meleeDamage: 1
+hp: 3
+abilities:
+  - FireSupportDrone

@@ -1,0 +1,12 @@
+name: Battleframe - Assize Class
+cost: 5
+faction: Carthan
+unitType: Carthan -- Vehicle - Commander
+mainText: 'Melee Shield 1\nRecurring Deploy: Gain 1 resource.'
+flavorText: "A bastion of order to stand against The Lawless One's mystifying noncompliance."
+rangedDamage: 0
+meleeDamage: 3
+hp: 6
+abilities:
+  - MeleeShield 1
+  - BattleframeAssizeClass

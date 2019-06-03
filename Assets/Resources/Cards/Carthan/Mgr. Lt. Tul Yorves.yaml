@@ -1,0 +1,12 @@
+name: Mgr. Lt. Tul Yorves
+cost: 4
+faction: Carthan
+unitType: Carthan -- Medical - Infantry - Commander
+mainText: 'Unique, Ranged Shield 1\nFront Line Persistent: Whenever you heal a Unit, heal it for 1 more and deal 1 damage to whatever is opposing it.'
+flavorText: 'It turns out "hit something in the head" cures a remarkable number of military ailments.'
+rangedDamage: 1
+meleeDamage: 3
+hp: 5
+abilities:
+  - RangedShield 1
+  - MgrLtTulYorves

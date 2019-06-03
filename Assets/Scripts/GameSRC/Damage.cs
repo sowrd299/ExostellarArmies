@@ -2,7 +2,7 @@
 namespace SFB.Game {
 	public class Damage {
 		public enum Type {
-			RANGED, MELEE, TOWER, HEAL
+			RANGED, MELEE, TOWER, HEAL, ABILITY
 		}
 
 		public static string DamageTypeToString(Type type) {
@@ -15,6 +15,8 @@ namespace SFB.Game {
 					return "T";
 				case Type.HEAL:
 					return "H";
+				case Type.ABILITY:
+					return "A";
 				default:
 					return "";
 			}
@@ -30,6 +32,8 @@ namespace SFB.Game {
 					return Type.TOWER;
 				case "H":
 					return Type.HEAL;
+				case "A":
+					return Type.ABILITY;
 				default:
 					throw new System.Exception($"Type string \"{type}\" is invalid");
 			}

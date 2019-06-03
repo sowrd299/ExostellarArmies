@@ -1,0 +1,11 @@
+name: 6th Sphere Skeletal Reshaper
+cost: 2
+faction: Carthan
+unitType: Carthan -- Medical - Infantry
+mainText: 'Fortify Carthan: Heal the fortified unit by 2.'
+flavorText: '"That''s Dr. Unsquisher to you, corporal."'
+rangedDamage: 1
+meleeDamage: 2
+hp: 3
+abilities:
+  - SphereSkeletalReshaper

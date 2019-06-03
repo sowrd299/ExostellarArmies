@@ -1,33 +1,33 @@
 id: carthStarter
 name: Carthan Starter
 cards:
-  - id: Exostellar Marine Squad
+  - id: 6th Sphere Frontline Squad
     count: 2
   - id: Commercial Shipper
     count: 1
   - id: Commercial Coms Relay
     count: 1
-  - id: Adv. Infantry Support System
+  - id: Battleframe - Assize Class
     count: 2
-  - id: Paladin-Class XS Marines
+  - id: 6th Sphere Medical Vanguard
     count: 1
-  - id: Adv. Supply Drone
+  - id: Archon – Brynhilde Class
     count: 2
-  - id: XS Field Technician
+  - id: 6th Sphere Greaser
     count: 1
-  - id: Lt. Mgr. Tul Yorves
+  - id: Mgr. Lt. Tul Yorves
     count: 1
-  - id: Exostellar Snipers
+  - id: 3rd Sphere Irregular Marksman
     count: 2
-  - id: Cmdr. Yos Lorth
+  - id: Battle-Chief Yos Lorth
     count: 1
-  - id: Ancillary Medical Officer
+  - id: 6th Sphere Skeletal Reshaper
     count: 1
-  - id: Mana Token
+  - id: 6th Sphere Deathseekers
     count: 1
-  - id: Emergency Med Drop
+  - id: Archon – Ethereal Class
     count: 1
   - id: Cannoneer Drone
     count: 1
-  - id: Autonomous Range Finder
+  - id: Fire Support Drone
     count: 2

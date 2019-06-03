@@ -23,7 +23,7 @@ namespace SFB.Game
 		protected override void AddEffectsToEvents(Unit source, GameManager gm)
 		{
 			remove2ndaryEffects = Remove2ndaryEffects();
-			add2ndaryEffects = Add2ndaryEffects();
+			add2ndaryEffects = InnerAddEffects;
 			removeThisFromGM = RemoveThisFromGM();
 
 			gm.AddBoardUpdateDeltas += remove2ndaryEffects;
@@ -36,17 +36,13 @@ namespace SFB.Game
 			throw new System.Exception("");
 		}
 
-		private AddDeltaGMBoardUpdate Add2ndaryEffects()
+		private void InnerAddEffects(List<Delta> deltas, GMWithBoardUpdate gmBoardUpdate)
 		{
-			void InnerAddEffects(List<Delta> deltas, GMWithBoardUpdate gmBoardUpdate) {
-				Tower tower = gmBoardUpdate.SubjectLane.Towers[gmBoardUpdate.Side];
-				deltas.Add(
-					new TowerDamageAmountDelta(tower, 3)
-				);
-				appliedTo = tower;
-			}
-
-			return InnerAddEffects;
+			Tower tower = gmBoardUpdate.SubjectLane.Towers[gmBoardUpdate.Side];
+			deltas.Add(
+				new TowerDamageAmountDelta(tower, 3)
+			);
+			appliedTo = tower;
 		}
 
 		private AddDeltaGMBoardUpdate Remove2ndaryEffects()
@@ -63,6 +59,10 @@ namespace SFB.Game
 			void RemovePersistentFromGM(List<Delta> deltas, GMWithLocation gmLoc, Damage.Type? phase) {
 				gmLoc.GameManager.AddBoardUpdateDeltas -= remove2ndaryEffects;
 				gmLoc.GameManager.AddBoardUpdateDeltas -= add2ndaryEffects;
+				if(appliedTo != null) {
+					deltas.Add(new TowerDamageAmountDelta(appliedTo, -3));
+					appliedTo = null;
+				}
 			}
 			return RemovePersistentFromGM;
 		}

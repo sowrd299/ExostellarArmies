@@ -1,0 +1,9 @@
+name: 3rd Sphere Irregular Marksman
+cost: 3
+faction: Carthan
+unitType: Carthan -- Infantry
+mainText: ''
+flavorText: 'Clear aim only takes a clear understanding of the laws of momentum and physics. It should come as no surprise, then, that Carthan physicists make outstanding snipers.'
+rangedDamage: 3
+meleeDamage: 1
+hp: 3

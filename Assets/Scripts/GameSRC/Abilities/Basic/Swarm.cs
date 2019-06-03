@@ -25,7 +25,7 @@ namespace SFB.Game
 		{
 			if(gmLoc.Pos == 1) {
 				foreach(string s in gmLoc.SubjectUnit.Card.UnitType.Split(' ')) {
-					if(s != "Unit" && gmLoc.IsSupporting(s)) {
+					if(s != "Unit" && gmLoc.IsFortifying(s)) {
 						RemoveFromDeckDelta[] rs = gmLoc.SubjectPlayer.Deck
 																	  .GetDrawDeltas(count: 1);
 						deltas.AddRange(rs);

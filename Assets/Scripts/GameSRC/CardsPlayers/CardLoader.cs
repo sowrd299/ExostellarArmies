@@ -41,6 +41,8 @@ namespace SFB.Game.Content
 			listOfCards = new Dictionary<string, Card>();
 			old_listOfCards = new Dictionary<string, Card>();
 
+			Console.WriteLine(typeof(FireSupportDrone));
+
 			string[] paths = new string[] {
 				Path.Combine("Assets", "Resources", "Cards"),
 				Path.Combine("Assets", "Resources", "Cards", "Carthan"),
@@ -49,7 +51,7 @@ namespace SFB.Game.Content
 			};
 			foreach(string path in paths) {
 				foreach(string fileName in Directory.EnumerateFiles(path, "*.yaml")) {
-					Console.WriteLine($"Loading file {fileName}.");
+					Console.WriteLine($"~~~\nLoading file {fileName}.");
 
 					YamlStream yaml = new YamlStream();
 					yaml.Load(File.OpenText(fileName));
@@ -71,8 +73,8 @@ namespace SFB.Game.Content
 						YamlSequenceNode abilitySequence = root.Children[new YamlScalarNode("abilities")] as YamlSequenceNode;
 						foreach(YamlScalarNode abilityNode in abilitySequence) {
 							abilities.Add(Ability.FromString(abilityNode.ToString()));
-							AddUnitCard(cardName, cost, faction, unitType, mainText, flavorText, r, m, hp, abilities);
 						}
+						AddUnitCard(cardName, cost, faction, unitType, mainText, flavorText, r, m, hp, abilities);
 					} else {
 						AddUnitCard(cardName, cost, faction, unitType, mainText, flavorText, r, m, hp);
 					}
@@ -122,30 +124,30 @@ namespace SFB.Game.Content
 					"Bravely into the Darkness", 2, 2, 4));
 			old_listOfCards.Add("Commercial Coms Relay", new UnitCard(0, "Commercial Coms Relay", Faction.NONE, "", "Deploy: Put a card from your hand beneath the top 4 cards of your deck.",
 					"Binding the Stars", 0, 1, 2));
-			old_listOfCards.Add("Adv. Infantry Support System", new UnitCard(5, "Adv. Infantry Support System", Faction.CARTHAN, "", "Melee Shield 1\nPersistent: At the start of your turn, generate an extra .",
-					"Mobile Command Center", 0, 3, 6, new MeleeShield(1), new AdvInfantrySupportSystem()));
-			old_listOfCards.Add("Paladin-Class XS Marines", new UnitCard(4, "Paladin-Class XS Marines", Faction.CARTHAN, "", "Front Line Recurring Deploy: If there is not a unit behind this, heal each adjacent allied front line 1.",
-					"Defense Against the Darkness", 1, 3, 5, new PaladinClassExSMarines()));
-			old_listOfCards.Add("Adv. Supply Drone", new UnitCard(2, "Adv. Supply Drone", Faction.CARTHAN, "", "Supporting Carthan Deploy: Heal the supported unit 2 and gain 3 s.",
-					"762491", 0, 1, 2, new AdvSupplyDrone()));
-			old_listOfCards.Add("XS Field Technician", new UnitCard(3, "XS Field Technician", Faction.CARTHAN, "", "Suporting Drone Deploy: Return the supported unit to your hand.",
-					"Tuning Blades in the Darkness", 1, 2, 4, new XSFieldTechnician()));
-			old_listOfCards.Add("Lt. Mgr. Tul Yorves", new UnitCard(4, "Lt. Mgr. Tul Yorves", Faction.CARTHAN, "", "Unique; Ranged Shield 1\nFront Line Persistent: Whenever you heal a Unit, heal it for 1 more and it deals 1 damage.",
-					"Master Medic", 1, 3, 5, new RangedShield(2)));
-			old_listOfCards.Add("Exostellar Snipers", new UnitCard(3, "Exostellar Snipers", Faction.CARTHAN, "", "",
-					"Illuminate with Muzzle Flare!", 3, 1, 3));
-			old_listOfCards.Add("Cmdr. Yos Lorth", new UnitCard(4, "Cmdr. Yos Lorth", Faction.CARTHAN, "", "Unique; Ranged Shield 1\nFront Line Persistent: Allied front line Elites have +1 and Ranged Shield +1",
-					"Exostellar Champion", 2, 2, 5, new RangedShield(1), new CmdrYosLorth()));
-			old_listOfCards.Add("Ancillary Medical Officer", new UnitCard(2, "Ancillary Medical Officer", Faction.CARTHAN, "", "Supporting Carthan Infantry Deploy: Heal this front line 2.",
-					"Healer in the Darkness", 1, 2, 3, new AncillaryMedicalOfficer()));
+			//old_listOfCards.Add("Adv. Infantry Support System", new UnitCard(5, "Adv. Infantry Support System", Faction.CARTHAN, "", "Melee Shield 1\nPersistent: At the start of your turn, generate an extra .",
+			//		"Mobile Command Center", 0, 3, 6, new MeleeShield(1), new BattleframeAssizeClass()));
+			//old_listOfCards.Add("Paladin-Class XS Marines", new UnitCard(4, "Paladin-Class XS Marines", Faction.CARTHAN, "", "Front Line Recurring Deploy: If there is not a unit behind this, heal each adjacent allied front line 1.",
+			//		"Defense Against the Darkness", 1, 3, 5, new PaladinClassExSMarines()));
+			//old_listOfCards.Add("Adv. Supply Drone", new UnitCard(2, "Adv. Supply Drone", Faction.CARTHAN, "", "Supporting Carthan Deploy: Heal the supported unit 2 and gain 3 s.",
+			//		"762491", 0, 1, 2, new AdvSupplyDrone()));
+			//old_listOfCards.Add("XS Field Technician", new UnitCard(3, "XS Field Technician", Faction.CARTHAN, "", "Suporting Drone Deploy: Return the supported unit to your hand.",
+			//		"Tuning Blades in the Darkness", 1, 2, 4, new XSFieldTechnician()));
+			//old_listOfCards.Add("Lt. Mgr. Tul Yorves", new UnitCard(4, "Lt. Mgr. Tul Yorves", Faction.CARTHAN, "", "Unique; Ranged Shield 1\nFront Line Persistent: Whenever you heal a Unit, heal it for 1 more and it deals 1 damage.",
+			//		"Master Medic", 1, 3, 5, new RangedShield(2)));
+			//old_listOfCards.Add("Exostellar Snipers", new UnitCard(3, "Exostellar Snipers", Faction.CARTHAN, "", "",
+			//		"Illuminate with Muzzle Flare!", 3, 1, 3));
+			//old_listOfCards.Add("Cmdr. Yos Lorth", new UnitCard(4, "Cmdr. Yos Lorth", Faction.CARTHAN, "", "Unique; Ranged Shield 1\nFront Line Persistent: Allied front line Elites have +1 and Ranged Shield +1",
+			//		"Exostellar Champion", 2, 2, 5, new RangedShield(1), new CmdrYosLorth()));
+			//old_listOfCards.Add("Ancillary Medical Officer", new UnitCard(2, "Ancillary Medical Officer", Faction.CARTHAN, "", "Supporting Carthan Infantry Deploy: Heal this front line 2.",
+			//		"Healer in the Darkness", 1, 2, 3, new AncillaryMedicalOfficer()));
 			old_listOfCards.Add("Battle-Line Trauma Medic", new UnitCard(3, "Battle-Line Trauma Medic", Faction.CARTHAN, "", "Supporting Carthan Deploy: Discard a card; heal each ally 2.",
 					"Forever Alive in the Dark!", 0, 2, 4));
-			old_listOfCards.Add("Emergency Med Drop", new UnitCard(0, "Emergency Med Drop", Faction.CARTHAN, "", "Deploy: Heal this front line 2 and each adjacent front line 1",
-					"756328", 0, 0, 1, new EmergencyMedDrop()));
+			//old_listOfCards.Add("Emergency Med Drop", new UnitCard(0, "Emergency Med Drop", Faction.CARTHAN, "", "Deploy: Heal this front line 2 and each adjacent front line 1",
+			//		"756328", 0, 0, 1, new EmergencyMedDrop()));
             old_listOfCards.Add("Cannoneer Drone", new UnitCard(2, "Cannoneer Drone", Faction.CARTHAN, "", "Ranged Shield 2; Melee Shield 2\nFront Line Persistent: The tower behind this deals +3 damge.",
                     "Death to Your Enemies", 0, 0, 1, new RangedShield(2), new MeleeShield(2)));
-            old_listOfCards.Add("Autonomous Range Finder", new UnitCard(2, "Autonomous Range Finder", Faction.CARTHAN, "", "Supporting Carthan Deploy: Give this front line +3R this turn.",
-                    "56413", 0, 1, 3, new AutonomousRangeFinder()));
+            //old_listOfCards.Add("Autonomous Range Finder", new UnitCard(2, "Autonomous Range Finder", Faction.CARTHAN, "", "Supporting Carthan Deploy: Give this front line +3R this turn.",
+            //        "56413", 0, 1, 3, new AutonomousRangeFinder()));
 
 			old_listOfCards.Add("Resist Token", new UnitCard(0, "Resist Token", Faction.NONE, "Token", "Tower Shield 1", "", 0, 0, 10, new TowerShield(1)));
 			old_listOfCards.Add("Mana Token", new UnitCard(0, "Mana Token", Faction.NONE, "Token", "Spore 10", "", 0, 0, 1, new Spore(10)));

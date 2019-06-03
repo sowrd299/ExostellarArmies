@@ -1,0 +1,11 @@
+name: 6th Sphere Greaser
+cost: 3
+faction: Carthan
+unitType: Elite - Carthan -- Infantry
+mainText: 'Fortify Drone: Return the fortified Drone to owner''s hand.'
+flavorText: '"Attention automated unit 452-619-311-002, your actuators are .0002 degrees off pitch. Stand by for dismantling!"'
+rangedDamage: 1
+meleeDamage: 2
+hp: 4
+abilities:
+  - SphereGreaser

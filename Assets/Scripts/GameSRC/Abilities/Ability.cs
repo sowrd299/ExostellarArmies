@@ -69,7 +69,7 @@ namespace SFB.Game
 		public static Ability FromString(string str)
 		{
 			string[] split = str.Split(' ');
-			//Console.WriteLine($"[{split[0]}{(split.Length > 1 ? ", " + split[1] : "")}]");
+			Console.WriteLine($"[{split[0]}{(split.Length > 1 ? ", " + split[1] : "")}]");
 			return split.Length == 1
 					? Ability.FromStringInt(split[0], -1)
 					: Ability.FromStringInt(split[0], int.Parse(split[1]));

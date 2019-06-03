@@ -42,7 +42,7 @@ namespace SFB.Game.Management
 			}
 		}
 		
-		public bool IsSupporting(params string[] types)
+		public bool IsFortifying(params string[] types)
 		{
 			Unit front = FrontUnit;
 			if(Pos == 1 && front != null) {
