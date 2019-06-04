@@ -15,6 +15,10 @@ public class CommercialShipperIR : InputRequest<Card>
 		Player = p;
 	}
 
+	public CommercialShipperIR(XmlElement e) :
+	base(e, CardLoader.instance)
+	{ }
+
 	public override bool IsLegalChoice(Card chosen)
 	{
 		return Player.Hand.Contains(chosen);

@@ -15,6 +15,10 @@ public class CommercialComsRelayIR : InputRequest<Card>
 		Player = p;
 	}
 
+	public CommercialComsRelayIR(XmlElement e) :
+	base(e, CardLoader.instance)
+	{ }
+
 	public override bool IsLegalChoice(Card chosen)
 	{
 		return Player.Hand.Contains(chosen);

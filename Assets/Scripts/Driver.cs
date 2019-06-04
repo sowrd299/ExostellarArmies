@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -145,7 +145,7 @@ public class Driver : MonoBehaviour
 		);
 
 		List<XmlElement> inputRequestElements = GetInputRequestElements(document.DocumentElement);
-		
+
 		if (inputRequestElements.Count > 0)
 		{
 			// Input request time!
