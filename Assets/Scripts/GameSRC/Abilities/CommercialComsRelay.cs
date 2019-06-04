@@ -27,6 +27,7 @@ namespace SFB.Game
 			CommercialComsRelayIR inputRequest = new CommercialComsRelayIR(
 				gmLoc.SubjectPlayer, gmLoc.GameManager
 			);
+			gmLoc.SubjectPlayer.AssignInputRequest(inputRequest);
 		}
 	}
 }
