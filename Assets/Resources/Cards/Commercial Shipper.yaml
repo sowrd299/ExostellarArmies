@@ -2,7 +2,6 @@ name: Commercial Shipper
 cost: 2
 faction: None?
 unitType: Infantry Unit
-mainText: 'Deploy: Draw a card, then put a card from hand on the bottom of your deck.'
 flavorText: 'What do you need? We got it.'
 rangedDamage: 0
 meleeDamage: 3

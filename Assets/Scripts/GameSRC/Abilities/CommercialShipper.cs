@@ -6,7 +6,7 @@ namespace SFB.Game
 	public class CommercialShipper : Ability
 	{
 		public override string GetMainText() {
-			return "Deploy: Draw a card, then put a card from hand on the bottom of your deck.";
+			return "Deploy: Put a card from hand on the bottom of your deck, then draw a card.";
 		}
 
 		public CommercialShipper() : base(-1) { }
@@ -21,9 +21,10 @@ namespace SFB.Game
 			u.AddInitialDeployDeltas -= InnerCommercialShipper;
 		}
 
-		public void InnerCommercialShipper(List<Delta> delta, GMWithLocation gmLoc)
+		public void InnerCommercialShipper(List<Delta> deltas, GMWithLocation gmLoc)
 		{
 			System.Console.WriteLine("COMM SHIP INIT DEP");
+			deltas.AddRange(gmLoc.SubjectPlayer.GetDrawDeltas(gmLoc.GameManager));
 			CommercialShipperIR inputRequest = new CommercialShipperIR(
 				gmLoc.SubjectPlayer, gmLoc.GameManager
 			);

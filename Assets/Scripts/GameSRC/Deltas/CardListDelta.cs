@@ -19,9 +19,9 @@ namespace SFB.Game {
             : base(list)
         {
             SendableCard = new SendableTarget<Card>("card", c); // TODO: shouldn't have to know what to name this...
-            Index = i;
-            Mode = m;
-        }
+			Index = i;
+			Mode = m;
+		}
 
         public CardListDelta(XmlElement from, IdIssuer<T> issuer, CardLoader cl)
 			: base(from, issuer, cl)
@@ -57,10 +57,10 @@ namespace SFB.Game {
 
         protected void RemoveCard()
 		{
-            if(Target.Count > Index && Target[Index] == SendableCard.Target) {
-                Target.RemoveAt(Index);
+            if(Target.Contains(SendableCard.Target)) {
+				Target.Remove(SendableCard.Target);
             } else {
-                throw new IllegalDeltaException("The card you wish to remove does not exist at that index");
+                throw new IllegalDeltaException("The card you wish to remove does not exist");
             }
         }
 

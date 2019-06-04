@@ -17,8 +17,8 @@ public class CommercialShipperIR : InputRequest<Card>
 		Hand = p.Hand;
 	}
 
-	public CommercialShipperIR(XmlElement e) :
-		base(e, CardLoader.instance)
+	public CommercialShipperIR(XmlElement e)
+		: base(e, CardLoader.instance)
 	{ 
 		Deck = Deck.IdIssuer.GetByID(e.GetAttribute("deckId"));
 		Hand = Hand.IdIssuer.GetByID(e.GetAttribute("handId"));

@@ -3,9 +3,9 @@ name: Carthan Starter
 cards:
   - id: 6th Sphere Frontline Squad
     count: 2
-  - id: Commercial Shipper # lol
+  - id: Commercial Shipper # not working
     count: 1
-  - id: Commercial Coms Relay # lol
+  - id: Commercial Coms Relay # not working
     count: 1
   - id: Battleframe - Assize Class
     count: 2
