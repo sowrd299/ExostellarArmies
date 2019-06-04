@@ -6,17 +6,18 @@ namespace SFB.Game
 	public abstract class TemporaryAbility : Ability
 	{
 		private Unit appliedTo;
+		private int turn;
 
 		public TemporaryAbility()
 			: base(-1)
 		{
 			appliedTo = null;
+			turn = 0;
 		}
 		
 		protected override void AddEffectsToEvents(Unit u, GameManager gm)
 		{
-			u.AddInitialDeployDeltas += AddIndividualEffect;
-			gm.AddRecurringDeployDeltas += RemoveIndividualEffect;
+			u.AddRecurringDeployDeltas += TempInner;
 		}
 
 		protected override void RemoveEffectsFromEvents(Unit u, GameManager gm)
@@ -24,21 +25,16 @@ namespace SFB.Game
 			throw new System.Exception("Can't remove this ability - potential bugs");
 		}
 		
-		public void AddIndividualEffect(List<Delta> deltas, GMWithLocation gmLoc)
+		public void TempInner(List<Delta> deltas, GMWithLocation gmLoc)
 		{
-			if(ShouldApply(gmLoc)) {
+			if(turn == 0 && ShouldApply(gmLoc)) {
 				deltas.AddRange(EffectAddDeltas(gmLoc));
 				appliedTo = AppliedTo(gmLoc);
-			}
-	
-		}
-		
-		public void RemoveIndividualEffect(List<Delta> deltas, GMWithLocation gmLoc) {
-			if(appliedTo != null) {
+			} else if(turn == 1 && appliedTo != null) {
 				deltas.AddRange(EffectRemoveDeltas(appliedTo, gmLoc));
 				appliedTo = null;
 			}
-			gmLoc.GameManager.AddRecurringDeployDeltas -= RemoveIndividualEffect;
+			turn++;
 		}
 		
 		protected abstract bool ShouldApply(GMWithLocation gmLoc);

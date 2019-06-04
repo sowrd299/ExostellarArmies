@@ -6,14 +6,18 @@ namespace SFB.Game
 {
 	public class Regrowth : Ability
 	{
-		// When this dies, if <condition applies>, return it to your hand
+		public override string GetMainText() {
+			return $"Regrowth ${ConditionString}"; // When this dies, if {ConditionString}, return it to your hand;
+		}
 
 		public Func<GMWithLocation, Damage.Type?, bool> Function { get; private set; }
+		public string ConditionString { get; private set; }
 
-		public Regrowth(Func<GMWithLocation, Damage.Type?, bool> fxn)
+		public Regrowth(Func<GMWithLocation, Damage.Type?, bool> fxn, string s)
 			: base(-1)
 		{
 			Function = fxn;
+			ConditionString = s;
 		}
 
 		protected override void AddEffectsToEvents(Unit u, GameManager gm) {

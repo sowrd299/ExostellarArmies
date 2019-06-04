@@ -5,7 +5,9 @@ namespace SFB.Game
 {
 	public class BattleframeAssizeClass : Ability
 	{
-		// Recurring Deploy: Gain 1 resource
+		public override string GetMainText() {
+			return "Recurring Deploy: Gain 1 resource";
+		}
 
 		public BattleframeAssizeClass() : base(-1) { }
 

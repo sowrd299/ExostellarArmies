@@ -2,11 +2,11 @@ name: Cannoneer Drone
 cost: 2
 faction: Carthan
 unitType: Engineering Drone Unit
-mainText: 'Ranged Shield 2, Melee Shield 2
-Front Line Persistent: The tower behind this deals +3 damage.'
 flavorText: 'Death to Your Enemies'
 rangedDamage: 0
 meleeDamage: 0
 hp: 1
 abilities:
-  - CannoneerDrone
+  - RangedShield 2
+  - MeleeShield 2
+  - CannoneerDrone # Front Line Persistent: The tower behind this deals +3 damage.

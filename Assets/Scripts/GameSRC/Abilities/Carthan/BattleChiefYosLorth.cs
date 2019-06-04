@@ -6,7 +6,9 @@ namespace SFB.Game
 {
 	public class BattleChiefYosLorth : PersistentFieldUnitAbility
 	{
-		// Your Elite Units on the front line gain Ranged Shield 1 and +1 M.
+		public override string GetMainText() {
+			return "Your Elite Units on the front line gain Ranged Shield 1 and +1 M.";
+		}
 
 		protected override Delta[] GetAddDeltas(int lane, int side, int pos, Lane[] lanes, Unit source, GameManager gm)
 		{

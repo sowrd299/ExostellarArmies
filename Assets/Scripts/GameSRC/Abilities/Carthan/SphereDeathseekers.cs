@@ -5,8 +5,10 @@ namespace SFB.Game
 {
 	public class SphereDeathseekers : Ability
 	{
-		// Deploy Front Line: This gains Ranged and Melee Shield 3 this turn.
-		// Fortify Carthan: This gains +3R this turn.
+		public override string GetMainText() {
+			return "Deploy Front Line: This gains Ranged and Melee Shield 3 this turn.\n"+
+			"Fortify Carthan: This gains +3R this turn.";
+		}
 
 		private Unit appliedShieldTo;
 		private Unit applied3RTo;
@@ -57,7 +59,6 @@ namespace SFB.Game
 					deltas.Add(new UnitDamageAmountDelta(applied3RTo, -3, Damage.Type.RANGED, applied3RTo));
 					applied3RTo = null;
 				}
-				gmLoc.GameManager.AddRecurringDeployDeltas -= SphereDeathseekersInner;
 			}
 			turn++;
 		}

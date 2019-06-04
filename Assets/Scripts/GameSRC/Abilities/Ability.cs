@@ -22,6 +22,8 @@ namespace SFB.Game
 	 */
 	public abstract class Ability
 	{
+		public delegate void AddDeltaGM(
+			List<Delta> deltas, GameManager gm);
 		public delegate void AddDeltaGMUnitDelta(
 			List<Delta> deltas, GameManager gm, UnitDelta ud);
 		public delegate void AddDeltaGMBoardUpdate(
@@ -32,8 +34,8 @@ namespace SFB.Game
 			List<Delta> deltas, GMWithLocation gmLoc, Damage.Type? phase);
 		public delegate void AddDeltaGMLocUnit(
 			List<Delta> deltas, GMWithLocation gmLoc, Unit u);
-		public delegate void AddDeltaGMLocTower(
-			List<Delta> deltas, GMWithLocation gmLoc, Tower tower);
+		public delegate void AddDeltaGMTower(
+			List<Delta> deltas, GameManager gm, Tower tower);
 
 		public delegate void FilterTargets(Unit[] targets);
 		public delegate void ModifyInt(ref int amt);
@@ -57,6 +59,7 @@ namespace SFB.Game
 
 		protected abstract void AddEffectsToEvents(Unit u, GameManager gm);
 		protected abstract void RemoveEffectsFromEvents(Unit u, GameManager gm);
+		public abstract string GetMainText();
 
 		public static Ability FromXmlUnitAbilityDelta(XmlElement from)
 		{
@@ -69,7 +72,7 @@ namespace SFB.Game
 		public static Ability FromString(string str)
 		{
 			string[] split = str.Split(' ');
-			Console.WriteLine($"[{split[0]}{(split.Length > 1 ? ", " + split[1] : "")}]");
+			//Console.WriteLine($"[{split[0]}{(split.Length > 1 ? ", " + split[1] : "")}]");
 			return split.Length == 1
 					? Ability.FromStringInt(split[0], -1)
 					: Ability.FromStringInt(split[0], int.Parse(split[1]));
@@ -99,9 +102,25 @@ namespace SFB.Game
 			}
 		}
 
+		public override bool Equals(Object other) {
+			return other.GetType() == this.GetType() && this.ToString().Equals(other.ToString());
+		}
+
+		public override int GetHashCode() {
+			return base.GetHashCode();
+		}
+
+		public static bool operator==(Ability lhs, Ability rhs) {
+			return lhs.Equals(rhs);
+		}
+
+		public static bool operator!=(Ability lhs, Ability rhs) {
+			return !(lhs.Equals(rhs));
+		}
+
 		public override string ToString()
 		{
-			return ""+this.GetType();
+			return ""+this.GetType() + (Amount == -1 ? "" : ""+Amount);
 		}
 	}
 }

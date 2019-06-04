@@ -7,15 +7,23 @@ namespace SFB.Game{
 		public int RangedAttack { get; private set; }
 		public int MeleeAttack { get; private set; }
 		public int HealthPoints { get; private set; }
+		public new string MainText {
+			get {
+				string s = "";
+				for(int i = 0; i < Abilities.Count; i++)
+					s += Abilities[i].GetMainText() + (i == Abilities.Count-1 ? "" : "\n");
+				return s;
+			}
+		}
 
 		public List<Ability> Abilities { get; private set; }
 
 		public string UnitType { get; private set; }
 
-		public UnitCard(int cost, string name, Faction faction, string unitType, string mainText, string flavorText,
+		public UnitCard(int cost, string name, Faction faction, string unitType, string flavorText,
 			int rangedAttack, int meleeAttack, int healthPoints, params Ability[] abList
 		)
-			: base(cost, name, faction, mainText, flavorText)
+			: base(cost, name, faction, "", flavorText)
         {
 			RangedAttack = rangedAttack;
 			MeleeAttack = meleeAttack;

@@ -4,10 +4,12 @@ using System;
 
 namespace SFB.Game
 {
-	// Front Line Recurring Deploy: If there is not a unit behind this, heal each adjacent allied front line unit 1.
-
 	public class SphereMedicalVanguard : Ability
 	{
+		public override string GetMainText() {
+			return "Front Line Recurring Deploy: If there is not a unit behind this, heal each adjacent allied front line unit 1.";
+		}
+
 		public SphereMedicalVanguard() : base(-1) { }
 
 		protected override void AddEffectsToEvents(Unit u, GameManager gm)

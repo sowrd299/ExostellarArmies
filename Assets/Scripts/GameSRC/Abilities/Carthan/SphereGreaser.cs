@@ -3,10 +3,12 @@ using System.Collections.Generic;
 
 namespace SFB.Game
 {
-	// Supporting Drone Deploy: Return the supported unit to your hand.
-
 	public class SphereGreaser : Ability
 	{
+		public override string GetMainText() {
+			return "Supporting Drone Deploy: Return the supported unit to your hand.";
+		}
+
 		public SphereGreaser() : base(-1) { }
 
 		protected override void AddEffectsToEvents(Unit u, GameManager gm)

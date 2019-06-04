@@ -30,6 +30,10 @@ namespace SFB.Game
 
 	public class MeleeShield : Shield
 	{
+		public override string GetMainText() {
+			return $"Melee Shield {Amount}";
+		}
+
 		public MeleeShield(int amount) : base(amount) { }
 		protected override void AddResistType(Unit u) {
 			u.ModifyMeleeResistance += ShieldInner;
@@ -40,6 +44,9 @@ namespace SFB.Game
 	}
 
 	public class RangedShield : Shield {
+		public override string GetMainText() {
+			return $"Ranged Shield {Amount}";
+		}
 		public RangedShield(int amount) : base(amount) { }
 		protected override void AddResistType(Unit u) {
 			u.ModifyRangedResistance += ShieldInner;
@@ -50,6 +57,9 @@ namespace SFB.Game
 	}
 
 	public class TowerShield : Shield {
+		public override string GetMainText() {
+			return $"Tower Shield {Amount}";
+		}
 		public TowerShield(int amount) : base(amount) { }
 		protected override void AddResistType(Unit u) {
 			u.ModifyTowerResistance += ShieldInner;

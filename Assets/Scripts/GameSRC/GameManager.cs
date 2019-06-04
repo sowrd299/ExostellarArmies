@@ -31,9 +31,9 @@ namespace SFB.Game.Management{
 
 
 		public event Ability.AddDeltaGMBoardUpdate AddBoardUpdateDeltas;
-		public event Ability.AddDeltaGMLoc AddRecurringDeployDeltas;
-		public event Ability.AddDeltaGMLocUnit AddUnitDeathDeltas;
-		public event Ability.AddDeltaGMLocTower AddTowerDeathDeltas;
+		public event Ability.AddDeltaGM AddRecurringDeployDeltas;
+		public event Ability.AddDeltaGMLoc AddUnitDeathDeltas;
+		public event Ability.AddDeltaGMTower AddTowerDeathDeltas;
 		public event Ability.AddDeltaGMUnitDelta AddHealDeltas;
 
 
@@ -41,13 +41,13 @@ namespace SFB.Game.Management{
 			AddBoardUpdateDeltas?.Invoke(deltas, new GMWithBoardUpdate(this, bu));
 		}
 		public void UseAddRecurringDeployDeltas(List<Delta> deltas) {
-			AddRecurringDeployDeltas?.Invoke(deltas, this.WithLocation(-1, -1, -1));
+			AddRecurringDeployDeltas?.Invoke(deltas, this);
 		}
-		public void UseAddUnitDeathDeltas(List<Delta> deltas, Unit u) {
-			AddUnitDeathDeltas?.Invoke(deltas, this.WithLocation(-1, -1, -1), u);
+		public void UseAddUnitDeathDeltas(List<Delta> deltas, int lane, int side, int pos) {
+			AddUnitDeathDeltas?.Invoke(deltas, this.WithLocation(lane, side, pos));
 		}
 		public void UseAddTowerDeathDeltas(List<Delta> deltas, Tower tower) {
-			AddTowerDeathDeltas?.Invoke(deltas, this.WithLocation(-1, -1, -1), tower);
+			AddTowerDeathDeltas?.Invoke(deltas, this, tower);
 		}
 		public void UseAddHealDeltas(List<Delta> deltas, UnitDelta ud) {
 			AddHealDeltas?.Invoke(deltas, this, ud);

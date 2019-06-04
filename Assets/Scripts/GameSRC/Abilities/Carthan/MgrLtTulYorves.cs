@@ -6,7 +6,9 @@ namespace SFB.Game
 {
 	public class MgrLtTulYorves : Ability
 	{
-		// Front Line Persistent: Whenever you heal a Unit, heal it for 1 more and deal 1 damage to whatever is opposing it.
+		public override string GetMainText() {
+			return "Front Line Persistent: Whenever you heal a Unit, heal it for 1 more and deal 1 damage to whatever is opposing it.";
+		}
 
 		public Unit Source { get; private set; }
 
@@ -14,7 +16,7 @@ namespace SFB.Game
 
 		protected override void AddEffectsToEvents(Unit u, GameManager gm) {
 			Source = u;
-			gm.AddHealDeltas += MgrLtTulYorvesInner;
+			u.AddInitialDeployDeltas += AddToGM;
 			u.AddDeathDeltas += RemoveFromGM;
 		}
 
@@ -23,21 +25,29 @@ namespace SFB.Game
 		}
 
 		public void MgrLtTulYorvesInner(List<Delta> deltas, GameManager gm, UnitDelta ud) {
-			System.Tuple<int, int, int> lsp = Lane.GetLaneSidePosOf(ud.Target, gm.Lanes);
+			System.Tuple<int, int, int> targetLSP = Lane.GetLaneSidePosOf(ud.Target, gm.Lanes);
+			System.Tuple<int, int, int> sourceLSP = Lane.GetLaneSidePosOf(Source, gm.Lanes);
 
-			if(lsp != null) {
-				Lane lane = gm.Lanes[lsp.Item1];
-				int side = lsp.Item2;
+			if(targetLSP != null && sourceLSP != null) {
+				if(targetLSP.Item2 == sourceLSP.Item2) {
+					int side = targetLSP.Item2;
+					Lane targetLane = gm.Lanes[targetLSP.Item1];
 
-				deltas.Add(new UnitHealthDelta(ud.Target, Source, 1, Damage.Type.HEAL));
-				if(lane.IsOccupied(1-side, 0)) {
-					deltas.Add(new UnitHealthDelta(lane.Units[1 - side, 0], Source, 1, Damage.Type.ABILITY));
-				} else if(lane.IsOccupied(1 - side, 1)) {
-					deltas.Add(new UnitHealthDelta(lane.Units[1 - side, 1], Source, 1, Damage.Type.ABILITY));
-				} else {
-					deltas.Add(new TowerDamageDelta(lane.Towers[1-side], 1, Damage.Type.ABILITY));
+					deltas.Add(new UnitHealthDelta(ud.Target, Source, 1, Damage.Type.HEAL));
+
+					if(targetLane.IsOccupied(1 - side, 0)) {
+						deltas.Add(new UnitHealthDelta(targetLane.Units[1 - side, 0], Source, 1, Damage.Type.ABILITY));
+					} else if(targetLane.IsOccupied(1 - side, 1)) {
+						deltas.Add(new UnitHealthDelta(targetLane.Units[1 - side, 1], Source, 1, Damage.Type.ABILITY));
+					} else {
+						deltas.Add(new TowerDamageDelta(targetLane.Towers[1 - side], 1, Damage.Type.ABILITY));
+					}
 				}
 			}
+		}
+
+		public void AddToGM(List<Delta> deltas, GMWithLocation gmLoc) {
+			gmLoc.GameManager.AddHealDeltas += MgrLtTulYorvesInner;
 		}
 
 		public void RemoveFromGM(List<Delta> deltas, GMWithLocation gmLoc, Damage.Type? phase) {

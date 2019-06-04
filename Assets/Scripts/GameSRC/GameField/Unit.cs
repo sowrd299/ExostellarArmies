@@ -63,10 +63,10 @@ namespace SFB.Game
 			Constructor(card, gm);
 		}
 
-		public Unit(UnitCard card, int id) {
+		public Unit(UnitCard card, int id, GameManager gm) {
 			this.id = ""+id;
 			IdIssuer.RegisterId(this.id, this);
-			Constructor(card, null);
+			Constructor(card, gm);
 		}
 
 		private void Constructor(UnitCard card, GameManager gm) {
@@ -90,9 +90,8 @@ namespace SFB.Game
 
 			Unit[] targets = { l.Units[oppSide, 0], l.Units[oppSide, 1] };
 			FilterTargets?.Invoke(targets);
-
-			int pos = 0;
-			while(dmgLeft > 0 && pos < 2) {
+			
+			for(int pos = 0; dmgLeft > 0 && pos < 2; pos++) {
 				if(targets[pos] != null) {
 					Unit target = targets[pos];
 					int resistance = target.GetResistance(dmgType);
@@ -110,7 +109,6 @@ namespace SFB.Game
 					dmgLeft = dmgLeft - deal;
 					target.ModifyDamageLeft?.Invoke(ref dmgLeft);
 				}
-				pos++;
 			}
 
 			if(dmgLeft > 0) {

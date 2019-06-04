@@ -4,7 +4,9 @@ namespace SFB.Game
 {
 	public class Absorb : Ability
 	{
-		// Excess damage done to this does not overflow.
+		public override string GetMainText() {
+			return "Absorb"; // Excess damage done to this does not overflow.
+		}
 
 		public Absorb() : base(-1) { }
 

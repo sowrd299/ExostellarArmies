@@ -150,8 +150,9 @@ namespace SFB.Game.Content
 		{
 			RemoveFromLaneDelta rmd = new RemoveFromLaneDelta(this, side, pos);
 			List<Delta> deltas = new List<Delta> { rmd };
-			gm.UseAddUnitDeathDeltas(deltas, Units[rmd.SideIndex, rmd.Position]);
-			gm.UseAddBoardUpdateDeltas(deltas, BoardUpdate.GetRemove(Lane.GetLaneIndexOf(this, gm.Lanes), side, pos));
+			int laneIdx = Lane.GetLaneIndexOf(this, gm.Lanes);
+			gm.UseAddUnitDeathDeltas(deltas, laneIdx, rmd.SideIndex, rmd.Position);
+			gm.UseAddBoardUpdateDeltas(deltas, BoardUpdate.GetRemove(laneIdx, side, pos));
 			return deltas.ToArray();
 		}
 

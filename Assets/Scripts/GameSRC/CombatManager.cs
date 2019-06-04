@@ -16,7 +16,7 @@ namespace SFB.Game.Management
 				for(int play = 0; play < 2; play++)
 					for(int pos = 0; pos < 2; pos++)
 						if(l.IsOccupied(play, pos)) {
-							Delta[] combatDeltas = l.Units[play, pos].GetDamagingDeltas(l, System.Math.Abs(play - 1), phase, gm);
+							Delta[] combatDeltas = l.Units[play, pos].GetDamagingDeltas(l, 1 - play, phase, gm);
 							foreach(Delta d in combatDeltas) {
 								if(d.GetType() == typeof(TowerDamageDelta)) {
 									TowerDamageDelta t = d as TowerDamageDelta;

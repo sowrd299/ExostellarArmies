@@ -5,7 +5,9 @@ namespace SFB.Game
 {
 	public class CommercialShipper : Ability
 	{
-		// Deploy: Draw a card, then put a card from hand on the bottom of your deck.
+		public override string GetMainText() {
+			return "Deploy: Draw a card, then put a card from hand on the bottom of your deck.";
+		}
 
 		public CommercialShipper() : base(-1) { }
 

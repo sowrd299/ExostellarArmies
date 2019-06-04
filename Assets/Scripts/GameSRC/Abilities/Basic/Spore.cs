@@ -6,6 +6,9 @@ namespace SFB.Game
 	public class Spore : Ability
 	{
 		// When this dies, gain <amount> resource(s)
+		public override string GetMainText() {
+			return $"Spore {Amount}";
+		}
 
 		public Spore(int amount) : base(amount) {}
 

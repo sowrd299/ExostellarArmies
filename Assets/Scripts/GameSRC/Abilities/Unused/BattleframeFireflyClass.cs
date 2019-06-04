@@ -4,16 +4,17 @@ using System;
 
 namespace SFB.Game
 {
-	// Front Line: While this unit is fortified, it has +2M, else it has +1R.
-
 	public class BattleframeFireflyClass : PersistentFieldUnitAbility
 	{
-		private Unit applied1RTo;
-		private Unit applied2MTo;
+		public override string GetMainText() {
+			return "Front Line: While this unit is fortified, it has +2M, else it has +1R.";
+		}
+
+		public enum AbilityState { UNAPPLIED, APPLIED1R, APPLIED2M }
+		public AbilityState State { get; private set; }
 
 		public BattleframeFireflyClass() {
-			applied1RTo = null;
-			applied2MTo = null;
+			State = AbilityState.UNAPPLIED;
 		}
 
 		protected override Delta[] GetAddDeltas(int lane, int side, int pos, Lane[] lanes, Unit source, GameManager gm)
@@ -23,10 +24,10 @@ namespace SFB.Game
 				Delta[] deltas = new Delta[1];
 				if(lanes[lane].Units[side, 1] == null) {
 					deltas[0] = new UnitDamageAmountDelta(target, 1, Damage.Type.RANGED, source);
-					applied1RTo = target;
+					State = AbilityState.APPLIED1R;
 				} else {
 					deltas[0] = new UnitDamageAmountDelta(target, 2, Damage.Type.MELEE, source);
-					applied2MTo = target;
+					State = AbilityState.APPLIED2M;
 				}
 				return deltas;
 			} else {
@@ -36,15 +37,16 @@ namespace SFB.Game
 
 		protected override Delta[] GetRemoveDeltas(Unit target, Unit source, GameManager gm)
 		{
-			if(applied1RTo != null) {
-				applied1RTo = null;
-				return new Delta[] { new UnitDamageAmountDelta(target, -1, Damage.Type.RANGED, source) };
+			switch(State) {
+				case AbilityState.APPLIED1R:
+					State = AbilityState.UNAPPLIED;
+					return new Delta[] { new UnitDamageAmountDelta(target, -1, Damage.Type.RANGED, source) };
+				case AbilityState.APPLIED2M:
+					State = AbilityState.UNAPPLIED;
+					return new Delta[] { new UnitDamageAmountDelta(target, -2, Damage.Type.MELEE, source) };
+				default:
+					return new Delta[] { };
 			}
-			if(applied2MTo != null) {
-				applied2MTo = null;
-				return new Delta[] { new UnitDamageAmountDelta(target, -2, Damage.Type.MELEE, source) };
-			}
-			return new Delta[] { };
 		}
 
 		protected override bool ApplyTo(int lane, int side, int pos, Lane[] lanes, Unit source)

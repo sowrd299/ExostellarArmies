@@ -3,10 +3,12 @@ using System.Collections.Generic;
 
 namespace SFB.Game
 {
-	// Front Line: This gets Ranged Shield 2 this turn.
-
 	public class EXAvengerCustomDrone2 : TemporaryAbility
 	{
+		public override string GetMainText() {
+			return "Front Line: This gets Ranged Shield 2 this turn.";
+		}
+
 		protected override bool ShouldApply(GMWithLocation gmLoc)
 		{
 			return gmLoc.Pos == 0;

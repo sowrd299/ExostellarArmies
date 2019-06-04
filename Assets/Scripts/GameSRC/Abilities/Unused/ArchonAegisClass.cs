@@ -5,7 +5,9 @@ namespace SFB.Game
 {
 	public class ArchonAegisClass : TemporaryAbility
 	{
-		// Fortify Carthan Infantry: The fortified unit gains Ranged Shield 3 this turn.
+		public override string GetMainText() {
+			return "Fortify Carthan Infantry: The fortified unit gains Ranged Shield 3 this turn.";
+		}
 
 		protected override bool ShouldApply(GMWithLocation gmLoc)
 		{

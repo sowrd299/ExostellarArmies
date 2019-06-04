@@ -9,6 +9,10 @@ namespace SFB.Game
 		// When you deploy this, if it is behind a Unit that shares a tag with it
 		// other than "Unit", draw a card.
 
+		public override string GetMainText() {
+			return "Swarm";
+		}
+
 		public Swarm() : base(-1) {}
 
 		protected override void AddEffectsToEvents(Unit u, GameManager gm)

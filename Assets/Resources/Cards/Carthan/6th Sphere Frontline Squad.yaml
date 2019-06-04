@@ -2,7 +2,6 @@ name: 6th Sphere Frontline Squad
 cost: 3
 faction: Carthan
 unitType: Carthan -- Elite - Infantry
-mainText: ''
 flavorText: 'To a Carthan, there is no greater calling than the Great Crusade against The Lawless One.'
 rangedDamage: 2
 meleeDamage: 2

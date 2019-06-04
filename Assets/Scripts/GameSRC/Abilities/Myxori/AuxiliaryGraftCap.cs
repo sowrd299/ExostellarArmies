@@ -4,12 +4,12 @@ using System;
 
 namespace SFB.Game
 {
-	// Supporting Myxori Persistent…
-	//   Center: The supported unit gains Absorb.
-	//   Flank: When the supported Unit dies, Beta Swarm.
-
 	public class AuxiliaryGraftCap : PersistentFieldUnitAbility
 	{
+		public override string GetMainText() {
+			return "Supporting Myxori Persistent...\nCenter: The supported unit gains Absorb.\nFlank: When the supported Unit dies, Beta Swarm.";
+		}
+
 		protected override Delta[] GetAddDeltas(int lane, int side, int pos, Lane[] lanes, Unit source, GameManager gm)
 		{
 			Unit target = lanes[lane].Units[side, pos];

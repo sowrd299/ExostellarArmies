@@ -6,6 +6,9 @@ namespace SFB.Game
 {
 	public class Siege : Ability
 	{
+		public override string GetMainText() {
+			return $"Siege {Amount}";
+		}
 		// After this deals damage to a tower, it deals <amount> extra damage to it.
 
 		public Siege(int amount) : base(amount) {}

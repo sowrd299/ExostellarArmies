@@ -33,7 +33,7 @@ namespace SFB.Game
 			XmlElement r = base.ToXml(doc);
 
 			XmlAttribute aTypeAttr = doc.CreateAttribute("abilityType");
-			aTypeAttr.Value = "" + Ability.ToString();
+			aTypeAttr.Value = "" + Ability.GetType();
 			r.SetAttributeNode(aTypeAttr);
 
 			XmlAttribute aAmtAttr = doc.CreateAttribute("abilityAmount");

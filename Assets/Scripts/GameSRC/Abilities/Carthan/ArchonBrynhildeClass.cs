@@ -5,7 +5,9 @@ namespace SFB.Game
 {
 	public class ArchonBrynhildeClass : Ability
 	{
-		// Fortify Carthan: Heal this Front Line 2 and gain 3 Resources.
+		public override string GetMainText() {
+			return "Fortify Carthan: Heal this Front Line 2 and gain 3 Resources.";
+		}
 
 		public ArchonBrynhildeClass() : base(-1) { }
 

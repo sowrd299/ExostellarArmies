@@ -3,10 +3,12 @@ using System.Collections.Generic;
 
 namespace SFB.Game
 {
-	// Fortify: Heal the fortified unit by 2 and each of its neighbors by 1.
-
 	public class ArchonEtherealClass : Ability
 	{
+		public override string GetMainText() {
+			return "Fortify: Heal the fortified unit by 2 and each of its neighbors by 1.";
+		}
+
 		public ArchonEtherealClass() : base(-1) { }
 
 		protected override void AddEffectsToEvents(Unit u, GameManager gm)

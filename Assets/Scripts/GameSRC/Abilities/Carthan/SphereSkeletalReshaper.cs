@@ -5,7 +5,9 @@ namespace SFB.Game
 {
 	public class SphereSkeletalReshaper : Ability
 	{
-		// Fortify Carthan: Heal the fortified unit by 2.
+		public override string GetMainText() {
+			return "Fortify Carthan: Heal the fortified unit by 2.";
+		}
 
 		public SphereSkeletalReshaper() : base(-1) { }
 

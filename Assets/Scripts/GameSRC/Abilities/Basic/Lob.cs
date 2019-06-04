@@ -6,7 +6,9 @@ namespace SFB.Game
 {
 	public class Lob : Ability
 	{
-		// In combat, this deals damage to whatever is behind the opposing front line.
+		public override string GetMainText() {
+			return "Lob"; //In combat, this deals damage to whatever is behind the opposing front line.
+		}
 
 		public Lob() : base(-1) {}
 

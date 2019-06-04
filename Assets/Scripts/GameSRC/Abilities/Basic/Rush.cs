@@ -23,16 +23,20 @@ namespace SFB.Game
 
 		protected override void AddEffectsToEvents(Unit u, GameManager gm)
 		{
-			gm.AddBoardUpdateDeltas += RushInner;
+			u.AddInitialDeployDeltas += AddBoardUpdate;
 			u.AddDeathDeltas += RemoveBoardUpdate;
-			Tuple<int, int, int> lsp = Lane.GetLaneSidePosOf(u, gm.Lanes);
-			Lane = gm.Lanes[lsp.Item1];
-			Unit = u;
-			Side = lsp.Item2;
 		}
 
 		protected override void RemoveEffectsFromEvents(Unit u, GameManager gm) {
 			gm.AddBoardUpdateDeltas -= RushInner;
+		}
+
+		public void AddBoardUpdate(List<Delta> deltas, GMWithLocation gmLoc) {
+			gmLoc.GameManager.AddBoardUpdateDeltas += RushInner;
+			Tuple<int, int, int> lsp = Lane.GetLaneSidePosOf(gmLoc.SubjectUnit, gmLoc.Lanes);
+			Lane = gmLoc.Lanes[lsp.Item1];
+			Unit = gmLoc.SubjectUnit;
+			Side = lsp.Item2;
 		}
 
 		public void RemoveBoardUpdate(List<Delta> deltas, GMWithLocation gmLoc, Damage.Type? phase)
@@ -54,6 +58,18 @@ namespace SFB.Game
 		protected abstract int RushTo();
 	}
 
-	public class RushFront : Rush { override protected int RushTo() { return 0; } }
-	public class RushBack : Rush { override protected int RushTo() { return 1; } }
+	public class RushFront : Rush
+	{
+		public override string GetMainText() {
+			return "Rush Front";
+		}
+		override protected int RushTo() { return 0; }
+	}
+	public class RushBack : Rush
+	{
+		public override string GetMainText() {
+			return "Rush Back";
+		}
+		override protected int RushTo() { return 1; }
+	}
 }

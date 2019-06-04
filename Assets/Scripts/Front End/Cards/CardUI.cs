@@ -36,7 +36,8 @@ public class CardUI : MonoBehaviour, IHasCard
 	{
 		background.sprite = factions[cardData.Faction].cardBackground;
 		cardName.text = cardData.Name;
-		description.text = cardData.MainText;
+		string mainText = (cardData as UnitCard)?.MainText;
+		description.text = (mainText == null ? cardData.MainText : mainText);
 		cardCost.text = cardData.DeployCost.ToString();
 		if (cardData.FlavorText != "")
 		{

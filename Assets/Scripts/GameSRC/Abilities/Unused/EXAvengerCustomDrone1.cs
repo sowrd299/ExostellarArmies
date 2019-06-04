@@ -3,10 +3,12 @@ using System.Collections.Generic;
 
 namespace SFB.Game
 {
-	// Support Carthan Infantry: Discard your hand to give the supported unit +1R this turn and heal it 1 for each card discarded.
-
 	public class EXAvengerCustomDrone1 : Ability
 	{
+		public override string GetMainText() {
+			return "Support Carthan Infantry: Discard your hand to give the supported unit +1R this turn and heal it 1 for each card discarded.";
+		}
+
 		public EXAvengerCustomDrone1() : base(-1) { }
 
 		protected override void AddEffectsToEvents(Unit u, GameManager gm)

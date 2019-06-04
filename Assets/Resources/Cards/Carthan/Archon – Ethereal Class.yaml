@@ -2,10 +2,9 @@ name: Archon – Ethereal Class
 cost: 0
 faction: Carthan
 unitType: Carthan -- Medical - Drone
-mainText: 'Fortify: Heal the fortified unit by 2 and each of its neighbors by 1.'
 flavorText: 'Carthan doctors are the bravest in the sector, but even they won''t charge into certain death. That''s what Archons are for.'
 rangedDamage: 0
 meleeDamage: 0
 hp: 1
 abilities:
-  - ArchonEtherealClass
+  - ArchonEtherealClass # Fortify: Heal the fortified unit by 2 and each of its neighbors by 1.

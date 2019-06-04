@@ -118,6 +118,12 @@ namespace SFB.Net.Server.Matches{
 					endDeploy.Deltas.Add(d);
 					gameManager.ApplyDelta(d);
 				}
+
+				foreach(Delta d in gameManager.GetRushForwardDeltas()) {
+					endDeploy.Deltas.Add(d);
+					gameManager.ApplyDelta(d);
+				}
+				
 				turnPhases.Add(endDeploy);
 
 				// if no more deployment phases, do the rest of this turn into the start of the next
@@ -132,7 +138,12 @@ namespace SFB.Net.Server.Matches{
                         rangedCombat.Deltas.Add(d);
                         gameManager.ApplyDelta(d);
                     }
-                    turnPhases.Add(rangedCombat);
+					foreach(Delta d in gameManager.GetRushForwardDeltas()) {
+						endDeploy.Deltas.Add(d);
+						gameManager.ApplyDelta(d);
+					}
+
+					turnPhases.Add(rangedCombat);
 
                     // melee combat
                     TurnPhase meleeCombat = new TurnPhase("meleeCombat");
@@ -144,6 +155,10 @@ namespace SFB.Net.Server.Matches{
                         meleeCombat.Deltas.Add(d);
                         gameManager.ApplyDelta(d);
                     }
+					foreach(Delta d in gameManager.GetRushForwardDeltas()) {
+						endDeploy.Deltas.Add(d);
+						gameManager.ApplyDelta(d);
+					}
 					turnPhases.Add(meleeCombat);
 					
 					// tower damage
@@ -154,6 +169,10 @@ namespace SFB.Net.Server.Matches{
 					}
 					foreach(Delta d in gameManager.GetCleanUpDeltas(Damage.Type.TOWER)) {
 						towerCombat.Deltas.Add(d);
+						gameManager.ApplyDelta(d);
+					}
+					foreach(Delta d in gameManager.GetRushForwardDeltas()) {
+						endDeploy.Deltas.Add(d);
 						gameManager.ApplyDelta(d);
 					}
 					turnPhases.Add(towerCombat);

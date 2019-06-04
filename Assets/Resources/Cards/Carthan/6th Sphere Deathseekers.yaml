@@ -2,10 +2,9 @@ name: 6th Sphere Deathseekers
 cost: 4
 faction: Carthan
 unitType: Elite - Carthan -- Infantry
-mainText: 'Deploy Front Line: This gains Ranged and Melee Shield 3 this turn.\nFortify Carthan: This gains +3R this turn.'
 flavorText: 'Battle makes even the wise into fools.'
 rangedDamage: 1
 meleeDamage: 1
 hp: 4
 abilities:
-  - SphereDeathseekers
+  - SphereDeathseekers # Deploy Front Line: This gains Ranged and Melee Shield 3 this turn.\nFortify Carthan: This gains +3R this turn.

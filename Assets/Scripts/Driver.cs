@@ -32,6 +32,8 @@ public class Driver : MonoBehaviour
 
 	private void Awake()
 	{
+		Debug.Log(new RangedShield(1) == new RangedShield(1) ? 'T' : 'F');
+
 		if (instance == null)
 		{
 			instance = this;
