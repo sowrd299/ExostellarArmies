@@ -7,21 +7,36 @@ using SFB.Game.Content;
 public class CommercialShipperIR : InputRequest<Card>
 {
 	public GameManager GameManager { get; private set; }
-	public Player Player { get; private set; }
+	public Deck Deck { get; private set; }
+	public Hand Hand { get; private set; }
 
 	public CommercialShipperIR(Player p, GameManager gm)
 	{
 		GameManager = gm;
-		Player = p;
+		Deck = p.Deck;
+		Hand = p.Hand;
 	}
 
 	public CommercialShipperIR(XmlElement e) :
-	base(e, CardLoader.instance)
-	{ }
+		base(e, CardLoader.instance)
+	{ 
+		Deck = Deck.IdIssuer.GetByID(e.GetAttribute("deckId"));
+		Hand = Hand.IdIssuer.GetByID(e.GetAttribute("handId"));
+	}
+
+	public override XmlElement ToXml(XmlDocument doc)
+	{
+		XmlElement e = base.ToXml(doc);
+
+		e.SetAttribute("deckId", Deck.ID);
+		e.SetAttribute("handId", Hand.ID);
+
+		return e;
+	}
 
 	public override bool IsLegalChoice(Card chosen)
 	{
-		return Player.Hand.Contains(chosen);
+		return Hand.Contains(chosen);
 	}
 
 	protected override bool MakeChoiceFrom(XmlElement e)
@@ -34,8 +49,8 @@ public class CommercialShipperIR : InputRequest<Card>
 	{
 		List<Delta> deltas = new List<Delta>();
 
-		deltas.AddRange(Player.Hand.GetRemoveDelta(chosen.Target));
-		deltas.Add(new AddToDeckIndexDelta(Player.Deck, chosen.Target, Player.Deck.Count));
+		deltas.AddRange(Hand.GetRemoveDelta(chosen.Target));
+		deltas.Add(new AddToDeckIndexDelta(Deck, chosen.Target, Deck.Count));
 
 		return deltas.ToArray();
 	}
