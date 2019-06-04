@@ -173,7 +173,7 @@ namespace SFB.Net.Server.Matches{
                     break;
                 // handle answers to input requests
                 case "inputRequestResponse":
-                    XmlDocument irResp = NewEmptyMessage("actionDeltas");
+                    XmlDocument irResp = NewEmptyMessage("turnStart");
                     foreach (XmlElement reqElement in msg.GetElementsByTagName("inputRequest")){
                         InputRequest req = InputRequest.FromXml(reqElement);
                         if(player.ContainsInputRequest(req) && req.Made){
