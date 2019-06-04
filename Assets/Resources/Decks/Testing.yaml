@@ -1,9 +1,9 @@
 id: TEST
 name: Testing
 cards:
-  - id: Commercial Shipper
-    count: 12
-  - id: Resist Token
-    count: 4
+  - id: 6th Sphere Deathseekers
+    count: 7
+  - id: 6th Sphere Frontline Squad
+    count: 6
   - id: Mana Token
-    count: 4
+    count: 7

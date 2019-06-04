@@ -1,33 +1,33 @@
 id: carthStarter
 name: Carthan Starter
 cards:
-  - id: 6th Sphere Frontline Squad # GOOD
+  - id: 6th Sphere Frontline Squad
     count: 2
-  - id: Commercial Shipper
+  - id: Commercial Shipper # lol
     count: 1
-  - id: Commercial Coms Relay
+  - id: Commercial Coms Relay # lol
     count: 1
-  - id: Battleframe - Assize Class # GOOD
+  - id: Battleframe - Assize Class
     count: 2
-  - id: 6th Sphere Medical Vanguard # most likely
+  - id: 6th Sphere Medical Vanguard
     count: 1
-  - id: Archon – Brynhilde Class # most likely
+  - id: Archon – Brynhilde Class
     count: 2
-  - id: 6th Sphere Greaser # GOOD
+  - id: 6th Sphere Greaser
     count: 1
   - id: Mgr. Lt. Tul Yorves
     count: 1
-  - id: 3rd Sphere Irregular Marksman # GOOD
+  - id: 3rd Sphere Irregular Marksman
     count: 2
-  - id: Battle-Chief Yos Lorth # possibly
+  - id: Battle-Chief Yos Lorth # sketchy
     count: 1
-  - id: 6th Sphere Skeletal Reshaper # GOOD
+  - id: 6th Sphere Skeletal Reshaper
     count: 1
-  - id: 6th Sphere Deathseekers # most likely
+  - id: 6th Sphere Deathseekers
     count: 1
-  - id: Archon – Ethereal Class # GOOD
+  - id: Archon – Ethereal Class
     count: 1
-  - id: Cannoneer Drone # GOOD
+  - id: Cannoneer Drone
     count: 1
-  - id: Fire Support Drone # most likely
+  - id: Fire Support Drone
     count: 2

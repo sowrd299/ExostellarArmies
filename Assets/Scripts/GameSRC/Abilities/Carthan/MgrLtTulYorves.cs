@@ -24,7 +24,8 @@ namespace SFB.Game
 			gm.AddHealDeltas -= MgrLtTulYorvesInner;
 		}
 
-		public void MgrLtTulYorvesInner(List<Delta> deltas, GameManager gm, UnitDelta ud) {
+		public void MgrLtTulYorvesInner(List<Delta> deltas, GameManager gm, UnitDelta ud)
+		{
 			System.Tuple<int, int, int> targetLSP = Lane.GetLaneSidePosOf(ud.Target, gm.Lanes);
 			System.Tuple<int, int, int> sourceLSP = Lane.GetLaneSidePosOf(Source, gm.Lanes);
 
@@ -47,6 +48,7 @@ namespace SFB.Game
 		}
 
 		public void AddToGM(List<Delta> deltas, GMWithLocation gmLoc) {
+			System.Console.WriteLine("~MgrLt Added to GM~");
 			gmLoc.GameManager.AddHealDeltas += MgrLtTulYorvesInner;
 		}
 

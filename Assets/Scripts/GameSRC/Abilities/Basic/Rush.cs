@@ -28,11 +28,11 @@ namespace SFB.Game
 		}
 
 		protected override void RemoveEffectsFromEvents(Unit u, GameManager gm) {
-			gm.AddBoardUpdateDeltas -= RushInner;
+			gm.AddPersistentDeltas -= RushInner;
 		}
 
 		public void AddBoardUpdate(List<Delta> deltas, GMWithLocation gmLoc) {
-			gmLoc.GameManager.AddBoardUpdateDeltas += RushInner;
+			gmLoc.GameManager.AddPersistentDeltas += RushInner;
 			Tuple<int, int, int> lsp = Lane.GetLaneSidePosOf(gmLoc.SubjectUnit, gmLoc.Lanes);
 			Lane = gmLoc.Lanes[lsp.Item1];
 			Unit = gmLoc.SubjectUnit;
@@ -41,18 +41,13 @@ namespace SFB.Game
 
 		public void RemoveBoardUpdate(List<Delta> deltas, GMWithLocation gmLoc, Damage.Type? phase)
 		{
-			gmLoc.GameManager.AddBoardUpdateDeltas -= RushInner;
+			gmLoc.GameManager.AddPersistentDeltas -= RushInner;
 		}
 
-		protected void RushInner(List<Delta> deltas, GMWithBoardUpdate gmBoardUpdate)
+		protected void RushInner(List<Delta> deltas, GameManager gm)
 		{
 			if(Unit != Lane.Units[Side ?? -1, RushTo()])
-				deltas.AddRange(gmBoardUpdate.SubjectLane
-											 .GetInLaneSwapDeltas(
-												 Side ?? -1,
-												 gmBoardUpdate.GameManager
-											 )
-				);
+				deltas.AddRange(Lane.GetInLaneSwapDeltas(Side ?? -1, gm));
 		}
 
 		protected abstract int RushTo();

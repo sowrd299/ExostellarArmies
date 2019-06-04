@@ -34,10 +34,15 @@ namespace SFB.Game
 			int? sourceSide = Lane.GetLaneSidePosOf(source, lanes)?.Item2;
 			if(sourceSide == null)
 				throw new Exception($"Source Unit \"{source.ID}\" not found");
-			return pos == 0 &&
+
+			
+			bool b = pos == 0 &&
 				lanes[lane].Units[side, pos].Card.UnitType.Contains("Elite") &&
 				sourceSide == side &&
 				lanes[lane].Units[side, pos] != source;
+
+			Console.WriteLine($" -l{lane} s{side} p{pos} apply{b}- ");
+			return b;
 		}
 	}
 }

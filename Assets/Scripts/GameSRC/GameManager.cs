@@ -30,15 +30,17 @@ namespace SFB.Game.Management{
 		public Lane[] Lanes { get; private set; }
 
 
-		public event Ability.AddDeltaGMBoardUpdate AddBoardUpdateDeltas;
+		public event Ability.AddDeltaGM AddPersistentDeltas;
 		public event Ability.AddDeltaGM AddRecurringDeployDeltas;
 		public event Ability.AddDeltaGMLoc AddUnitDeathDeltas;
-		public event Ability.AddDeltaGMTower AddTowerDeathDeltas;
+		public event Ability.AddDeltaGMTower AddTowerDamageDeltas;
 		public event Ability.AddDeltaGMUnitDelta AddHealDeltas;
 
 
-		public void UseAddBoardUpdateDeltas(List<Delta> deltas, BoardUpdate bu) {
-			AddBoardUpdateDeltas?.Invoke(deltas, new GMWithBoardUpdate(this, bu));
+		public List<Delta> GetPersistentDeltas() {
+			List<Delta> deltas = new List<Delta>();
+			AddPersistentDeltas?.Invoke(deltas, this);
+			return deltas;
 		}
 		public void UseAddRecurringDeployDeltas(List<Delta> deltas) {
 			AddRecurringDeployDeltas?.Invoke(deltas, this);
@@ -46,8 +48,8 @@ namespace SFB.Game.Management{
 		public void UseAddUnitDeathDeltas(List<Delta> deltas, int lane, int side, int pos) {
 			AddUnitDeathDeltas?.Invoke(deltas, this.WithLocation(lane, side, pos));
 		}
-		public void UseAddTowerDeathDeltas(List<Delta> deltas, Tower tower) {
-			AddTowerDeathDeltas?.Invoke(deltas, this, tower);
+		public void UseAddTowerDamageDeltas(List<Delta> deltas, Tower tower) {
+			AddTowerDamageDeltas?.Invoke(deltas, this, tower);
 		}
 		public void UseAddHealDeltas(List<Delta> deltas, UnitDelta ud) {
 			AddHealDeltas?.Invoke(deltas, this, ud);
@@ -117,7 +119,7 @@ namespace SFB.Game.Management{
         //   whose deltas haven't been applied yet
 
         // get deltas for the absolute start of the turn
-		// add deploy phases
+		// add mana and deploy phases
         public Delta[] GetStartTurnDeltas(){
             List<Delta> deltas = new List<Delta>();
             foreach(Player p in Players){
@@ -167,36 +169,39 @@ namespace SFB.Game.Management{
             return deltas;
         }
 		
-        // Get deltas for after a deployment phase ends
-		// Decrease # of deploy phases, activate deploy effects
+		// Decrease # of deploy phases
         public Delta[] GetEndDeployDeltas()
 		{
-			// decrease each player's # of deploy phases
             List<Delta> deltas = new List<Delta>();
-            foreach(Player p in Players) {
-                foreach(Delta d in p.GetPostDeployPhaseDeltas()){
-                    deltas.Add(d);
-                }
-            }
 
-			// activate deploy affects
-			for(int l = 0; l < Lanes.Length; l++) {
-				Lane lane = Lanes[l];
-				
-				for(int side = 0; side < lane.Units.GetLength(0); side++) // sideIndex
-					for(int pos = 0; pos < lane.Units.GetLength(1); pos++) // front/back row
-						if(lane.Units[side, pos] != null) // do not call on empty spaces
-							deltas.AddRange(lane.Units[side, pos].OnEachDeployPhase(l, side, pos, this));
-			}
-			UseAddRecurringDeployDeltas(deltas);
+            foreach(Player p in Players)
+                foreach(Delta d in p.GetPostDeployPhaseDeltas())
+                    deltas.Add(d);
 
             return deltas.ToArray();
         }
 
-        // returns whether or there are deploy phases to continue doing
-        // if returns true, continue to combat
-        // if not, go back to GetStartDeployDeltas...
-        public bool DeployPhasesOver()
+		// activate deploy effects
+		public Delta[] GetEndTurnDeltas() {
+			List<Delta> deltas = new List<Delta>();
+
+			for(int l = 0; l < Lanes.Length; l++) {
+				Lane lane = Lanes[l];
+
+				for(int side = 0; side < lane.Units.GetLength(0); side++) // sideIndex
+					for(int pos = 0; pos < lane.Units.GetLength(1); pos++) // front/back row
+						if(lane.Units[side, pos] != null) // do not call on empty spaces
+							deltas.AddRange(lane.Units[side, pos].OnEachTurn(l, side, pos, this));
+			}
+			UseAddRecurringDeployDeltas(deltas);
+
+			return deltas.ToArray();
+		}
+
+		// returns whether or there are deploy phases to continue doing
+		// if returns true, continue to combat
+		// if not, go back to GetStartDeployDeltas...
+		public bool DeployPhasesOver()
 		{
             bool r = true;
             foreach(Player p in Players) {

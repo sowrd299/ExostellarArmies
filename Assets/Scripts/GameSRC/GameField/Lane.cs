@@ -142,7 +142,6 @@ namespace SFB.Game.Content
 		public Delta[] GetDeployDeltas(UnitCard card, int side, int pos, GameManager gm)
 		{
 			List<Delta> deltas = new List<Delta>() { new AddToLaneDelta(this, card, side, pos, gm) };
-			gm.UseAddBoardUpdateDeltas(deltas, BoardUpdate.GetAdd(Lane.GetLaneIndexOf(this, gm.Lanes), side, pos));
 			return deltas.ToArray();
 		}
 
@@ -152,14 +151,12 @@ namespace SFB.Game.Content
 			List<Delta> deltas = new List<Delta> { rmd };
 			int laneIdx = Lane.GetLaneIndexOf(this, gm.Lanes);
 			gm.UseAddUnitDeathDeltas(deltas, laneIdx, rmd.SideIndex, rmd.Position);
-			gm.UseAddBoardUpdateDeltas(deltas, BoardUpdate.GetRemove(laneIdx, side, pos));
 			return deltas.ToArray();
 		}
 
 		public Delta[] GetInLaneSwapDeltas(int side, GameManager gm)
 		{
 			List<Delta> deltas = new List<Delta> { new InLaneSwapDelta(this, side) };
-			gm.UseAddBoardUpdateDeltas(deltas, BoardUpdate.GetSwap(Lane.GetLaneIndexOf(this, gm.Lanes), side));
 			return deltas.ToArray();
 		}
 	}

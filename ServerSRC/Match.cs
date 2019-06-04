@@ -68,7 +68,7 @@ namespace SFB.Net.Server.Matches{
             }
             returnCallback = rc; 
             // start the first turn;
-            EndTurn();
+            EndDeployPhase();
         }
 
         // starts the match with asynchronous receiving
@@ -92,56 +92,69 @@ namespace SFB.Net.Server.Matches{
         // mostly here as a freestanding method so I can call it back
         public void CheckEndTurn(){
             if(TurnLockedIn){
-                EndTurn();
+                EndDeployPhase();
             }
         }
         
+		private void CleanUpAndUpdate(TurnPhase turnPhase, Damage.Type? phase) {
+			foreach(Delta d in gameManager.GetCleanUpDeltas(phase)) {
+				turnPhase.Deltas.Add(d);
+				gameManager.ApplyDelta(d);
+			}
+			foreach(Delta d in gameManager.GetRushForwardDeltas()) {
+				turnPhase.Deltas.Add(d);
+				gameManager.ApplyDelta(d);
+			}
+			foreach(Delta d in gameManager.GetPersistentDeltas()) {
+				turnPhase.Deltas.Add(d);
+				gameManager.ApplyDelta(d);
+			}
+		}
+
         // TODO: avoid weird race conditions when a user resumes making actions
         // to be called after ending deployment
         // NOTE: technically, multiple deployment phases withing one turn are implemented
         // as multiple turns, with many phases skipped
-        public void EndTurn(){
+        public void EndDeployPhase(){
             bool gameOver;
             List<TurnPhase>[] turnPhaseLists = new List<TurnPhase>[players.Length];
             lock(gameManager){
                 // calculate the outcome of the deploy phase
                 // use a list to collect the deltas, to send them later
-                List<TurnPhase> turnPhases = new List<TurnPhase>(); 
-                
-                TurnPhase endDeploy = new TurnPhase("endDeploy");
+                List<TurnPhase> turnPhases = new List<TurnPhase>();
+
+				TurnPhase endDeploy = new TurnPhase("endDeploy");
+				
+				// decrease # dep phase
                 foreach(Delta d in gameManager.GetEndDeployDeltas()){
                     endDeploy.Deltas.Add(d);
                     gameManager.ApplyDelta(d);
                 }
 
-				foreach(Delta d in gameManager.GetCleanUpDeltas(null)) {
-					endDeploy.Deltas.Add(d);
-					gameManager.ApplyDelta(d);
+				if(!gameManager.DeployPhasesOver()) {
+					Console.WriteLine("Still are deploy phases");
+					CleanUpAndUpdate(endDeploy, null);
+					turnPhases.Add(endDeploy);
 				}
 
-				foreach(Delta d in gameManager.GetRushForwardDeltas()) {
-					endDeploy.Deltas.Add(d);
-					gameManager.ApplyDelta(d);
-				}
-				
-				turnPhases.Add(endDeploy);
-
-				// if no more deployment phases, do the rest of this turn into the start of the next
+				// if no more deployment phases, do the rest of this turn through the start of the next
 				if(gameManager.DeployPhasesOver()){
-                    // ranged combat
-                    TurnPhase rangedCombat = new TurnPhase("rangedCombat");
+					Console.WriteLine("No more deploy phases");
+					// card+field deploy effects
+					foreach(Delta d in gameManager.GetEndTurnDeltas()) {
+						endDeploy.Deltas.Add(d);
+						gameManager.ApplyDelta(d);
+					}
+					CleanUpAndUpdate(endDeploy, null);
+					turnPhases.Add(endDeploy);
+
+					// ranged combat
+					TurnPhase rangedCombat = new TurnPhase("rangedCombat");
                     foreach(Delta d in gameManager.GetRangedCombatDeltas()){
                         rangedCombat.Deltas.Add(d);
                         gameManager.ApplyDelta(d);
                     }
-                    foreach(Delta d in gameManager.GetCleanUpDeltas(Damage.Type.RANGED)){
-                        rangedCombat.Deltas.Add(d);
-                        gameManager.ApplyDelta(d);
-                    }
-					foreach(Delta d in gameManager.GetRushForwardDeltas()) {
-						endDeploy.Deltas.Add(d);
-						gameManager.ApplyDelta(d);
-					}
+					CleanUpAndUpdate(rangedCombat, Damage.Type.RANGED);
 
 					turnPhases.Add(rangedCombat);
 
@@ -151,14 +164,7 @@ namespace SFB.Net.Server.Matches{
                         meleeCombat.Deltas.Add(d);
                         gameManager.ApplyDelta(d);
                     }
-                    foreach(Delta d in gameManager.GetCleanUpDeltas(Damage.Type.MELEE)){
-                        meleeCombat.Deltas.Add(d);
-                        gameManager.ApplyDelta(d);
-                    }
-					foreach(Delta d in gameManager.GetRushForwardDeltas()) {
-						endDeploy.Deltas.Add(d);
-						gameManager.ApplyDelta(d);
-					}
+					CleanUpAndUpdate(meleeCombat, Damage.Type.MELEE);
 					turnPhases.Add(meleeCombat);
 					
 					// tower damage
@@ -167,18 +173,12 @@ namespace SFB.Net.Server.Matches{
 						towerCombat.Deltas.Add(d);
 						gameManager.ApplyDelta(d);
 					}
-					foreach(Delta d in gameManager.GetCleanUpDeltas(Damage.Type.TOWER)) {
-						towerCombat.Deltas.Add(d);
-						gameManager.ApplyDelta(d);
-					}
-					foreach(Delta d in gameManager.GetRushForwardDeltas()) {
-						endDeploy.Deltas.Add(d);
-						gameManager.ApplyDelta(d);
-					}
+					CleanUpAndUpdate(meleeCombat, Damage.Type.TOWER);
 					turnPhases.Add(towerCombat);
 
 					// start of the next turn
 					TurnPhase startTurn = new TurnPhase("startPhase");
+					// mana + # deploy phases
 					foreach(Delta d in gameManager.GetStartTurnDeltas()){
                         startTurn.Deltas.Add(d);
                         gameManager.ApplyDelta(d);
@@ -186,7 +186,7 @@ namespace SFB.Net.Server.Matches{
                     turnPhases.Add(startTurn);
                 }
 
-                // get the start of the next deploy phase
+                // get the start of the next deploy phase (draw)
                 TurnPhase startDeploy = new TurnPhase("startDeploy");
                 foreach(Delta d in gameManager.GetStartDeployDeltas()){
                     startDeploy.Deltas.Add(d);

@@ -41,13 +41,13 @@ namespace SFB.Game.Content
 		public void AddUnitCard(string name, int cost, Faction f, string uType, string flavor, int r, int m, int hp, params Ability[] a)
 		{
 			UnitCard c = new UnitCard(cost, name, f, uType, flavor, r, m, hp, a);
-			Console.WriteLine(c.ToString());
+			Console.WriteLine("~~~\n"+c.ToString());
 			listOfCards.Add(name, c);
 		}
 		public void AddUnitCard(string name, int cost, Faction f, string uType, string flavor, int r, int m, int hp, List<Ability> a)
 		{
 			UnitCard c = new UnitCard(cost, name, f, uType, flavor, r, m, hp, a.ToArray());
-			Console.WriteLine(c.ToString());
+			Console.WriteLine("~~~\n" + c.ToString());
 			listOfCards.Add(name, c);
 		}
 

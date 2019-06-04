@@ -86,10 +86,8 @@ namespace SFB.Game
 
 			this.Abilities = new List<Ability>();
 
-			foreach(Ability a in card.Abilities) {
-				this.Abilities.Add(a);
+			foreach(Ability a in card.Abilities)
 				a.ApplyTo(this, gm);
-			}
 		}
 		
 		public Delta[] GetDamagingDeltas(Lane l, int oppSide, Damage.Type dmgType, GameManager gm) {
@@ -102,9 +100,11 @@ namespace SFB.Game
 			
 			for(int pos = 0; dmgLeft > 0 && pos < 2; pos++) {
 				if(targets[pos] != null) {
+					//System.Console.WriteLine($"    Found Target at Pos{pos}");
 					Unit target = targets[pos];
 					int resistance = target.GetResistance(dmgType);
 					int deal = System.Math.Min(target.HealthPoints+resistance, dmgLeft);
+					//System.Console.WriteLine($"    Dealing{deal} to {target.Card.Name} with resist{resistance}");
 
 					deltas.AddRange(
 						UnitHealthDelta.GetDamageDeltas(
@@ -115,14 +115,16 @@ namespace SFB.Game
 							gm
 						)
 					);
-					dmgLeft = dmgLeft - deal;
+					dmgLeft -= deal;
 					target.ModifyDamageLeft?.Invoke(ref dmgLeft);
+					//System.Console.WriteLine($"    Damage Left{dmgLeft}");
 				}
 			}
 
 			if(dmgLeft > 0) {
 				int towerDamage = 1;
 				ModifyTowerDamage?.Invoke(ref towerDamage);
+				//System.Console.WriteLine($"    Hit Tower{towerDamage}");
 				deltas.AddRange(l.Towers[oppSide].GetDamageDeltas(towerDamage, dmgType));
 			}
 
@@ -151,13 +153,13 @@ namespace SFB.Game
         }
 
 		public void Heal(int amt) {
-			HealthPoints += amt;
+			HealthPoints = System.Math.Min(Card.HealthPoints, HealthPoints+amt);
 		}
 
-		public Delta[] OnEachDeployPhase(int lane, int side, int pos, GameManager gm) {
+		public Delta[] OnEachTurn(int lane, int side, int pos, GameManager gm) {
 			List<Delta> deltas = new List<Delta>();
 			
-			AddRecurringDeployDeltas?.Invoke(deltas, gm.WithLocation(lane, pos, side));
+			AddRecurringDeployDeltas?.Invoke(deltas, gm.WithLocation(lane, side, pos));
 
 			if(this.FirstDeploy) {
 				AddInitialDeployDeltas?.Invoke(deltas, gm.WithLocation(lane, side, pos));

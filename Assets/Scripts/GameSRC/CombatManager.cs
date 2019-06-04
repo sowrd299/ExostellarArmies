@@ -10,15 +10,18 @@ namespace SFB.Game.Management
 		public static Delta[] GetUnitCombatDeltas(Lane[] lanes, Damage.Type phase, GameManager gm)
 		{
 			List<Delta> deltas = new List<Delta>();
-			TowerDamageDelta maxTowerDelta = null;
+			
 
-			foreach(Lane l in lanes)
-				for(int play = 0; play < 2; play++)
-					for(int pos = 0; pos < 2; pos++)
-						if(l.IsOccupied(play, pos)) {
-							Delta[] combatDeltas = l.Units[play, pos].GetDamagingDeltas(l, 1 - play, phase, gm);
+			for(int l = 0; l < lanes.Length; l++) {
+				Lane lane = lanes[l];
+				for(int play = 0; play < 2; play++) {
+					TowerDamageDelta maxTowerDelta = null;
+					for(int pos = 0; pos < 2; pos++) {
+						if(lane.IsOccupied(play, pos)) {
+							//System.Console.WriteLine($"  Found {lane.Units[play, pos].Card.Name} at Lane{l} Side{play} Pos{pos}");
+							Delta[] combatDeltas = lane.Units[play, pos].GetDamagingDeltas(lane, 1 - play, phase, gm);
 							foreach(Delta d in combatDeltas) {
-								if(d.GetType() == typeof(TowerDamageDelta)) {
+								if(d is TowerDamageDelta) {
 									TowerDamageDelta t = d as TowerDamageDelta;
 									if(maxTowerDelta == null || t.Amount > maxTowerDelta.Amount)
 										maxTowerDelta = t;
@@ -27,10 +30,12 @@ namespace SFB.Game.Management
 								}
 							}
 						}
-
-			if(maxTowerDelta != null) {
-				deltas.Add(maxTowerDelta);
-				gm.UseAddTowerDeathDeltas(deltas, maxTowerDelta.Target);
+					}
+					if(maxTowerDelta != null) {
+						deltas.Add(maxTowerDelta);
+						gm.UseAddTowerDamageDeltas(deltas, maxTowerDelta.Target);
+					}
+				}
 			}
 			
 			return deltas.ToArray();

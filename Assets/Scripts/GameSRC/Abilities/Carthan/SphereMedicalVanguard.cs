@@ -24,12 +24,15 @@ namespace SFB.Game
 
 		public void SphereMedicalVanguardInner(List<Delta> deltas, GMWithLocation gmLoc)
 		{
+			Console.WriteLine($"Sphere Medical Vanguard L{gmLoc.Lane} S{gmLoc.Side} P{gmLoc.Pos}");
 			if(gmLoc.Pos == 0 && gmLoc.BackUnit == null) {
+				Console.WriteLine("  In");
 				int lane = gmLoc.Lane;
 				int side = gmLoc.Side;
 
 				Unit leftLaneFront = gmLoc.LeftLane?.Units?[side, 0];
-				if(leftLaneFront != null)
+				if(leftLaneFront != null) {
+					Console.WriteLine("  L");
 					deltas.AddRange(
 						UnitHealthDelta.GetHealDeltas(
 							leftLaneFront,
@@ -38,9 +41,11 @@ namespace SFB.Game
 							gmLoc.GameManager
 						)
 					);
+				}
 
 				Unit rightLaneFront = gmLoc.RightLane?.Units?[side, 0];
-				if(rightLaneFront != null)
+				if(rightLaneFront != null) {
+					Console.WriteLine("  R");
 					deltas.AddRange(
 						UnitHealthDelta.GetHealDeltas(
 							rightLaneFront,
@@ -49,6 +54,7 @@ namespace SFB.Game
 							gmLoc.GameManager
 						)
 					);
+				}
 			}
 		}
 	}

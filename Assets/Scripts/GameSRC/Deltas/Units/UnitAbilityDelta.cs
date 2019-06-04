@@ -16,6 +16,9 @@ namespace SFB.Game
 		public UnitAbilityDelta(Unit target, Unit source, Ability a, DeltaMode m, GameManager gm)
 			: base(target, source)
 		{
+			Console.WriteLine($"UnitAbilityDelta Constructor Target Null: {Target == null}");
+			Console.WriteLine($"UnitAbilityDelta Constructor Source Null: {Source == null}");
+
 			Ability = a;
 			Mode = m;
 			GameManager = gm;
@@ -49,6 +52,8 @@ namespace SFB.Game
 
 		protected override void ApplyEffects(Unit u)
 		{
+			Console.WriteLine($"Ability Null: {Ability == null}");
+			Console.WriteLine($"GM Null: {GameManager == null}");
 			if(Mode == DeltaMode.ADD)
 				Ability.ApplyTo(u, GameManager);
 			else
