@@ -3,12 +3,12 @@ using System.Xml;
 
 namespace SFB.Game
 {
-	public class AddToBottomDeckDelta : CardListDelta<Deck> {
-		public AddToBottomDeckDelta(Deck deck, Card card)
-			: base(deck, card, deck.Count, CardListDelta<Deck>.DeltaMode.ADD)
+	public class AddToDeckIndexDelta : CardListDelta<Deck> {
+		public AddToDeckIndexDelta(Deck deck, Card card, int index)
+			: base(deck, card, index, CardListDelta<Deck>.DeltaMode.ADD)
 		{ }
 
-		public AddToBottomDeckDelta(XmlElement element, CardLoader loader)
+		public AddToDeckIndexDelta(XmlElement element, CardLoader loader)
 			: base(element, Deck.IdIssuer, loader)
 		{ }
 

@@ -15,6 +15,15 @@ namespace SFB.Game
 		// unit basic attributes
 		public UnitCard Card { get; private set; } // the card the unit is an instance of
 
+		public string MainText {
+			get {
+				string s = "";
+				for(int i = 0; i < Abilities.Count; i++)
+					s += Abilities[i].GetMainText() + (i == Abilities.Count - 1 ? "" : "\n");
+				return s;
+			}
+		}
+
 		public event Ability.ModifyInt RangedAtkMod;
 		public int RangedAttack {
 			get {
