@@ -45,7 +45,7 @@ public class CardUI : MonoBehaviour, IHasCard
 		}
 		else
 		{
-			flavourText.transform.parent.gameObject.SetActive(false);
+			flavourText.gameObject.SetActive(false);
 		}
 
 		if (cardData is UnitCard)
