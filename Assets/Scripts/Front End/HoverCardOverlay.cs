@@ -57,6 +57,8 @@ public class HoverCardOverlay : MonoBehaviour, IPointerEnterHandler, IPointerExi
 		ApplyOverrideAspect(unit.HealthPoints, unit.Card.HealthPoints, cardUI.health);
 		ApplyOverrideAspect(unit.RangedAttack, unit.Card.RangedAttack, cardUI.rangedDamage);
 		ApplyOverrideAspect(unit.MeleeAttack, unit.Card.MeleeAttack, cardUI.meleeDamage);
+
+		cardUI.flavourText.text = unit.MainText;
 	}
 
 	private void ApplyOverrideAspect(int unitValue, int cardValue, Text valueText)
