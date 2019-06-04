@@ -30,7 +30,8 @@ namespace SFB.Game{
             HealthPoints = healthPoints;
 			Abilities = new List<Ability>();
 			foreach(Ability a in abList)
-				Abilities.Add(a);
+				if(a != null)
+					Abilities.Add(a);
 			UnitType = unitType;
         }
 

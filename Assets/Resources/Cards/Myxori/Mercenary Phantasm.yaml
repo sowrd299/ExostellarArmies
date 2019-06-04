@@ -1,0 +1,10 @@
+name: Mercenary Phantasm
+cost: 2
+faction: None
+unitType: Elite Infantry Unit
+flavorText: 'What do you want to know?'
+rangedDamage: 1
+meleeDamage: 2
+hp: 3
+abilities:
+  - MercenaryPhantasm # Deploy: Your opponent reveals a card from their hand at random.

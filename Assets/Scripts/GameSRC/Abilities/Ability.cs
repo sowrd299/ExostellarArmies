@@ -89,21 +89,21 @@ namespace SFB.Game
 			if(type.IsSubclassOf(typeof(Ability))) {
 				if(amt == -1) {
 					ConstructorInfo con = type.GetConstructor(new Type[] { });
-					//Console.WriteLine($"No number, constructor found: {con != null}");
+					Console.WriteLine($"No number, constructor found: {con != null}");
 					return con?.Invoke(new object[] { }) as Ability;
 				} else {
 					ConstructorInfo con = type.GetConstructor(new Type[] { typeof(int) });
-					//Console.WriteLine($"Number, constructor found: {con != null}");
+					Console.WriteLine($"Number, constructor found: {con != null}");
 					return con?.Invoke(new object[] { amt }) as Ability;
 				}
 			} else {
-				//Console.WriteLine("Not subclass");
+				Console.WriteLine("Not subclass");
 				return null;
 			}
 		}
 
 		public override bool Equals(Object other) {
-			return other.GetType() == this.GetType() && this.ToString().Equals(other.ToString());
+			return other != null && other.GetType() == this.GetType() && this.ToString().Equals(other.ToString());
 		}
 
 		public override int GetHashCode() {
