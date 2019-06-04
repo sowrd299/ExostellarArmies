@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -94,7 +94,7 @@ public partial class UIManager : MonoBehaviour
 
 	public Coroutine RevealOpponentCard(Card card)
 	{
-		return null;
+		return enemyHandManager.RevealCard(card);
 	}
 
 	public Coroutine TowerRespawn(Tower target)
