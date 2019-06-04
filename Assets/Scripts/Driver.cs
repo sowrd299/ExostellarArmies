@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -193,7 +193,7 @@ public class Driver : MonoBehaviour
 		else if (delta is AddToLaneDelta)
 		{
 			AddToLaneDelta addToLaneDelta = delta as AddToLaneDelta;
-			uiManager.SpawnUnit(addToLaneDelta.SideIndex, Array.FindIndex(gameManager.Lanes, lane => lane.ID == addToLaneDelta.Target.ID), addToLaneDelta.Position);
+			yield return uiManager.SpawnUnit(addToLaneDelta.SideIndex, Array.FindIndex(gameManager.Lanes, lane => lane.ID == addToLaneDelta.Target.ID), addToLaneDelta.Position);
 		}
 		else if (delta is UnitHealthDelta)
 		{
