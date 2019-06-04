@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -208,7 +208,9 @@ public class Driver : MonoBehaviour
 		}
 		else if (delta is AddToDiscardDelta)
 		{
-
+			uiManager.UpdateDiscardDisplay(
+				Array.FindIndex(gameManager.Players, player => player.Discard == (delta as AddToDiscardDelta).Target)
+			);
 		}
 		else if (delta is AddToLaneDelta)
 		{
@@ -254,6 +256,11 @@ public class Driver : MonoBehaviour
 		{
 			TowerReviveDelta towerReviveDelta = delta as TowerReviveDelta;
 			yield return uiManager.TowerRespawn(towerReviveDelta.Target);
+		}
+		else if (delta is RevealHandCardDelta)
+		{
+			RevealHandCardDelta revealDelta = delta as RevealHandCardDelta;
+			yield return uiManager.RevealOpponentCard(revealDelta.Card);
 		}
 		else if (delta is ResourcePoolDelta)
 		{

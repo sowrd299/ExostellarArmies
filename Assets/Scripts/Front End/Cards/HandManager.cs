@@ -69,6 +69,25 @@ public class HandManager : MonoBehaviour
 		}
 	}
 
+	public Coroutine RevealCard(Card card)
+	{
+		foreach (Transform child in transform)
+		{
+			if (child.childCount > 0)
+			{
+				Transform cardTransform = child.GetChild(0);
+				CardUI cardUI = cardTransform.GetComponent<CardUI>();
+				if (cardUI.card is UnknownCard)
+				{
+					return cardUI.RevealCard(card);
+				}
+			}
+		}
+
+		Debug.LogError("Unable to find card to reveal?");
+		return null;
+	}
+
 	public void SetCardDraggable(bool draggable)
 	{
 		cardDraggable = draggable;

@@ -21,11 +21,16 @@ public class CardUI : MonoBehaviour, IHasCard
 	public Text unitType;
 	public Text flavourText;
 	public Text cardCost;
+	public GameObject cover;
 
 	[Header("Unit Card UI References")]
 	public Text rangedDamage;
 	public Text meleeDamage;
 	public Text health;
+
+	[Header("Config")]
+	public float revealDuration;
+	public AnimationCurve revealCurve;
 
 	private void Start()
 	{
@@ -57,5 +62,31 @@ public class CardUI : MonoBehaviour, IHasCard
 			meleeDamage.text = unitCardData.MeleeAttack.ToString();
 			health.text = unitCardData.HealthPoints.ToString();
 		}
+	}
+
+	public Coroutine RevealCard(Card card)
+	{
+		cardData = card;
+
+		return StartCoroutine(AnimateRevealCard());
+	}
+
+	private IEnumerator AnimateRevealCard()
+	{
+		Transform t = transform;
+		Vector3 originalScale = t.localScale;
+
+		yield return UIManager.instance.LerpTime(
+			Vector3.Lerp, originalScale, Vector3.up,
+			revealDuration / 2, revealCurve.Evaluate, scale => t.localScale = scale
+		);
+
+		cover.SetActive(false);
+		RenderCard();
+
+		yield return UIManager.instance.LerpTime(
+			Vector3.Lerp, Vector3.up, originalScale,
+			revealDuration / 2, time => 1 - revealCurve.Evaluate(1 - time), scale => t.localScale = scale
+		);
 	}
 }
