@@ -1,0 +1,22 @@
+<svg
+	xmlns="http://www.w3.org/2000/svg"
+	width="200"
+	height="300"
+>
+	<rect
+		x="10" y="15"
+		width="180" height="270" rx="20"
+		stroke="#00a4a7" stroke-width="10"
+		fill="#00c3c9"
+	/>
+	<line
+		x1="30" y1="45"
+		x2="170" y2="255"
+		stroke="darkred" stroke-width="20"
+	/>
+	<line
+		x1="170" y1="45"
+		x2="30" y2="255"
+		stroke="darkred" stroke-width="20"
+	/>
+</svg>

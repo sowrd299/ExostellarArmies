@@ -92,6 +92,11 @@ public partial class UIManager : MonoBehaviour
 		return holder.RemoveUnit();
 	}
 
+	public Coroutine RevealOpponentCard(Card card)
+	{
+		return null;
+	}
+
 	public Coroutine TowerRespawn(Tower target)
 	{
 		(int laneIndex, int sideIndex) = GetPositionIdentifier(target);

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,6 +30,8 @@ public class Driver : MonoBehaviour
 
 	public UIManager uiManager => UIManager.instance;
 
+	private List<TurnPhase> phaseStash;
+
 	private void Awake()
 	{
 		if (instance == null)
@@ -42,6 +44,8 @@ public class Driver : MonoBehaviour
 		}
 
 		DontDestroyOnLoad(gameObject);
+
+		phaseStash = new List<TurnPhase>();
 	}
 
 	private List<XmlElement> GetDeltaElements(XmlElement element)
@@ -85,7 +89,7 @@ public class Driver : MonoBehaviour
 				client.SendPlayerActions(uiManager.myHandManager.ExportActions());
 				Task<XmlDocument> confirmAction = client.ReceiveDocument(type => type == "actionDeltas");
 				yield return new WaitUntil(() => confirmAction.IsCompleted);
-				yield return StartCoroutine(ProcessActionResults(confirmAction.Result));
+				ProcessActionResults(confirmAction.Result);
 
 				uiManager.WaitForOpponent();
 				client.LockInTurn();
@@ -109,7 +113,7 @@ public class Driver : MonoBehaviour
 		uiManager.InitializeUI();
 	}
 
-	private IEnumerator ProcessActionResults(XmlDocument document)
+	private void ProcessActionResults(XmlDocument document)
 	{
 		List<XmlElement> deltaElements = GetDeltaElements(document.DocumentElement);
 
@@ -118,24 +122,6 @@ public class Driver : MonoBehaviour
 		{
 			Delta delta = Delta.FromXml(element, cardLoader);
 			delta.Apply();
-		}
-
-		List<XmlElement> inputRequestElements = GetInputRequestElements(document.DocumentElement);
-
-		if (inputRequestElements.Count > 0)
-		{
-			List<InputRequest> requests = inputRequestElements.Select(InputRequest.FromXml).ToList();
-
-			Debug.Log($"Processing {inputRequestElements.Count} input requests");
-			foreach (InputRequest request in requests)
-			{
-				yield return StartCoroutine(ProcessInputRequest(request));
-			}
-
-			client.SendInputRequestResponse(requests.ToArray());
-			Task<XmlDocument> confirmInput = client.ReceiveDocument(type => type == "actionDeltas");
-			yield return new WaitUntil(() => confirmInput.IsCompleted);
-			yield return StartCoroutine(ProcessActionResults(confirmInput.Result));
 		}
 
 		uiManager.RenderUnits();
@@ -148,23 +134,57 @@ public class Driver : MonoBehaviour
 
 	private IEnumerator ProcessTurnStart(XmlDocument document)
 	{
-		string type = document.DocumentElement.GetAttribute("type");
+		phaseStash.AddRange(
+			document
+				.DocumentElement
+				.GetElementsByTagName("phase")
+				.OfType<XmlElement>()
+				.Select(element => new TurnPhase(element, cardLoader))
+		);
 
-		List<XmlElement> phaseElements = document
-			.DocumentElement
-			.GetElementsByTagName("phase")
-			.OfType<XmlElement>()
-			.ToList();
-
-		foreach (TurnPhase phase in phaseElements.Select(element => new TurnPhase(element, cardLoader)))
+		List<XmlElement> inputRequestElements = GetInputRequestElements(document.DocumentElement);
+		
+		if (inputRequestElements.Count > 0)
 		{
-			if (phase.Deltas.Count == 0) continue;
+			// Input request time!
+			List<InputRequest> requests = inputRequestElements.Select(InputRequest.FromXml).ToList();
+
+			Debug.Log($"Processing {inputRequestElements.Count} input requests");
+			foreach (InputRequest request in requests)
+			{
+				yield return StartCoroutine(ProcessInputRequest(request));
+			}
+
+			client.SendInputRequestResponse(requests.ToArray());
+			Task<XmlDocument> confirmInput = client.ReceiveDocument(type => type == "turnStart");
+			yield return new WaitUntil(() => confirmInput.IsCompleted);
+
+			yield return StartCoroutine(ProcessTurnStart(confirmInput.Result));
+		}
+
+		while (phaseStash.Count > 0)
+		{
+			TurnPhase phase = phaseStash[0];
+			phaseStash.RemoveAt(0);
+
+			List<Delta> deltas = new List<Delta>(phase.Deltas);
+			for (int i = 0; i < phaseStash.Count; i++)
+			{
+				if (phaseStash[i].Name == phase.Name)
+				{
+					phaseStash.RemoveAt(i);
+					deltas.AddRange(phaseStash[i].Deltas);
+					i--;
+				}
+			}
+
+			if (deltas.Count == 0) continue;
 
 			string phaseDisplayName = GetPhaseName(phase.Name);
 			if (phaseDisplayName != null) yield return uiManager.ShowPhaseName(phaseDisplayName);
 
-			Debug.Log($"Processing {phase.Deltas.Count} deltas of phase {phase.Name}");
-			foreach (Delta delta in phase.Deltas)
+			Debug.Log($"Processing {deltas.Count} deltas of phase {phase.Name}");
+			foreach (Delta delta in deltas)
 			{
 				delta.Apply();
 				yield return StartCoroutine(AnimateDelta(delta));
@@ -186,7 +206,9 @@ public class Driver : MonoBehaviour
 		}
 		else if (delta is AddToDiscardDelta)
 		{
-
+			uiManager.UpdateDiscardDisplay(
+				Array.FindIndex(gameManager.Players, player => player.Discard == (delta as AddToDiscardDelta).Target)
+			);
 		}
 		else if (delta is AddToLaneDelta)
 		{
@@ -232,6 +254,11 @@ public class Driver : MonoBehaviour
 		{
 			TowerReviveDelta towerReviveDelta = delta as TowerReviveDelta;
 			yield return uiManager.TowerRespawn(towerReviveDelta.Target);
+		}
+		else if (delta is RevealHandCardDelta)
+		{
+			RevealHandCardDelta revealDelta = delta as RevealHandCardDelta;
+			yield return uiManager.RevealOpponentCard(revealDelta.Card);
 		}
 		else if (delta is ResourcePoolDelta)
 		{
