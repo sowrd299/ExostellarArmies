@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -261,6 +261,14 @@ public class Driver : MonoBehaviour
 		{
 			RevealHandCardDelta revealDelta = delta as RevealHandCardDelta;
 			yield return uiManager.RevealOpponentCard(revealDelta.Card);
+		}
+		else if (delta is RemoveFromHandDelta)
+		{
+			RemoveFromHandDelta removeDelta = delta as RemoveFromHandDelta;
+			yield return uiManager.RemoveFromHand(
+				Array.FindIndex(gameManager.Players, player => player.Owns(removeDelta.Target)),
+				removeDelta.Card
+			);
 		}
 		else if (delta is ResourcePoolDelta)
 		{

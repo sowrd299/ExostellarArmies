@@ -31,6 +31,7 @@ public class CardUI : MonoBehaviour, IHasCard
 	[Header("Config")]
 	public float revealDuration;
 	public AnimationCurve revealCurve;
+	public float removeDuration;
 
 	private void Start()
 	{
@@ -88,5 +89,20 @@ public class CardUI : MonoBehaviour, IHasCard
 			Vector3.Lerp, Vector3.up, originalScale,
 			revealDuration / 2, time => 1 - revealCurve.Evaluate(1 - time), scale => t.localScale = scale
 		);
+	}
+
+	public Coroutine RemoveFromHand()
+	{
+		return StartCoroutine(AnimateRemoveFromHand());
+	}
+
+	private IEnumerator AnimateRemoveFromHand()
+	{
+		Transform t = transform;
+		yield return UIManager.instance.LerpTime(
+			Vector3.Lerp, t.localScale, Vector3.zero,
+			removeDuration, scale => t.localScale = scale
+		);
+		Destroy(gameObject);
 	}
 }
