@@ -35,8 +35,8 @@ namespace SFB.Game.Management{
         // CALLING THIS MANUAL WILL CAUSE PROBLEMS FOR ID's
         public InputRequest(XmlElement e) {
             // find and register the ID
-            string id = e.Attributes["id"].Value;
-            idIssuer.RegisterId(id, this);
+            ID = e.Attributes["id"].Value;
+            idIssuer.RegisterId(ID, this);
         }
 
         // call this to set the choice to whatever choice made by the request
