@@ -30,8 +30,6 @@ public class Driver : MonoBehaviour
 
 	public UIManager uiManager => UIManager.instance;
 
-	private List<TurnPhase> phaseStash;
-
 	private void Awake()
 	{
 		if (instance == null)
@@ -44,8 +42,6 @@ public class Driver : MonoBehaviour
 		}
 
 		DontDestroyOnLoad(gameObject);
-
-		phaseStash = new List<TurnPhase>();
 	}
 
 	private List<XmlElement> GetDeltaElements(XmlElement element)
@@ -134,16 +130,8 @@ public class Driver : MonoBehaviour
 
 	private IEnumerator ProcessTurnStart(XmlDocument document)
 	{
-		phaseStash.AddRange(
-			document
-				.DocumentElement
-				.GetElementsByTagName("phase")
-				.OfType<XmlElement>()
-				.Select(element => new TurnPhase(element, cardLoader))
-		);
-
 		List<XmlElement> inputRequestElements = GetInputRequestElements(document.DocumentElement);
-		
+
 		if (inputRequestElements.Count > 0)
 		{
 			// Input request time!
@@ -162,22 +150,16 @@ public class Driver : MonoBehaviour
 			yield return StartCoroutine(ProcessTurnStart(confirmInput.Result));
 		}
 
-		while (phaseStash.Count > 0)
+		List<TurnPhase> phases = document
+				.DocumentElement
+				.GetElementsByTagName("phase")
+				.OfType<XmlElement>()
+				.Select(element => new TurnPhase(element, cardLoader))
+				.ToList();
+
+		foreach (TurnPhase phase in phases)
 		{
-			TurnPhase phase = phaseStash[0];
-			phaseStash.RemoveAt(0);
-
-			List<Delta> deltas = new List<Delta>(phase.Deltas);
-			for (int i = 0; i < phaseStash.Count; i++)
-			{
-				if (phaseStash[i].Name == phase.Name)
-				{
-					phaseStash.RemoveAt(i);
-					deltas.AddRange(phaseStash[i].Deltas);
-					i--;
-				}
-			}
-
+			List<Delta> deltas = phase.Deltas;
 			if (deltas.Count == 0) continue;
 
 			string phaseDisplayName = GetPhaseName(phase.Name);
@@ -195,6 +177,21 @@ public class Driver : MonoBehaviour
 			{
 				yield return uiManager.OpponentDrawCards();
 			}
+		}
+
+		List<Delta> unphasedDeltas = document
+			.DocumentElement
+			.ChildNodes
+			.OfType<XmlElement>()
+			.Where(element => element.Name == "delta")
+			.Select(element => Delta.FromXml(element, CardLoader.instance))
+			.ToList();
+		
+		Debug.Log($"Processing {unphasedDeltas.Count} deltas outside phases");
+		foreach (Delta delta in unphasedDeltas)
+		{
+				delta.Apply();
+				yield return StartCoroutine(AnimateDelta(delta));
 		}
 	}
 
@@ -259,6 +256,14 @@ public class Driver : MonoBehaviour
 		{
 			RevealHandCardDelta revealDelta = delta as RevealHandCardDelta;
 			yield return uiManager.RevealOpponentCard(revealDelta.Card);
+		}
+		else if (delta is RemoveFromHandDelta)
+		{
+			RemoveFromHandDelta removeDelta = delta as RemoveFromHandDelta;
+			yield return uiManager.RemoveFromHand(
+				Array.FindIndex(gameManager.Players, player => player.Owns(removeDelta.Target)),
+				removeDelta.Card
+			);
 		}
 		else if (delta is ResourcePoolDelta)
 		{

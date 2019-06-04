@@ -94,7 +94,12 @@ public partial class UIManager : MonoBehaviour
 
 	public Coroutine RevealOpponentCard(Card card)
 	{
-		return null;
+		return enemyHandManager.RevealCard(card);
+	}
+
+	public Coroutine RemoveFromHand(int sideIndex, Card card)
+	{
+		return handManagers[sideIndex].RemoveCard(card);
 	}
 
 	public Coroutine TowerRespawn(Tower target)

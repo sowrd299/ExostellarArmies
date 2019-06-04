@@ -75,8 +75,7 @@ public class HandManager : MonoBehaviour
 		{
 			if (child.childCount > 0)
 			{
-				Transform cardTransform = child.GetChild(0);
-				CardUI cardUI = cardTransform.GetComponent<CardUI>();
+				CardUI cardUI = child.GetChild(0).GetComponent<CardUI>();
 				if (cardUI.card is UnknownCard)
 				{
 					return cardUI.RevealCard(card);
@@ -85,6 +84,25 @@ public class HandManager : MonoBehaviour
 		}
 
 		Debug.LogError("Unable to find card to reveal?");
+		return null;
+	}
+
+	public Coroutine RemoveCard(Card card)
+	{
+		foreach (Transform child in transform)
+		{
+			if (child.childCount > 0)
+			{
+				CardUI cardUI = child.GetChild(0).GetComponent<CardUI>();
+
+				if (cardUI.card.ID == card.ID)
+				{
+					return cardUI.RemoveFromHand();
+				}
+			}
+		}
+
+		Debug.LogError("Unable to find card to remove?");
 		return null;
 	}
 

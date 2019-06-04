@@ -1961,11 +1961,39 @@ MonoBehaviour:
   background: {fileID: 7084708171239449566}
   cardName: {fileID: 2209705395013451064}
   description: {fileID: 2209705395253232660}
+  unitType: {fileID: 2209705395154985839}
   flavourText: {fileID: 2209705393878752952}
   cardCost: {fileID: 2209705394794001776}
+  cover: {fileID: 2209705393386963247}
   rangedDamage: {fileID: 2209705395291305454}
   meleeDamage: {fileID: 2209705394706410014}
   health: {fileID: 4825893673882871425}
+  revealDuration: 0.5
+  revealCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 2
+      outSlope: 2
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  removeDuration: 0.3
 --- !u!1 &6795833052985177640
 GameObject:
   m_ObjectHideFlags: 0

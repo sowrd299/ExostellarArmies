@@ -27,6 +27,7 @@ namespace SFB.Game
 			CommercialShipperIR inputRequest = new CommercialShipperIR(
 				gmLoc.SubjectPlayer, gmLoc.GameManager
 			);
+			gmLoc.SubjectPlayer.AssignInputRequest(inputRequest);
 		}
 	}
 }
