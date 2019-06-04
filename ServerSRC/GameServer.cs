@@ -33,7 +33,19 @@ namespace SFB.Net.Server{
         {
             //get the IP address
             ipEntry = Dns.GetHostEntry(Dns.GetHostName());
-            ipAddr = ipEntry.AddressList.First(addr => addr.AddressFamily == AddressFamily.InterNetwork);
+            int index_print = 0;
+            foreach(var entry in ipEntry.AddressList){
+                Console.WriteLine(index_print.ToString() + ": " + entry.ToString());
+                ++index_print;
+            }
+            int index_read = 0;
+            string index_read_str;
+            do {
+                Console.WriteLine("Please choose an IP address to use (not all IP addresses will work; please use the IP address for your LAN): ");
+                index_read_str = Console.ReadLine();
+            } while(!Int32.TryParse(index_read_str, out index_read) || index_read >= ipEntry.AddressList.Length); // repeat until get a valid int
+            
+            ipAddr = ipEntry.AddressList[index_read];
             //setup socket managers
             ncl = new NewClientManager(ipAddr, Port);
             clientSockets = new HashSet<SocketManager>();
