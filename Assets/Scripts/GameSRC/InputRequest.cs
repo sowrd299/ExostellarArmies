@@ -8,7 +8,7 @@ namespace SFB.Game.Management{
     public abstract class InputRequest : Sendable, IIDed {
 
         // setup Sendable
-        protected static new string XmlNodeName{
+        protected override string XmlNodeName{
             get{ return "inputRequest"; }
         }
 
