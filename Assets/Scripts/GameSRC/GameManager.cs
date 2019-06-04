@@ -121,9 +121,8 @@ namespace SFB.Game.Management{
         public Delta[] GetStartTurnDeltas(){
             List<Delta> deltas = new List<Delta>();
             foreach(Player p in Players){
-                foreach(Delta d in p.GetDeployPhaseDeltas()){
-                    deltas.Add(d);
-                }
+				deltas.AddRange(p.GetDeployPhaseDeltas());
+				deltas.AddRange(p.GetManaDeltas());
             }
             return deltas.ToArray();
         }
@@ -135,7 +134,6 @@ namespace SFB.Game.Management{
 				foreach(Delta d in p.GetDrawDeltas(this)) {
 					deltas.Add(d);
 				}
-                deltas.Add(p.ManaPool.GetAddDeltas(6 - p.Lives)[0]);
             }
 			return deltas.ToArray();
 		}
@@ -234,13 +232,6 @@ namespace SFB.Game.Management{
 					}
 			}
 
-			// fill front if empty
-			foreach(Lane lane in Lanes) {
-				for(int side = 0; side < lane.Units.GetLength(0); side++)
-					if(lane.NeedFillFront(side))
-						deltas.AddRange(lane.GetInLaneSwapDeltas(side, this));
-			}
-
 			// clean towers -> player lives
 			for(int l = 0; l < Lanes.Length; l++) {
 				Lane lane = Lanes[l];
@@ -251,6 +242,20 @@ namespace SFB.Game.Management{
 						deltas.AddRange(Players[i].DeployPhasesPool.GetAddDeltas(1));
 					}
 				}
+			}
+
+			return deltas.ToArray();
+		}
+
+		public Delta[] GetRushForwardDeltas()
+		{
+			List<Delta> deltas = new List<Delta>();
+			
+			// fill front if empty
+			foreach(Lane lane in Lanes) {
+				for(int side = 0; side < lane.Units.GetLength(0); side++)
+					if(lane.NeedFillFront(side))
+						deltas.AddRange(lane.GetInLaneSwapDeltas(side, this));
 			}
 
 			return deltas.ToArray();
