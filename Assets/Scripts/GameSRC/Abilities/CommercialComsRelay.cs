@@ -3,28 +3,28 @@ using System.Collections.Generic;
 
 namespace SFB.Game
 {
-	public class CommercialShipper : Ability
+	public class CommercialComsRelay : Ability
 	{
 		public override string GetMainText() {
-			return "Deploy: Draw a card, then put a card from hand on the bottom of your deck.";
+			return "Deploy: Put a card from your hand beneath the top 4 cards of your deck.";
 		}
 
-		public CommercialShipper() : base(-1) { }
+		public CommercialComsRelay() : base(-1) { }
 
 		protected override void AddEffectsToEvents(Unit u, GameManager gm)
 		{
-			u.AddInitialDeployDeltas += InnerCommercialShipper;
+			u.AddInitialDeployDeltas += InnerCommercialComsRelay;
 		}
 
 		protected override void RemoveEffectsFromEvents(Unit u, GameManager gm)
 		{
-			u.AddInitialDeployDeltas -= InnerCommercialShipper;
+			u.AddInitialDeployDeltas -= InnerCommercialComsRelay;
 		}
 
-		public void InnerCommercialShipper(List<Delta> delta, GMWithLocation gmLoc)
+		public void InnerCommercialComsRelay(List<Delta> delta, GMWithLocation gmLoc)
 		{
-			System.Console.WriteLine("COMM SHIP INIT DEP");
-			CommercialShipperIR inputRequest = new CommercialShipperIR(
+			System.Console.WriteLine("COMM COMS RELAY INIT DEP");
+			CommercialComsRelayIR inputRequest = new CommercialComsRelayIR(
 				gmLoc.SubjectPlayer, gmLoc.GameManager
 			);
 		}
