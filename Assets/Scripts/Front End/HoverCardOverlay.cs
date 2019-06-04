@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -58,7 +58,7 @@ public class HoverCardOverlay : MonoBehaviour, IPointerEnterHandler, IPointerExi
 		ApplyOverrideAspect(unit.RangedAttack, unit.Card.RangedAttack, cardUI.rangedDamage);
 		ApplyOverrideAspect(unit.MeleeAttack, unit.Card.MeleeAttack, cardUI.meleeDamage);
 
-		cardUI.flavourText.text = unit.MainText;
+		cardUI.description.text = unit.MainText;
 	}
 
 	private void ApplyOverrideAspect(int unitValue, int cardValue, Text valueText)
