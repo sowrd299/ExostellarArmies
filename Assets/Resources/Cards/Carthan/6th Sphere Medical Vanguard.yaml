@@ -1,7 +1,7 @@
 name: 6th Sphere Medical Vanguard
 cost: 4
 faction: Carthan
-unitType: Carthan Elite Medical Infantry Unit
+unitType: Elite - Carthan -- Medical - Infantry
 flavorText: 'No weapon the Carthans ever discovered revolutionized warfare the way the bone saw did.'
 rangedDamage: 1
 meleeDamage: 3

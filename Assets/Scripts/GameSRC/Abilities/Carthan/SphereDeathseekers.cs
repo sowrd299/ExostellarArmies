@@ -38,9 +38,9 @@ namespace SFB.Game
 				if(gmLoc.Pos == 0) {
 					// Deploy Front Line: This gains Ranged and Melee Shield 3 this turn.
 					deltas.AddRange(new Delta[] {
-					new UnitAbilityDelta(self, self, new RangedShield(3), UnitAbilityDelta.DeltaMode.ADD, gmLoc.GameManager),
-					new UnitAbilityDelta(self, self, new MeleeShield(3), UnitAbilityDelta.DeltaMode.ADD, gmLoc.GameManager)
-				});
+						new UnitAbilityDelta(self, self, new RangedShield(3), UnitAbilityDelta.DeltaMode.ADD, gmLoc.GameManager),
+						new UnitAbilityDelta(self, self, new MeleeShield(3), UnitAbilityDelta.DeltaMode.ADD, gmLoc.GameManager)
+					});
 					appliedShieldTo = self;
 				} else if(gmLoc.IsFortifying("Carthan")) {
 					// Fortify Carthan: This gains +3R this turn.

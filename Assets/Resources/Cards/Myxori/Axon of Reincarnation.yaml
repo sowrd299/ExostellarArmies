@@ -1,0 +1,10 @@
+name: Axon of Reincarnation
+cost: 1
+faction: Myxori
+unitType: Myxori -- Infantry
+flavorText: 'Life after death is a desire all flashbound share, and one that Myxori has no trouble making manifest.'
+rangedDamage: 0
+meleeDamage: 2
+hp: 2
+abilities:
+  - Mulch

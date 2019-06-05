@@ -60,7 +60,7 @@ namespace SFB.Game
 		// triggered ability events
 		public event Ability.AddDeltaGMLoc AddInitialDeployDeltas;
 		public event Ability.AddDeltaGMLoc AddRecurringDeployDeltas;
-		public event Ability.AddDeltaGMLocPhase AddDeathDeltas;
+		public event Ability.AddDeltaGMLocPhase AddDeathBeforeRemoveDeltas;
 
 		readonly public string id;
         public string ID {
@@ -168,9 +168,9 @@ namespace SFB.Game
 			return deltas.ToArray();
 		}
 
-		public Delta[] OnDeath(int lane, int side, int pos, GameManager gm, Damage.Type? phase) {
+		public Delta[] OnDeathBeforeRemove(int lane, int side, int pos, GameManager gm, Damage.Type? phase) {
 			List<Delta> deltas = new List<Delta>();
-			AddDeathDeltas?.Invoke(deltas, gm.WithLocation(lane, side, pos), phase);
+			AddDeathBeforeRemoveDeltas?.Invoke(deltas, gm.WithLocation(lane, side, pos), phase);
 			return deltas.ToArray();
 		}
 	}

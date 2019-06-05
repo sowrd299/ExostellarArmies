@@ -5,23 +5,23 @@ cards:
     count: 1
   - id: Commercial Shipper
     count: 1
-  - id: Adaptive Protopod
+  - id: Axon of Adaptability
     count: 2
-  - id: Screaming Spore Spunner
+  - id: Grueling
     count: 1
-  - id: Pod-Cap Yxuu maRroz
+  - id: 'K''jac Rost''F, The Bloomer'
     count: 1
-  - id: Undergrowth Smasher
+  - id: Bough of Vengeance
     count: 1
-  - id: Aftergrowth Spunner
+  - id: Sposh Creeper
     count: 1
-  - id: Mulch Pod
+  - id: Névé's Doomseekers
     count: 2
-  - id: Fecund Reflex Axon
-    count: 2 # Jack: I only found 1 in the deck?
-  - id: Grafted Fang Spunner
+  - id: Onding Overseer
     count: 2
-  - id: Spore Pod
+  - id: Axon of Reincarnation
+    count: 2
+  - id: Spectre of Possibility
     count: 2
   - id: Horde Caller
     count: 2

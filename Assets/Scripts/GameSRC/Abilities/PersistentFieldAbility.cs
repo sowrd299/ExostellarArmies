@@ -19,7 +19,7 @@ namespace SFB.Game
 		{
 			Source = source;
 			source.AddInitialDeployDeltas += AddPersistentToGM;
-			source.AddDeathDeltas += RemovePersistentFromGM;
+			source.AddDeathBeforeRemoveDeltas += RemovePersistentFromGM;
 		}
 
 		protected override void RemoveEffectsFromEvents(Unit source, GameManager gm)

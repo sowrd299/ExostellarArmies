@@ -1,9 +1,0 @@
-id: TEST
-name: Testing
-cards:
-  - id: Commercial Shipper
-    count: 7
-  - id: Commercial Coms Relay
-    count: 7
-  - id: Mana Token
-    count: 6

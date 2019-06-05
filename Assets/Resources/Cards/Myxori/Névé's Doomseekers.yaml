@@ -1,0 +1,11 @@
+name: Névé's Doomseekers
+cost: 2
+faction: Myxori
+unitType: Myxori -- Infantry -- Trap
+flavorText: 'Myxori''s personas are only as advanced as necessary to study the stimuli they''re meant for. Sentience is far from a requirement.'
+rangedDamage: 0
+meleeDamage: 1
+hp: 1
+abilities:
+  - Absorb
+  - Mulch

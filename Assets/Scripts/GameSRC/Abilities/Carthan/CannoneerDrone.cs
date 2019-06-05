@@ -20,7 +20,7 @@ namespace SFB.Game
 		protected override void AddEffectsToEvents(Unit source, GameManager gm)
 		{
 			source.AddInitialDeployDeltas += ApplyEffects;
-			source.AddDeathDeltas += RemoveEffects;
+			source.AddDeathBeforeRemoveDeltas += RemoveEffects;
 		}
 
 		protected override void RemoveEffectsFromEvents(Unit source, GameManager gm)

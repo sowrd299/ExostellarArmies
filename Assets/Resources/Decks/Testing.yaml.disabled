@@ -1,0 +1,9 @@
+id: TEST
+name: Testing
+cards:
+  - id: Archon - Eximus Class
+    count: 8
+  - id: 3rd Sphere Irregular Marksman
+    count: 6
+  - id: Mana Token
+    count: 6

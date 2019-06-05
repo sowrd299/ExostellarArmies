@@ -1,0 +1,10 @@
+name: Onding Overseer
+cost: 5
+faction: Myxori
+unitType: Myxori -- Infantry -- Command
+flavorText: 'Additional data is required. Send in the next wave of personas.'
+rangedDamage: 0
+meleeDamage: 3
+hp: 2
+#abilities:
+#  - OndingOverseer # Deploy: Give each ally back line unit +2M this turn, then Mulch here and in each of your empty columns.

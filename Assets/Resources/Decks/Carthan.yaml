@@ -3,14 +3,12 @@ name: Carthan Starter
 cards:
   - id: 6th Sphere Frontline Squad
     count: 2
-  - id: Commercial Shipper # not working
-    count: 1
-  - id: Commercial Coms Relay # not working
-    count: 1
+  - id: Archon - Eximus Class
+    count: 2
   - id: Battleframe - Assize Class
     count: 2
   - id: 6th Sphere Medical Vanguard
-    count: 1
+    count: 2
   - id: Archon – Brynhilde Class
     count: 2
   - id: 6th Sphere Greaser
@@ -19,15 +17,15 @@ cards:
     count: 1
   - id: 3rd Sphere Irregular Marksman
     count: 2
-  - id: Battle-Chief Yos Lorth # sketchy
-    count: 1
+#  - id: Battle-Chief Yos Lorth # sketchy
+#    count: 1
   - id: 6th Sphere Skeletal Reshaper
     count: 1
   - id: 6th Sphere Deathseekers
     count: 1
   - id: Archon – Ethereal Class
     count: 1
-  - id: Cannoneer Drone
+  - id: Autonomous Weapons Platform
     count: 1
-  - id: Fire Support Drone
+  - id: Fire Support Drone # sometimes bugs
     count: 2

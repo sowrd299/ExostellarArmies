@@ -1,0 +1,10 @@
+name: Axon of Adaptability
+cost: 2
+faction: Myxori
+unitType: Myxori -- Artillery
+flavorText: 'Some things are only learned by flinging oneself haphazardly into certain death'
+rangedDamage: 2
+meleeDamage: 0
+hp: 2
+abilities:
+  - AxonOfAdaptability # Fortify Artillery: Gain Spore 3 until end of turn. Fortify Infantry: Gain Lob until end of turn.

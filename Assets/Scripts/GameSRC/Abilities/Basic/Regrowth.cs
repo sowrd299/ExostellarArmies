@@ -21,11 +21,11 @@ namespace SFB.Game
 		}
 
 		protected override void AddEffectsToEvents(Unit u, GameManager gm) {
-			u.AddDeathDeltas += RegrowthInner;
+			u.AddDeathBeforeRemoveDeltas += RegrowthInner;
 		}
 
 		protected override void RemoveEffectsFromEvents(Unit u, GameManager gm) {
-			u.AddDeathDeltas -= RegrowthInner;
+			u.AddDeathBeforeRemoveDeltas -= RegrowthInner;
 		}
 
 		private void RegrowthInner(List<Delta> deltas, GMWithLocation gmLoc, Damage.Type? phase)

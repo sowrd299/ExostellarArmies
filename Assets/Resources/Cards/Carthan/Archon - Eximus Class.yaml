@@ -1,0 +1,11 @@
+name: Archon - Eximus Class
+cost: 2
+faction: Carthan
+unitType: Carthan -- Drone
+flavorText: ''
+rangedDamage: 0
+meleeDamage: 2
+hp: 3
+abilities:
+  - ArchonEximusClass1 # Fortify Carthan Infantry: Discard your hand, and for each card discarded, give the fortified unit +1R this turn and heal it by 1.
+  - ArchonEximusClass2 # Front Line: This gets Ranged Shield 2 this turn.

@@ -33,9 +33,9 @@ namespace SFB.Game
 		public UnitHealthDelta(Unit t, Unit s, int a, Damage.Type type)
 			: base(t, s)
 		{
-			Console.WriteLine($"UnitHealthDelta Constructor For Type {type}");
-			Console.WriteLine($"    Target Null: {Target == null}");
-			Console.WriteLine($"    Source Null: {Source == null}");
+			//Console.WriteLine($"UnitHealthDelta Constructor For Type {type}");
+			//Console.WriteLine($"    Target Null: {Target == null}");
+			//Console.WriteLine($"    Source Null: {Source == null}");
 			Amount = a;
 			DmgType = type;
 		}
@@ -64,7 +64,6 @@ namespace SFB.Game
 		protected override void ApplyEffects(Unit u) {
 			switch(DmgType) {
 				case Damage.Type.HEAL:
-					Console.WriteLine("heal pls");
 					Target.Heal(Amount);
 					break;
 				default:

@@ -1,0 +1,11 @@
+name: Spectre of Possibility
+cost: 1
+faction: Myxori
+unitType: Myxori -- Trap
+flavorText: '"Is the essence of that which can be anything nothing or everything?"\n- T''Lec Vros, Vizier of Renewal'
+rangedDamage: 0
+meleeDamage: 0
+hp: 1
+abilities:
+  - Spore 1
+  - Mulch

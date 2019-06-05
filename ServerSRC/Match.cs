@@ -132,14 +132,12 @@ namespace SFB.Net.Server.Matches{
                 }
 
 				if(!gameManager.DeployPhasesOver()) {
-					Console.WriteLine("Still are deploy phases");
 					CleanUpAndUpdate(endDeploy, null);
 					turnPhases.Add(endDeploy);
 				}
 
 				// if no more deployment phases, do the rest of this turn through the start of the next
 				if(gameManager.DeployPhasesOver()){
-					Console.WriteLine("No more deploy phases");
 					// card+field deploy effects
 					foreach(Delta d in gameManager.GetEndTurnDeltas()) {
 						endDeploy.Deltas.Add(d);

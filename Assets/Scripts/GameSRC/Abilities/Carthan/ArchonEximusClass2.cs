@@ -1,9 +1,8 @@
 using SFB.Game.Management;
-using System.Collections.Generic;
 
 namespace SFB.Game
 {
-	public class EXAvengerCustomDrone2 : TemporaryAbility
+	public class ArchonEximusClass2 : TemporaryAbility
 	{
 		public override string GetMainText() {
 			return "Front Line: This gets Ranged Shield 2 this turn.";

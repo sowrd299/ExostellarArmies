@@ -1,0 +1,11 @@
+name: Bough of Vengeance
+cost: 5
+faction: Myxori
+unitType: Myxori -- Infantry
+flavorText: 'Some fleshbound reactions to death were impossible for Névé to replicate. Others were trivial.'
+rangedDamage: 0
+meleeDamage: 4
+hp: 4
+abilities:
+  - Siege 1
+  - MercenaryPhantasm # Deploy: Deal 1 damage to the opposing enemy unit (if it exists) for each Myxori unit you control.

@@ -17,7 +17,7 @@ namespace SFB.Game
 		protected override void AddEffectsToEvents(Unit u, GameManager gm) {
 			Source = u;
 			u.AddInitialDeployDeltas += AddToGM;
-			u.AddDeathDeltas += RemoveFromGM;
+			u.AddDeathBeforeRemoveDeltas += RemoveFromGM;
 		}
 
 		protected override void RemoveEffectsFromEvents(Unit u, GameManager gm) {

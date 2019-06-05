@@ -1,0 +1,10 @@
+name: 'K''jac Rost''F, The Bloomer'
+cost: 1
+faction: Myxori
+unitType: Myxori -- Artillery -- Command
+flavorText: 'Loss means little when one has gained nothing in life.'
+rangedDamage: 1
+meleeDamage: 0
+hp: 2
+abilities:
+  - KjacRostFTheBloomer # Deploy: Infantry you control get +1M this turn.

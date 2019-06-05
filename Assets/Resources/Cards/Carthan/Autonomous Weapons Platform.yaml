@@ -1,8 +1,8 @@
-name: Cannoneer Drone
+name: Autonomous Weapons Platform
 cost: 2
-faction: Carthan
-unitType: Engineering Drone Unit
-flavorText: 'Death to Your Enemies'
+faction: None?
+unitType: Engineering -- Drone
+flavorText: 'There are few problems that overwhelming firepower can''t solve.'
 rangedDamage: 0
 meleeDamage: 0
 hp: 1

@@ -1,0 +1,10 @@
+name: Sposh Creeper
+cost: 2
+faction: Myxori
+unitType: Myxori -- Infantry
+flavorText: 'Some destinies outlive their owners.'
+rangedDamage: 0
+meleeDamage: 2
+hp: 2
+abilities:
+  - Spore 3

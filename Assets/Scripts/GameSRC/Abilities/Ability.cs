@@ -89,11 +89,11 @@ namespace SFB.Game
 			if(type.IsSubclassOf(typeof(Ability))) {
 				if(amt == -1) {
 					ConstructorInfo con = type.GetConstructor(new Type[] { });
-					Console.WriteLine($"No number, constructor found: {con != null}");
+					//Console.WriteLine($"No number, constructor found: {con != null}");
 					return con?.Invoke(new object[] { }) as Ability;
 				} else {
 					ConstructorInfo con = type.GetConstructor(new Type[] { typeof(int) });
-					Console.WriteLine($"Number, constructor found: {con != null}");
+					//Console.WriteLine($"Number, constructor found: {con != null}");
 					return con?.Invoke(new object[] { amt }) as Ability;
 				}
 			} else {

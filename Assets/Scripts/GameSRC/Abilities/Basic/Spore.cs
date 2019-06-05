@@ -14,12 +14,12 @@ namespace SFB.Game
 
 		protected override void AddEffectsToEvents(Unit u, GameManager gm)
 		{
-			u.AddDeathDeltas += SporeInner;
+			u.AddDeathBeforeRemoveDeltas += SporeInner;
 		}
 
 		protected override void RemoveEffectsFromEvents(Unit u, GameManager gm)
 		{
-			u.AddDeathDeltas -= SporeInner;
+			u.AddDeathBeforeRemoveDeltas -= SporeInner;
 		}
 
 		void SporeInner(List<Delta> deltas, GMWithLocation gameStateLoc, Damage.Type? phase)
